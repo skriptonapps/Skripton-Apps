@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Skripton Apps — Soluciones digitales para tu negocio</title>
+<title>Skripto Apps — Soluciones digitales para tu negocio</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -549,7 +549,7 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
   <div class="footer-inner">
     <div>
       <div class="footer-logo-row">
-        <div class="footer-brand-name">Skripton <em>Apps</em></div>
+        <div class="footer-brand-name">Skripto <em>Apps</em></div>
       </div>
       <div class="footer-tagline">Soluciones digitales para todo tipo de negocio.</div>
     </div>
@@ -566,12 +566,12 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
       <div class="footer-col-title">Contacto</div>
       <div class="footer-links-list">
         <a href="https://wa.me/573132824580" target="_blank">WhatsApp</a>
-        <a href="mailto:skriptonapps@gmail.com">Correo electrónico</a>
+        <a href="mailto:skriptoApps@gmail.com">Correo electrónico</a>
       </div>
     </div>
   </div>
   <div class="footer-bottom">
-    <div class="footer-copy">© 2025 Skripton Apps · Todos los derechos reservados</div>
+    <div class="footer-copy">© 2025 Skripto Apps · Todos los derechos reservados</div>
     <div class="footer-made">Hecho con <span>♥</span> para tu negocio</div>
   </div>
 </footer>
@@ -658,7 +658,8 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
 
 <script>
 // ── URL del Apps Script ──────────────────────────────────────
-var APP_URL = 'https://script.google.com/macros/s/AKfycbzwAIDkSAGLZj-RdeiNwVqDXsZemmufHy1j1ZDO5x_HjkIOFxnubSz8oK_6cSVE7chdmg/exec';
+// IMPORTANTE: debe coincidir EXACTAMENTE con el deployment que confirmaste que carga sin pedir login
+var APP_URL = 'https://script.google.com/macros/s/AKfycbx0xkiFXloPIUczA5JrSBeOOzTz0ZL5fDQl8vF8lLXgVMeYa5OGXfULwuu0KcVwTkodqA/exec';
 
 // ── FAQ ──────────────────────────────────────────────────────
 function toggleFaq(btn){
@@ -722,91 +723,42 @@ function mostrarAlerta(msg,tipo){
   a.textContent=msg;a.className='modal-alert '+tipo;a.style.display='block';
 }
 
-// ── HELPER: llamar Apps Script evitando CORS con formulario oculto ──
-// Apps Script redirige después de procesar, lo capturamos en un iframe oculto.
-// Usamos window.name como canal de comunicación entre dominios.
+// ── HELPER: llamar Apps Script con fetch directo, verificando la respuesta real ──
+// IMPORTANTE: nunca asumimos éxito. Si no podemos confirmar un JSON con
+// success:true desde el servidor, mostramos error explícito.
 function llamarAppScript(params, onSuccess, onError, btnEl, btnTextoOriginal) {
   btnEl.disabled = true;
   btnEl.textContent = 'Procesando…';
 
-  // Crear iframe oculto
-  var iframeId = '_as_frame_' + Date.now();
-  var iframe = document.createElement('iframe');
-  iframe.name = iframeId;
-  iframe.style.display = 'none';
-  document.body.appendChild(iframe);
+  var qs = Object.keys(params).map(function(k){
+    return encodeURIComponent(k) + '=' + encodeURIComponent(params[k]);
+  }).join('&');
+  var url = APP_URL + '?' + qs;
 
-  // Crear formulario oculto que apunta al iframe
-  var form = document.createElement('form');
-  form.method = 'GET';
-  form.action = APP_URL;
-  form.target = iframeId;
-  form.style.display = 'none';
-
-  Object.keys(params).forEach(function(k) {
-    var input = document.createElement('input');
-    input.type = 'hidden';
-    input.name = k;
-    input.value = params[k];
-    form.appendChild(input);
-  });
-  document.body.appendChild(form);
-
-  var timeout = setTimeout(function() {
-    cleanup();
-    btnEl.disabled = false;
-    btnEl.textContent = btnTextoOriginal;
-    onError('Tiempo de espera agotado. Intenta de nuevo.');
-  }, 15000);
-
-  iframe.onload = function() {
-    clearTimeout(timeout);
-    try {
-      // Intentar leer la respuesta JSON del iframe
-      var content = iframe.contentDocument
-        ? iframe.contentDocument.body.innerText
-        : iframe.contentWindow.document.body.innerText;
-      content = (content || '').trim();
-      // Limpiar posible HTML wrapper
-      var match = content.match(/\{[\s\S]*\}/);
-      if (match) {
-        var res = JSON.parse(match[0]);
-        cleanup();
-        btnEl.disabled = false;
-        btnEl.textContent = btnTextoOriginal;
-        if (res.success) onSuccess(res);
-        else onError(res.mensaje || 'Error desconocido.');
-      } else {
-        // Apps Script redirigió (respuesta HTML) — asumimos éxito
-        cleanup();
-        btnEl.disabled = false;
-        btnEl.textContent = btnTextoOriginal;
-        onSuccess({ success: true });
-      }
-    } catch(e) {
-      // Cross-origin block al leer el iframe — ocurre cuando Apps Script redirige
-      // En ese caso la solicitud SÍ llegó al servidor correctamente
-      cleanup();
+  fetch(url, { method: 'GET', redirect: 'follow' })
+    .then(function(r){
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.text();
+    })
+    .then(function(text){
       btnEl.disabled = false;
       btnEl.textContent = btnTextoOriginal;
-      onSuccess({ success: true, _asumido: true });
-    }
-  };
-
-  iframe.onerror = function() {
-    clearTimeout(timeout);
-    cleanup();
-    btnEl.disabled = false;
-    btnEl.textContent = btnTextoOriginal;
-    onError('Error de conexión. Intenta de nuevo.');
-  };
-
-  form.submit();
-
-  function cleanup() {
-    try { document.body.removeChild(form); } catch(e) {}
-    try { document.body.removeChild(iframe); } catch(e) {}
-  }
+      var match = (text || '').match(/\{[\s\S]*\}/);
+      if (match) {
+        try {
+          var res = JSON.parse(match[0]);
+          if (res.success) { onSuccess(res); return; }
+          onError(res.mensaje || 'Error desconocido del servidor.');
+          return;
+        } catch(e) { /* cae al error genérico abajo */ }
+      }
+      onError('No se pudo confirmar el registro con el servidor. Contáctanos por WhatsApp para verificar tu cuenta.');
+    })
+    .catch(function(err){
+      btnEl.disabled = false;
+      btnEl.textContent = btnTextoOriginal;
+      onError('Error de conexión: ' + err.message + '. Contáctanos por WhatsApp si el problema persiste.');
+    });
 }
 
 // ── REGISTRO NUEVO ──────────────────────────────────────────
@@ -823,10 +775,7 @@ function doRegistro(){
   llamarAppScript(
     { action:'registrar', nombre:nombre, usuario:usuario, password:password, email:email, app:appSeleccionada },
     function(res) {
-      var msg = res._asumido
-        ? '✅ ¡Solicitud enviada! Revisa tu correo y envíanos el comprobante de pago por WhatsApp para activarla.'
-        : '✅ ¡Cuenta creada! Revisa tu correo y envíanos el comprobante de pago por WhatsApp para activarla.';
-      mostrarAlerta(msg,'ok');
+      mostrarAlerta(res.mensaje || '✅ ¡Cuenta creada! Revisa tu correo y envíanos el comprobante de pago por WhatsApp para activarla.','ok');
       ['reg-nombre','reg-usuario','reg-password'].forEach(function(id){document.getElementById(id).value='';});
     },
     function(err) { mostrarAlerta(err,'err'); },
@@ -844,10 +793,7 @@ function doAgregarApp(){
   llamarAppScript(
     { action:'agregarapp', usuario:usuario, password:password, app:appSeleccionada },
     function(res) {
-      var msg = res._asumido
-        ? '✅ ¡Solicitud enviada! Revisa tu correo y envíanos el comprobante para activarla.'
-        : (res.mensaje || '✅ App agregada correctamente.');
-      mostrarAlerta(msg,'ok');
+      mostrarAlerta(res.mensaje || '✅ App agregada correctamente.','ok');
       document.getElementById('exist-usuario').value='';
       document.getElementById('exist-password').value='';
     },
