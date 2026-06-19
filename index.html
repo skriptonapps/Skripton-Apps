@@ -658,7 +658,6 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
 
 <script>
 // ── URL del Apps Script ──────────────────────────────────────
-// IMPORTANTE: debe coincidir EXACTAMENTE con el deployment que confirmaste que carga sin pedir login
 var APP_URL = 'https://script.google.com/macros/s/AKfycbzYUBps-12Vgv9ffanreIQ4nlSYD7FBg7VMxqw-_pDjvZ6QsRtg4cNw5O3UcCfhou7zlw/exec';
 
 // ── FAQ ──────────────────────────────────────────────────────
@@ -724,11 +723,15 @@ function mostrarAlerta(msg,tipo){
 }
 
 // ── HELPER: dispara la petición a Apps Script de forma fiable ──
-// Apps Script no permite leer la respuesta cross-origin de forma confiable
-// (CORS bloquea fetch, y el iframe+title es frágil entre navegadores).
-// En su lugar, disparamos la petición con un iframe oculto (sin esperar
-// poder leerla) y confiamos en el envío de correo como confirmación real:
-// el usuario revisa su bandeja de entrada para confirmar que se procesó.
+// FIX: ya no usamos un iframe oculto (eso es lo que fallaba en Brave
+// y en navegadores móviles: bloquean iframes ocultos hacia google.com
+// por protecciones anti-tracking / restricciones de terceros).
+// En su lugar usamos fetch() con mode:'no-cors', que es solo una
+// petición de red — no depende de renderizar nada embebido ni de
+// cookies de terceros, así que no cae en esas protecciones.
+// Sigue sin poder leerse la respuesta real (limitación de CORS con
+// Apps Script en GET cross-origin), por eso el correo sigue siendo
+// la confirmación real del proceso, igual que antes.
 function llamarAppScript(params, onDone, btnEl, btnTextoOriginal) {
   btnEl.disabled = true;
   btnEl.textContent = 'Enviando…';
@@ -738,22 +741,22 @@ function llamarAppScript(params, onDone, btnEl, btnTextoOriginal) {
   }).join('&');
   var url = APP_URL + '?' + qs;
 
-  var iframeId = '_as_frame_' + Date.now();
-  var iframe = document.createElement('iframe');
-  iframe.name = iframeId;
-  iframe.style.display = 'none';
-  iframe.src = url;
-  document.body.appendChild(iframe);
-
-  // Damos tiempo suficiente para que el servidor procese (crear usuario + enviar email)
-  // antes de mostrar el mensaje final. No podemos leer la respuesta real por CORS,
-  // así que el mensaje es siempre "revisa tu correo" — que es la confirmación real.
-  setTimeout(function(){
-    try { document.body.removeChild(iframe); } catch(e){}
+  fetch(url, {
+    method: 'GET',
+    mode: 'no-cors',
+    credentials: 'omit',
+    keepalive: true
+  })
+  .catch(function(){
+    // La respuesta es opaca en no-cors, así que un "error" aquí
+    // normalmente solo significa que no pudimos leerla, no que
+    // la petición no llegó. La dejamos pasar igual.
+  })
+  .then(function(){
     btnEl.disabled = false;
     btnEl.textContent = btnTextoOriginal;
     onDone();
-  }, 3500);
+  });
 }
 
 // ── REGISTRO NUEVO ──────────────────────────────────────────
