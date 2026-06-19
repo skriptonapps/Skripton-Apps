@@ -723,9 +723,10 @@ function mostrarAlerta(msg,tipo){
   a.textContent=msg;a.className='modal-alert '+tipo;a.style.display='block';
 }
 
-// ── HELPER: llamar Apps Script con fetch directo, verificando la respuesta real ──
-// IMPORTANTE: nunca asumimos éxito. Si no podemos confirmar un JSON con
-// success:true desde el servidor, mostramos error explícito.
+// ── HELPER: llamar Apps Script vía iframe, leyendo el resultado desde el <title> ──
+// document.title SÍ es legible cross-origin aunque el body no lo sea.
+// El servidor (Code.gs) debe responder con _respuestaPuente(res), que pone
+// el JSON codificado en el título de la página HTML devuelta.
 function llamarAppScript(params, onSuccess, onError, btnEl, btnTextoOriginal) {
   btnEl.disabled = true;
   btnEl.textContent = 'Procesando…';
@@ -735,30 +736,84 @@ function llamarAppScript(params, onSuccess, onError, btnEl, btnTextoOriginal) {
   }).join('&');
   var url = APP_URL + '?' + qs;
 
-  fetch(url, { method: 'GET', redirect: 'follow' })
-    .then(function(r){
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      return r.text();
-    })
-    .then(function(text){
+  var iframeId = '_as_frame_' + Date.now();
+  var iframe = document.createElement('iframe');
+  iframe.name = iframeId;
+  iframe.style.display = 'none';
+  iframe.src = url;
+  document.body.appendChild(iframe);
+
+  var resuelto = false;
+
+  function finalizar(){
+    try { document.body.removeChild(iframe); } catch(e){}
+  }
+
+  var timeout = setTimeout(function(){
+    if (resuelto) return;
+    resuelto = true;
+    finalizar();
+    btnEl.disabled = false;
+    btnEl.textContent = btnTextoOriginal;
+    onError('Tiempo de espera agotado. Verifica tu conexión o contáctanos por WhatsApp.');
+  }, 20000);
+
+  iframe.onload = function(){
+    if (resuelto) return;
+    var title = '';
+    try { title = iframe.contentDocument.title || ''; }
+    catch(e) { title = ''; }
+
+    var prefix = 'SKRIPTO_RESULT:';
+    if (title.indexOf(prefix) === 0) {
+      resuelto = true;
+      clearTimeout(timeout);
+      finalizar();
       btnEl.disabled = false;
       btnEl.textContent = btnTextoOriginal;
-      var match = (text || '').match(/\{[\s\S]*\}/);
-      if (match) {
-        try {
-          var res = JSON.parse(match[0]);
-          if (res.success) { onSuccess(res); return; }
-          onError(res.mensaje || 'Error desconocido del servidor.');
-          return;
-        } catch(e) { /* cae al error genérico abajo */ }
+      try {
+        var res = JSON.parse(decodeURIComponent(title.slice(prefix.length)));
+        if (res.success) onSuccess(res);
+        else onError(res.mensaje || 'Error desconocido del servidor.');
+      } catch(e) {
+        onError('Respuesta inválida del servidor. Contáctanos por WhatsApp.');
       }
-      onError('No se pudo confirmar el registro con el servidor. Contáctanos por WhatsApp para verificar tu cuenta.');
-    })
-    .catch(function(err){
+      return;
+    }
+    // Si el título no trae nuestro prefijo, puede ser que aún no cargó del todo
+    // (algunos navegadores disparan onload antes de tiempo). Reintentar una vez.
+    setTimeout(function(){
+      if (resuelto) return;
+      var title2 = '';
+      try { title2 = iframe.contentDocument.title || ''; } catch(e) { title2 = ''; }
+      resuelto = true;
+      clearTimeout(timeout);
+      finalizar();
       btnEl.disabled = false;
       btnEl.textContent = btnTextoOriginal;
-      onError('Error de conexión: ' + err.message + '. Contáctanos por WhatsApp si el problema persiste.');
-    });
+      if (title2.indexOf(prefix) === 0) {
+        try {
+          var res2 = JSON.parse(decodeURIComponent(title2.slice(prefix.length)));
+          if (res2.success) onSuccess(res2);
+          else onError(res2.mensaje || 'Error desconocido del servidor.');
+        } catch(e) {
+          onError('Respuesta inválida del servidor. Contáctanos por WhatsApp.');
+        }
+      } else {
+        onError('No se pudo confirmar el registro con el servidor. Contáctanos por WhatsApp.');
+      }
+    }, 1500);
+  };
+
+  iframe.onerror = function(){
+    if (resuelto) return;
+    resuelto = true;
+    clearTimeout(timeout);
+    finalizar();
+    btnEl.disabled = false;
+    btnEl.textContent = btnTextoOriginal;
+    onError('Error de conexión. Contáctanos por WhatsApp si el problema persiste.');
+  };
 }
 
 // ── REGISTRO NUEVO ──────────────────────────────────────────
