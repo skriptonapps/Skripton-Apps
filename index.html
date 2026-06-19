@@ -659,7 +659,7 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
 <script>
 // ── URL del Apps Script ──────────────────────────────────────
 // IMPORTANTE: debe coincidir EXACTAMENTE con el deployment que confirmaste que carga sin pedir login
-var APP_URL = 'https://script.google.com/macros/s/AKfycbzEj4EfHSaB-99f4dplPz58_BC5uLK4JxA0r1DdsCOMQ42iFlxaCmJ5h_KAAh9WxO28mQ/exec';
+var APP_URL = 'https://script.google.com/macros/s/AKfycbx0xkiFXloPIUczA5JrSBeOOzTz0ZL5fDQl8vF8lLXgVMeYa5OGXfULwuu0KcVwTkodqA/exec';
 
 // ── FAQ ──────────────────────────────────────────────────────
 function toggleFaq(btn){
@@ -723,13 +723,15 @@ function mostrarAlerta(msg,tipo){
   a.textContent=msg;a.className='modal-alert '+tipo;a.style.display='block';
 }
 
-// ── HELPER: llamar Apps Script vía iframe, leyendo el resultado desde el <title> ──
-// document.title SÍ es legible cross-origin aunque el body no lo sea.
-// El servidor (Code.gs) debe responder con _respuestaPuente(res), que pone
-// el JSON codificado en el título de la página HTML devuelta.
-function llamarAppScript(params, onSuccess, onError, btnEl, btnTextoOriginal) {
+// ── HELPER: dispara la petición a Apps Script de forma fiable ──
+// Apps Script no permite leer la respuesta cross-origin de forma confiable
+// (CORS bloquea fetch, y el iframe+title es frágil entre navegadores).
+// En su lugar, disparamos la petición con un iframe oculto (sin esperar
+// poder leerla) y confiamos en el envío de correo como confirmación real:
+// el usuario revisa su bandeja de entrada para confirmar que se procesó.
+function llamarAppScript(params, onDone, btnEl, btnTextoOriginal) {
   btnEl.disabled = true;
-  btnEl.textContent = 'Procesando…';
+  btnEl.textContent = 'Enviando…';
 
   var qs = Object.keys(params).map(function(k){
     return encodeURIComponent(k) + '=' + encodeURIComponent(params[k]);
@@ -743,77 +745,15 @@ function llamarAppScript(params, onSuccess, onError, btnEl, btnTextoOriginal) {
   iframe.src = url;
   document.body.appendChild(iframe);
 
-  var resuelto = false;
-
-  function finalizar(){
+  // Damos tiempo suficiente para que el servidor procese (crear usuario + enviar email)
+  // antes de mostrar el mensaje final. No podemos leer la respuesta real por CORS,
+  // así que el mensaje es siempre "revisa tu correo" — que es la confirmación real.
+  setTimeout(function(){
     try { document.body.removeChild(iframe); } catch(e){}
-  }
-
-  var timeout = setTimeout(function(){
-    if (resuelto) return;
-    resuelto = true;
-    finalizar();
     btnEl.disabled = false;
     btnEl.textContent = btnTextoOriginal;
-    onError('Tiempo de espera agotado. Verifica tu conexión o contáctanos por WhatsApp.');
-  }, 20000);
-
-  iframe.onload = function(){
-    if (resuelto) return;
-    var title = '';
-    try { title = iframe.contentDocument.title || ''; }
-    catch(e) { title = ''; }
-
-    var prefix = 'SKRIPTO_RESULT:';
-    if (title.indexOf(prefix) === 0) {
-      resuelto = true;
-      clearTimeout(timeout);
-      finalizar();
-      btnEl.disabled = false;
-      btnEl.textContent = btnTextoOriginal;
-      try {
-        var res = JSON.parse(decodeURIComponent(title.slice(prefix.length)));
-        if (res.success) onSuccess(res);
-        else onError(res.mensaje || 'Error desconocido del servidor.');
-      } catch(e) {
-        onError('Respuesta inválida del servidor. Contáctanos por WhatsApp.');
-      }
-      return;
-    }
-    // Si el título no trae nuestro prefijo, puede ser que aún no cargó del todo
-    // (algunos navegadores disparan onload antes de tiempo). Reintentar una vez.
-    setTimeout(function(){
-      if (resuelto) return;
-      var title2 = '';
-      try { title2 = iframe.contentDocument.title || ''; } catch(e) { title2 = ''; }
-      resuelto = true;
-      clearTimeout(timeout);
-      finalizar();
-      btnEl.disabled = false;
-      btnEl.textContent = btnTextoOriginal;
-      if (title2.indexOf(prefix) === 0) {
-        try {
-          var res2 = JSON.parse(decodeURIComponent(title2.slice(prefix.length)));
-          if (res2.success) onSuccess(res2);
-          else onError(res2.mensaje || 'Error desconocido del servidor.');
-        } catch(e) {
-          onError('Respuesta inválida del servidor. Contáctanos por WhatsApp.');
-        }
-      } else {
-        onError('No se pudo confirmar el registro con el servidor. Contáctanos por WhatsApp.');
-      }
-    }, 1500);
-  };
-
-  iframe.onerror = function(){
-    if (resuelto) return;
-    resuelto = true;
-    clearTimeout(timeout);
-    finalizar();
-    btnEl.disabled = false;
-    btnEl.textContent = btnTextoOriginal;
-    onError('Error de conexión. Contáctanos por WhatsApp si el problema persiste.');
-  };
+    onDone();
+  }, 3500);
 }
 
 // ── REGISTRO NUEVO ──────────────────────────────────────────
@@ -829,11 +769,10 @@ function doRegistro(){
   var btn=document.getElementById('btn-reg-main');
   llamarAppScript(
     { action:'registrar', nombre:nombre, usuario:usuario, password:password, email:email, app:appSeleccionada },
-    function(res) {
-      mostrarAlerta(res.mensaje || '✅ ¡Cuenta creada! Revisa tu correo y envíanos el comprobante de pago por WhatsApp para activarla.','ok');
+    function() {
+      mostrarAlerta('📧 Solicitud enviada. Revisa tu correo ('+email+') en los próximos segundos para confirmar tu registro. Si tu usuario ya existía, el correo te lo indicará.','ok');
       ['reg-nombre','reg-usuario','reg-password'].forEach(function(id){document.getElementById(id).value='';});
     },
-    function(err) { mostrarAlerta(err,'err'); },
     btn, 'Crear cuenta →'
   );
 }
@@ -847,12 +786,11 @@ function doAgregarApp(){
   var btn=document.getElementById('btn-agregar-app');
   llamarAppScript(
     { action:'agregarapp', usuario:usuario, password:password, app:appSeleccionada },
-    function(res) {
-      mostrarAlerta(res.mensaje || '✅ App agregada correctamente.','ok');
+    function() {
+      mostrarAlerta('📧 Solicitud enviada. Revisa tu correo para confirmar. Si el usuario o contraseña no eran correctos, no se hizo ningún cambio.','ok');
       document.getElementById('exist-usuario').value='';
       document.getElementById('exist-password').value='';
     },
-    function(err) { mostrarAlerta(err,'err'); },
     btn, 'Agregar app a mi cuenta →'
   );
 }
