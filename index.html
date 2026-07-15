@@ -96,8 +96,10 @@ section{padding:96px 40px}
 .app-feature{display:flex;align-items:flex-start;gap:9px;font-size:12.5px;color:var(--ink2)}
 .app-feature::before{content:'✓';color:var(--green);font-weight:700;font-size:12px;flex-shrink:0;margin-top:1px}
 .app-feature.blue-check::before{color:var(--blue)}
-.app-card-footer{display:flex;align-items:center;padding-top:16px;border-top:1px solid var(--border)}
+.app-card-footer{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding-top:16px;border-top:1px solid var(--border)}
 .app-price-num{font-family:var(--font-serif);font-size:28px;color:var(--ink)}
+.app-price-trial{font-size:11.5px;font-weight:700;color:var(--green2);background:var(--green3);border:1px solid rgba(15,158,110,.25);border-radius:20px;padding:3px 10px;display:inline-flex;align-items:center;gap:5px}
+.app-price-trial.blue-trial{color:var(--blue);background:var(--blue3);border-color:rgba(26,86,219,.25)}
 .app-badge-new{position:absolute;top:18px;right:18px;background:var(--green3);border:1px solid rgba(15,158,110,.3);border-radius:20px;padding:3px 11px;font-size:10px;font-weight:700;color:var(--green2);text-transform:uppercase;letter-spacing:.08em}
 .app-card-soon{opacity:.55;cursor:not-allowed;background:var(--bg3)}
 .app-card-soon:hover{transform:none;box-shadow:none;border-color:var(--border)}
@@ -123,6 +125,8 @@ section{padding:96px 40px}
 .plan-features{display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
 .plan-feature{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink2)}
 .plan-feature-check{width:20px;height:20px;background:var(--green3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--green2);font-weight:700;flex-shrink:0}
+.plan-feature.highlight{font-weight:600;color:var(--green2)}
+.plan-feature.highlight .plan-feature-check{background:var(--green);color:#fff}
 .plan-divider{border-top:1px solid var(--border);padding-top:24px;margin-top:4px}
 .plan-divider-label{font-size:11px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px}
 .app-selector{display:flex;flex-direction:column;gap:8px}
@@ -144,6 +148,7 @@ section{padding:96px 40px}
 .app-selector-tag.avail-green{color:var(--green2);background:rgba(15,158,110,.12)}
 .app-selector-tag.avail-blue{color:var(--blue);background:rgba(26,86,219,.12)}
 .app-selector-tag.soon-tag{color:var(--ink3);background:var(--bg4)}
+.pago-intro-box{background:var(--green3);border:1.5px solid rgba(15,158,110,.25);border-radius:var(--r2);padding:14px 18px;font-size:13px;color:var(--green2);margin-bottom:20px;line-height:1.6}
 .pago-steps{display:flex;flex-direction:column;gap:12px;margin-bottom:24px}
 .pago-step{display:flex;gap:14px;align-items:flex-start;background:#fff;border:1.5px solid var(--border);border-radius:var(--r2);padding:16px 18px;transition:border-color .2s}
 .pago-step:hover{border-color:var(--green)}
@@ -230,6 +235,7 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
 .modal-alert.ok{background:var(--green3);color:var(--green2);border-color:var(--green)}
 .modal-alert.err{background:#FEF2F2;color:#B91C1C;border-color:#EF4444}
 .modal-footer-txt{text-align:center;margin-top:16px;font-size:12px;color:var(--ink3)}
+.modal-footer-txt strong{color:var(--green2)}
 .app-picker{display:flex;flex-direction:column;gap:8px;margin-top:4px}
 .app-pick-btn{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:var(--r);border:1.5px solid var(--border2);background:#fff;cursor:pointer;transition:all .2s;text-align:left;width:100%;font-family:var(--font-sans)}
 .app-pick-btn:hover{border-color:var(--green);background:var(--green3)}
@@ -314,12 +320,12 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
   <div class="hero-glow"></div>
   <div class="hero-badge anim-fade-up">
     <span class="hero-badge-dot"></span>
-    Soluciones digitales
+    🎁 3 días gratis · sin tarjeta
   </div>
   <h1 class="anim-fade-up anim-delay-1">Herramientas que<br><em>simplifican</em> tu negocio</h1>
-  <p class="hero-sub anim-fade-up anim-delay-2">Aplicaciones web diseñadas para todo tipo de negocio. Sin complicaciones, sin instalaciones. Solo resultados.</p>
+  <p class="hero-sub anim-fade-up anim-delay-2">Aplicaciones web diseñadas para todo tipo de negocio. Regístrate y empieza a usarlas de inmediato con 3 días de prueba gratis, sin complicaciones y sin instalaciones.</p>
   <div class="hero-actions anim-fade-up anim-delay-3">
-    <button class="btn-hero-primary" onclick="abrirModal()">Comenzar ahora</button>
+    <button class="btn-hero-primary" onclick="abrirModal()">Comenzar gratis</button>
     <a href="#como" class="btn-hero-secondary">¿Cómo funciona?</a>
   </div>
   <div class="hero-stats anim-fade-up anim-delay-4">
@@ -328,8 +334,8 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
       <span class="hero-stat-lbl">Web, sin instalar</span>
     </div>
     <div class="hero-stat">
-      <span class="hero-stat-num"><span id="stat-hrs">0</span>h</span>
-      <span class="hero-stat-lbl">Activación</span>
+      <span class="hero-stat-num"><span id="stat-hrs">0</span></span>
+      <span class="hero-stat-lbl">Días de prueba gratis</span>
     </div>
     <div class="hero-stat">
       <span class="hero-stat-num"><span id="stat-apps">0</span></span>
@@ -344,7 +350,7 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
     <div class="section-header reveal" style="text-align:center;display:flex;flex-direction:column;align-items:center">
       <div class="section-badge">Aplicaciones</div>
       <h2 class="section-title">Nuestras herramientas</h2>
-      <p class="section-sub">Cada app resuelve un problema real de tu negocio. Paga solo lo que usas.</p>
+      <p class="section-sub">Cada app resuelve un problema real de tu negocio. Pruébala gratis 3 días, luego paga solo lo que usas.</p>
     </div>
     <div class="apps-grid">
       <div class="app-card reveal" style="transition-delay:.05s">
@@ -360,6 +366,7 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
           <div class="app-feature">Funciona desde el celular sin instalar nada</div>
         </div>
         <div class="app-card-footer">
+          <span class="app-price-trial">🎁 3 días gratis primero</span>
           <div class="app-price-num">$10 USD<span style="font-size:13px;color:var(--ink3);font-family:var(--font-sans);font-weight:400">/mes</span></div>
         </div>
       </div>
@@ -377,6 +384,7 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
           <div class="app-feature blue-check">Exportación en PDF por factura o reporte general</div>
         </div>
         <div class="app-card-footer">
+          <span class="app-price-trial blue-trial">🎁 3 días gratis primero</span>
           <div class="app-price-num">$20 USD<span style="font-size:13px;color:var(--ink3);font-family:var(--font-sans);font-weight:400">/mes</span></div>
         </div>
       </div>
@@ -404,7 +412,7 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
     <div class="section-header reveal" style="text-align:center;display:flex;flex-direction:column;align-items:center">
       <div class="section-badge">Proceso</div>
       <h2 class="section-title">¿Cómo funciona?</h2>
-      <p class="section-sub">En menos de 24 horas tienes tu sistema listo para usar.</p>
+      <p class="section-sub">Tu cuenta queda activa al instante. El pago solo lo necesitas si decides seguir después de la prueba gratis.</p>
     </div>
     <div class="steps-grid">
       <div class="step reveal" style="transition-delay:.05s">
@@ -414,22 +422,22 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
         <div class="step-desc">Crea tu cuenta con el nombre de tu negocio, usuario y contraseña.</div>
       </div>
       <div class="step reveal" style="transition-delay:.1s">
-        <div class="step-circle"><span>💳</span></div>
+        <div class="step-circle"><span>🎁</span></div>
         <div class="step-num">Paso 02</div>
-        <div class="step-title">Realiza el pago</div>
-        <div class="step-desc">Transfiere por Nequi o Bancolombia y envíanos el comprobante.</div>
+        <div class="step-title">Usa 3 días gratis</div>
+        <div class="step-desc">Tu cuenta queda activa de inmediato. No necesitas pagar nada todavía.</div>
       </div>
       <div class="step reveal" style="transition-delay:.15s">
-        <div class="step-circle"><span>✅</span></div>
+        <div class="step-circle"><span>💳</span></div>
         <div class="step-num">Paso 03</div>
-        <div class="step-title">Activamos tu cuenta</div>
-        <div class="step-desc">En menos de 24 horas activamos y recibes un correo con el acceso.</div>
+        <div class="step-title">Realiza el pago</div>
+        <div class="step-desc">Antes de que termine la prueba, transfiere por Nequi o Bancolombia si quieres continuar.</div>
       </div>
       <div class="step reveal" style="transition-delay:.2s">
         <div class="step-circle"><span>🚀</span></div>
         <div class="step-num">Paso 04</div>
-        <div class="step-title">¡A usar tu app!</div>
-        <div class="step-desc">Ingresa con tu usuario desde cualquier navegador o celular.</div>
+        <div class="step-title">Sigue sin interrupciones</div>
+        <div class="step-desc">Envíanos el comprobante y tu acceso continúa activo sin pausas.</div>
       </div>
     </div>
   </div>
@@ -441,10 +449,11 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
     <div class="reveal">
       <div class="section-badge">Precios</div>
       <h2 class="section-title">Simple y transparente</h2>
-      <p class="section-sub" style="margin-bottom:28px">Un solo precio por app, sin sorpresas. Cancela cuando quieras.</p>
+      <p class="section-sub" style="margin-bottom:28px">Un solo precio por app, sin sorpresas. Empieza gratis, cancela cuando quieras.</p>
       <div class="plan-card">
         <div style="font-size:11px;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Plan mensual por app</div>
         <div class="plan-features">
+          <div class="plan-feature highlight"><div class="plan-feature-check">✓</div>🎁 3 días de prueba gratis, sin tarjeta</div>
           <div class="plan-feature"><div class="plan-feature-check">✓</div>Acceso completo a la app</div>
           <div class="plan-feature"><div class="plan-feature-check">✓</div>Datos siempre respaldados</div>
           <div class="plan-feature"><div class="plan-feature-check">✓</div>Soporte por WhatsApp</div>
@@ -452,14 +461,14 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
           <div class="plan-feature"><div class="plan-feature-check">✓</div>Cancela cuando quieras</div>
         </div>
         <div class="plan-divider">
-          <div class="plan-divider-label">¿Qué app quieres activar?</div>
+          <div class="plan-divider-label">¿Qué app quieres activar gratis?</div>
           <div class="app-selector">
             <a href="#" class="app-selector-item available" onclick="abrirModal('inventario');return false">
               <div class="app-selector-left">
                 <span class="app-selector-emoji">📦</span>
                 <div>
                   <div class="app-selector-name">Inventario</div>
-                  <div class="app-selector-sub green">Disponible · $10 USD/mes</div>
+                  <div class="app-selector-sub green">🎁 3 días gratis · luego $10 USD/mes</div>
                 </div>
               </div>
               <span class="app-selector-tag avail-green">Registrarme →</span>
@@ -469,7 +478,7 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
                 <span class="app-selector-emoji">📊</span>
                 <div>
                   <div class="app-selector-name">Facturación</div>
-                  <div class="app-selector-sub blue-c">Disponible · $20 USD/mes</div>
+                  <div class="app-selector-sub blue-c">🎁 3 días gratis · luego $20 USD/mes</div>
                 </div>
               </div>
               <span class="app-selector-tag avail-blue">Registrarme →</span>
@@ -491,15 +500,18 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
     <div class="reveal" style="transition-delay:.1s">
       <div class="section-badge">Métodos de pago</div>
       <h2 class="section-title" style="font-size:32px;margin-bottom:8px">¿Cómo pagar?</h2>
-      <p class="section-sub" style="margin-bottom:24px;font-size:14px">Transferencia directa, sin plataformas intermediarias.</p>
+      <p class="section-sub" style="margin-bottom:20px;font-size:14px">Transferencia directa, sin plataformas intermediarias.</p>
+      <div class="pago-intro-box">
+        🎁 <strong>No necesitas pagar para empezar.</strong> Tu cuenta se activa gratis por 3 días apenas te registras. Solo paga si decides seguir usando la app después de la prueba.
+      </div>
       <div class="pago-steps">
         <div class="pago-step">
           <div class="pago-step-num">1</div>
-          <div><div class="pago-step-title">Regístrate primero</div><div class="pago-step-desc">Crea tu cuenta en la app que quieres usar.</div></div>
+          <div><div class="pago-step-title">Regístrate primero</div><div class="pago-step-desc">Crea tu cuenta gratis en la app que quieres usar.</div></div>
         </div>
         <div class="pago-step">
           <div class="pago-step-num">2</div>
-          <div><div class="pago-step-title">Transfiere</div><div class="pago-step-desc">Por Nequi o Bancolombia a los datos de abajo.</div></div>
+          <div><div class="pago-step-title">Transfiere</div><div class="pago-step-desc">Por Nequi o Bancolombia a los datos de abajo (solo si quieres continuar tras la prueba).</div></div>
         </div>
         <div class="pago-step">
           <div class="pago-step-num">3</div>
@@ -539,21 +551,25 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
     <div class="faq-list">
       <div class="faq-item reveal">
         <button class="faq-q" onclick="toggleFaq(this)">¿En cuánto tiempo activan mi cuenta?<div class="faq-chevron">▾</div></button>
-        <div class="faq-a"><div class="faq-a-inner">En menos de 24 horas después de recibir tu comprobante. En horario laboral generalmente es mucho más rápido.</div></div>
+        <div class="faq-a"><div class="faq-a-inner">¡Al instante! Apenas te registras, tu cuenta queda activa con 3 días de prueba gratis, sin necesidad de pago. Si luego decides continuar, activamos tu suscripción en menos de 24 horas después de recibir tu comprobante.</div></div>
       </div>
       <div class="faq-item reveal" style="transition-delay:.05s">
+        <button class="faq-q" onclick="toggleFaq(this)">¿Necesito pagar para empezar a usar la app?<div class="faq-chevron">▾</div></button>
+        <div class="faq-a"><div class="faq-a-inner">No. Al registrarte tienes 3 días de prueba completamente gratis, sin tarjeta y sin compromisos. Solo debes pagar si quieres seguir usando la app una vez termine ese período.</div></div>
+      </div>
+      <div class="faq-item reveal" style="transition-delay:.1s">
         <button class="faq-q" onclick="toggleFaq(this)">¿Puedo tener varias apps al mismo tiempo?<div class="faq-chevron">▾</div></button>
         <div class="faq-a"><div class="faq-a-inner">Sí. Cada app tiene su propia suscripción. Si ya tienes cuenta, usa la opción "Ya tengo cuenta" para agregar la nueva app con el mismo usuario y contraseña.</div></div>
       </div>
-      <div class="faq-item reveal" style="transition-delay:.1s">
-        <button class="faq-q" onclick="toggleFaq(this)">¿Qué pasa si no renuevo?<div class="faq-chevron">▾</div></button>
-        <div class="faq-a"><div class="faq-a-inner">Tu cuenta se inactiva pero tus datos no se borran. Cuando renueves, todo estará exactamente igual.</div></div>
-      </div>
       <div class="faq-item reveal" style="transition-delay:.15s">
+        <button class="faq-q" onclick="toggleFaq(this)">¿Qué pasa si no renuevo o no pago tras la prueba?<div class="faq-chevron">▾</div></button>
+        <div class="faq-a"><div class="faq-a-inner">Tu cuenta se inactiva automáticamente al terminar la prueba o la suscripción, pero tus datos no se borran. Cuando actives tu pago, todo estará exactamente igual.</div></div>
+      </div>
+      <div class="faq-item reveal" style="transition-delay:.2s">
         <button class="faq-q" onclick="toggleFaq(this)">¿Necesito instalar algo?<div class="faq-chevron">▾</div></button>
         <div class="faq-a"><div class="faq-a-inner">No. Todas las aplicaciones son 100% web. Solo necesitas un navegador y conexión a internet.</div></div>
       </div>
-      <div class="faq-item reveal" style="transition-delay:.2s">
+      <div class="faq-item reveal" style="transition-delay:.25s">
         <button class="faq-q" onclick="toggleFaq(this)">¿Hay soporte si tengo problemas?<div class="faq-chevron">▾</div></button>
         <div class="faq-a"><div class="faq-a-inner">Sí. Puedes escribirnos por WhatsApp y te respondemos en el menor tiempo posible.</div></div>
       </div>
@@ -600,7 +616,7 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
     <div class="modal-header">
       <span class="modal-icon" id="modal-icon-display">🚀</span>
       <div class="modal-title">Crear cuenta</div>
-      <div class="modal-subtitle">Selecciona la app y completa el registro</div>
+      <div class="modal-subtitle">Selecciona la app y completa el registro · 🎁 3 días gratis</div>
     </div>
     <div class="step-toggle">
       <button class="step-toggle-btn active" id="stab-nuevo" onclick="cambiarFlujo('nuevo')">Soy nuevo</button>
@@ -650,7 +666,7 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
         <input type="password" id="reg-password" placeholder="Mínimo 6 caracteres"
           onkeydown="if(event.key==='Enter')doRegistro()">
       </div>
-      <button class="btn-modal-primary" id="btn-reg-main" onclick="doRegistro()">Crear cuenta →</button>
+      <button class="btn-modal-primary" id="btn-reg-main" onclick="doRegistro()">Crear cuenta gratis →</button>
     </div>
     <!-- FLUJO EXISTENTE -->
     <div class="modal-step" id="step-existente">
@@ -669,7 +685,7 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
       </div>
       <button class="btn-modal-primary" id="btn-agregar-app" onclick="doAgregarApp()">Agregar app a mi cuenta →</button>
     </div>
-    <div class="modal-footer-txt">Después del registro realiza el pago para activar tu suscripción.</div>
+    <div class="modal-footer-txt">🎁 <strong>Tu cuenta queda activa de inmediato</strong> con 3 días de prueba gratis, sin necesidad de pago.</div>
   </div>
 </div>
 
@@ -790,10 +806,10 @@ function doRegistro(){
   llamarAppScript(
     { action:'registrar', nombre:nombre, usuario:usuario, password:password, email:email, app:appSeleccionada },
     function() {
-      mostrarAlerta('📧 Solicitud enviada. Revisa tu correo ('+email+') en los próximos segundos para confirmar tu registro. Si tu usuario ya existía, el correo te lo indicará.','ok');
+      mostrarAlerta('🎉 ¡Registro enviado! Revisa tu correo ('+email+') en los próximos segundos: si es tu primera vez, tu cuenta ya está activa con 3 días de prueba gratis y puedes iniciar sesión de inmediato.','ok');
       ['reg-nombre','reg-usuario','reg-password'].forEach(function(id){document.getElementById(id).value='';});
     },
-    btn, 'Crear cuenta →'
+    btn, 'Crear cuenta gratis →'
   );
 }
 
@@ -848,7 +864,7 @@ var statsObs=new IntersectionObserver(function(entries){
   entries.forEach(function(e){
     if(e.isIntersecting){
       animarContador(document.getElementById('stat-pct'),0,100,1800);
-      animarContador(document.getElementById('stat-hrs'),0,24,1400);
+      animarContador(document.getElementById('stat-hrs'),0,3,900);
       animarContador(document.getElementById('stat-apps'),0,2,900);
       statsObs.disconnect();
     }
