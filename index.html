@@ -13,6 +13,7 @@
   --green:#0F9E6E;--green2:#0A7A54;--green3:#E6F7F1;--green4:#D0F0E4;
   --blue:#1A56DB;--blue2:#1E3A8A;--blue3:#EEF2FF;--blue4:#BFDBFE;
   --amber:#D97706;--amber2:#FEF3C7;
+  --purple:#7C3AED;--purple2:#5B21B6;--purple3:#F5F3FF;--purple4:#DDD6FE;
   --border:#E2E8F0;--border2:#CBD5E1;
   --shadow-sm:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
   --shadow:0 4px 16px rgba(0,0,0,.07),0 1px 4px rgba(0,0,0,.04);
@@ -87,19 +88,24 @@ section{padding:96px 40px}
 .app-card:hover::before{opacity:1}
 .app-card.blue-card:hover{border-color:rgba(26,86,219,.4)}
 .app-card.blue-card::before{background:linear-gradient(135deg,rgba(26,86,219,.04) 0%,transparent 60%)}
+.app-card.purple-card:hover{border-color:rgba(124,58,237,.4)}
+.app-card.purple-card::before{background:linear-gradient(135deg,rgba(124,58,237,.04) 0%,transparent 60%)}
 .app-card-icon{width:56px;height:56px;background:var(--green3);border:1.5px solid rgba(15,158,110,.2);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:20px;transition:transform .3s}
 .app-card:hover .app-card-icon{transform:rotate(-8deg) scale(1.1)}
 .app-card-icon.blue{background:var(--blue3);border-color:rgba(26,86,219,.2)}
+.app-card-icon.purple{background:var(--purple3);border-color:rgba(124,58,237,.2)}
 .app-card-name{font-size:19px;font-weight:700;color:var(--ink);margin-bottom:8px}
 .app-card-desc{font-size:13px;color:var(--ink2);line-height:1.65;margin-bottom:20px}
 .app-card-features{display:flex;flex-direction:column;gap:7px;margin-bottom:24px}
 .app-feature{display:flex;align-items:flex-start;gap:9px;font-size:12.5px;color:var(--ink2)}
 .app-feature::before{content:'✓';color:var(--green);font-weight:700;font-size:12px;flex-shrink:0;margin-top:1px}
 .app-feature.blue-check::before{color:var(--blue)}
+.app-feature.purple-check::before{color:var(--purple)}
 .app-card-footer{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding-top:16px;border-top:1px solid var(--border)}
 .app-price-num{font-family:var(--font-serif);font-size:28px;color:var(--ink)}
 .app-price-trial{font-size:11.5px;font-weight:700;color:var(--green2);background:var(--green3);border:1px solid rgba(15,158,110,.25);border-radius:20px;padding:3px 10px;display:inline-flex;align-items:center;gap:5px}
 .app-price-trial.blue-trial{color:var(--blue);background:var(--blue3);border-color:rgba(26,86,219,.25)}
+.app-price-trial.purple-trial{color:var(--purple2);background:var(--purple3);border-color:rgba(124,58,237,.25)}
 .app-badge-new{position:absolute;top:18px;right:18px;background:var(--green3);border:1px solid rgba(15,158,110,.3);border-radius:20px;padding:3px 11px;font-size:10px;font-weight:700;color:var(--green2);text-transform:uppercase;letter-spacing:.08em}
 .app-card-soon{opacity:.55;cursor:not-allowed;background:var(--bg3)}
 .app-card-soon:hover{transform:none;box-shadow:none;border-color:var(--border)}
@@ -135,6 +141,8 @@ section{padding:96px 40px}
 .app-selector-item.available:hover{border-color:var(--green);background:var(--green4);transform:translateX(4px)}
 .app-selector-item.available.blue-sel{background:var(--blue3);border-color:rgba(26,86,219,.3)}
 .app-selector-item.available.blue-sel:hover{border-color:var(--blue);background:var(--blue4)}
+.app-selector-item.available.purple-sel{background:var(--purple3);border-color:rgba(124,58,237,.3)}
+.app-selector-item.available.purple-sel:hover{border-color:var(--purple);background:var(--purple4)}
 .app-selector-item.soon{background:var(--bg3);border-color:var(--border);opacity:.45;cursor:not-allowed}
 .app-selector-left{display:flex;align-items:center;gap:12px}
 .app-selector-emoji{font-size:22px;transition:transform .3s}
@@ -143,10 +151,12 @@ section{padding:96px 40px}
 .app-selector-sub{font-size:11px;margin-top:1px}
 .app-selector-sub.green{color:var(--green2)}
 .app-selector-sub.blue-c{color:var(--blue)}
+.app-selector-sub.purple-c{color:var(--purple)}
 .app-selector-sub.muted{color:var(--ink3)}
 .app-selector-tag{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px}
 .app-selector-tag.avail-green{color:var(--green2);background:rgba(15,158,110,.12)}
 .app-selector-tag.avail-blue{color:var(--blue);background:rgba(26,86,219,.12)}
+.app-selector-tag.avail-purple{color:var(--purple2);background:rgba(124,58,237,.12)}
 .app-selector-tag.soon-tag{color:var(--ink3);background:var(--bg4)}
 .pago-intro-box{background:var(--green3);border:1.5px solid rgba(15,158,110,.25);border-radius:var(--r2);padding:14px 18px;font-size:13px;color:var(--green2);margin-bottom:20px;line-height:1.6}
 .pago-steps{display:flex;flex-direction:column;gap:12px;margin-bottom:24px}
@@ -230,6 +240,8 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
 .btn-modal-primary:hover{background:var(--green2);box-shadow:0 6px 20px rgba(15,158,110,.35);transform:translateY(-1px)}
 .btn-modal-primary.blue{background:var(--blue);box-shadow:0 3px 12px rgba(26,86,219,.25)}
 .btn-modal-primary.blue:hover{background:var(--blue2)}
+.btn-modal-primary.purple{background:var(--purple);box-shadow:0 3px 12px rgba(124,58,237,.25)}
+.btn-modal-primary.purple:hover{background:var(--purple2)}
 .btn-modal-primary:disabled{background:var(--ink3);cursor:not-allowed;transform:none;box-shadow:none}
 .modal-alert{padding:10px 14px;border-radius:var(--r);font-size:13px;margin-bottom:14px;display:none;border-left:3px solid}
 .modal-alert.ok{background:var(--green3);color:var(--green2);border-color:var(--green)}
@@ -242,14 +254,17 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
 .app-pick-btn.active{border-color:var(--green);background:var(--green3);box-shadow:0 0 0 3px rgba(15,158,110,.1)}
 .app-pick-btn.active-blue{border-color:var(--blue);background:var(--blue3);box-shadow:0 0 0 3px rgba(26,86,219,.1)}
 .app-pick-btn.active-blue:hover{border-color:var(--blue);background:var(--blue3)}
+.app-pick-btn.active-purple{border-color:var(--purple);background:var(--purple3);box-shadow:0 0 0 3px rgba(124,58,237,.1)}
+.app-pick-btn.active-purple:hover{border-color:var(--purple);background:var(--purple3)}
 .app-pick-emoji{font-size:22px;flex-shrink:0;transition:transform .2s}
-.app-pick-btn:hover .app-pick-emoji,.app-pick-btn.active .app-pick-emoji,.app-pick-btn.active-blue .app-pick-emoji{transform:scale(1.15)}
+.app-pick-btn:hover .app-pick-emoji,.app-pick-btn.active .app-pick-emoji,.app-pick-btn.active-blue .app-pick-emoji,.app-pick-btn.active-purple .app-pick-emoji{transform:scale(1.15)}
 .app-pick-info{flex:1}
 .app-pick-name{font-size:13px;font-weight:600;color:var(--ink)}
 .app-pick-sub{font-size:11px;color:var(--ink3);margin-top:1px}
 .app-pick-check{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:transparent;transition:all .2s;flex-shrink:0}
 .app-pick-btn.active .app-pick-check{background:var(--green);border-color:var(--green);color:#fff}
 .app-pick-btn.active-blue .app-pick-check{background:var(--blue);border-color:var(--blue);color:#fff}
+.app-pick-btn.active-purple .app-pick-check{background:var(--purple);border-color:var(--purple);color:#fff}
 
 /* ── RESPONSIVE ── */
 @media(max-width:900px){
@@ -388,7 +403,24 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
           <div class="app-price-num">$70.000 COP<span style="font-size:13px;color:var(--ink3);font-family:var(--font-sans);font-weight:400">/mes</span></div>
         </div>
       </div>
-      <div class="app-card app-card-soon reveal" style="transition-delay:.15s">
+      <div class="app-card purple-card reveal" style="transition-delay:.15s">
+        <div class="app-badge-new" style="background:var(--purple3);color:var(--purple2);border-color:rgba(124,58,237,.25)">Disponible</div>
+        <div class="app-card-icon purple">📁</div>
+        <div class="app-card-name">Expedientes</div>
+        <div class="app-card-desc">Gestión de casos para abogados, contadores y consultores. Organiza clientes, casos y vencimientos en un solo lugar, sin volver a olvidar una fecha límite.</div>
+        <div class="app-card-features">
+          <div class="app-feature purple-check">Clientes y casos organizados por expediente</div>
+          <div class="app-feature purple-check">Alertas automáticas de vencimientos por correo (7, 3 y 1 día antes)</div>
+          <div class="app-feature purple-check">Registro de tiempo por caso con tarifa opcional</div>
+          <div class="app-feature purple-check">Panel con próximos vencimientos ordenados por urgencia</div>
+          <div class="app-feature purple-check">Funciona desde el celular sin instalar nada</div>
+        </div>
+        <div class="app-card-footer">
+          <span class="app-price-trial purple-trial">🎁 3 días gratis primero</span>
+          <div class="app-price-num">$35.000 COP<span style="font-size:13px;color:var(--ink3);font-family:var(--font-sans);font-weight:400">/mes</span></div>
+        </div>
+      </div>
+      <div class="app-card app-card-soon reveal" style="transition-delay:.2s">
         <div class="app-badge-soon">Próximamente</div>
         <div class="app-card-icon" style="background:var(--bg4);border-color:var(--border)">👥</div>
         <div class="app-card-name">Clientes</div>
@@ -482,6 +514,16 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
                 </div>
               </div>
               <span class="app-selector-tag avail-blue">Registrarme →</span>
+            </a>
+            <a href="#" class="app-selector-item available purple-sel" onclick="abrirModal('expedientes');return false">
+              <div class="app-selector-left">
+                <span class="app-selector-emoji">📁</span>
+                <div>
+                  <div class="app-selector-name">Expedientes</div>
+                  <div class="app-selector-sub purple-c">🎁 3 días gratis · luego $35.000 COP/mes</div>
+                </div>
+              </div>
+              <span class="app-selector-tag avail-purple">Registrarme →</span>
             </a>
             <div class="app-selector-item soon">
               <div class="app-selector-left">
@@ -641,6 +683,14 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
           </div>
           <span class="app-pick-check" id="check-finanzas"></span>
         </button>
+        <button class="app-pick-btn" id="pick-expedientes" onclick="seleccionarApp('expedientes')">
+          <span class="app-pick-emoji">📁</span>
+          <div class="app-pick-info">
+            <div class="app-pick-name">Expedientes</div>
+            <div class="app-pick-sub">Casos, vencimientos y tiempo</div>
+          </div>
+          <span class="app-pick-check" id="check-expedientes"></span>
+        </button>
       </div>
     </div>
     <hr class="modal-divider">
@@ -691,7 +741,7 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
 
 <script>
 // ── URL del Apps Script ──────────────────────────────────────
-var APP_URL = 'https://script.google.com/macros/s/AKfycbx3pnNPsVWwuK2BKCTfKvfCLhaYRe6eb44WFkitBaNy6Gdr0lcs7tlAsb4r2G3zHNVTNA/exec';
+var APP_URL = 'https://script.google.com/macros/s/AKfycbypeejYq19Mca8Rbbeg6LX38FPSFCca7Hj380RcyeB5f76Gh-b3Sno-t7Xu05P0YoLLoQ/exec';
 
 // ── FAQ ──────────────────────────────────────────────────────
 function toggleFaq(btn){
@@ -713,17 +763,23 @@ function copiar(btn,texto){
 var appSeleccionada = 'inventario';
 var flujoActual = 'nuevo';
 
+var APP_INFO = {
+  inventario:  { activeClass: 'active',        btnClass: '',        icon: '📦' },
+  finanzas:    { activeClass: 'active-blue',    btnClass: ' blue',   icon: '📊' },
+  expedientes: { activeClass: 'active-purple',  btnClass: ' purple', icon: '📁' }
+};
+
 function seleccionarApp(app){
   appSeleccionada=app;
-  ['inventario','finanzas'].forEach(function(a){
+  Object.keys(APP_INFO).forEach(function(a){
     document.getElementById('pick-'+a).className='app-pick-btn';
     document.getElementById('check-'+a).textContent='';
   });
-  var isFinanzas = app==='finanzas';
-  document.getElementById('pick-'+app).classList.add(isFinanzas?'active-blue':'active');
+  var info = APP_INFO[app] || APP_INFO.inventario;
+  document.getElementById('pick-'+app).classList.add(info.activeClass);
   document.getElementById('check-'+app).textContent='✓';
-  document.getElementById('modal-icon-display').textContent=isFinanzas?'📊':'📦';
-  document.getElementById('btn-reg-main').className='btn-modal-primary'+(isFinanzas?' blue':'');
+  document.getElementById('modal-icon-display').textContent=info.icon;
+  document.getElementById('btn-reg-main').className='btn-modal-primary'+info.btnClass;
 }
 
 function cambiarFlujo(flujo){
@@ -865,7 +921,7 @@ var statsObs=new IntersectionObserver(function(entries){
     if(e.isIntersecting){
       animarContador(document.getElementById('stat-pct'),0,100,1800);
       animarContador(document.getElementById('stat-hrs'),0,3,900);
-      animarContador(document.getElementById('stat-apps'),0,2,900);
+      animarContador(document.getElementById('stat-apps'),0,3,900);
       statsObs.disconnect();
     }
   });
