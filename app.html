@@ -547,9 +547,12 @@ body {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  const SUPABASE_URL = 'https://tpynubemonzmtlcjioff.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRweW51YmVtb256bXRsY2ppb2ZmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY4OTU0MTgsImV4cCI6MjEwMjQ3MTQxOH0.R80Zc-4bM8Qo1W9EaRAXhBD2q_JFF1h7VpQIwLWZPH0';
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  var SUPABASE_URL = 'https://tpynubemonzmtlcjioff.supabase.co';
+  var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRweW51YmVtb256bXRsY2ppb2ZmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY4OTU0MTgsImV4cCI6MjEwMjQ3MTQxOH0.R80Zc-4bM8Qo1W9EaRAXhBD2q_JFF1h7VpQIwLWZPH0';
+  if (typeof window.supabase !== 'undefined' && !window._skriptoClient) {
+    window._skriptoClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  }
+  var supabase = window._skriptoClient;
 </script>
 </head>
 <body>
@@ -1145,22 +1148,28 @@ async function doLogin(){
   var btn=document.getElementById('btn-login');
   btn.disabled=true;btn.textContent='Entrando…';
 
-  var { data, error } = await supabase.auth.signInWithPassword({ email:email, password:p });
-  if(error){ btn.disabled=false;btn.textContent='Entrar'; return showAlert('alert-auth','Correo o contraseña incorrectos.','err'); }
+  try {
+    var { data, error } = await supabase.auth.signInWithPassword({ email:email, password:p });
+    if(error){ return showAlert('alert-auth','Correo o contraseña incorrectos.','err'); }
 
-  var { data: perfil } = await supabase.from('perfiles').select('*').eq('id', data.user.id).single();
-  btn.disabled=false;btn.textContent='Entrar';
+    var { data: perfil } = await supabase.from('perfiles').select('*').eq('id', data.user.id).single();
 
-  if(!perfil || perfil.estado!=='activo' || !perfil.apps.includes('inventario')){
-    await supabase.auth.signOut();
-    var tipo = (perfil && (perfil.estado==='pendiente'||perfil.estado==='inactivo')) ? 'warn':'err';
-    var msg = perfil && perfil.estado==='pendiente'
-      ? '⏳ Tu cuenta está pendiente de activación.'
-      : '🔒 Sin suscripción activa para Inventario.';
-    return showAlert('alert-auth', msg, tipo);
+    if(!perfil || perfil.estado!=='activo' || !perfil.apps.includes('inventario')){
+      await supabase.auth.signOut();
+      var tipo = (perfil && (perfil.estado==='pendiente'||perfil.estado==='inactivo')) ? 'warn':'err';
+      var msg = perfil && perfil.estado==='pendiente'
+        ? '⏳ Tu cuenta está pendiente de activación.'
+        : '🔒 Sin suscripción activa para Inventario.';
+      return showAlert('alert-auth', msg, tipo);
+    }
+    SESSION={usuario:perfil.usuario,nombre:perfil.nombre};
+    entrarApp();
+  } catch(e) {
+    showAlert('alert-auth','Error inesperado: '+e.message,'err');
+    console.error(e);
+  } finally {
+    btn.disabled=false;btn.textContent='Entrar';
   }
-  SESSION={usuario:perfil.usuario,nombre:perfil.nombre};
-  entrarApp();
 }
 
 // REGISTRO
