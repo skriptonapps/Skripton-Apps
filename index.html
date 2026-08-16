@@ -18,6 +18,12 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Skripto Apps — Soluciones digitales para tu negocio</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = 'https://tpynubemonzmtlcjioff.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRweW51YmVtb256bXRsY2ppb2ZmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY4OTU0MTgsImV4cCI6MjEwMjQ3MTQxOH0.R80Zc-4bM8Qo1W9EaRAXhBD2q_JFF1h7VpQIwLWZPH0';
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+</script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -416,23 +422,6 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
           <div class="app-price-num">$70.000 COP<span style="font-size:13px;color:var(--ink3);font-family:var(--font-sans);font-weight:400">/mes</span></div>
         </div>
       </div>
-      <div class="app-card purple-card reveal" style="transition-delay:.15s">
-        <div class="app-badge-new" style="background:var(--purple3);color:var(--purple2);border-color:rgba(124,58,237,.25)">Disponible</div>
-        <div class="app-card-icon purple">📁</div>
-        <div class="app-card-name">Expedientes</div>
-        <div class="app-card-desc">Gestión de casos para abogados, contadores y consultores. Organiza clientes, casos y vencimientos en un solo lugar, sin volver a olvidar una fecha límite.</div>
-        <div class="app-card-features">
-          <div class="app-feature purple-check">Clientes y casos organizados por expediente</div>
-          <div class="app-feature purple-check">Alertas automáticas de vencimientos por correo (7, 3 y 1 día antes)</div>
-          <div class="app-feature purple-check">Registro de tiempo por caso con tarifa opcional</div>
-          <div class="app-feature purple-check">Panel con próximos vencimientos ordenados por urgencia</div>
-          <div class="app-feature purple-check">Funciona desde el celular sin instalar nada</div>
-        </div>
-        <div class="app-card-footer">
-          <span class="app-price-trial purple-trial">🎁 3 días gratis primero</span>
-          <div class="app-price-num">$35.000 COP<span style="font-size:13px;color:var(--ink3);font-family:var(--font-sans);font-weight:400">/mes</span></div>
-        </div>
-      </div>
       <div class="app-card app-card-soon reveal" style="transition-delay:.2s">
         <div class="app-badge-soon">Próximamente</div>
         <div class="app-card-icon" style="background:var(--bg4);border-color:var(--border)">👥</div>
@@ -528,16 +517,6 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
               </div>
               <span class="app-selector-tag avail-blue">Registrarme →</span>
             </a>
-            <a href="#" class="app-selector-item available purple-sel" onclick="abrirModal('expedientes');return false">
-              <div class="app-selector-left">
-                <span class="app-selector-emoji">📁</span>
-                <div>
-                  <div class="app-selector-name">Expedientes</div>
-                  <div class="app-selector-sub purple-c">🎁 3 días gratis · luego $35.000 COP/mes</div>
-                </div>
-              </div>
-              <span class="app-selector-tag avail-purple">Registrarme →</span>
-            </a>
             <div class="app-selector-item soon">
               <div class="app-selector-left">
                 <span class="app-selector-emoji">👥</span>
@@ -614,7 +593,7 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
       </div>
       <div class="faq-item reveal" style="transition-delay:.1s">
         <button class="faq-q" onclick="toggleFaq(this)">¿Puedo tener varias apps al mismo tiempo?<div class="faq-chevron">▾</div></button>
-        <div class="faq-a"><div class="faq-a-inner">Sí. Cada app tiene su propia suscripción. Si ya tienes cuenta, usa la opción "Ya tengo cuenta" para agregar la nueva app con el mismo usuario y contraseña.</div></div>
+        <div class="faq-a"><div class="faq-a-inner">Sí. Cada app tiene su propia suscripción. Si ya tienes cuenta, usa la opción "Ya tengo cuenta" para agregar la nueva app con el mismo correo y contraseña.</div></div>
       </div>
       <div class="faq-item reveal" style="transition-delay:.15s">
         <button class="faq-q" onclick="toggleFaq(this)">¿Qué pasa si no renuevo o no pago tras la prueba?<div class="faq-chevron">▾</div></button>
@@ -696,14 +675,6 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
           </div>
           <span class="app-pick-check" id="check-finanzas"></span>
         </button>
-        <button class="app-pick-btn" id="pick-expedientes" onclick="seleccionarApp('expedientes')">
-          <span class="app-pick-emoji">📁</span>
-          <div class="app-pick-info">
-            <div class="app-pick-name">Expedientes</div>
-            <div class="app-pick-sub">Casos, vencimientos y tiempo</div>
-          </div>
-          <span class="app-pick-check" id="check-expedientes"></span>
-        </button>
       </div>
     </div>
     <hr class="modal-divider">
@@ -717,7 +688,7 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
       <div class="form-g">
         <label>Correo electrónico</label>
         <input type="email" id="reg-email" placeholder="tu@correo.com">
-        <div class="input-hint">Aquí recibirás la confirmación y el link de acceso</div>
+        <div class="input-hint">Aquí recibirás el correo con el link para entrar a tu app</div>
       </div>
       <div class="form-g">
         <label>Usuario</label>
@@ -734,12 +705,11 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
     <!-- FLUJO EXISTENTE -->
     <div class="modal-step" id="step-existente">
       <div class="modal-info-box">
-        Ingresa tus datos actuales para agregar esta app a tu cuenta existente.
+        Ingresa tu correo y contraseña para agregar esta app a tu cuenta existente.
       </div>
       <div class="form-g">
-        <label>Tu usuario actual</label>
-        <input type="text" id="exist-usuario" placeholder="tu_usuario"
-          oninput="this.value=this.value.toLowerCase().replace(/\s+/g,'_')">
+        <label>Tu correo electrónico</label>
+        <input type="email" id="exist-usuario" placeholder="tu@correo.com">
       </div>
       <div class="form-g">
         <label>Tu contraseña</label>
@@ -753,9 +723,6 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
 </div>
 
 <script>
-// ── URL del Apps Script ──────────────────────────────────────
-var APP_URL = 'https://script.google.com/macros/s/AKfycbypeejYq19Mca8Rbbeg6LX38FPSFCca7Hj380RcyeB5f76Gh-b3Sno-t7Xu05P0YoLLoQ/exec';
-
 // ── FAQ ──────────────────────────────────────────────────────
 function toggleFaq(btn){
   var item=btn.parentElement;
@@ -776,10 +743,16 @@ function copiar(btn,texto){
 var appSeleccionada = 'inventario';
 var flujoActual = 'nuevo';
 
+// URLs de cada app: a dónde se manda a la persona tras confirmar el correo.
+// Reemplaza estas 2 líneas con tus URLs reales de GitHub Pages.
+var APP_PAGES = {
+  inventario: 'https://TU-USUARIO.github.io/TU-REPO/app.html',
+  finanzas:   'https://TU-USUARIO.github.io/TU-REPO/finanzas.html'
+};
+
 var APP_INFO = {
-  inventario:  { activeClass: 'active',        btnClass: '',        icon: '📦' },
-  finanzas:    { activeClass: 'active-blue',    btnClass: ' blue',   icon: '📊' },
-  expedientes: { activeClass: 'active-purple',  btnClass: ' purple', icon: '📁' }
+  inventario:  { activeClass: 'active',      btnClass: '',      icon: '📦' },
+  finanzas:    { activeClass: 'active-blue',  btnClass: ' blue', icon: '📊' }
 };
 
 function seleccionarApp(app){
@@ -824,45 +797,8 @@ function mostrarAlerta(msg,tipo){
   a.textContent=msg;a.className='modal-alert '+tipo;a.style.display='block';
 }
 
-// ── HELPER: dispara la petición a Apps Script de forma fiable ──
-// FIX: ya no usamos un iframe oculto (eso es lo que fallaba en Brave
-// y en navegadores móviles: bloquean iframes ocultos hacia google.com
-// por protecciones anti-tracking / restricciones de terceros).
-// En su lugar usamos fetch() con mode:'no-cors', que es solo una
-// petición de red — no depende de renderizar nada embebido ni de
-// cookies de terceros, así que no cae en esas protecciones.
-// Sigue sin poder leerse la respuesta real (limitación de CORS con
-// Apps Script en GET cross-origin), por eso el correo sigue siendo
-// la confirmación real del proceso, igual que antes.
-function llamarAppScript(params, onDone, btnEl, btnTextoOriginal) {
-  btnEl.disabled = true;
-  btnEl.textContent = 'Enviando…';
-
-  var qs = Object.keys(params).map(function(k){
-    return encodeURIComponent(k) + '=' + encodeURIComponent(params[k]);
-  }).join('&');
-  var url = APP_URL + '?' + qs;
-
-  fetch(url, {
-    method: 'GET',
-    mode: 'no-cors',
-    credentials: 'omit',
-    keepalive: true
-  })
-  .catch(function(){
-    // La respuesta es opaca en no-cors, así que un "error" aquí
-    // normalmente solo significa que no pudimos leerla, no que
-    // la petición no llegó. La dejamos pasar igual.
-  })
-  .then(function(){
-    btnEl.disabled = false;
-    btnEl.textContent = btnTextoOriginal;
-    onDone();
-  });
-}
-
-// ── REGISTRO NUEVO ──────────────────────────────────────────
-function doRegistro(){
+// ── REGISTRO NUEVO — con Supabase directo, sin Apps Script ─────
+async function doRegistro(){
   var nombre  =document.getElementById('reg-nombre').value.trim();
   var email   =document.getElementById('reg-email').value.trim();
   var usuario =document.getElementById('reg-usuario').value.trim();
@@ -871,33 +807,66 @@ function doRegistro(){
   if(!email)   return mostrarAlerta('Ingresa tu correo electrónico.','err');
   if(!usuario) return mostrarAlerta('Elige un nombre de usuario.','err');
   if(!password||password.length<6) return mostrarAlerta('La contraseña debe tener al menos 6 caracteres.','err');
+
   var btn=document.getElementById('btn-reg-main');
-  llamarAppScript(
-    { action:'registrar', nombre:nombre, usuario:usuario, password:password, email:email, app:appSeleccionada },
-    function() {
-      mostrarAlerta('🎉 ¡Registro enviado! Revisa tu correo ('+email+') en los próximos segundos: si es tu primera vez, tu cuenta ya está activa con 3 días de prueba gratis y puedes iniciar sesión de inmediato.','ok');
-      ['reg-nombre','reg-usuario','reg-password'].forEach(function(id){document.getElementById(id).value='';});
-    },
-    btn, 'Crear cuenta gratis →'
-  );
+  btn.disabled=true; btn.textContent='Enviando…';
+
+  var { data, error } = await supabase.auth.signUp({
+    email: email,
+    password: password,
+    options: {
+      data: { nombre: nombre, usuario: usuario, app: appSeleccionada },
+      emailRedirectTo: APP_PAGES[appSeleccionada] || APP_PAGES.inventario
+    }
+  });
+
+  btn.disabled=false; btn.textContent='Crear cuenta gratis →';
+
+  if(error){
+    if(error.message && error.message.toLowerCase().includes('already registered'))
+      return mostrarAlerta('Ya existe una cuenta con ese correo. Usa "Ya tengo cuenta" para agregar esta app.','err');
+    return mostrarAlerta('Error: '+error.message,'err');
+  }
+
+  mostrarAlerta('🎉 ¡Cuenta creada! Revisa tu correo ('+email+') y haz clic en el link para activar tu acceso — quedarás directo dentro de la app con 3 días de prueba gratis.','ok');
+  ['reg-nombre','reg-usuario','reg-password'].forEach(function(id){document.getElementById(id).value=''});
 }
 
-// ── AGREGAR APP ─────────────────────────────────────────────
-function doAgregarApp(){
-  var usuario =document.getElementById('exist-usuario').value.trim();
+// ── AGREGAR APP a una cuenta ya existente ───────────────────────
+async function doAgregarApp(){
+  var email   =document.getElementById('exist-usuario').value.trim();
   var password=document.getElementById('exist-password').value;
-  if(!usuario)  return mostrarAlerta('Ingresa tu usuario.','err');
+  if(!email)    return mostrarAlerta('Ingresa tu correo electrónico.','err');
   if(!password) return mostrarAlerta('Ingresa tu contraseña.','err');
+
   var btn=document.getElementById('btn-agregar-app');
-  llamarAppScript(
-    { action:'agregarapp', usuario:usuario, password:password, app:appSeleccionada },
-    function() {
-      mostrarAlerta('📧 Solicitud enviada. Revisa tu correo para confirmar. Si el usuario o contraseña no eran correctos, no se hizo ningún cambio.','ok');
-      document.getElementById('exist-usuario').value='';
-      document.getElementById('exist-password').value='';
-    },
-    btn, 'Agregar app a mi cuenta →'
-  );
+  btn.disabled=true; btn.textContent='Verificando…';
+
+  var { data, error } = await supabase.auth.signInWithPassword({ email:email, password:password });
+  if(error){
+    btn.disabled=false; btn.textContent='Agregar app a mi cuenta →';
+    return mostrarAlerta('Correo o contraseña incorrectos.','err');
+  }
+
+  var { data: perfil } = await supabase.from('perfiles').select('*').eq('id', data.user.id).single();
+  var app = appSeleccionada;
+
+  if(perfil.apps.includes(app)){
+    await supabase.auth.signOut();
+    btn.disabled=false; btn.textContent='Agregar app a mi cuenta →';
+    return mostrarAlerta('Ya tienes acceso activo a esa app con esta cuenta.','warn');
+  }
+
+  var pendientes = perfil.apps_pendientes || [];
+  if(!pendientes.includes(app)) pendientes.push(app);
+
+  await supabase.from('perfiles').update({ apps_pendientes: pendientes }).eq('id', data.user.id);
+  await supabase.auth.signOut();
+
+  btn.disabled=false; btn.textContent='Agregar app a mi cuenta →';
+  mostrarAlerta('📧 Solicitud registrada. Realiza el pago y avísanos para activarla.','ok');
+  document.getElementById('exist-usuario').value='';
+  document.getElementById('exist-password').value='';
 }
 
 // ── CERRAR con ESC / click fuera ─────────────────────────────
@@ -934,7 +903,7 @@ var statsObs=new IntersectionObserver(function(entries){
     if(e.isIntersecting){
       animarContador(document.getElementById('stat-pct'),0,100,1800);
       animarContador(document.getElementById('stat-hrs'),0,3,900);
-      animarContador(document.getElementById('stat-apps'),0,3,900);
+      animarContador(document.getElementById('stat-apps'),0,2,900);
       statsObs.disconnect();
     }
   });
