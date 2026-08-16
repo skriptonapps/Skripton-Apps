@@ -20,9 +20,12 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  const SUPABASE_URL = 'https://tpynubemonzmtlcjioff.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRweW51YmVtb256bXRsY2ppb2ZmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY4OTU0MTgsImV4cCI6MjEwMjQ3MTQxOH0.R80Zc-4bM8Qo1W9EaRAXhBD2q_JFF1h7VpQIwLWZPH0';
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  var SUPABASE_URL = 'https://tpynubemonzmtlcjioff.supabase.co';
+  var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRweW51YmVtb256bXRsY2ppb2ZmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY4OTU0MTgsImV4cCI6MjEwMjQ3MTQxOH0.R80Zc-4bM8Qo1W9EaRAXhBD2q_JFF1h7VpQIwLWZPH0';
+  if (typeof window.supabase !== 'undefined' && !window._skriptoClient) {
+    window._skriptoClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  }
+  var supabase = window._skriptoClient;
 </script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -746,8 +749,8 @@ var flujoActual = 'nuevo';
 // URLs de cada app: a dónde se manda a la persona tras confirmar el correo.
 // Reemplaza estas 2 líneas con tus URLs reales de GitHub Pages.
 var APP_PAGES = {
-  inventario: 'https://TU-USUARIO.github.io/TU-REPO/app.html',
-  finanzas:   'https://TU-USUARIO.github.io/TU-REPO/finanzas.html'
+  inventario: 'https://skriptonapps.github.io/Skripton-Apps/app.html',
+  finanzas:   'https://skriptonapps.github.io/Skripton-Apps/finanzas.html'
 };
 
 var APP_INFO = {
