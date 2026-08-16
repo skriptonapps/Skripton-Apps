@@ -545,6 +545,12 @@ body {
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = 'https://TU-PROYECTO.supabase.co';
+  const SUPABASE_ANON_KEY = 'TU-ANON-KEY';
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+</script>
 </head>
 <body>
 
@@ -563,8 +569,8 @@ body {
     <!-- LOGIN -->
     <div id="blq-login">
       <div class="form-g">
-        <label>Usuario</label>
-        <input type="text" id="in-user" placeholder="tu_usuario" autocomplete="username">
+        <label>Correo electrónico</label>
+        <input type="email" id="in-user" placeholder="tu@correo.com" autocomplete="username">
       </div>
       <div class="form-g">
         <label>Contraseña</label>
@@ -586,10 +592,10 @@ body {
       <div class="form-g">
         <label>Correo electrónico</label>
         <input type="email" id="rg-email" placeholder="tu@correo.com">
-        <div style="font-size:11px;color:var(--ink3);margin-top:3px">Recibirás el link de pago y confirmación aquí</div>
+        <div style="font-size:11px;color:var(--ink3);margin-top:3px">Con este correo inicias sesión</div>
       </div>
       <div class="form-g">
-        <label>Usuario</label>
+        <label>Usuario (nombre visible)</label>
         <input type="text" id="rg-user" placeholder="minegocio (sin espacios)">
       </div>
       <div class="form-g">
@@ -1047,20 +1053,7 @@ body {
   </div>
 </div>
 
-========================================================================
- INSTRUCCIONES: este archivo reemplaza TODO el bloque <script>...</script>
- que está cerca del final de tu App.html (justo antes del comentario
- "Modal selector período reporte" en el HTML — busca la línea que dice
- "/* __RESET_TOKEN__ */" para encontrar dónde empieza ese bloque, y
- termina justo antes de "</script>\n\n<!-- Modal selector período reporte -->").
- Todo lo demás del archivo (CSS, HTML visual, el generador de PDF)
- se queda EXACTAMENTE IGUAL. No lo toques.
-========================================================================
-
 <script>
-/* ══ CONEXIÓN A SUPABASE (agrega esto en el <head>, ya está en tu copia nueva) ══ */
-// const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
 var SESSION = null;
 var mpProductos  = [];
 var pfProductos  = [];
@@ -1719,10 +1712,411 @@ async function ejecutarReporte() {
   }
 }
 
-/* ══ A PARTIR DE AQUÍ (filtrarVentasPorPeriodo, generarPDFRico, descargarReporte)
-   TODO SIGUE EXACTAMENTE IGUAL — es JavaScript puro con jsPDF, no toca el
-   backend para nada. Copia esas funciones tal cual las tienes en tu
-   archivo original, sin ningún cambio. ══ */
+// ─── Filtrar ventas por período ─────────────────────────────────────────────
+function filtrarVentasPorPeriodo(ventas, desde, hasta) {
+  if (!desde && !hasta) return ventas;
+  return ventas.filter(function(v) {
+    var partes = (v.fecha||'').split(' ')[0].split('/');
+    if (partes.length < 3) return false;
+    var mesAnio = partes[2] + '/' + partes[1];
+    var ok = true;
+    if (desde) ok = ok && mesAnio >= desde;
+    if (hasta) ok = ok && mesAnio <= hasta;
+    return ok;
+  });
+}
+
+// ─── GENERADOR PDF RICO ──────────────────────────────────────────────────────
+function generarPDFRico(datos, filtroDesde, filtroHasta, labelPeriodo) {
+  var doc = new window.jspdf.jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
+  var W   = doc.internal.pageSize.getWidth();
+  var H   = doc.internal.pageSize.getHeight();
+  var MX  = 14;
+  var y   = 0;
+
+  var nombreUsuario = SESSION ? (SESSION.nombre||SESSION.usuario) : 'Usuario';
+  var fechaGen = new Date().toLocaleDateString('es-CO',{
+    day:'2-digit', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit'
+  });
+
+  var ventasPeriodo = filtrarVentasPorPeriodo(datos.ventas||[], filtroDesde, filtroHasta);
+
+  var totalIngresos = ventasPeriodo.reduce(function(s,v){return s+v.ingresoTotal},0);
+  var totalCostos   = ventasPeriodo.reduce(function(s,v){return s+v.costoTotal},0);
+  var totalUtilidad = ventasPeriodo.reduce(function(s,v){return s+v.utilidad},0);
+  var margen = totalCostos > 0 ? (totalUtilidad/totalCostos*100) : 0;
+
+  var valorTotalMP = (datos.productos||[]).reduce(function(s,p){return s+p.stock*p.cpp},0);
+  var valorTotalPF = (datos.pfStock||[]).reduce(function(s,p){return s+p.stock*p.cpp},0);
+
+  var VERDE   = [15,110,86];
+  var VERDE_L = [225,245,238];
+  var VERDE_M = [29,158,117];
+  var GRIS1   = [28,27,24];
+  var GRIS2   = [61,60,57];
+  var GRIS3   = [92,90,85];
+  var GRIS4   = [156,154,148];
+  var ROJO    = [153,60,29];
+  var ROJO_L  = [250,236,231];
+  var AMBAR   = [186,117,23];
+  var AMBAR_L = [254,243,199];
+  var INDIGO  = [83,74,183];
+  var INDIGO_L= [238,242,255];
+  var BORDE   = [226,224,218];
+  var BG_ALT  = [250,250,248];
+
+  function nuevaPagina() {
+    piePagina();
+    doc.addPage();
+    y = 14;
+  }
+  function checkY(esp) { if (y + esp > H - 18) nuevaPagina(); }
+
+  function piePagina() {
+    var pg = doc.internal.getCurrentPageInfo().pageNumber;
+    var tot= doc.internal.getNumberOfPages();
+    doc.setDrawColor.apply(doc, BORDE);
+    doc.setLineWidth(0.3);
+    doc.line(MX, H-10, W-MX, H-10);
+    doc.setFont('helvetica','normal');
+    doc.setFontSize(7);
+    doc.setTextColor.apply(doc, GRIS4);
+    doc.text('Skripto Apps - Sistema de Inventario - ' + nombreUsuario, MX, H-6);
+    doc.text('Página ' + pg + ' de ' + tot, W-MX, H-6, {align:'right'});
+  }
+
+  function seccionTitulo(titulo, color) {
+    checkY(14);
+    y += 5;
+    var col = color || VERDE;
+    doc.setFillColor(col[0]+(255-col[0])*.85, col[1]+(255-col[1])*.85, col[2]+(255-col[2])*.85);
+    doc.roundedRect(MX, y-4, W-MX*2, 9, 1.5, 1.5, 'F');
+    doc.setFillColor.apply(doc, col);
+    doc.roundedRect(MX, y-4, 3, 9, 1, 1, 'F');
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(11);
+    doc.setTextColor.apply(doc, col);
+    doc.text(titulo, MX+7, y+2);
+    y += 9;
+  }
+
+  function tarjetaKPI(x, yy, ancho, alto, label, valor, sub, colorVal, colorBorde) {
+    colorBorde = colorBorde || VERDE;
+    doc.setFillColor(230,228,224);
+    doc.roundedRect(x+1, yy+1, ancho, alto, 2, 2, 'F');
+    doc.setFillColor(255,255,255);
+    doc.roundedRect(x, yy, ancho, alto, 2, 2, 'F');
+    doc.setDrawColor.apply(doc, colorBorde);
+    doc.setLineWidth(1.5);
+    doc.line(x+4, yy, x+ancho-4, yy);
+    doc.setLineWidth(0.2);
+    doc.setDrawColor.apply(doc, BORDE);
+    doc.roundedRect(x, yy, ancho, alto, 2, 2, 'S');
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(6.5);
+    doc.setTextColor.apply(doc, GRIS3);
+    doc.text(label.toUpperCase(), x + ancho/2, yy+6, {align:'center'});
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(11);
+    doc.setTextColor.apply(doc, colorVal||GRIS1);
+    doc.text(valor, x + ancho/2, yy+14, {align:'center'});
+    if (sub) {
+      doc.setFont('helvetica','normal');
+      doc.setFontSize(6.5);
+      doc.setTextColor.apply(doc, GRIS4);
+      doc.text(sub, x + ancho/2, yy+20, {align:'center'});
+    }
+  }
+
+  doc.setFillColor.apply(doc, VERDE);
+  doc.rect(0, 0, W, 28, 'F');
+  doc.setFillColor(255,255,255);
+  doc.setGState && doc.setGState(new doc.GState({opacity:0.05}));
+  doc.circle(W-20, 14, 22, 'F');
+  doc.circle(W-45, 5, 14, 'F');
+  doc.setGState && doc.setGState(new doc.GState({opacity:1}));
+
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(20);
+  doc.setTextColor(255,255,255);
+  doc.text('inventario', MX, 14);
+
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(8);
+  doc.setTextColor(209,240,228);
+  doc.text('Reporte de Inventario y Ventas - Skripto Apps', MX, 20.5);
+
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(9);
+  doc.setTextColor(255,255,255);
+  doc.text(nombreUsuario, W-MX, 11, {align:'right'});
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(7.5);
+  doc.setTextColor(209,240,228);
+  doc.text('Generado: ' + fechaGen, W-MX, 17, {align:'right'});
+
+  y = 34;
+
+  doc.setFillColor.apply(doc, VERDE_L);
+  doc.roundedRect(MX, y, W-MX*2, 10, 2, 2, 'F');
+  doc.setDrawColor.apply(doc, VERDE_M);
+  doc.setLineWidth(0.5);
+  doc.roundedRect(MX, y, W-MX*2, 10, 2, 2, 'S');
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(8);
+  doc.setTextColor.apply(doc, VERDE);
+  doc.text('PERIODO: ' + labelPeriodo.toUpperCase(), W/2, y+6.5, {align:'center'});
+  y += 16;
+
+  seccionTitulo('Resumen del Periodo', VERDE);
+  y += 2;
+
+  var kW = (W - MX*2 - 9) / 4;
+  var kH = 26;
+  var utilPos = totalUtilidad >= 0;
+  tarjetaKPI(MX,          y, kW, kH, 'Total Ingresos',  fmt(totalIngresos), ventasPeriodo.length+' ventas',   VERDE,              VERDE_M);
+  tarjetaKPI(MX+kW+3,     y, kW, kH, 'Total Costos',    fmt(totalCostos),   '',                                GRIS1,              GRIS3);
+  tarjetaKPI(MX+(kW+3)*2, y, kW, kH, 'Utilidad Neta',   fmt(totalUtilidad), utilPos?'Positiva':'Negativa', utilPos?VERDE:ROJO, utilPos?VERDE_M:ROJO);
+  tarjetaKPI(MX+(kW+3)*3, y, kW, kH, 'Margen',          margen.toFixed(1)+'%', totalCostos>0?'sobre costos':'sin ventas',         AMBAR, AMBAR);
+  y += kH + 10;
+
+  seccionTitulo('Stock de Materia Prima (estado actual)', VERDE);
+  y += 3;
+
+  var prods = datos.productos || [];
+  if (prods.length) {
+    var bodyMP = prods.map(function(p) {
+      var val = p.stock * p.cpp;
+      return [p.nombre, fmtN(p.stock) + ' ' + (p.unidad||'und'), fmt(p.cpp), fmt(val)];
+    });
+    bodyMP.push(['TOTAL', '', '', fmt(valorTotalMP)]);
+
+    doc.autoTable({
+      startY: y,
+      head: [['Insumo / Material', 'Stock disponible', 'Costo Prom. (CPP)', 'Valor en inventario']],
+      body: bodyMP,
+      theme: 'plain',
+      styles: { fontSize:8.5, cellPadding:3.5, textColor:GRIS2, lineColor:BORDE, lineWidth:0.3 },
+      headStyles: { fillColor:[247,246,242], textColor:GRIS3, fontStyle:'bold', fontSize:7.5 },
+      alternateRowStyles: { fillColor:BG_ALT },
+      columnStyles: {
+        0: { cellWidth:'auto' },
+        1: { halign:'right', cellWidth:36 },
+        2: { halign:'right', cellWidth:36 },
+        3: { halign:'right', cellWidth:38, fontStyle:'bold' }
+      },
+      didParseCell: function(data) {
+        if (data.row.index === bodyMP.length - 1) {
+          data.cell.styles.fillColor = [247,246,242];
+          data.cell.styles.fontStyle = 'bold';
+          data.cell.styles.textColor = GRIS1;
+        }
+      },
+      margin: { left:MX, right:MX },
+    });
+    y = doc.lastAutoTable.finalY + 6;
+  } else {
+    checkY(10);
+    doc.setFont('helvetica','italic'); doc.setFontSize(8.5); doc.setTextColor.apply(doc,GRIS4);
+    doc.text('Sin registros de materia prima.', MX, y); y += 10;
+  }
+
+  seccionTitulo('Stock de Productos Terminados (estado actual)', INDIGO);
+  y += 3;
+
+  var pfList = datos.pfStock || [];
+  if (pfList.length) {
+    var bodyPF = pfList.map(function(p) {
+      return [p.nombre, String(p.stock) + ' und', fmt(p.cpp), fmt(p.stock*p.cpp)];
+    });
+    bodyPF.push(['TOTAL', '', '', fmt(valorTotalPF)]);
+
+    doc.autoTable({
+      startY: y,
+      head: [['Producto Terminado', 'Stock disponible', 'Costo Prom. (CPP)', 'Valor en inventario']],
+      body: bodyPF,
+      theme: 'plain',
+      styles: { fontSize:8.5, cellPadding:3.5, textColor:GRIS2, lineColor:BORDE, lineWidth:0.3 },
+      headStyles: { fillColor:[238,242,255], textColor:[83,74,183], fontStyle:'bold', fontSize:7.5 },
+      alternateRowStyles: { fillColor:BG_ALT },
+      columnStyles: {
+        0: { cellWidth:'auto' },
+        1: { halign:'right', cellWidth:36 },
+        2: { halign:'right', cellWidth:36 },
+        3: { halign:'right', cellWidth:38, fontStyle:'bold' }
+      },
+      didParseCell: function(data) {
+        if (data.row.index === bodyPF.length - 1) {
+          data.cell.styles.fillColor = [238,242,255];
+          data.cell.styles.fontStyle = 'bold';
+          data.cell.styles.textColor = INDIGO;
+        }
+      },
+      margin: { left:MX, right:MX },
+    });
+    y = doc.lastAutoTable.finalY + 6;
+  } else {
+    checkY(10);
+    doc.setFont('helvetica','italic'); doc.setFontSize(8.5); doc.setTextColor.apply(doc,GRIS4);
+    doc.text('Sin productos en stock.', MX, y); y += 10;
+  }
+
+  checkY(30);
+  seccionTitulo('Ventas del Periodo - ' + labelPeriodo, AMBAR);
+  y += 3;
+
+  if (ventasPeriodo.length) {
+    var porProducto = {};
+    ventasPeriodo.forEach(function(v) {
+      if (!porProducto[v.producto]) porProducto[v.producto] = {nombre:v.producto, unidades:0, ingresos:0, costos:0, utilidad:0};
+      porProducto[v.producto].unidades  += v.cantidad;
+      porProducto[v.producto].ingresos  += v.ingresoTotal;
+      porProducto[v.producto].costos    += v.costoTotal;
+      porProducto[v.producto].utilidad  += v.utilidad;
+    });
+    var ppList = Object.values(porProducto).sort(function(a,b){return b.ingresos-a.ingresos});
+
+    if (ppList.length <= 4) {
+      var pW = (W - MX*2 - (ppList.length-1)*3) / ppList.length;
+      ppList.forEach(function(pp, i) {
+        var px = MX + i*(pW+3);
+        var mg = pp.costos>0 ? (pp.utilidad/pp.costos*100).toFixed(1)+'%' : '-';
+        tarjetaKPI(px, y, pW, 28, pp.nombre.substring(0,14),
+          fmt(pp.ingresos), pp.unidades+' und · margen '+mg,
+          pp.utilidad>=0 ? VERDE : ROJO, AMBAR);
+      });
+      y += 35;
+    }
+
+    checkY(20);
+    var bodyV = ventasPeriodo.map(function(v) {
+      return [
+        v.id,
+        v.fecha.split(' ')[0],
+        v.producto,
+        String(v.cantidad),
+        fmt(v.precioUnit),
+        fmt(v.ingresoTotal),
+        fmt(v.costoTotal),
+        (v.utilidad>=0?'+':'')+fmt(v.utilidad)
+      ];
+    });
+    var sumIng  = ventasPeriodo.reduce(function(s,v){return s+v.ingresoTotal},0);
+    var sumCos  = ventasPeriodo.reduce(function(s,v){return s+v.costoTotal},0);
+    var sumUtil = ventasPeriodo.reduce(function(s,v){return s+v.utilidad},0);
+    bodyV.push(['','','TOTAL','','',fmt(sumIng),fmt(sumCos),(sumUtil>=0?'+':'')+fmt(sumUtil)]);
+
+    doc.autoTable({
+      startY: y,
+      head: [['ID','Fecha','Producto','Cant.','Precio','Ingreso','Costo','Utilidad']],
+      body: bodyV,
+      theme: 'plain',
+      styles: { fontSize:8, cellPadding:3, textColor:GRIS2, lineColor:BORDE, lineWidth:0.3 },
+      headStyles: { fillColor:[254,243,199], textColor:[186,117,23], fontStyle:'bold', fontSize:7.5 },
+      alternateRowStyles: { fillColor:BG_ALT },
+      columnStyles: {
+        0: { cellWidth:14, textColor:GRIS4, fontSize:7 },
+        1: { cellWidth:22 },
+        2: { cellWidth:'auto' },
+        3: { halign:'right', cellWidth:14 },
+        4: { halign:'right', cellWidth:24 },
+        5: { halign:'right', cellWidth:24, fontStyle:'bold' },
+        6: { halign:'right', cellWidth:22 },
+        7: { halign:'right', cellWidth:24, fontStyle:'bold' }
+      },
+      didParseCell: function(data) {
+        if (data.row.index === bodyV.length - 1) {
+          data.cell.styles.fillColor = [254,243,199];
+          data.cell.styles.fontStyle = 'bold';
+          data.cell.styles.textColor = [186,117,23];
+        }
+        if (data.column.index === 7 && data.section === 'body' && data.row.index < bodyV.length-1) {
+          var val = ventasPeriodo[data.row.index] ? ventasPeriodo[data.row.index].utilidad : 0;
+          data.cell.styles.textColor = val >= 0 ? VERDE : ROJO;
+        }
+      },
+      margin: { left:MX, right:MX },
+    });
+    y = doc.lastAutoTable.finalY + 6;
+
+  } else {
+    checkY(16);
+    doc.setFillColor(254,243,199);
+    doc.roundedRect(MX, y, W-MX*2, 14, 2, 2, 'F');
+    doc.setDrawColor(186,117,23);
+    doc.setLineWidth(0.4);
+    doc.roundedRect(MX, y, W-MX*2, 14, 2, 2, 'S');
+    doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(186,117,23);
+    doc.text('Sin ventas registradas para: ' + labelPeriodo, W/2, y+6, {align:'center'});
+    doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(92,90,85);
+    doc.text('Prueba seleccionando "Todo el historial" o un periodo diferente.', W/2, y+11, {align:'center'});
+    y += 20;
+  }
+
+  piePagina();
+
+  var fechaNom = new Date().toISOString().slice(0,10).replace(/-/g,'');
+  var periodoNom = labelPeriodo.replace(/[^a-zA-Z0-9]/g,'_').replace(/_+/g,'_');
+  var nomArch = 'Reporte_' + (SESSION?(SESSION.nombre||SESSION.usuario).replace(/\s+/g,'_'):'usuario') + '_' + periodoNom + '_' + fechaNom + '.pdf';
+  doc.save(nomArch);
+}
+
+function descargarReporte() { abrirModalReporte(); }
+</script>
+
+<!-- Modal selector período reporte -->
+<div class="modal-reporte-overlay" id="modal-reporte">
+  <div class="modal-reporte-box">
+    <div class="modal-reporte-title">📄 Generar Reporte</div>
+    <div class="modal-reporte-sub">Elige el período que quieres incluir en el reporte</div>
+
+    <div class="periodo-grid" id="periodo-grid">
+      <button class="periodo-btn active" id="pb-total"  onclick="setPeriodo('total')">📊 Todo el historial</button>
+      <button class="periodo-btn"        id="pb-anio"   onclick="setPeriodo('anio')">📅 Este año</button>
+      <button class="periodo-btn"        id="pb-mes"    onclick="setPeriodo('mes')">🗓️ Este mes</button>
+      <button class="periodo-btn"        id="pb-custom" onclick="setPeriodo('custom')">✏️ Rango personalizado</button>
+    </div>
+
+    <div class="periodo-custom" id="periodo-custom">
+      <div class="periodo-custom-row">
+        <div class="form-g">
+          <label>Desde</label>
+          <input type="month" id="rep-desde">
+        </div>
+        <div class="form-g">
+          <label>Hasta</label>
+          <input type="month" id="rep-hasta">
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-generar" id="btn-generar-rep" onclick="ejecutarReporte()">
+      Generar y descargar PDF →
+    </button>
+    <button class="btn-cancelar-rep" onclick="cerrarModalReporte()">Cancelar</button>
+  </div>
+</div>
+
+<!-- Toast descarga PDF -->
+<div class="download-toast" id="download-toast"></div>
+<!-- Banner instalación iOS -->
+<div id="ios-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:var(--ink);color:#fff;padding:14px 16px;padding-bottom:calc(14px + env(safe-area-inset-bottom));z-index:999;font-size:13px;text-align:center">
+  📲 Para usar sin problemas en iPhone: toca <strong>Compartir</strong> → <strong>Agregar a pantalla de inicio</strong>
+  <button onclick="document.getElementById('ios-banner').style.display='none'" style="background:none;border:none;color:#aaa;font-size:18px;position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer">✕</button>
+</div>
+
+<script>
+(function(){
+  var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+  var isStandalone = window.navigator.standalone;
+  var yaVisto = false;
+  try { yaVisto = localStorage.getItem('ios_banner_visto'); } catch(e){}
+  if(isIOS && isSafari && !isStandalone && !yaVisto){
+    document.getElementById('ios-banner').style.display='block';
+    try { localStorage.setItem('ios_banner_visto','1'); } catch(e){}
+  }
+})();
 </script>
 </body>
 </html>
