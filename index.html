@@ -866,6 +866,12 @@ async function doAgregarApp(){
   await supabase.from('perfiles').update({ apps_pendientes: pendientes }).eq('id', data.user.id);
   await supabase.auth.signOut();
 
+  // Enviar correo con el link de acceso (enlace mágico) a la app solicitada
+  await supabase.auth.signInWithOtp({
+    email: email,
+    options: { emailRedirectTo: APP_PAGES[app] || APP_PAGES.inventario }
+  });
+
   btn.disabled=false; btn.textContent='Agregar app a mi cuenta →';
   mostrarAlerta('📧 Solicitud registrada. Realiza el pago y avísanos para activarla.','ok');
   document.getElementById('exist-usuario').value='';
