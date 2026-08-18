@@ -2270,22 +2270,30 @@ async function pdfFacturaObj(f){
   doc.setFont('helvetica','bold'); doc.setFontSize(9);
   doc.text('N° '+f.numero, boxX+boxW/2, y+9+6, {align:'center'});
 
-  y = Math.max(ly+4, y+30);
-
-  // ── Caja "Fecha y hora Factura" ─────────────────────────────
-  var fy = y;
-  doc.setFont('helvetica','bold'); doc.setFontSize(9);
-  doc.rect(boxX, fy, boxW, 7);
-  doc.text('Fecha y hora Factura', boxX+boxW/2, fy+5, {align:'center'});
-  doc.setFont('helvetica','normal'); doc.setFontSize(8);
-  var filas=[['Generación', f.fechaSolo], ['Expedición', f.fechaSolo], ['Vencimiento', f.fechaVencimiento||'—']];
-  filas.forEach(function(r,i){
-    var ry=fy+7+i*6;
-    doc.rect(boxX, ry, boxW*0.45, 6);
-    doc.rect(boxX+boxW*0.45, ry, boxW*0.55, 6);
-    doc.text(r[0], boxX+2, ry+4);
-    doc.text(String(r[1]), boxX+boxW*0.45+2, ry+4);
+  // ── Caja "Fecha y hora Factura" — justo debajo del número ──
+  function formatFechaCorta(v){
+    if(!v) return '—';
+    var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(v);
+    return m ? (m[3]+'/'+m[2]+'/'+m[1]) : v;
+  }
+  var fy = y+9+10;
+  doc.autoTable({
+    startY: fy,
+    margin: { left: boxX, right: W-boxX-boxW },
+    tableWidth: boxW,
+    theme: 'grid',
+    styles: { fontSize:8, cellPadding:1.8, textColor:NEGRO, lineColor:[0,0,0], lineWidth:0.3, valign:'middle' },
+    head: [[{ content:'Fecha y hora Factura', colSpan:2, styles:{ halign:'center', fontStyle:'bold', fontSize:8.5, fillColor:[255,255,255] } }]],
+    body: [
+      ['Generación', f.fechaSolo||'—'],
+      ['Expedición', f.fechaSolo||'—'],
+      ['Vencimiento', formatFechaCorta(f.fechaVencimiento)]
+    ],
+    columnStyles: { 0:{fontStyle:'bold', cellWidth: boxW*0.45}, 1:{cellWidth: boxW*0.55} }
   });
+  var fechaBoxBottom = doc.lastAutoTable.finalY;
+
+  y = Math.max(ly+4, fechaBoxBottom+4, y+30);
 
   // ── Datos del cliente ────────────────────────────────────────
   var cx=MX, cw=W-MX*2, ch=8;
