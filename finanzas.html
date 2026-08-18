@@ -1416,6 +1416,12 @@ async function cambiarEstadoFac(id,estado){
 /* ─────────────────────────────────────────────────
    VER FACTURA (modal)
 ───────────────────────────────────────────────── */
+function formatFechaCorta(v){
+  if(!v) return '—';
+  var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(v);
+  return m ? (m[3]+'/'+m[2]+'/'+m[1]) : v;
+}
+
 async function verFactura(id){
   var { data: f } = await supabase.rpc('fac_factura_get_by_id', { p_id:id });
   if(!f){toast('Factura no encontrada','err');return;}
@@ -1431,7 +1437,7 @@ async function verFactura(id){
     '<div><div style="color:var(--ink3);font-size:10px;text-transform:uppercase;font-weight:600;margin-bottom:3px">Factura</div>'+
     '<div>N° <strong>'+esc(f.numero)+'</strong></div>'+
     '<div style="color:var(--ink3)">Emitida: '+esc(f.fechaSolo)+'</div>'+
-    (f.fechaVencimiento?'<div style="color:var(--amber)">Vence: '+esc(f.fechaVencimiento)+'</div>':'')+
+    (f.fechaVencimiento?'<div style="color:var(--amber)">Vence: '+esc(formatFechaCorta(f.fechaVencimiento))+'</div>':'')+
     '<div style="margin-top:4px"><span class="badge badge-'+esc(f.estado)+'">'+badgeLabel(f.estado)+'</span></div>'+
     '</div></div></div>';
 
@@ -2271,11 +2277,6 @@ async function pdfFacturaObj(f){
   doc.text('N° '+f.numero, boxX+boxW/2, y+9+6, {align:'center'});
 
   // ── Caja "Fecha y hora Factura" — justo debajo del número ──
-  function formatFechaCorta(v){
-    if(!v) return '—';
-    var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(v);
-    return m ? (m[3]+'/'+m[2]+'/'+m[1]) : v;
-  }
   var fy = y+9+10;
   doc.autoTable({
     startY: fy,
