@@ -2247,8 +2247,8 @@ async function pdfFacturaObj(f){
   var textX = MX;
   if(_config.logoBase64){
     try{
-      var fmt = _config.logoBase64.indexOf('image/png')>-1 ? 'PNG' : 'JPEG';
-      doc.addImage(_config.logoBase64, fmt, MX, y, 24, 24);
+      var imgFmt = _config.logoBase64.indexOf('image/png')>-1 ? 'PNG' : 'JPEG';
+      doc.addImage(_config.logoBase64, imgFmt, MX, y, 24, 24);
       textX = MX + 30;
     }catch(e){ console.error('Logo no válido para PDF', e); }
   }
