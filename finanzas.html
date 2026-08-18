@@ -10,6 +10,10 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0F6E56">
 <title>Sistema de Facturación — Skripto Apps</title>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
@@ -395,7 +399,7 @@ body {
       <div class="sidebar-section">
         <div class="sidebar-label">Ajustes</div>
         <button class="nav-item" id="nav-config" onclick="cambiarMod('config')">
-          <span class="nav-item-icon">🏢</span>Mi empresa
+          <span class="nav-item-icon">🏢</span>Datos generales
         </button>
       </div>
       <div class="sidebar-footer">
@@ -809,7 +813,7 @@ body {
       <!-- ════ CONFIGURACIÓN DE EMPRESA ════ -->
       <div id="mod-config" class="modulo" style="display:none">
         <div class="panel-header">
-          <div><div class="panel-title">Mi empresa</div>
+          <div><div class="panel-title">Datos generales</div>
             <div class="panel-sub">Estos datos aparecen en el encabezado de tus facturas en PDF</div></div>
         </div>
         <div id="alert-config" class="alert"></div>
