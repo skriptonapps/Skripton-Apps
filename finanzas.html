@@ -272,7 +272,6 @@ body {
   padding-bottom: env(safe-area-inset-bottom);
 }
 </style>
-<link rel="icon" type="image/x-icon" href="favicon.ico"> <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png"> <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png"> <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 </head>
 <body>
 
@@ -391,6 +390,12 @@ body {
         </button>
         <button class="nav-item" id="nav-rentabilidad" onclick="cambiarMod('rentabilidad')">
           <span class="nav-item-icon">📈</span>Rentabilidad
+        </button>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">Ajustes</div>
+        <button class="nav-item" id="nav-config" onclick="cambiarMod('config')">
+          <span class="nav-item-icon">🏢</span>Mi empresa
         </button>
       </div>
       <div class="sidebar-footer">
@@ -801,6 +806,53 @@ body {
         </div>
       </div>
 
+      <!-- ════ CONFIGURACIÓN DE EMPRESA ════ -->
+      <div id="mod-config" class="modulo" style="display:none">
+        <div class="panel-header">
+          <div><div class="panel-title">Mi empresa</div>
+            <div class="panel-sub">Estos datos aparecen en el encabezado de tus facturas en PDF</div></div>
+        </div>
+        <div id="alert-config" class="alert"></div>
+
+        <div class="card">
+          <div class="card-title">Logo</div>
+          <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+            <div id="config-logo-preview" style="width:90px;height:90px;border:1.5px dashed var(--border2);border-radius:var(--r);display:flex;align-items:center;justify-content:center;overflow:hidden;background:var(--bg3);flex-shrink:0">
+              <span style="font-size:11px;color:var(--ink3);text-align:center;padding:4px">Sin logo</span>
+            </div>
+            <div>
+              <input type="file" id="config-logo-file" accept="image/png,image/jpeg" onchange="onLogoSeleccionado(event)" style="max-width:220px">
+              <div class="hint">PNG o JPG, idealmente cuadrado. Se guarda directamente en tu cuenta.</div>
+              <button class="link-btn" style="color:var(--red);margin-top:6px" onclick="quitarLogo()">Quitar logo</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Datos de la empresa</div>
+          <div class="grid-2">
+            <div class="form-g"><label>Nombre de la empresa</label>
+              <input type="text" id="config-nombre" placeholder="Ej: Mi Negocio S.A.S."></div>
+            <div class="form-g"><label>NIT</label>
+              <input type="text" id="config-nit" placeholder="900.123.456-7"></div>
+          </div>
+          <div class="grid-2">
+            <div class="form-g"><label>Teléfono</label>
+              <input type="text" id="config-telefono" placeholder="(604) 300 0000"></div>
+            <div class="form-g"><label>Ciudad</label>
+              <input type="text" id="config-ciudad" placeholder="Medellín - Colombia"></div>
+          </div>
+          <div class="form-g"><label>Correo electrónico</label>
+            <input type="email" id="config-email" placeholder="contacto@miempresa.com"></div>
+          <div class="form-g"><label>Observaciones por defecto</label>
+            <textarea id="config-obs" rows="2" placeholder="Ej: Por favor realizar su pago en…"></textarea>
+            <div class="hint">Este texto aparece automáticamente en el PDF, en cada factura</div>
+          </div>
+        </div>
+
+        <button class="btn-primary" style="width:auto;padding:12px 28px" onclick="guardarConfiguracion()">💾 Guardar datos de mi empresa</button>
+      </div>
+
     </div><!-- main-content -->
   </div><!-- app-body -->
 </div><!-- screen-app -->
@@ -1042,7 +1094,7 @@ function closeSidebar(){
   document.getElementById('sidebar-overlay').classList.remove('visible');
 }
 
-var MODS=['dashboard','facturas','nueva-factura','clientes','servicios','gastos','rentabilidad'];
+var MODS=['dashboard','facturas','nueva-factura','clientes','servicios','gastos','rentabilidad','config'];
 function cambiarMod(mod){
   closeSidebar();
   MODS.forEach(function(m){
@@ -1057,6 +1109,7 @@ function cambiarMod(mod){
   if(mod==='servicios')     cargarServicios();
   if(mod==='gastos')        cargarGastos();
   if(mod==='rentabilidad')  initRentabilidad();
+  if(mod==='config')        cargarConfiguracion();
 }
 
 /* ─────────────────────────────────────────────────
@@ -2108,7 +2161,65 @@ async function cargarRentabilidad(){
 }
 
 /* ─────────────────────────────────────────────────
-   PDF — FACTURA INDIVIDUAL (jsPDF, sin cambios de backend)
+   CONFIGURACIÓN DE EMPRESA (logo, datos para el PDF)
+───────────────────────────────────────────────── */
+var _config = { logoBase64:'', nombreEmpresa:'', nit:'', telefono:'', ciudad:'', email:'', observacionesDefault:'' };
+
+async function cargarConfiguracion(){
+  var { data: c } = await supabase.rpc('fac_configuracion_obtener');
+  if(c) _config = c;
+  document.getElementById('config-nombre').value = _config.nombreEmpresa||'';
+  document.getElementById('config-nit').value = _config.nit||'';
+  document.getElementById('config-telefono').value = _config.telefono||'';
+  document.getElementById('config-ciudad').value = _config.ciudad||'';
+  document.getElementById('config-email').value = _config.email||'';
+  document.getElementById('config-obs').value = _config.observacionesDefault||'';
+  var prev = document.getElementById('config-logo-preview');
+  if(_config.logoBase64){
+    prev.innerHTML = '<img src="'+_config.logoBase64+'" style="width:100%;height:100%;object-fit:contain">';
+  } else {
+    prev.innerHTML = '<span style="font-size:11px;color:var(--ink3);text-align:center;padding:4px">Sin logo</span>';
+  }
+}
+
+function onLogoSeleccionado(e){
+  var file = e.target.files[0];
+  if(!file) return;
+  if(file.size > 1024*1024){ toast('La imagen es muy pesada (máx. 1MB)','warn'); return; }
+  var reader = new FileReader();
+  reader.onload = function(ev){
+    _config.logoBase64 = ev.target.result;
+    document.getElementById('config-logo-preview').innerHTML =
+      '<img src="'+_config.logoBase64+'" style="width:100%;height:100%;object-fit:contain">';
+  };
+  reader.readAsDataURL(file);
+}
+
+function quitarLogo(){
+  _config.logoBase64 = '';
+  document.getElementById('config-logo-preview').innerHTML =
+    '<span style="font-size:11px;color:var(--ink3);text-align:center;padding:4px">Sin logo</span>';
+  document.getElementById('config-logo-file').value = '';
+}
+
+async function guardarConfiguracion(){
+  var { data: res, error } = await supabase.rpc('fac_configuracion_guardar', {
+    p_logo_base64: _config.logoBase64,
+    p_nombre_empresa: document.getElementById('config-nombre').value.trim(),
+    p_nit: document.getElementById('config-nit').value.trim(),
+    p_telefono: document.getElementById('config-telefono').value.trim(),
+    p_ciudad: document.getElementById('config-ciudad').value.trim(),
+    p_email: document.getElementById('config-email').value.trim(),
+    p_observaciones_default: document.getElementById('config-obs').value.trim()
+  });
+  if(error){ showAlert('alert-config','Error: '+error.message,'err'); return; }
+  showAlert('alert-config',res.mensaje,'ok');
+}
+
+/* ─────────────────────────────────────────────────
+   PDF — FACTURA INDIVIDUAL, estilo plantilla clásica
+   (logo + datos empresa a la izquierda, "Factura de
+   Venta" a la derecha, igual al ejemplo de referencia)
 ───────────────────────────────────────────────── */
 function descargarFacturaPDF(){
   if(!_facturaActual){ toast('No hay factura seleccionada','err'); return; }
@@ -2120,100 +2231,136 @@ async function pdfFactura(id){
   if(f){ _facturaActual=f; pdfFacturaObj(f); } else toast('Factura no encontrada','err');
 }
 
-function pdfFacturaObj(f){
+async function pdfFacturaObj(f){
+  // Aseguramos tener la configuración de empresa más reciente
+  if(!_config.nombreEmpresa && !_config.logoBase64){
+    var { data: c } = await supabase.rpc('fac_configuracion_obtener');
+    if(c) _config = c;
+  }
+
   var doc=new window.jspdf.jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
   var W=doc.internal.pageSize.getWidth(), H=doc.internal.pageSize.getHeight();
-  var MX=15, y=0;
-  var AZUL=[26,86,219], AZUL_L=[232,240,254], GRIS1=[28,27,24], GRIS2=[92,90,85], GRIS3=[156,154,148], BORDE=[226,224,218];
-  var VERDE=[15,110,86], ROJO=[153,60,29];
-  var empresa=SESSION.nombre||SESSION.usuario;
+  var MX=15, y=15;
+  var NEGRO=[20,20,20], GRIS=[90,90,90];
 
-  doc.setFillColor.apply(doc,AZUL);
-  doc.rect(0,0,W,28,'F');
-  doc.setFont('helvetica','bold'); doc.setFontSize(18); doc.setTextColor(255,255,255);
-  doc.text('FACTURA DE SERVICIOS',MX,14);
-  doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(200,220,255);
-  doc.text(empresa,MX,21);
-  doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.setTextColor(255,255,255);
-  doc.text('N° '+f.numero,W-MX,11,{align:'right'});
-  doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(200,220,255);
-  doc.text('Emitida: '+f.fechaSolo,W-MX,17,{align:'right'});
-  if(f.fechaVencimiento) doc.text('Vence: '+f.fechaVencimiento,W-MX,23,{align:'right'});
-  y=34;
+  // ── Encabezado: logo + datos empresa (izquierda) ──────────
+  var textX = MX;
+  if(_config.logoBase64){
+    try{
+      var fmt = _config.logoBase64.indexOf('image/png')>-1 ? 'PNG' : 'JPEG';
+      doc.addImage(_config.logoBase64, fmt, MX, y, 24, 24);
+      textX = MX + 30;
+    }catch(e){ console.error('Logo no válido para PDF', e); }
+  }
+  doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.setTextColor.apply(doc,NEGRO);
+  doc.text((_config.nombreEmpresa || (SESSION.nombre||SESSION.usuario)).toUpperCase(), textX, y+5);
+  doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor.apply(doc,GRIS);
+  var ly = y+11;
+  if(_config.nit){ doc.text('NIT '+_config.nit, textX, ly); ly+=4.5; }
+  if(_config.telefono){ doc.text('Tel: '+_config.telefono, textX, ly); ly+=4.5; }
+  if(_config.ciudad){ doc.text(_config.ciudad, textX, ly); ly+=4.5; }
+  if(_config.email){ doc.text(_config.email, textX, ly); ly+=4.5; }
 
-  var estadoColor=f.estado==='pagada'?VERDE:(f.estado==='anulada'?ROJO:AZUL);
-  doc.setFillColor.apply(doc,[estadoColor[0]+(255-estadoColor[0])*.8,estadoColor[1]+(255-estadoColor[1])*.8,estadoColor[2]+(255-estadoColor[2])*.8]);
-  doc.roundedRect(MX,y,W-MX*2,8,1.5,1.5,'F');
-  doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.setTextColor.apply(doc,estadoColor);
-  var estadoTxt=f.estado==='emitida'?'PENDIENTE DE PAGO':f.estado==='pagada'?'PAGADA':f.estado.toUpperCase();
-  doc.text('ESTADO: '+estadoTxt,W/2,y+5.5,{align:'center'});
-  y+=14;
+  // ── Caja "Factura de Venta" (derecha) ──────────────────────
+  var boxW = 60, boxX = W-MX-boxW;
+  doc.setDrawColor(0,0,0); doc.setLineWidth(0.4);
+  doc.rect(boxX, y, boxW, 9);
+  doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor.apply(doc,NEGRO);
+  doc.text('Factura de Venta', boxX+boxW/2, y+6, {align:'center'});
+  doc.setFont('helvetica','bold'); doc.setFontSize(9);
+  doc.text('N° '+f.numero, boxX+boxW/2, y+9+6, {align:'center'});
 
-  doc.setFillColor.apply(doc,[247,246,242]);
-  doc.roundedRect(MX,y,W/2-MX-3,30,1.5,1.5,'F');
-  doc.setFont('helvetica','bold'); doc.setFontSize(7.5); doc.setTextColor.apply(doc,GRIS2);
-  doc.text('CLIENTE',MX+4,y+5);
-  doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor.apply(doc,GRIS1);
-  doc.text(f.clienteNombre.substring(0,28),MX+4,y+11);
-  doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor.apply(doc,GRIS2);
-  var cy=y+17;
-  if(f.clienteNitcc){ doc.text('NIT/CC: '+f.clienteNitcc,MX+4,cy); cy+=5; }
-  if(f.clienteTelefono){ doc.text('Tel: '+f.clienteTelefono,MX+4,cy); cy+=5; }
-  if(f.clienteEmail) doc.text(f.clienteEmail.substring(0,30),MX+4,cy);
+  y = Math.max(ly+4, y+30);
 
-  var rx=W/2+3;
-  doc.setFillColor.apply(doc,AZUL_L);
-  doc.roundedRect(rx,y,W-MX-rx,30,1.5,1.5,'F');
-  doc.setFont('helvetica','bold'); doc.setFontSize(7.5); doc.setTextColor.apply(doc,AZUL);
-  doc.text('DATOS FACTURA',rx+4,y+5);
-  doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor.apply(doc,GRIS1);
-  doc.text('Fecha emisión: '+f.fechaSolo,rx+4,y+12);
-  if(f.fechaVencimiento) doc.text('Vencimiento: '+f.fechaVencimiento,rx+4,y+18);
-  y+=36;
+  // ── Caja "Fecha y hora Factura" ─────────────────────────────
+  var fy = y;
+  doc.setFont('helvetica','bold'); doc.setFontSize(9);
+  doc.rect(boxX, fy, boxW, 7);
+  doc.text('Fecha y hora Factura', boxX+boxW/2, fy+5, {align:'center'});
+  doc.setFont('helvetica','normal'); doc.setFontSize(8);
+  var filas=[['Generación', f.fechaSolo], ['Expedición', f.fechaSolo], ['Vencimiento', f.fechaVencimiento||'—']];
+  filas.forEach(function(r,i){
+    var ry=fy+7+i*6;
+    doc.rect(boxX, ry, boxW*0.45, 6);
+    doc.rect(boxX+boxW*0.45, ry, boxW*0.55, 6);
+    doc.text(r[0], boxX+2, ry+4);
+    doc.text(String(r[1]), boxX+boxW*0.45+2, ry+4);
+  });
 
-  var bodyItems=(f.items||[]).map(function(it){
-    return [it.nombre+(it.descripcion?'\n'+it.descripcion:''),String(it.cantidad),fmt(it.precio),fmt(it.subtotalItem)];
+  // ── Datos del cliente ────────────────────────────────────────
+  var cx=MX, cw=W-MX*2, ch=8;
+  doc.setLineWidth(0.3);
+  doc.rect(cx, y, cw, ch);
+  doc.setFont('helvetica','bold'); doc.setFontSize(8.5);
+  doc.text('Señores', cx+2, y+5.5);
+  doc.setFont('helvetica','normal');
+  doc.text(f.clienteNombre||'', cx+22, y+5.5);
+  y+=ch;
+
+  doc.rect(cx, y, cw*0.5, ch);
+  doc.rect(cx+cw*0.5, y, cw*0.5, ch);
+  doc.setFont('helvetica','bold'); doc.text('NIT/CC', cx+2, y+5.5);
+  doc.setFont('helvetica','normal'); doc.text(f.clienteNitcc||'', cx+22, y+5.5);
+  doc.setFont('helvetica','bold'); doc.text('Teléfono', cx+cw*0.5+2, y+5.5);
+  doc.setFont('helvetica','normal'); doc.text(f.clienteTelefono||'', cx+cw*0.5+24, y+5.5);
+  y+=ch;
+
+  doc.rect(cx, y, cw*0.5, ch);
+  doc.rect(cx+cw*0.5, y, cw*0.5, ch);
+  doc.setFont('helvetica','bold'); doc.text('Dirección', cx+2, y+5.5);
+  doc.setFont('helvetica','normal'); doc.text(f.clienteDireccion||'', cx+24, y+5.5);
+  doc.setFont('helvetica','bold'); doc.text('Ciudad', cx+cw*0.5+2, y+5.5);
+  doc.setFont('helvetica','normal'); doc.text(f.clienteCiudad||'', cx+cw*0.5+20, y+5.5);
+  y+=ch+8;
+
+  // ── Tabla de ítems ─────────────────────────────────────────
+  var bodyItems=(f.items||[]).map(function(it,i){
+    return [String(i+1), it.nombre+(it.descripcion?' — '+it.descripcion:''), String(it.cantidad), fmt(it.subtotalItem)];
   });
   doc.autoTable({
     startY:y,
-    head:[['Servicio / Descripción','Cant.','Precio Unit.','Subtotal']],
+    head:[['Ítem','Descripción','Cantidad','Vr. Total']],
     body:bodyItems,
-    theme:'plain',
-    styles:{fontSize:9,cellPadding:3.5,textColor:GRIS2,lineColor:BORDE,lineWidth:0.3},
-    headStyles:{fillColor:[232,240,254],textColor:AZUL,fontStyle:'bold',fontSize:8},
-    columnStyles:{0:{cellWidth:'auto'},1:{halign:'center',cellWidth:18},2:{halign:'right',cellWidth:32},3:{halign:'right',cellWidth:32,fontStyle:'bold'}},
-    alternateRowStyles:{fillColor:[250,250,248]},
+    theme:'grid',
+    styles:{fontSize:9,cellPadding:3,textColor:NEGRO,lineColor:[0,0,0],lineWidth:0.3},
+    headStyles:{fillColor:[255,255,255],textColor:NEGRO,fontStyle:'bold',lineColor:[0,0,0],lineWidth:0.3},
+    columnStyles:{0:{cellWidth:16,halign:'center'},1:{cellWidth:'auto'},2:{cellWidth:26,halign:'center'},3:{cellWidth:32,halign:'right'}},
     margin:{left:MX,right:MX}
   });
   y=doc.lastAutoTable.finalY+6;
 
+  // ── Total de ítems (izq) + Totales (der) ────────────────────
+  doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor.apply(doc,NEGRO);
+  doc.text('Total items: '+(f.items||[]).length, MX, y+4);
+
   var tw=70, tx=W-MX-tw;
-  doc.setFillColor.apply(doc,AZUL_L);
-  doc.roundedRect(tx,y,tw,f.ivaPorc>0?24:18,2,2,'F');
-  doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor.apply(doc,GRIS2);
-  doc.text('Subtotal:',tx+4,y+7); doc.text(fmt(f.subtotal),tx+tw-4,y+7,{align:'right'});
-  if(f.ivaPorc>0){
-    doc.text('IVA ('+f.ivaPorc+'%):',tx+4,y+13); doc.text(fmt(f.ivaValor),tx+tw-4,y+13,{align:'right'});
-    doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor.apply(doc,AZUL);
-    doc.text('TOTAL:',tx+4,y+21); doc.text(fmt(f.total),tx+tw-4,y+21,{align:'right'});
-    y+=28;
-  } else {
-    doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor.apply(doc,AZUL);
-    doc.text('TOTAL:',tx+4,y+15); doc.text(fmt(f.total),tx+tw-4,y+15,{align:'right'});
-    y+=22;
+  var filasTot=[['Total Bruto', fmt(f.subtotal)]];
+  if(f.ivaPorc>0) filasTot.push(['IVA '+f.ivaPorc+'%', fmt(f.ivaValor)]);
+  filasTot.push(['Total a Pagar', fmt(f.total)]);
+  filasTot.forEach(function(r,i){
+    var ry=y+i*7;
+    doc.rect(tx, ry, tw*0.55, 7);
+    doc.rect(tx+tw*0.55, ry, tw*0.45, 7);
+    doc.setFont('helvetica','bold'); doc.setFontSize(8.5);
+    doc.text(r[0], tx+2, ry+5);
+    doc.text(r[1], tx+tw-2, ry+5, {align:'right'});
+  });
+  y += filasTot.length*7 + 14;
+
+  // ── Observaciones ────────────────────────────────────────────
+  var obs = f.notas || _config.observacionesDefault || '';
+  if(obs){
+    doc.setFont('helvetica','bold'); doc.setFontSize(8.5); doc.setTextColor.apply(doc,NEGRO);
+    doc.text('Observaciones:', MX, y);
+    doc.setFont('helvetica','normal');
+    var obsLines = doc.splitTextToSize(obs, W-MX*2-32);
+    doc.text(obsLines, MX+32, y);
   }
 
-  if(f.notas){
-    doc.setFillColor.apply(doc,[247,246,242]);
-    doc.roundedRect(MX,y,W-MX*2,12,1.5,1.5,'F');
-    doc.setFont('helvetica','italic'); doc.setFontSize(8); doc.setTextColor.apply(doc,GRIS2);
-    doc.text('Notas: '+f.notas.substring(0,80),MX+4,y+7);
-    y+=16;
-  }
-
-  doc.setDrawColor.apply(doc,BORDE); doc.setLineWidth(0.3); doc.line(MX,H-10,W-MX,H-10);
-  doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor.apply(doc,GRIS3);
-  doc.text(empresa+' · Factura N° '+f.numero+' · Generado en Skripto Apps',W/2,H-6,{align:'center'});
+  // ── Pie de página ─────────────────────────────────────────────
+  doc.setDrawColor(220,220,220); doc.setLineWidth(0.2); doc.line(MX,H-10,W-MX,H-10);
+  doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(150,150,150);
+  doc.text('Generado con Skripto Apps',W/2,H-6,{align:'center'});
 
   doc.save('Factura_'+f.numero+'_'+f.clienteNombre.replace(/\s+/g,'_').substring(0,20)+'.pdf');
   toast('📄 PDF descargado','ok');
