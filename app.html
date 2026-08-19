@@ -1060,6 +1060,18 @@ body {
   </div>
 </div>
 
+<!-- Modal de confirmación genérico (eliminar movimientos, ventas, etc) -->
+<div class="modal-overlay" id="modal-confirmar-app">
+  <div class="modal-box" style="max-width:400px">
+    <h3 id="mconf-app-title">¿Confirmar acción?</h3>
+    <p id="mconf-app-msg">Esta acción no se puede deshacer.</p>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="cerrarModalConfirmar()">Cancelar</button>
+      <button class="btn-danger" id="mconf-app-btn" onclick="">Sí, eliminar</button>
+    </div>
+  </div>
+</div>
+
 <script>
 var SESSION = null;
 var mpProductos  = [];
@@ -1281,6 +1293,16 @@ supabase.auth.onAuthStateChange(function(event){
 function mostrarModalEliminar(){document.getElementById('del-pwd').value='';document.getElementById('del-error').style.display='none';document.getElementById('modal-eliminar-cuenta').classList.add('visible')}
 function cerrarModalEliminar(){document.getElementById('modal-eliminar-cuenta').classList.remove('visible')}
 
+function confirmar(titulo, msg, fn){
+  document.getElementById('mconf-app-title').textContent = titulo;
+  document.getElementById('mconf-app-msg').textContent = msg;
+  document.getElementById('mconf-app-btn').onclick = function(){ cerrarModalConfirmar(); fn(); };
+  document.getElementById('modal-confirmar-app').classList.add('visible');
+}
+function cerrarModalConfirmar(){
+  document.getElementById('modal-confirmar-app').classList.remove('visible');
+}
+
 // NOTA: borrar la cuenta por completo (como hacías en Apps Script) requiere
 // una función especial de administrador (Edge Function) porque el usuario
 // no puede autoeliminarse a sí mismo desde el navegador por seguridad.
@@ -1386,12 +1408,17 @@ async function mpConsultar(){
   });
 }
 
-async function mpEliminarMovimiento(id, producto){
-  if(!confirm('¿Eliminar este movimiento de "'+producto+'"?\n\nEsto restaura el stock y el costo promedio al estado anterior. No se puede deshacer.')) return;
-  var { data: res, error } = await supabase.rpc('mp_eliminar_movimiento', { p_id: id });
-  if(error){ showAlert('alert-mp','Error: '+error.message,'err'); return; }
-  if(res.success){ showAlert('alert-mp',res.mensaje,'ok'); mpConsultar(); cargarDatosIniciales(); }
-  else showAlert('alert-mp',res.mensaje,'err');
+function mpEliminarMovimiento(id, producto){
+  confirmar(
+    'Eliminar movimiento',
+    '¿Eliminar este movimiento de "'+producto+'"? Esto restaura el stock y el costo promedio al estado anterior.',
+    async function(){
+      var { data: res, error } = await supabase.rpc('mp_eliminar_movimiento', { p_id: id });
+      if(error){ showAlert('alert-mp','Error: '+error.message,'err'); return; }
+      if(res.success){ showAlert('alert-mp',res.mensaje,'ok'); mpConsultar(); cargarDatosIniciales(); }
+      else showAlert('alert-mp',res.mensaje,'err');
+    }
+  );
 }
 
 /* ══ PRODUCCIÓN (los cálculos/armado de arrays son iguales, solo cambia la llamada) ══ */
@@ -1668,12 +1695,17 @@ function renderHistorial(ventas){
   });
 }
 
-async function ventasEliminarRegistro(id, producto){
-  if(!confirm('¿Eliminar esta venta de "'+producto+'"?\n\nEsto restaura el stock del producto al estado anterior. No se puede deshacer.')) return;
-  var { data: res, error } = await supabase.rpc('ventas_eliminar', { p_id: id });
-  if(error){ showAlert('alert-ventas','Error: '+error.message,'err'); return; }
-  if(res.success){ showAlert('alert-ventas',res.mensaje,'ok'); cargarHistorialVentas(); cargarPFVentas(); }
-  else showAlert('alert-ventas',res.mensaje,'err');
+function ventasEliminarRegistro(id, producto){
+  confirmar(
+    'Eliminar venta',
+    '¿Eliminar esta venta de "'+producto+'"? Esto restaura el stock del producto al estado anterior.',
+    async function(){
+      var { data: res, error } = await supabase.rpc('ventas_eliminar', { p_id: id });
+      if(error){ showAlert('alert-ventas','Error: '+error.message,'err'); return; }
+      if(res.success){ showAlert('alert-ventas',res.mensaje,'ok'); cargarHistorialVentas(); cargarPFVentas(); }
+      else showAlert('alert-ventas',res.mensaje,'err');
+    }
+  );
 }
 
 /* ══ REPORTE PDF — igual que antes, solo cambia CÓMO trae los datos ══ */
