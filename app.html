@@ -554,7 +554,6 @@ body {
   }
   var supabase = window._skriptoClient;
 </script>
-<link rel="icon" type="image/x-icon" href="favicon.ico"> <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png"> <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png"> <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 </head>
 <body>
 
@@ -804,7 +803,7 @@ body {
                     <th>#</th><th>Fecha</th><th>Tipo</th>
                     <th class="r">Cant.</th><th>Und</th>
                     <th class="r">V. Unit.</th><th class="r">V. Total</th>
-                    <th class="r">Stock</th><th class="r">CPP</th>
+                    <th class="r">Stock</th><th class="r">CPP</th><th></th>
                   </tr></thead>
                   <tbody id="mp-tbody"></tbody>
                 </table>
@@ -1021,7 +1020,7 @@ body {
                   <th class="r">Cant.</th><th class="r">C.Unit.</th>
                   <th class="r">Precio</th><th class="r">Ingreso</th>
                   <th class="r">Margen</th><th class="r">Utilidad</th>
-                  <th>Notas</th>
+                  <th>Notas</th><th></th>
                 </tr></thead>
                 <tbody id="v-tbody"></tbody>
               </table>
@@ -1373,13 +1372,22 @@ async function mpConsultar(){
   var movs=estado.movimientos||[];
   document.getElementById('mp-mov-cnt').textContent=movs.length+' movimiento'+(movs.length!==1?'s':'');
   var tbody=document.getElementById('mp-tbody');tbody.innerHTML='';
-  if(!movs.length){tbody.innerHTML='<tr><td colspan="9" style="text-align:center;padding:20px;color:var(--ink3)">Sin movimientos</td></tr>';return}
-  movs.forEach(function(m){
+  if(!movs.length){tbody.innerHTML='<tr><td colspan="10" style="text-align:center;padding:20px;color:var(--ink3)">Sin movimientos</td></tr>';return}
+  movs.forEach(function(m,idx){
     var es=m.tipo==='COMPRA';
+    var esUltimo=idx===movs.length-1;
     var tr=document.createElement('tr');tr.style.background=es?'#F0FDF4':'#FFF7F5';
-    tr.innerHTML='<td style="color:var(--ink3);font-size:10px;font-family:var(--font-mono)">'+esc(m.id)+'</td><td>'+esc(m.fecha)+'</td><td><span class="badge '+(es?'badge-compra':'badge-salida')+'">'+(es?'📥':'📤')+'</span></td><td class="r"><strong>'+fmtN(m.cantidad)+'</strong></td><td>'+esc(m.unidad)+'</td><td class="r">'+fmt(m.valorUnit)+'</td><td class="r">'+fmt(m.vtotal)+'</td><td class="r">'+fmtN(m.stockAcum)+'</td><td class="r"><strong style="color:'+(es?'var(--green)':'#D85A30')+'">'+fmt(m.cpp)+'</strong></td>';
+    tr.innerHTML='<td style="color:var(--ink3);font-size:10px;font-family:var(--font-mono)">'+esc(m.id)+'</td><td>'+esc(m.fecha)+'</td><td><span class="badge '+(es?'badge-compra':'badge-salida')+'">'+(es?'📥':'📤')+'</span></td><td class="r"><strong>'+fmtN(m.cantidad)+'</strong></td><td>'+esc(m.unidad)+'</td><td class="r">'+fmt(m.valorUnit)+'</td><td class="r">'+fmt(m.vtotal)+'</td><td class="r">'+fmtN(m.stockAcum)+'</td><td class="r"><strong style="color:'+(es?'var(--green)':'#D85A30')+'">'+fmt(m.cpp)+'</strong></td><td>'+(esUltimo?'<button class="btn-rm" title="Eliminar (es el más reciente)" onclick="mpEliminarMovimiento(\''+m.id+'\',\''+esc(nombre)+'\')" style="font-size:15px">🗑</button>':'')+'</td>';
     tbody.appendChild(tr);
   });
+}
+
+async function mpEliminarMovimiento(id, producto){
+  if(!confirm('¿Eliminar este movimiento de "'+producto+'"?\n\nEsto restaura el stock y el costo promedio al estado anterior. No se puede deshacer.')) return;
+  var { data: res, error } = await supabase.rpc('mp_eliminar_movimiento', { p_id: id });
+  if(error){ showAlert('alert-mp','Error: '+error.message,'err'); return; }
+  if(res.success){ showAlert('alert-mp',res.mensaje,'ok'); mpConsultar(); cargarDatosIniciales(); }
+  else showAlert('alert-mp',res.mensaje,'err');
 }
 
 /* ══ PRODUCCIÓN (los cálculos/armado de arrays son iguales, solo cambia la llamada) ══ */
@@ -1636,16 +1644,32 @@ function vFiltrar(){
   } else {document.getElementById('rp-box').style.display='none'}
   renderHistorial(filtradas);
 }
+function calcularUltimasVentasPorProducto(){
+  var map={};
+  todasVentas.forEach(function(v){ if(!map[v.producto]) map[v.producto]=v.id; });
+  return map;
+}
+
 function renderHistorial(ventas){
   var tabla=document.getElementById('v-tabla');var empty=document.getElementById('v-hist-empty');
   if(!ventas.length){tabla.style.display='none';empty.style.display='block';return}
   tabla.style.display='table';empty.style.display='none';
   var tbody=document.getElementById('v-tbody');tbody.innerHTML='';
+  var ultimos=calcularUltimasVentasPorProducto();
   ventas.forEach(function(v){
     var ep=v.utilidad>=0;var tr=document.createElement('tr');
-    tr.innerHTML='<td style="font-size:10px;color:var(--ink3);font-family:var(--font-mono)">'+esc(v.id)+'</td><td>'+esc(v.fecha)+'</td><td><strong>'+esc(v.producto)+'</strong></td><td class="r">'+v.cantidad+'</td><td class="r">'+fmt(v.cpp)+'</td><td class="r">'+fmt(v.precioUnit)+'</td><td class="r"><strong>'+fmt(v.ingresoTotal)+'</strong></td><td class="r">'+v.margen.toFixed(2)+'%</td><td class="r"><span class="badge '+(ep?'badge-ok':'badge-neg')+'">'+(ep?'+':'')+fmt(v.utilidad)+'</span></td><td style="font-size:11px;color:var(--ink3);font-style:italic;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+esc(v.notas)+'">'+esc(v.notas||'—')+'</td>';
+    var esUltimo=ultimos[v.producto]===v.id;
+    tr.innerHTML='<td style="font-size:10px;color:var(--ink3);font-family:var(--font-mono)">'+esc(v.id)+'</td><td>'+esc(v.fecha)+'</td><td><strong>'+esc(v.producto)+'</strong></td><td class="r">'+v.cantidad+'</td><td class="r">'+fmt(v.cpp)+'</td><td class="r">'+fmt(v.precioUnit)+'</td><td class="r"><strong>'+fmt(v.ingresoTotal)+'</strong></td><td class="r">'+v.margen.toFixed(2)+'%</td><td class="r"><span class="badge '+(ep?'badge-ok':'badge-neg')+'">'+(ep?'+':'')+fmt(v.utilidad)+'</span></td><td style="font-size:11px;color:var(--ink3);font-style:italic;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+esc(v.notas)+'">'+esc(v.notas||'—')+'</td><td>'+(esUltimo?'<button class="btn-rm" title="Eliminar (es la más reciente)" onclick="ventasEliminarRegistro(\''+v.id+'\',\''+esc(v.producto)+'\')" style="font-size:15px">🗑</button>':'')+'</td>';
     tbody.appendChild(tr);
   });
+}
+
+async function ventasEliminarRegistro(id, producto){
+  if(!confirm('¿Eliminar esta venta de "'+producto+'"?\n\nEsto restaura el stock del producto al estado anterior. No se puede deshacer.')) return;
+  var { data: res, error } = await supabase.rpc('ventas_eliminar', { p_id: id });
+  if(error){ showAlert('alert-ventas','Error: '+error.message,'err'); return; }
+  if(res.success){ showAlert('alert-ventas',res.mensaje,'ok'); cargarHistorialVentas(); cargarPFVentas(); }
+  else showAlert('alert-ventas',res.mensaje,'err');
 }
 
 /* ══ REPORTE PDF — igual que antes, solo cambia CÓMO trae los datos ══ */
