@@ -1700,10 +1700,11 @@ async function prodCalcular(){
   if(!u||u<=0) return showAlert('alert-prod','Ingresa las unidades a producir.','err');
   hideAlert('alert-prod');
 
-  var { data: res, error } = await supabase.rpc('prod_calcular', {
-    p_producto_final: pf, p_unidades: u,
-    p_ingredientes: leerIngredientes(), p_costos_fijos: leerCF(), p_mano_obra: leerMO()
-  });
+  var fnCalc = prodIdEditando ? 'prod_calcular_edicion' : 'prod_calcular';
+  var params = { p_producto_final: pf, p_unidades: u, p_ingredientes: leerIngredientes(), p_costos_fijos: leerCF(), p_mano_obra: leerMO() };
+  if(prodIdEditando) params.p_id_prod = prodIdEditando;
+
+  var { data: res, error } = await supabase.rpc(fnCalc, params);
   if(error) return showAlert('alert-prod','Error: '+error.message,'err');
   if(!res.success){ showAlert('alert-prod',res.mensaje,'err'); return; }
   ultimoCalcProd=res; prodMostrarPreview(res);
