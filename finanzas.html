@@ -2213,7 +2213,7 @@ function quitarLogo(){
 }
 
 async function guardarConfiguracion(){
-  var { data: res, error } = await supabase.rpc('fac_configuracion_guardar', {
+  var nuevosDatos = {
     p_logo_base64: _config.logoBase64,
     p_nombre_empresa: document.getElementById('config-nombre').value.trim(),
     p_nit: document.getElementById('config-nit').value.trim(),
@@ -2221,8 +2221,22 @@ async function guardarConfiguracion(){
     p_ciudad: document.getElementById('config-ciudad').value.trim(),
     p_email: document.getElementById('config-email').value.trim(),
     p_observaciones_default: document.getElementById('config-obs').value.trim()
-  });
+  };
+  var { data: res, error } = await supabase.rpc('fac_configuracion_guardar', nuevosDatos);
   if(error){ showAlert('alert-config','Error: '+error.message,'err'); return; }
+
+  // Actualizamos la copia en memoria con lo recién guardado,
+  // así el PDF ya no depende de recargar la página.
+  _config = {
+    logoBase64: nuevosDatos.p_logo_base64,
+    nombreEmpresa: nuevosDatos.p_nombre_empresa,
+    nit: nuevosDatos.p_nit,
+    telefono: nuevosDatos.p_telefono,
+    ciudad: nuevosDatos.p_ciudad,
+    email: nuevosDatos.p_email,
+    observacionesDefault: nuevosDatos.p_observaciones_default
+  };
+
   showAlert('alert-config',res.mensaje,'ok');
 }
 
@@ -2242,11 +2256,11 @@ async function pdfFactura(id){
 }
 
 async function pdfFacturaObj(f){
-  // Aseguramos tener la configuración de empresa más reciente
-  if(!_config.nombreEmpresa && !_config.logoBase64){
-    var { data: c } = await supabase.rpc('fac_configuracion_obtener');
-    if(c) _config = c;
-  }
+  // Siempre traemos la configuración más reciente directo de la
+  // base de datos, para no depender de una copia en memoria que
+  // se pudo quedar desactualizada.
+  var { data: c } = await supabase.rpc('fac_configuracion_obtener');
+  if(c) _config = c;
 
   var doc=new window.jspdf.jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
   var W=doc.internal.pageSize.getWidth(), H=doc.internal.pageSize.getHeight();
