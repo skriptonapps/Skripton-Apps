@@ -65,6 +65,10 @@ button{font-family:var(--font-sans);cursor:pointer;border:none;border-radius:var
 .alert.warn{background:var(--amber2);color:var(--amber);border-color:#D97706}
 .link-btn{background:none;border:none;color:var(--ink3);font-size:12px;cursor:pointer;text-decoration:underline;padding:0;font-family:var(--font-sans)}
 .link-btn:hover{color:var(--ink2)}
+.lang-switch{position:fixed;top:14px;right:16px;display:flex;gap:0;background:var(--bg3);border-radius:20px;padding:3px;z-index:250;box-shadow:var(--shadow)}
+.lang-switch .lang-btn{padding:6px 12px;background:none;border-radius:16px;font-size:11px;font-weight:600;color:var(--ink2);transition:all .15s}
+.lang-switch .lang-btn.active{background:var(--green);color:#fff}
+.topbar .lang-switch{position:static;box-shadow:none;background:var(--bg3);margin-right:8px}
 
 /* ══════════════════════════════════════
    APP — layout raíz
@@ -560,17 +564,140 @@ body {
   }
   var supabase = window._skriptoClient;
 </script>
+<script>
+/* ══════════════════════════════════════════════════════
+   SISTEMA DE IDIOMA (ES / EN)
+══════════════════════════════════════════════════════ */
+var I18N = {
+  es: {
+    app_title:'Inventario', app_sub:'Sistema de gestión de costos',
+    email:'Correo electrónico', password:'Contraseña', forgot:'¿Olvidaste tu contraseña?', enter:'Entrar',
+    business_name:'Nombre del emprendimiento', with_this_email:'Con este correo inicias sesión',
+    username:'Usuario (nombre visible)', min_chars:'Mínimo 6 caracteres', create_account:'Crear cuenta',
+    recover_title:'Recuperar contraseña', recover_sub:'Te enviaremos un enlace a tu correo',
+    your_email:'Tu correo electrónico', send_instructions:'Enviar instrucciones', back_to_login:'Volver al inicio de sesión',
+    new_pwd_title:'Crea tu nueva contraseña', new_pwd:'Nueva contraseña', confirm_pwd:'Confirmar contraseña',
+    repeat_pwd:'Repite la contraseña', save_new_pwd:'Guardar nueva contraseña',
+    del_account:'Eliminar cuenta', logout:'Salir',
+    nav_modules:'Módulos', nav_mp:'Materia Prima', nav_prod:'Producción', nav_sales:'Ventas',
+    nav_entry:'Entrada', nav_check_stock:'Consultar stock', nav_register:'Registrar', nav_stock:'Stock', nav_history:'Historial',
+    nav_monitoring:'Monitoreo', nav_alerts:'Alertas de stock', nav_download_report:'Descargar Reporte',
+    mp_entry_title:'Entrada de insumo', mp_entry_sub:'Registra una compra de materia prima',
+    mp_check_title:'Consultar stock', mp_check_sub:'Revisa el estado actual de tus insumos',
+    mp_card_title:'Registrar compra de insumo', mp_ins_name:'Nombre del insumo', mp_qty_bought:'Cantidad comprada',
+    mp_unit:'Unidad de medida', mp_total_val:'Valor total factura', mp_register_entry:'Registrar Entrada',
+    mp_select_insumo:'Insumo:', mp_select_placeholder:'-- Selecciona un insumo --',
+    mp_cost:'COSTO', mp_stock:'Stock', mp_inv_value:'Valor inventario',
+    mp_history:'Historial de movimientos', mp_no_movs:'Sin movimientos',
+    mp_select_empty_title:'Selecciona un insumo para ver su detalle', mp_select_empty_sub:'Stock actual, costo promedio y todos los movimientos',
+    prod_title:'Producción', prod_sub:'Registra un lote de producción y calcula costos',
+    prod_final_product:'Producto Final', prod_units:'Unidades a Producir', prod_units_hint:'CF y MO se prorratean entre estas unidades',
+    prod_raw_materials:'Materias Primas', prod_add_mp:'Agregar Materia Prima',
+    prod_fixed_costs:'Costos Fijos', prod_add_cf:'Agregar Costo Fijo',
+    prod_labor:'Mano de Obra', prod_add_mo:'Agregar Mano de Obra',
+    prod_calc:'Calcular', prod_register:'Registrar',
+    prod_history:'Historial de producciones', prod_no_history:'Aún no has registrado ninguna producción',
+    sales_reg_title:'Registrar venta', sales_reg_sub:'Registra una nueva venta de producto terminado',
+    sales_stock_title:'Stock de productos', sales_stock_sub:'Consulta el inventario de productos terminados',
+    sales_hist_title:'Historial de ventas', sales_hist_sub:'Todas tus ventas registradas con filtros',
+    sales_product:'Producto a vender', sales_final_product:'Producto Final', sales_select_product:'-- Selecciona producto --',
+    sales_qty:'Cantidad a Vender', sales_notes:'Notas (opcional)',
+    sales_price:'Precio de Venta', sales_margin:'Por margen %', sales_manual:'Precio manual',
+    sales_margin_pct:'Margen de Ganancia (%)', sales_calc_price:'Precio de Venta Calculado',
+    sales_manual_price:'Precio de Venta Unitario', sales_preview:'Previsualizar', sales_confirm:'Confirmar',
+    sales_no_stock:'No hay productos finales en inventario', sales_no_stock_sub:'Registra una producción para ver el stock aquí',
+    sales_no_history:'No hay ventas registradas aún',
+    sales_registered:'Ventas registradas', all_months:'Todos los meses', all:'Todos',
+    alerts_title:'Alertas de stock', alerts_sub:'Configura cuándo avisarte, y revisa tu predicción de días restantes',
+    alerts_monitored:'Insumos monitoreados', alerts_now:'En alerta ahora', alerts_urgent:'Se agotan en ≤ 7 días',
+    alerts_hint:'Punto de reorden: la cantidad mínima que quieres tener antes de que te avisemos. Días restantes: se calcula solo con tu consumo real de los últimos 30 días — mientras más muevas el insumo, más precisa es la predicción.',
+    alerts_all_insumos:'Todos los insumos', alerts_none:'Aún no tienes insumos registrados', alerts_none_sub:'Registra materia prima primero para ver sus alertas aquí',
+    th_insumo:'Insumo', th_stock_now:'Stock actual', th_reorder:'Punto de reorden', th_daily:'Consumo diario prom.', th_days_left:'Días restantes est.', th_status:'Estado',
+    cancel:'Cancelar', save_changes:'Guardar cambios', confirm_action:'¿Confirmar acción?', delete:'Sí, eliminar',
+    del_account_title:'Eliminar mi cuenta', del_account_p1:'Esta acción cerrará tu sesión y eliminará tu acceso.',
+    del_account_p2:'Tus datos se conservan por 30 días.', del_account_confirm:'Confirma con tu contraseña actual:',
+    current_pwd:'Tu contraseña actual'
+  },
+  en: {
+    app_title:'Inventory', app_sub:'Cost management system',
+    email:'Email address', password:'Password', forgot:'Forgot your password?', enter:'Sign in',
+    business_name:'Business name', with_this_email:'You sign in with this email',
+    username:'Username (display name)', min_chars:'Minimum 6 characters', create_account:'Create account',
+    recover_title:'Recover password', recover_sub:"We'll send a link to your email",
+    your_email:'Your email address', send_instructions:'Send instructions', back_to_login:'Back to sign in',
+    new_pwd_title:'Create your new password', new_pwd:'New password', confirm_pwd:'Confirm password',
+    repeat_pwd:'Repeat the password', save_new_pwd:'Save new password',
+    del_account:'Delete account', logout:'Log out',
+    nav_modules:'Modules', nav_mp:'Raw Materials', nav_prod:'Production', nav_sales:'Sales',
+    nav_entry:'Entry', nav_check_stock:'Check stock', nav_register:'Register', nav_stock:'Stock', nav_history:'History',
+    nav_monitoring:'Monitoring', nav_alerts:'Stock alerts', nav_download_report:'Download Report',
+    mp_entry_title:'Supply entry', mp_entry_sub:'Record a raw material purchase',
+    mp_check_title:'Check stock', mp_check_sub:'Review the current status of your supplies',
+    mp_card_title:'Record supply purchase', mp_ins_name:'Supply name', mp_qty_bought:'Quantity bought',
+    mp_unit:'Unit of measure', mp_total_val:'Total invoice value', mp_register_entry:'Register Entry',
+    mp_select_insumo:'Supply:', mp_select_placeholder:'-- Select a supply --',
+    mp_cost:'COST', mp_stock:'Stock', mp_inv_value:'Inventory value',
+    mp_history:'Movement history', mp_no_movs:'No movements',
+    mp_select_empty_title:'Select a supply to see its detail', mp_select_empty_sub:'Current stock, average cost and all movements',
+    prod_title:'Production', prod_sub:'Record a production batch and calculate costs',
+    prod_final_product:'Final Product', prod_units:'Units to Produce', prod_units_hint:'Fixed costs and labor are prorated across these units',
+    prod_raw_materials:'Raw Materials', prod_add_mp:'Add Raw Material',
+    prod_fixed_costs:'Fixed Costs', prod_add_cf:'Add Fixed Cost',
+    prod_labor:'Labor', prod_add_mo:'Add Labor',
+    prod_calc:'Calculate', prod_register:'Register',
+    prod_history:'Production history', prod_no_history:"You haven't recorded any production yet",
+    sales_reg_title:'Register sale', sales_reg_sub:'Record a new finished product sale',
+    sales_stock_title:'Product stock', sales_stock_sub:'Check the inventory of finished products',
+    sales_hist_title:'Sales history', sales_hist_sub:'All your recorded sales with filters',
+    sales_product:'Product to sell', sales_final_product:'Final Product', sales_select_product:'-- Select product --',
+    sales_qty:'Quantity to Sell', sales_notes:'Notes (optional)',
+    sales_price:'Sale Price', sales_margin:'By margin %', sales_manual:'Manual price',
+    sales_margin_pct:'Profit Margin (%)', sales_calc_price:'Calculated Sale Price',
+    sales_manual_price:'Unit Sale Price', sales_preview:'Preview', sales_confirm:'Confirm',
+    sales_no_stock:'No finished products in inventory', sales_no_stock_sub:'Record a production to see stock here',
+    sales_no_history:'No sales recorded yet',
+    sales_registered:'Recorded sales', all_months:'All months', all:'All',
+    alerts_title:'Stock alerts', alerts_sub:'Configure when to notify you, and check your days-remaining prediction',
+    alerts_monitored:'Monitored supplies', alerts_now:'Currently in alert', alerts_urgent:'Running out in ≤ 7 days',
+    alerts_hint:'Reorder point: the minimum quantity you want before we notify you. Days remaining: calculated only from your actual consumption over the last 30 days — the more you move the supply, the more accurate the prediction.',
+    alerts_all_insumos:'All supplies', alerts_none:"You haven't registered any supplies yet", alerts_none_sub:'Register raw materials first to see their alerts here',
+    th_insumo:'Supply', th_stock_now:'Current stock', th_reorder:'Reorder point', th_daily:'Avg. daily consumption', th_days_left:'Est. days left', th_status:'Status',
+    cancel:'Cancel', save_changes:'Save changes', confirm_action:'Confirm action?', delete:'Yes, delete',
+    del_account_title:'Delete my account', del_account_p1:'This action will close your session and remove your access.',
+    del_account_p2:'Your data is kept for 30 days.', del_account_confirm:'Confirm with your current password:',
+    current_pwd:'Your current password'
+  }
+};
+var LANG = localStorage.getItem('skripto_lang') || 'es';
+function t(k){ return (I18N[LANG] && I18N[LANG][k]) || (I18N.es[k]) || k; }
+function setLang(l){
+  LANG = l;
+  try{ localStorage.setItem('skripto_lang', l); }catch(e){}
+  aplicarIdioma();
+}
+function aplicarIdioma(){
+  document.querySelectorAll('[data-i18n]').forEach(function(el){ el.textContent = t(el.getAttribute('data-i18n')); });
+  document.querySelectorAll('[data-i18n-ph]').forEach(function(el){ el.placeholder = t(el.getAttribute('data-i18n-ph')); });
+  document.querySelectorAll('.lang-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.lang===LANG); });
+  document.documentElement.lang = LANG;
+}
+</script>
 </head>
+
 <body>
 
 <!-- ══════════════════════════════
      PANTALLA LOGIN
 ══════════════════════════════ -->
 <div id="screen-login" class="screen visible">
+  <div class="lang-switch">
+    <button class="lang-btn" data-lang="es" onclick="setLang('es')">ES</button>
+    <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+  </div>
   <div class="login-card">
     <div class="login-logo">
       <h1>Inven<span style="color:var(--green2)">tario</span></h1>
-      <span>Sistema de gestión de costos</span>
+      <span data-i18n="app_sub">Sistema de gestión de costos</span>
     </div>
 
     <div id="alert-auth" class="alert"></div>
@@ -578,58 +705,58 @@ body {
     <!-- LOGIN -->
     <div id="blq-login">
       <div class="form-g">
-        <label>Correo electrónico</label>
+        <label data-i18n="email">Correo electrónico</label>
         <input type="email" id="in-user" placeholder="tu@correo.com" autocomplete="username">
       </div>
       <div class="form-g">
-        <label>Contraseña</label>
+        <label data-i18n="password">Contraseña</label>
         <input type="password" id="in-pwd" placeholder="••••••••" autocomplete="current-password"
           onkeydown="if(event.key==='Enter')doLogin()">
         <div style="text-align:right;margin-top:6px">
-          <button class="link-btn" onclick="mostrarRecuperacion()">¿Olvidaste tu contraseña?</button>
+          <button class="link-btn" data-i18n="forgot" onclick="mostrarRecuperacion()">¿Olvidaste tu contraseña?</button>
         </div>
       </div>
-      <button class="btn-main" id="btn-login" onclick="doLogin()">Entrar</button>
+      <button class="btn-main" id="btn-login" data-i18n="enter" onclick="doLogin()">Entrar</button>
     </div>
 
     <!-- REGISTRO -->
     <div id="blq-registro" style="display:none">
       <div class="form-g">
-        <label>Nombre del emprendimiento</label>
+        <label data-i18n="business_name">Nombre del emprendimiento</label>
         <input type="text" id="rg-nombre" placeholder="Mi Negocio S.A.S.">
       </div>
       <div class="form-g">
-        <label>Correo electrónico</label>
+        <label data-i18n="email">Correo electrónico</label>
         <input type="email" id="rg-email" placeholder="tu@correo.com">
-        <div style="font-size:11px;color:var(--ink3);margin-top:3px">Con este correo inicias sesión</div>
+        <div style="font-size:11px;color:var(--ink3);margin-top:3px" data-i18n="with_this_email">Con este correo inicias sesión</div>
       </div>
       <div class="form-g">
-        <label>Usuario (nombre visible)</label>
+        <label data-i18n="username">Usuario (nombre visible)</label>
         <input type="text" id="rg-user" placeholder="minegocio (sin espacios)">
       </div>
       <div class="form-g">
-        <label>Contraseña</label>
+        <label data-i18n="password">Contraseña</label>
         <input type="password" id="rg-pwd" placeholder="Mínimo 6 caracteres"
           onkeydown="if(event.key==='Enter')doRegistro()">
       </div>
-      <button class="btn-main" id="btn-reg" onclick="doRegistro()">Crear cuenta</button>
+      <button class="btn-main" id="btn-reg" data-i18n="create_account" onclick="doRegistro()">Crear cuenta</button>
     </div>
 
     <!-- RECUPERAR -->
     <div id="blq-recuperar" style="display:none">
       <div style="text-align:center;margin-bottom:20px">
         <div style="font-size:28px;margin-bottom:6px">🔑</div>
-        <div style="font-size:15px;font-weight:600">Recuperar contraseña</div>
-        <div style="font-size:12px;color:var(--ink3);margin-top:4px">Te enviaremos un enlace a tu correo</div>
+        <div style="font-size:15px;font-weight:600" data-i18n="recover_title">Recuperar contraseña</div>
+        <div style="font-size:12px;color:var(--ink3);margin-top:4px" data-i18n="recover_sub">Te enviaremos un enlace a tu correo</div>
       </div>
       <div class="form-g">
-        <label>Tu correo electrónico</label>
+        <label data-i18n="your_email">Tu correo electrónico</label>
         <input type="email" id="rec-email" placeholder="tu@correo.com"
           onkeydown="if(event.key==='Enter')doSolicitarRecuperacion()">
       </div>
-      <button class="btn-main" id="btn-recuperar" onclick="doSolicitarRecuperacion()">Enviar instrucciones</button>
+      <button class="btn-main" id="btn-recuperar" data-i18n="send_instructions" onclick="doSolicitarRecuperacion()">Enviar instrucciones</button>
       <div style="text-align:center;margin-top:12px">
-        <button class="link-btn" onclick="volverALogin()">Volver al inicio de sesión</button>
+        <button class="link-btn" data-i18n="back_to_login" onclick="volverALogin()">Volver al inicio de sesión</button>
       </div>
     </div>
 
@@ -637,18 +764,18 @@ body {
     <div id="blq-reset" style="display:none">
       <div style="text-align:center;margin-bottom:20px">
         <div style="font-size:28px;margin-bottom:6px">🔐</div>
-        <div style="font-size:15px;font-weight:600">Crea tu nueva contraseña</div>
+        <div style="font-size:15px;font-weight:600" data-i18n="new_pwd_title">Crea tu nueva contraseña</div>
       </div>
       <div class="form-g">
-        <label>Nueva contraseña</label>
+        <label data-i18n="new_pwd">Nueva contraseña</label>
         <input type="password" id="reset-pwd" placeholder="Mínimo 6 caracteres">
       </div>
       <div class="form-g">
-        <label>Confirmar contraseña</label>
+        <label data-i18n="confirm_pwd">Confirmar contraseña</label>
         <input type="password" id="reset-pwd2" placeholder="Repite la contraseña"
           onkeydown="if(event.key==='Enter')doNuevaPassword()">
       </div>
-      <button class="btn-main" id="btn-reset" onclick="doNuevaPassword()">Guardar nueva contraseña</button>
+      <button class="btn-main" id="btn-reset" data-i18n="save_new_pwd" onclick="doNuevaPassword()">Guardar nueva contraseña</button>
     </div>
   </div>
 </div>
@@ -663,8 +790,12 @@ body {
     <button class="btn-menu-toggle" id="btn-menu-toggle" onclick="toggleSidebar()">☰</button>
     <div class="topbar-brand">Inven<span>tario</span></div>
     <span class="topbar-user" id="tb-user"></span>
-    <button class="btn-del-account" onclick="mostrarModalEliminar()">Eliminar cuenta</button>
-    <button class="btn-logout" onclick="doLogout()">Salir</button>
+    <div class="lang-switch">
+      <button class="lang-btn" data-lang="es" onclick="setLang('es')">ES</button>
+      <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+    </div>
+    <button class="btn-del-account" data-i18n="del_account" onclick="mostrarModalEliminar()">Eliminar cuenta</button>
+    <button class="btn-logout" data-i18n="logout" onclick="doLogout()">Salir</button>
   </div>
 
   <!-- Overlay para cerrar sidebar en móvil -->
@@ -676,41 +807,41 @@ body {
     <nav class="sidebar" id="sidebar">
 
       <div class="sidebar-section">
-        <div class="sidebar-label">Módulos</div>
+        <div class="sidebar-label" data-i18n="nav_modules">Módulos</div>
 
         <!-- Materia Prima -->
         <button class="nav-item active" id="nav-mp" onclick="cambiarModulo('mp')">
           <span class="nav-item-icon">📋</span>
-          <span class="nav-item-text">Materia Prima</span>
+          <span class="nav-item-text" data-i18n="nav_mp">Materia Prima</span>
         </button>
         <div class="nav-subtabs visible" id="sub-mp">
-          <button class="nav-sub active" id="sub-mp-entrada" onclick="mpTab('entrada')">📥 Entrada</button>
-          <button class="nav-sub" id="sub-mp-consultar" onclick="mpTab('consultar')">🔍 Consultar stock</button>
+          <button class="nav-sub active" id="sub-mp-entrada" onclick="mpTab('entrada')">📥 <span data-i18n="nav_entry">Entrada</span></button>
+          <button class="nav-sub" id="sub-mp-consultar" onclick="mpTab('consultar')">🔍 <span data-i18n="nav_check_stock">Consultar stock</span></button>
         </div>
 
         <!-- Producción -->
         <button class="nav-item" id="nav-prod" onclick="cambiarModulo('prod')">
           <span class="nav-item-icon">🏭</span>
-          <span class="nav-item-text">Producción</span>
+          <span class="nav-item-text" data-i18n="nav_prod">Producción</span>
         </button>
 
         <!-- Ventas -->
         <button class="nav-item" id="nav-ventas" onclick="cambiarModulo('ventas')">
           <span class="nav-item-icon">💰</span>
-          <span class="nav-item-text">Ventas</span>
+          <span class="nav-item-text" data-i18n="nav_sales">Ventas</span>
         </button>
         <div class="nav-subtabs" id="sub-ventas">
-          <button class="nav-sub active" id="sub-v-registrar" onclick="ventasTab('registrar')">🛒 Registrar</button>
-          <button class="nav-sub" id="sub-v-stock" onclick="ventasTab('stock')">📦 Stock</button>
-          <button class="nav-sub" id="sub-v-historial" onclick="ventasTab('historial')">🗂️ Historial</button>
+          <button class="nav-sub active" id="sub-v-registrar" onclick="ventasTab('registrar')">🛒 <span data-i18n="nav_register">Registrar</span></button>
+          <button class="nav-sub" id="sub-v-stock" onclick="ventasTab('stock')">📦 <span data-i18n="nav_stock">Stock</span></button>
+          <button class="nav-sub" id="sub-v-historial" onclick="ventasTab('historial')">🗂️ <span data-i18n="nav_history">Historial</span></button>
         </div>
       </div>
 
       <div class="sidebar-section">
-        <div class="sidebar-label">Monitoreo</div>
+        <div class="sidebar-label" data-i18n="nav_monitoring">Monitoreo</div>
         <button class="nav-item" id="nav-alertas" onclick="cambiarModulo('alertas')" style="position:relative">
           <span class="nav-item-icon">🔔</span>
-          <span class="nav-item-text">Alertas de stock</span>
+          <span class="nav-item-text" data-i18n="nav_alerts">Alertas de stock</span>
           <span id="alertas-badge" style="display:none;background:var(--red);color:#fff;font-size:10px;font-weight:700;border-radius:20px;padding:1px 7px;min-width:16px;text-align:center">0</span>
         </button>
       </div>
@@ -720,7 +851,7 @@ body {
       <div class="sidebar-footer">
         <button class="btn-pdf" id="btn-pdf" onclick="abrirModalReporte()">
           <span class="btn-pdf-icon">📄</span>
-          <span>Descargar Reporte</span>
+          <span data-i18n="nav_download_report">Descargar Reporte</span>
         </button>
       </div>
 
@@ -1192,6 +1323,7 @@ body {
 
 <script>
 var SESSION = null;
+aplicarIdioma();
 var mpProductos  = [];
 var pfProductos  = [];
 var todasVentas  = [];
@@ -1236,41 +1368,41 @@ function cambiarModulo(mod){
   if(mod==='prod') cargarHistorialProducciones();
   window.scrollTo({top:0,behavior:'smooth'});
 }
-function mpTab(t){
+function mpTab(tab){
   ['entrada','consultar'].forEach(function(p){
-    document.getElementById('sub-mp-'+p).classList.toggle('active',p===t);
-    document.getElementById('mpanel-'+p).classList.toggle('active',p===t);
+    document.getElementById('sub-mp-'+p).classList.toggle('active',p===tab);
+    document.getElementById('mpanel-'+p).classList.toggle('active',p===tab);
   });
-  var titles={entrada:['Entrada de insumo','Registra una compra de materia prima'],consultar:['Consultar stock','Revisa el estado actual de tus insumos']};
-  document.getElementById('mp-panel-title').textContent=titles[t][0];
-  document.getElementById('mp-panel-sub').textContent=titles[t][1];
+  var titles={entrada:['mp_entry_title','mp_entry_sub'],consultar:['mp_check_title','mp_check_sub']};
+  document.getElementById('mp-panel-title').textContent=t(titles[tab][0]);
+  document.getElementById('mp-panel-sub').textContent=t(titles[tab][1]);
 }
-function ventasTab(t){
+function ventasTab(tab){
   var tabs=['registrar','stock','historial'];
   tabs.forEach(function(n){
-    document.getElementById('sub-v-'+n).classList.toggle('active',n===t);
-    document.getElementById('vpanel-'+n).classList.toggle('active',n===t);
+    document.getElementById('sub-v-'+n).classList.toggle('active',n===tab);
+    document.getElementById('vpanel-'+n).classList.toggle('active',n===tab);
   });
   var titles={
-    registrar:['Registrar venta','Registra una nueva venta de producto terminado'],
-    stock:['Stock de productos','Consulta el inventario de productos terminados'],
-    historial:['Historial de ventas','Todas tus ventas registradas con filtros']
+    registrar:['sales_reg_title','sales_reg_sub'],
+    stock:['sales_stock_title','sales_stock_sub'],
+    historial:['sales_hist_title','sales_hist_sub']
   };
-  document.getElementById('ventas-panel-title').textContent=titles[t][0];
-  document.getElementById('ventas-panel-sub').textContent=titles[t][1];
-  if(t==='stock')     cargarStockPF();
-  if(t==='historial') cargarHistorialVentas();
+  document.getElementById('ventas-panel-title').textContent=t(titles[tab][0]);
+  document.getElementById('ventas-panel-sub').textContent=t(titles[tab][1]);
+  if(tab==='stock')     cargarStockPF();
+  if(tab==='historial') cargarHistorialVentas();
 }
 
 /* ══════════════════════════════════════════════════════
    AUTH — esta es la parte que cambia de raíz
 ══════════════════════════════════════════════════════ */
-function setAuthTab(t){
+function setAuthTab(tab){
   document.querySelectorAll('.tab-auth button').forEach(function(b,i){
-    b.classList.toggle('active',(i===0&&t==='login')||(i===1&&t==='registro'));
+    b.classList.toggle('active',(i===0&&tab==='login')||(i===1&&tab==='registro'));
   });
-  document.getElementById('blq-login').style.display     = t==='login'    ? 'block':'none';
-  document.getElementById('blq-registro').style.display  = t==='registro' ? 'block':'none';
+  document.getElementById('blq-login').style.display     = tab==='login'    ? 'block':'none';
+  document.getElementById('blq-registro').style.display  = tab==='registro' ? 'block':'none';
   document.getElementById('blq-recuperar').style.display = 'none';
   document.getElementById('blq-reset').style.display     = 'none';
   hideAlert('alert-auth');
@@ -1537,10 +1669,10 @@ function onMpNombreInput(){
 }
 function mpCalc(){
   var q=parseFloat(document.getElementById('mp-cantidad').value)||0;
-  var t=parseFloat(document.getElementById('mp-vtotal').value)||0;
+  var tot=parseFloat(document.getElementById('mp-vtotal').value)||0;
   var u=document.getElementById('mp-unidad').value||'und';
   var box=document.getElementById('mp-calc');
-  if(q>0&&t>0){document.getElementById('calc-total').textContent=fmt(t);document.getElementById('calc-cant').textContent=fmtN(q)+' '+u;document.getElementById('calc-unit').textContent=fmt(t/q)+'/'+u;box.style.display='block'}
+  if(q>0&&tot>0){document.getElementById('calc-total').textContent=fmt(tot);document.getElementById('calc-cant').textContent=fmtN(q)+' '+u;document.getElementById('calc-unit').textContent=fmt(tot/q)+'/'+u;box.style.display='block'}
   else{box.style.display='none'}
 }
 async function mpRegistrar(){
