@@ -914,10 +914,6 @@ body {
           <button class="btn-outline" onclick="prodCalcular()" style="flex:1">🧮 Calcular</button>
           <button class="btn-indigo" id="btn-prod-reg" onclick="prodRegistrar()" disabled>✅ Registrar</button>
         </div>
-        <div id="prod-editando-aviso" style="display:none;margin-top:10px;background:var(--amber2);border:1px solid var(--amber);border-radius:var(--r);padding:10px 14px;font-size:12px;color:var(--amber);display:flex;justify-content:space-between;align-items:center;gap:10px">
-          <span>✏️ Editando <strong id="prod-editando-id"></strong> — al guardar se reemplaza esta producción por completo.</span>
-          <button class="link-btn" style="color:var(--amber)" onclick="prodCancelarEdicion()">Cancelar edición</button>
-        </div>
 
         <div class="table-wrap" style="margin-top:24px">
           <div class="table-head"><h3>Historial de producciones</h3></div>
@@ -1700,11 +1696,10 @@ async function prodCalcular(){
   if(!u||u<=0) return showAlert('alert-prod','Ingresa las unidades a producir.','err');
   hideAlert('alert-prod');
 
-  var fnCalc = prodIdEditando ? 'prod_calcular_edicion' : 'prod_calcular';
-  var params = { p_producto_final: pf, p_unidades: u, p_ingredientes: leerIngredientes(), p_costos_fijos: leerCF(), p_mano_obra: leerMO() };
-  if(prodIdEditando) params.p_id_prod = prodIdEditando;
-
-  var { data: res, error } = await supabase.rpc(fnCalc, params);
+  var { data: res, error } = await supabase.rpc('prod_calcular', {
+    p_producto_final: pf, p_unidades: u,
+    p_ingredientes: leerIngredientes(), p_costos_fijos: leerCF(), p_mano_obra: leerMO()
+  });
   if(error) return showAlert('alert-prod','Error: '+error.message,'err');
   if(!res.success){ showAlert('alert-prod',res.mensaje,'err'); return; }
   ultimoCalcProd=res; prodMostrarPreview(res);
@@ -1732,20 +1727,17 @@ function prodMostrarPreview(r){
   document.getElementById('prod-preview').style.display='block';
 }
 
-var prodIdEditando = null;
-
 async function prodRegistrar(){
   if(!ultimoCalcProd) return showAlert('alert-prod','Primero calcula el costo.','warn');
   var pf=document.getElementById('pf-nombre').value.trim();
   var u=parseFloat(document.getElementById('pf-unidades').value);
-  var btn=document.getElementById('btn-prod-reg');btn.disabled=true;btn.textContent=prodIdEditando?'Guardando…':'Registrando…';
+  var btn=document.getElementById('btn-prod-reg');btn.disabled=true;btn.textContent='Registrando…';
 
-  var fn = prodIdEditando ? 'prod_editar' : 'prod_registrar';
-  var params = { p_producto_final: pf, p_unidades: u, p_ingredientes: leerIngredientes(), p_costos_fijos: leerCF(), p_mano_obra: leerMO() };
-  if(prodIdEditando) params.p_id_prod = prodIdEditando;
-
-  var { data: res, error } = await supabase.rpc(fn, params);
-  btn.textContent=prodIdEditando?'💾 Guardar cambios':'✅ Registrar';
+  var { data: res, error } = await supabase.rpc('prod_registrar', {
+    p_producto_final: pf, p_unidades: u,
+    p_ingredientes: leerIngredientes(), p_costos_fijos: leerCF(), p_mano_obra: leerMO()
+  });
+  btn.textContent='✅ Registrar';
   if(error){ showAlert('alert-prod','Error: '+error.message,'err'); btn.disabled=false; return; }
   if(res.success){
     showAlert('alert-prod',res.mensaje+' — Stock PF: '+res.stockNuevoPF+' und','ok');
@@ -1757,14 +1749,7 @@ function prodLimpiar(){
   ['prod-list-mp','prod-list-cf','prod-list-mo'].forEach(function(id){document.getElementById(id).innerHTML=''});
   cntMp=0;cntCf=0;cntMo=0;ultimoCalcProd=null;
   document.getElementById('btn-prod-reg').disabled=true;
-  document.getElementById('btn-prod-reg').textContent='✅ Registrar';
   document.getElementById('prod-preview').style.display='none';
-  prodIdEditando = null;
-  document.getElementById('prod-editando-aviso').style.display='none';
-}
-function prodCancelarEdicion(){
-  prodLimpiar();
-  showAlert('alert-prod','Edición cancelada. No se guardó ningún cambio.','warn');
 }
 
 async function cargarHistorialProducciones(){
@@ -1784,58 +1769,9 @@ async function cargarHistorialProducciones(){
       '<td class="r">'+p.unidades+'</td>'+
       '<td class="r">'+fmt(p.costoTotalLote)+'</td>'+
       '<td class="r">'+fmt(p.costoUnitarioPF)+'</td>'+
-      '<td style="white-space:nowrap">'+
-        '<button class="icon-btn" title="Editar" onclick="prodCargarParaEditar(\''+p.id+'\')" style="margin-right:4px">✏️</button>'+
-        '<button class="btn-rm" title="Eliminar" onclick="prodEliminarRegistro(\''+p.id+'\',\''+esc(p.productoFinal)+'\')" style="font-size:15px">🗑</button>'+
-      '</td>';
+      '<td><button class="btn-rm" title="Eliminar" onclick="prodEliminarRegistro(\''+p.id+'\',\''+esc(p.productoFinal)+'\')" style="font-size:15px">🗑</button></td>';
     tbody.appendChild(tr);
   });
-}
-
-async function prodCargarParaEditar(id){
-  var { data: p } = await supabase.rpc('prod_get_by_id', { p_id: id });
-  if(!p){ showAlert('alert-prod','No se pudo cargar esa producción.','err'); return; }
-
-  prodLimpiar();
-  prodIdEditando = id;
-  document.getElementById('prod-editando-id').textContent = id;
-  document.getElementById('prod-editando-aviso').style.display = 'flex';
-  document.getElementById('btn-prod-reg').textContent = '💾 Guardar cambios';
-
-  document.getElementById('pf-nombre').value = p.productoFinal;
-  document.getElementById('pf-unidades').value = p.unidades;
-
-  (p.ingredientes||[]).forEach(function(ing){
-    prodAddMp();
-    var lastId = 'pmp-'+cntMp;
-    var sel = document.querySelector('#'+lastId+' select');
-    sel.value = ing.nombre;
-    prodMpSel(lastId);
-    document.getElementById('pmp-cant-'+lastId).value = ing.cantidad;
-  });
-  (p.costosFijos||[]).forEach(function(cf){
-    prodAddCf();
-    var lastId = 'cf-'+cntCf;
-    document.getElementById('cfnom-'+lastId).value = cf.nombre;
-    var det = cf.detalle||{};
-    document.getElementById('cfmes-'+lastId).value = det.costoMes||'';
-    document.getElementById('cfhmes-'+lastId).value = det.horasMes||'';
-    document.getElementById('cfhlote-'+lastId).value = det.horasLote||'';
-    calcCfPrev(lastId);
-  });
-  (p.manoObra||[]).forEach(function(mo){
-    prodAddMo();
-    var lastId = 'mo-'+cntMo;
-    document.getElementById('monom-'+lastId).value = mo.nombre;
-    var det = mo.detalle||{};
-    document.getElementById('sames-'+lastId).value = det.salarioMes||'';
-    document.getElementById('hmes-'+lastId).value = det.horasMes||'';
-    document.getElementById('hlote-'+lastId).value = det.horasLote||'';
-    calcMoPrev(lastId);
-  });
-
-  cambiarModulo('prod');
-  showAlert('alert-prod','Cargado para editar. Ajusta lo que necesites y vuelve a calcular antes de guardar.','warn');
 }
 
 function prodEliminarRegistro(id, producto){
@@ -1848,7 +1784,6 @@ function prodEliminarRegistro(id, producto){
       if(res.success){
         showAlert('alert-prod',res.mensaje,'ok');
         cargarHistorialProducciones(); cargarDatosIniciales();
-        if(prodIdEditando===id) prodLimpiar();
       } else showAlert('alert-prod',res.mensaje,'err');
     }
   );
