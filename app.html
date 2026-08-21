@@ -664,7 +664,24 @@ var I18N = {
     subtotal_mp:'Subtotal MP', subtotal_cf:'Subtotal CF', subtotal_mo:'Subtotal MO', cost_per_unit:'Costo por unidad:',
     gen_report_title:'Generar Reporte', gen_report_sub:'Elige el período que quieres incluir en el reporte',
     period_all:'Todo el historial', period_year:'Este año', period_month:'Este mes', period_custom:'Rango personalizado',
-    from_word:'Desde', to_word:'Hasta', gen_download_pdf:'Generar y descargar PDF →'
+    from_word:'Desde', to_word:'Hasta', gen_download_pdf:'Generar y descargar PDF →',
+    stock_avail_colon:'Stock disponible:', unit_cost_cpp:'Costo unitario (CPP):',
+    pdf_brand:'inventario', pdf_subtitle:'Reporte de Inventario y Ventas - Skripto Apps', pdf_generated:'Generado:',
+    pdf_period:'PERIODO:', pdf_period_summary:'Resumen del Periodo', pdf_total_income:'Total Ingresos',
+    pdf_total_costs:'Total Costos', pdf_net_profit:'Utilidad Neta', pdf_margin:'Margen', pdf_sales_suffix:'ventas',
+    pdf_positive:'Positiva', pdf_negative:'Negativa', pdf_over_costs:'sobre costos', pdf_no_sales_word:'sin ventas',
+    pdf_mp_stock_title:'Stock de Materia Prima (estado actual)', pdf_th_insumo:'Insumo / Material',
+    pdf_th_stock_disp:'Stock disponible', pdf_th_cpp:'Costo Prom. (CPP)', pdf_th_val_inv:'Valor en inventario',
+    pdf_total_word:'TOTAL', pdf_no_mp:'Sin registros de materia prima.',
+    pdf_pf_stock_title:'Stock de Productos Terminados (estado actual)', pdf_th_pf:'Producto Terminado',
+    pdf_no_pf:'Sin productos en stock.', pdf_sales_period:'Ventas del Periodo - ', pdf_units_margin:' und · margen ',
+    pdf_th_id:'ID', pdf_th_date:'Fecha', pdf_th_prod:'Producto', pdf_th_qty:'Cant.', pdf_th_price:'Precio',
+    pdf_th_income:'Ingreso', pdf_th_cost:'Costo', pdf_th_profit:'Utilidad',
+    pdf_no_sales_for:'Sin ventas registradas para: ', pdf_try_other:'Prueba seleccionando "Todo el historial" o un periodo diferente.',
+    pdf_footer_brand:'Skripto Apps - Sistema de Inventario - ', pdf_page:'Página', pdf_page_of:'de',
+    pdf_year_label:'Año ', pdf_all_history:'Todo el historial',
+    preparing_data:'Preparando datos…', generating_pdf:'Generando PDF…', report_downloaded:'Reporte descargado',
+    error_loading_data:'Error cargando datos', to_word_lower:'a'
   },
   en: {
     app_title:'Inventory', app_sub:'Cost management system',
@@ -761,7 +778,24 @@ var I18N = {
     subtotal_mp:'Subtotal RM', subtotal_cf:'Subtotal FC', subtotal_mo:'Subtotal Labor', cost_per_unit:'Cost per unit:',
     gen_report_title:'Generate Report', gen_report_sub:'Choose the period you want to include in the report',
     period_all:'Entire history', period_year:'This year', period_month:'This month', period_custom:'Custom range',
-    from_word:'From', to_word:'To', gen_download_pdf:'Generate and download PDF →'
+    from_word:'From', to_word:'To', gen_download_pdf:'Generate and download PDF →',
+    stock_avail_colon:'Available stock:', unit_cost_cpp:'Unit cost (avg.):',
+    pdf_brand:'inventory', pdf_subtitle:'Inventory and Sales Report - Skripto Apps', pdf_generated:'Generated:',
+    pdf_period:'PERIOD:', pdf_period_summary:'Period Summary', pdf_total_income:'Total Income',
+    pdf_total_costs:'Total Costs', pdf_net_profit:'Net Profit', pdf_margin:'Margin', pdf_sales_suffix:'sales',
+    pdf_positive:'Positive', pdf_negative:'Negative', pdf_over_costs:'over costs', pdf_no_sales_word:'no sales',
+    pdf_mp_stock_title:'Raw Material Stock (current status)', pdf_th_insumo:'Supply / Material',
+    pdf_th_stock_disp:'Available stock', pdf_th_cpp:'Avg. Cost', pdf_th_val_inv:'Inventory value',
+    pdf_total_word:'TOTAL', pdf_no_mp:'No raw material records.',
+    pdf_pf_stock_title:'Finished Product Stock (current status)', pdf_th_pf:'Finished Product',
+    pdf_no_pf:'No products in stock.', pdf_sales_period:'Sales for the Period - ', pdf_units_margin:' units · margin ',
+    pdf_th_id:'ID', pdf_th_date:'Date', pdf_th_prod:'Product', pdf_th_qty:'Qty.', pdf_th_price:'Price',
+    pdf_th_income:'Income', pdf_th_cost:'Cost', pdf_th_profit:'Profit',
+    pdf_no_sales_for:'No sales recorded for: ', pdf_try_other:'Try selecting "Entire history" or a different period.',
+    pdf_footer_brand:'Skripto Apps - Inventory System - ', pdf_page:'Page', pdf_page_of:'of',
+    pdf_year_label:'Year ', pdf_all_history:'Entire history',
+    preparing_data:'Preparing data…', generating_pdf:'Generating PDF…', report_downloaded:'Report downloaded',
+    error_loading_data:'Error loading data', to_word_lower:'to'
   }
 };
 var LANG = localStorage.getItem('skripto_lang') || 'es';
@@ -2031,8 +2065,8 @@ async function cargarPFVentas(){
 function vProductoChange(){
   var nombre=document.getElementById('v-producto').value;
   var p=pfProductos.find(function(x){return x.nombre===nombre});
-  document.getElementById('v-stock-info').textContent=p?'Stock disponible: '+p.stock+' und':'';
-  document.getElementById('v-cpp-info').textContent=p?'Costo unitario (CPP): '+fmt(p.cpp):'';
+  document.getElementById('v-stock-info').textContent=p?t('stock_avail_colon')+' '+p.stock+' und':'';
+  document.getElementById('v-cpp-info').textContent=p?t('unit_cost_cpp')+' '+fmt(p.cpp):'';
   vResetPreview();vRecalc();
 }
 function vSetModo(m){
@@ -2234,7 +2268,7 @@ async function ejecutarReporte() {
   var btn   = document.getElementById('btn-pdf');
   var toast = document.getElementById('download-toast');
   btn.disabled = true;
-  btn.innerHTML = '<span class="btn-pdf-icon">⏳</span><span>Preparando datos…</span>';
+  btn.innerHTML = '<span class="btn-pdf-icon">⏳</span><span>'+t('preparing_data')+'</span>';
 
   function showToast(msg, tipo) {
     toast.textContent = msg;
@@ -2243,25 +2277,24 @@ async function ejecutarReporte() {
   }
   function resetBtn() {
     btn.disabled = false;
-    btn.innerHTML = '<span class="btn-pdf-icon">📄</span><span>Descargar Reporte</span>';
+    btn.innerHTML = '<span class="btn-pdf-icon">📄</span><span>'+t('nav_download_report')+'</span>';
   }
 
   var ahora = new Date();
-  var filtroDesde = null, filtroHasta = null, labelPeriodo = 'Todo el historial';
+  var filtroDesde = null, filtroHasta = null, labelPeriodo = t('pdf_all_history');
   if (periodoSeleccionado === 'anio') {
     filtroDesde = ahora.getFullYear() + '/01'; filtroHasta = ahora.getFullYear() + '/12';
-    labelPeriodo = 'Año ' + ahora.getFullYear();
+    labelPeriodo = t('pdf_year_label') + ahora.getFullYear();
   } else if (periodoSeleccionado === 'mes') {
     var mm = String(ahora.getMonth()+1).padStart(2,'0');
     filtroDesde = ahora.getFullYear() + '/' + mm; filtroHasta = filtroDesde;
-    var meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-    labelPeriodo = meses[ahora.getMonth()] + ' ' + ahora.getFullYear();
+    labelPeriodo = t('mo'+(ahora.getMonth()+1)) + ' ' + ahora.getFullYear();
   } else if (periodoSeleccionado === 'custom') {
     var desde = document.getElementById('rep-desde').value;
     var hasta = document.getElementById('rep-hasta').value;
     if (desde) filtroDesde = desde.replace('-','/');
     if (hasta) filtroHasta = hasta.replace('-','/');
-    labelPeriodo = (desde ? desde.replace('-','/') : '') + ' a ' + (hasta ? hasta.replace('-','/') : '');
+    labelPeriodo = (desde ? desde.replace('-','/') : '') + ' ' + t('to_word_lower') + ' ' + (hasta ? hasta.replace('-','/') : '');
   }
 
   try {
@@ -2271,16 +2304,16 @@ async function ejecutarReporte() {
       supabase.rpc('ventas_historial'),
       supabase.rpc('ventas_resumen')
     ]);
-    btn.innerHTML = '<span class="btn-pdf-icon">⏳</span><span>Generando PDF…</span>';
+    btn.innerHTML = '<span class="btn-pdf-icon">⏳</span><span>'+t('generating_pdf')+'</span>';
     var datos = { productos: productos||[], pfStock: pfStock||[], ventas: ventas||[], resumen: resumen };
     setTimeout(function(){
       try {
         generarPDFRico(datos, filtroDesde, filtroHasta, labelPeriodo);
-        resetBtn(); showToast('✅ Reporte descargado', 'ok');
-      } catch(e) { resetBtn(); showToast('❌ Error: ' + e.message, 'err'); console.error(e); }
+        resetBtn(); showToast('✅ '+t('report_downloaded'), 'ok');
+      } catch(e) { resetBtn(); showToast('❌ '+t('msg_error_prefix') + e.message, 'err'); console.error(e); }
     }, 60);
   } catch(e) {
-    resetBtn(); showToast('❌ Error cargando datos', 'err');
+    resetBtn(); showToast('❌ '+t('error_loading_data'), 'err');
   }
 }
 
@@ -2307,7 +2340,7 @@ function generarPDFRico(datos, filtroDesde, filtroHasta, labelPeriodo) {
   var y   = 0;
 
   var nombreUsuario = SESSION ? (SESSION.nombre||SESSION.usuario) : 'Usuario';
-  var fechaGen = new Date().toLocaleDateString('es-CO',{
+  var fechaGen = new Date().toLocaleDateString(LANG==='en'?'en-US':'es-CO',{
     day:'2-digit', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit'
   });
 
@@ -2353,8 +2386,8 @@ function generarPDFRico(datos, filtroDesde, filtroHasta, labelPeriodo) {
     doc.setFont('helvetica','normal');
     doc.setFontSize(7);
     doc.setTextColor.apply(doc, GRIS4);
-    doc.text('Skripto Apps - Sistema de Inventario - ' + nombreUsuario, MX, H-6);
-    doc.text('Página ' + pg + ' de ' + tot, W-MX, H-6, {align:'right'});
+    doc.text(t('pdf_footer_brand') + nombreUsuario, MX, H-6);
+    doc.text(t('pdf_page') + ' ' + pg + ' ' + t('pdf_page_of') + ' ' + tot, W-MX, H-6, {align:'right'});
   }
 
   function seccionTitulo(titulo, color) {
@@ -2411,12 +2444,12 @@ function generarPDFRico(datos, filtroDesde, filtroHasta, labelPeriodo) {
   doc.setFont('helvetica','bold');
   doc.setFontSize(20);
   doc.setTextColor(255,255,255);
-  doc.text('inventario', MX, 14);
+  doc.text(t('pdf_brand'), MX, 14);
 
   doc.setFont('helvetica','normal');
   doc.setFontSize(8);
   doc.setTextColor(209,240,228);
-  doc.text('Reporte de Inventario y Ventas - Skripto Apps', MX, 20.5);
+  doc.text(t('pdf_subtitle'), MX, 20.5);
 
   doc.setFont('helvetica','bold');
   doc.setFontSize(9);
@@ -2425,7 +2458,7 @@ function generarPDFRico(datos, filtroDesde, filtroHasta, labelPeriodo) {
   doc.setFont('helvetica','normal');
   doc.setFontSize(7.5);
   doc.setTextColor(209,240,228);
-  doc.text('Generado: ' + fechaGen, W-MX, 17, {align:'right'});
+  doc.text(t('pdf_generated') + ' ' + fechaGen, W-MX, 17, {align:'right'});
 
   y = 34;
 
@@ -2437,22 +2470,22 @@ function generarPDFRico(datos, filtroDesde, filtroHasta, labelPeriodo) {
   doc.setFont('helvetica','bold');
   doc.setFontSize(8);
   doc.setTextColor.apply(doc, VERDE);
-  doc.text('PERIODO: ' + labelPeriodo.toUpperCase(), W/2, y+6.5, {align:'center'});
+  doc.text(t('pdf_period') + ' ' + labelPeriodo.toUpperCase(), W/2, y+6.5, {align:'center'});
   y += 16;
 
-  seccionTitulo('Resumen del Periodo', VERDE);
+  seccionTitulo(t('pdf_period_summary'), VERDE);
   y += 2;
 
   var kW = (W - MX*2 - 9) / 4;
   var kH = 26;
   var utilPos = totalUtilidad >= 0;
-  tarjetaKPI(MX,          y, kW, kH, 'Total Ingresos',  fmt(totalIngresos), ventasPeriodo.length+' ventas',   VERDE,              VERDE_M);
-  tarjetaKPI(MX+kW+3,     y, kW, kH, 'Total Costos',    fmt(totalCostos),   '',                                GRIS1,              GRIS3);
-  tarjetaKPI(MX+(kW+3)*2, y, kW, kH, 'Utilidad Neta',   fmt(totalUtilidad), utilPos?'Positiva':'Negativa', utilPos?VERDE:ROJO, utilPos?VERDE_M:ROJO);
-  tarjetaKPI(MX+(kW+3)*3, y, kW, kH, 'Margen',          margen.toFixed(1)+'%', totalCostos>0?'sobre costos':'sin ventas',         AMBAR, AMBAR);
+  tarjetaKPI(MX,          y, kW, kH, t('pdf_total_income'),  fmt(totalIngresos), ventasPeriodo.length+' '+t('pdf_sales_suffix'),   VERDE,              VERDE_M);
+  tarjetaKPI(MX+kW+3,     y, kW, kH, t('pdf_total_costs'),    fmt(totalCostos),   '',                                GRIS1,              GRIS3);
+  tarjetaKPI(MX+(kW+3)*2, y, kW, kH, t('pdf_net_profit'),   fmt(totalUtilidad), utilPos?t('pdf_positive'):t('pdf_negative'), utilPos?VERDE:ROJO, utilPos?VERDE_M:ROJO);
+  tarjetaKPI(MX+(kW+3)*3, y, kW, kH, t('pdf_margin'),          margen.toFixed(1)+'%', totalCostos>0?t('pdf_over_costs'):t('pdf_no_sales_word'),         AMBAR, AMBAR);
   y += kH + 10;
 
-  seccionTitulo('Stock de Materia Prima (estado actual)', VERDE);
+  seccionTitulo(t('pdf_mp_stock_title'), VERDE);
   y += 3;
 
   var prods = datos.productos || [];
@@ -2461,11 +2494,11 @@ function generarPDFRico(datos, filtroDesde, filtroHasta, labelPeriodo) {
       var val = p.stock * p.cpp;
       return [p.nombre, fmtN(p.stock) + ' ' + (p.unidad||'und'), fmt(p.cpp), fmt(val)];
     });
-    bodyMP.push(['TOTAL', '', '', fmt(valorTotalMP)]);
+    bodyMP.push([t('pdf_total_word'), '', '', fmt(valorTotalMP)]);
 
     doc.autoTable({
       startY: y,
-      head: [['Insumo / Material', 'Stock disponible', 'Costo Prom. (CPP)', 'Valor en inventario']],
+      head: [[t('pdf_th_insumo'), t('pdf_th_stock_disp'), t('pdf_th_cpp'), t('pdf_th_val_inv')]],
       body: bodyMP,
       theme: 'plain',
       styles: { fontSize:8.5, cellPadding:3.5, textColor:GRIS2, lineColor:BORDE, lineWidth:0.3 },
@@ -2490,10 +2523,10 @@ function generarPDFRico(datos, filtroDesde, filtroHasta, labelPeriodo) {
   } else {
     checkY(10);
     doc.setFont('helvetica','italic'); doc.setFontSize(8.5); doc.setTextColor.apply(doc,GRIS4);
-    doc.text('Sin registros de materia prima.', MX, y); y += 10;
+    doc.text(t('pdf_no_mp'), MX, y); y += 10;
   }
 
-  seccionTitulo('Stock de Productos Terminados (estado actual)', INDIGO);
+  seccionTitulo(t('pdf_pf_stock_title'), INDIGO);
   y += 3;
 
   var pfList = datos.pfStock || [];
@@ -2501,11 +2534,11 @@ function generarPDFRico(datos, filtroDesde, filtroHasta, labelPeriodo) {
     var bodyPF = pfList.map(function(p) {
       return [p.nombre, String(p.stock) + ' und', fmt(p.cpp), fmt(p.stock*p.cpp)];
     });
-    bodyPF.push(['TOTAL', '', '', fmt(valorTotalPF)]);
+    bodyPF.push([t('pdf_total_word'), '', '', fmt(valorTotalPF)]);
 
     doc.autoTable({
       startY: y,
-      head: [['Producto Terminado', 'Stock disponible', 'Costo Prom. (CPP)', 'Valor en inventario']],
+      head: [[t('pdf_th_pf'), t('pdf_th_stock_disp'), t('pdf_th_cpp'), t('pdf_th_val_inv')]],
       body: bodyPF,
       theme: 'plain',
       styles: { fontSize:8.5, cellPadding:3.5, textColor:GRIS2, lineColor:BORDE, lineWidth:0.3 },
@@ -2530,11 +2563,11 @@ function generarPDFRico(datos, filtroDesde, filtroHasta, labelPeriodo) {
   } else {
     checkY(10);
     doc.setFont('helvetica','italic'); doc.setFontSize(8.5); doc.setTextColor.apply(doc,GRIS4);
-    doc.text('Sin productos en stock.', MX, y); y += 10;
+    doc.text(t('pdf_no_pf'), MX, y); y += 10;
   }
 
   checkY(30);
-  seccionTitulo('Ventas del Periodo - ' + labelPeriodo, AMBAR);
+  seccionTitulo(t('pdf_sales_period') + labelPeriodo, AMBAR);
   y += 3;
 
   if (ventasPeriodo.length) {
@@ -2554,7 +2587,7 @@ function generarPDFRico(datos, filtroDesde, filtroHasta, labelPeriodo) {
         var px = MX + i*(pW+3);
         var mg = pp.costos>0 ? (pp.utilidad/pp.costos*100).toFixed(1)+'%' : '-';
         tarjetaKPI(px, y, pW, 28, pp.nombre.substring(0,14),
-          fmt(pp.ingresos), pp.unidades+' und · margen '+mg,
+          fmt(pp.ingresos), pp.unidades+t('pdf_units_margin')+mg,
           pp.utilidad>=0 ? VERDE : ROJO, AMBAR);
       });
       y += 35;
@@ -2576,11 +2609,11 @@ function generarPDFRico(datos, filtroDesde, filtroHasta, labelPeriodo) {
     var sumIng  = ventasPeriodo.reduce(function(s,v){return s+v.ingresoTotal},0);
     var sumCos  = ventasPeriodo.reduce(function(s,v){return s+v.costoTotal},0);
     var sumUtil = ventasPeriodo.reduce(function(s,v){return s+v.utilidad},0);
-    bodyV.push(['','','TOTAL','','',fmt(sumIng),fmt(sumCos),(sumUtil>=0?'+':'')+fmt(sumUtil)]);
+    bodyV.push(['','',t('pdf_total_word'),'','',fmt(sumIng),fmt(sumCos),(sumUtil>=0?'+':'')+fmt(sumUtil)]);
 
     doc.autoTable({
       startY: y,
-      head: [['ID','Fecha','Producto','Cant.','Precio','Ingreso','Costo','Utilidad']],
+      head: [[t('pdf_th_id'),t('pdf_th_date'),t('pdf_th_prod'),t('pdf_th_qty'),t('pdf_th_price'),t('pdf_th_income'),t('pdf_th_cost'),t('pdf_th_profit')]],
       body: bodyV,
       theme: 'plain',
       styles: { fontSize:8, cellPadding:3, textColor:GRIS2, lineColor:BORDE, lineWidth:0.3 },
@@ -2619,9 +2652,9 @@ function generarPDFRico(datos, filtroDesde, filtroHasta, labelPeriodo) {
     doc.setLineWidth(0.4);
     doc.roundedRect(MX, y, W-MX*2, 14, 2, 2, 'S');
     doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(186,117,23);
-    doc.text('Sin ventas registradas para: ' + labelPeriodo, W/2, y+6, {align:'center'});
+    doc.text(t('pdf_no_sales_for') + labelPeriodo, W/2, y+6, {align:'center'});
     doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(92,90,85);
-    doc.text('Prueba seleccionando "Todo el historial" o un periodo diferente.', W/2, y+11, {align:'center'});
+    doc.text(t('pdf_try_other'), W/2, y+11, {align:'center'});
     y += 20;
   }
 
