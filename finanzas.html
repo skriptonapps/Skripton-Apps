@@ -161,7 +161,8 @@ var I18N = {
     pdf_rep_top_clients:'Top Clientes', pdf_rep_th_client:'Cliente', pdf_rep_th_invoices:'Facturas',
     pdf_rep_expenses_by_cat:'Gastos por Categoría', pdf_rep_th_category:'Categoría',
     pdf_rep_monthly_flow:'Flujo Mensual', pdf_rep_th_month:'Mes', pdf_rep_th_billed:'Facturado', pdf_rep_th_expenses:'Gastos', pdf_rep_th_profit:'Utilidad',
-    pdf_rep_invoice_detail:'Detalle de Facturas', pdf_rep_th_id:'#', pdf_rep_th_date:'Fecha', pdf_rep_paid_word:'Pagada', pdf_rep_pending_word:'Pendiente', pdf_rep_th_status:'Estado'
+    pdf_rep_invoice_detail:'Detalle de Facturas', pdf_rep_th_id:'#', pdf_rep_th_date:'Fecha', pdf_rep_paid_word:'Pagada', pdf_rep_pending_word:'Pendiente', pdf_rep_th_status:'Estado',
+    pdf_per_invoice_title:'PDF por factura', pdf_per_invoice_msg:'Se descargarán {n} PDF{s}, uno por cada factura. El navegador los descargará en secuencia. ¿Continuar?'
   },
   en: {
     app_title:'Invoicing', app_sub:'Service invoicing system',
@@ -293,7 +294,8 @@ var I18N = {
     pdf_rep_top_clients:'Top Clients', pdf_rep_th_client:'Client', pdf_rep_th_invoices:'Invoices',
     pdf_rep_expenses_by_cat:'Expenses by Category', pdf_rep_th_category:'Category',
     pdf_rep_monthly_flow:'Monthly Flow', pdf_rep_th_month:'Month', pdf_rep_th_billed:'Billed', pdf_rep_th_expenses:'Expenses', pdf_rep_th_profit:'Profit',
-    pdf_rep_invoice_detail:'Invoice Detail', pdf_rep_th_id:'#', pdf_rep_th_date:'Date', pdf_rep_paid_word:'Paid', pdf_rep_pending_word:'Pending', pdf_rep_th_status:'Status'
+    pdf_rep_invoice_detail:'Invoice Detail', pdf_rep_th_id:'#', pdf_rep_th_date:'Date', pdf_rep_paid_word:'Paid', pdf_rep_pending_word:'Pending', pdf_rep_th_status:'Status',
+    pdf_per_invoice_title:'PDF per invoice', pdf_per_invoice_msg:'{n} PDF{s} will be downloaded, one per invoice. The browser will download them in sequence. Continue?'
   }
 };
 var LANG = localStorage.getItem('skripto_lang') || 'es';
@@ -308,6 +310,8 @@ function aplicarIdioma(){
   document.querySelectorAll('[data-i18n-ph]').forEach(function(el){ el.placeholder = t(el.getAttribute('data-i18n-ph')); });
   document.querySelectorAll('.lang-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.lang===LANG); });
   document.documentElement.lang = LANG;
+  var langTag = LANG==='en' ? 'en-US' : 'es-CO';
+  document.querySelectorAll('input[type="month"], input[type="date"]').forEach(function(el){ el.setAttribute('lang', langTag); });
 }
 </script>
 <style>
@@ -2722,8 +2726,8 @@ function exportarFacturasMasivo(){
   }
 
   confirmar(
-    'PDF por factura',
-    'Se descargarán '+ids.length+' PDF'+(ids.length!==1?'s':'')+', uno por cada factura. El navegador los descargará en secuencia. ¿Continuar?',
+    t('pdf_per_invoice_title'),
+    t('pdf_per_invoice_msg').replace('{n}',ids.length).replace('{s}',ids.length!==1?'s':''),
     function(){ descargarSiguiente(0); }
   );
 }
