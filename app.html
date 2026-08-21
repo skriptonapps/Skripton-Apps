@@ -655,7 +655,16 @@ var I18N = {
     msg_invalid_total:'Valor total inválido.', msg_enter_final_product:'Ingresa el nombre del producto final.',
     msg_enter_units:'Ingresa las unidades a producir.', msg_calc_first:'Primero calcula el costo.',
     msg_invalid_margin:'Margen inválido.', msg_invalid_price:'Precio inválido.', msg_preview_first:'Primero previsualiza la venta.',
-    msg_product_not_found:'Producto no encontrado.', msg_select_product:'Selecciona un producto.', msg_insufficient_stock:'Stock insuficiente. Disponible: '
+    msg_product_not_found:'Producto no encontrado.', msg_select_product:'Selecciona un producto.', msg_insufficient_stock:'Stock insuficiente. Disponible: ',
+    stock_word:'Stock:', movement:'Movimiento', purchase_word:'Compra', exit_word:'Salida',
+    edit_tt:'Editar', delete_tt:'Eliminar', from_prod_tt:'Viene de una producción — edítala desde el módulo Producción',
+    confirm_del_mov_msg:'¿Eliminar este movimiento de "{p}"? Esto recalcula el stock y el costo promedio de todos los movimientos posteriores.',
+    confirm_del_prod_msg:'¿Eliminar {id} ({p})? Esto restaura la materia prima consumida y descuenta el producto terminado que había generado.',
+    confirm_del_sale_msg:'¿Eliminar esta venta de "{p}"? Esto recalcula el stock del producto.',
+    subtotal_mp:'Subtotal MP', subtotal_cf:'Subtotal CF', subtotal_mo:'Subtotal MO', cost_per_unit:'Costo por unidad:',
+    gen_report_title:'Generar Reporte', gen_report_sub:'Elige el período que quieres incluir en el reporte',
+    period_all:'Todo el historial', period_year:'Este año', period_month:'Este mes', period_custom:'Rango personalizado',
+    from_word:'Desde', to_word:'Hasta', gen_download_pdf:'Generar y descargar PDF →'
   },
   en: {
     app_title:'Inventory', app_sub:'Cost management system',
@@ -743,7 +752,16 @@ var I18N = {
     msg_invalid_total:'Invalid total value.', msg_enter_final_product:'Enter the final product name.',
     msg_enter_units:'Enter the units to produce.', msg_calc_first:'Calculate the cost first.',
     msg_invalid_margin:'Invalid margin.', msg_invalid_price:'Invalid price.', msg_preview_first:'Preview the sale first.',
-    msg_product_not_found:'Product not found.', msg_select_product:'Select a product.', msg_insufficient_stock:'Insufficient stock. Available: '
+    msg_product_not_found:'Product not found.', msg_select_product:'Select a product.', msg_insufficient_stock:'Insufficient stock. Available: ',
+    stock_word:'Stock:', movement:'Movement', purchase_word:'Purchase', exit_word:'Exit',
+    edit_tt:'Edit', delete_tt:'Delete', from_prod_tt:'Comes from a production — edit it from the Production module',
+    confirm_del_mov_msg:'Delete this movement of "{p}"? This recalculates the stock and average cost of all later movements.',
+    confirm_del_prod_msg:'Delete {id} ({p})? This restores the raw materials consumed and removes the finished product it had generated.',
+    confirm_del_sale_msg:'Delete this sale of "{p}"? This recalculates the product stock.',
+    subtotal_mp:'Subtotal RM', subtotal_cf:'Subtotal FC', subtotal_mo:'Subtotal Labor', cost_per_unit:'Cost per unit:',
+    gen_report_title:'Generate Report', gen_report_sub:'Choose the period you want to include in the report',
+    period_all:'Entire history', period_year:'This year', period_month:'This month', period_custom:'Custom range',
+    from_word:'From', to_word:'To', gen_download_pdf:'Generate and download PDF →'
   }
 };
 var LANG = localStorage.getItem('skripto_lang') || 'es';
@@ -1665,8 +1683,8 @@ async function cargarDatosIniciales(){
   var dl=document.getElementById('mp-lista');dl.innerHTML='';
   lista.forEach(function(p){var o=document.createElement('option');o.value=p.nombre;dl.appendChild(o)});
   var sel=document.getElementById('mp-sel-consulta');var cur=sel.value;
-  sel.innerHTML="<option value=''>-- Selecciona un insumo --</option>";
-  lista.forEach(function(p){var o=document.createElement('option');o.value=p.nombre;o.textContent=p.nombre+' (Stock: '+fmtN(p.stock)+' '+p.unidad+')';sel.appendChild(o)});
+  sel.innerHTML="<option value=''>"+t('mp_select_placeholder')+"</option>";
+  lista.forEach(function(p){var o=document.createElement('option');o.value=p.nombre;o.textContent=p.nombre+' ('+t('stock_word')+' '+fmtN(p.stock)+' '+p.unidad+')';sel.appendChild(o)});
   if(cur) sel.value=cur;
   document.querySelectorAll('.prod-mp-sel').forEach(function(s){var cv=s.value;s.innerHTML='<option value="">'+t('choose_option')+'</option>'+lista.map(function(p){return '<option value="'+esc(p.nombre)+'">'+esc(p.nombre)+' ('+fmtN(p.stock)+' '+esc(p.unidad)+')</option>'}).join('');if(cv)s.value=cv});
 
@@ -1792,22 +1810,22 @@ async function mpConsultar(){
   document.getElementById('mp-mov-cnt').textContent=movs.length+' movimiento'+(movs.length!==1?'s':'');
   var tbody=document.getElementById('mp-tbody');tbody.innerHTML='';
   if(!movs.length){tbody.innerHTML='<tr><td colspan="10" style="text-align:center;padding:20px;color:var(--ink3)">'+t('mp_no_movs')+'</td></tr>';return}
-  movs.forEach(function(m){
+  movs.forEach(function(m,idx){
     var es=m.tipo==='COMPRA';
     var tr=document.createElement('tr');tr.style.background=es?'#F0FDF4':'#FFF7F5';
     var acciones = es
-      ? '<button class="icon-btn" title="Editar" onclick="mpEditarMovimiento(\''+m.id+'\',\''+esc(nombre)+'\','+m.cantidad+','+m.vtotal+')" style="margin-right:4px">✏️</button>'+
-        '<button class="btn-rm" title="Eliminar" onclick="mpEliminarMovimiento(\''+m.id+'\',\''+esc(nombre)+'\')" style="font-size:15px">🗑</button>'
-      : '<span title="Viene de una producción — edítala desde el módulo Producción" style="font-size:11px;color:var(--ink3)">🔒</span>';
-    tr.innerHTML='<td style="color:var(--ink3);font-size:10px;font-family:var(--font-mono)">'+esc(m.id)+'</td><td>'+esc(m.fecha)+'</td><td><span class="badge '+(es?'badge-compra':'badge-salida')+'">'+(es?'📥':'📤')+'</span></td><td class="r"><strong>'+fmtN(m.cantidad)+'</strong></td><td>'+esc(m.unidad)+'</td><td class="r">'+fmt(m.valorUnit)+'</td><td class="r">'+fmt(m.vtotal)+'</td><td class="r">'+fmtN(m.stockAcum)+'</td><td class="r"><strong style="color:'+(es?'var(--green)':'#D85A30')+'">'+fmt(m.cpp)+'</strong></td><td>'+acciones+'</td>';
+      ? '<button class="icon-btn" title="'+t('edit_tt')+'" onclick="mpEditarMovimiento(\''+m.id+'\',\''+esc(nombre)+'\','+m.cantidad+','+m.vtotal+')" style="margin-right:4px">✏️</button>'+
+        '<button class="btn-rm" title="'+t('delete_tt')+'" onclick="mpEliminarMovimiento(\''+m.id+'\',\''+esc(nombre)+'\')" style="font-size:15px">🗑</button>'
+      : '<span title="'+t('from_prod_tt')+'" style="font-size:11px;color:var(--ink3)">🔒</span>';
+    tr.innerHTML='<td style="color:var(--ink3);font-size:11px;font-weight:600">#'+(idx+1)+'</td><td>'+esc(m.fecha)+'</td><td><span class="badge '+(es?'badge-compra':'badge-salida')+'">'+(es?'📥':'📤')+'</span></td><td class="r"><strong>'+fmtN(m.cantidad)+'</strong></td><td>'+esc(m.unidad)+'</td><td class="r">'+fmt(m.valorUnit)+'</td><td class="r">'+fmt(m.vtotal)+'</td><td class="r">'+fmtN(m.stockAcum)+'</td><td class="r"><strong style="color:'+(es?'var(--green)':'#D85A30')+'">'+fmt(m.cpp)+'</strong></td><td>'+acciones+'</td>';
     tbody.appendChild(tr);
   });
 }
 
 function mpEliminarMovimiento(id, producto){
   confirmar(
-    'Eliminar movimiento',
-    '¿Eliminar este movimiento de "'+producto+'"? Esto recalcula el stock y el costo promedio de todos los movimientos posteriores.',
+    t('modal_del_movement'),
+    t('confirm_del_mov_msg').replace('{p}', producto),
     async function(){
       var { data: res, error } = await supabase.rpc('mp_eliminar_movimiento', { p_id: id });
       if(error){ showAlert('alert-mp',t('msg_error_prefix')+error.message,'err'); return; }
@@ -1866,7 +1884,7 @@ function prodMpSel(id){
 }
 function prodAddCf(){
   cntCf++;var id='cf-'+cntCf;var div=document.createElement('div');div.id=id;div.className='cf-row';
-  div.innerHTML='<div class="cf-grid"><div class="form-g"><label style="color:#92400E">'+t('concept')+'</label><input type="text" id="cfnom-'+id+'" placeholder="Arriendo, Electricidad…" oninput="prodResetCalc()"></div><div class="form-g"><label style="color:#92400E">'+t('monthly_cost')+'</label><input type="number" id="cfmes-'+id+'" min="0" step="1000" inputmode="numeric" oninput="calcCfPrev(\''+id+'\')"><div class="hint">'+t('monthly_cost_hint')+'</div></div><div class="form-g"><label style="color:#92400E">'+t('hours_month_use')+'</label><input type="number" id="cfhmes-'+id+'" min="0.1" step="0.5" inputmode="decimal" oninput="calcCfPrev(\''+id+'\')"></div><div class="form-g"><label style="color:#92400E">'+t('hours_this_batch')+'</label><input type="number" id="cfhlote-'+id+'" min="0.1" step="0.5" inputmode="decimal" oninput="calcCfPrev(\''+id+'\')"></div><button class="btn-rm" onclick="rmEl(\''+id+'\')">×</button></div><div class="cf-res" id="cfres-'+id+'"></div>';
+  div.innerHTML='<div class="cf-grid"><div class="form-g"><label style="color:#92400E">'+t('concept')+'</label><input type="text" id="cfnom-'+id+'" placeholder="" oninput="prodResetCalc()"></div><div class="form-g"><label style="color:#92400E">'+t('monthly_cost')+'</label><input type="number" id="cfmes-'+id+'" min="0" step="1000" inputmode="numeric" oninput="calcCfPrev(\''+id+'\')"><div class="hint">'+t('monthly_cost_hint')+'</div></div><div class="form-g"><label style="color:#92400E">'+t('hours_month_use')+'</label><input type="number" id="cfhmes-'+id+'" min="0.1" step="0.5" inputmode="decimal" oninput="calcCfPrev(\''+id+'\')"></div><div class="form-g"><label style="color:#92400E">'+t('hours_this_batch')+'</label><input type="number" id="cfhlote-'+id+'" min="0.1" step="0.5" inputmode="decimal" oninput="calcCfPrev(\''+id+'\')"></div><button class="btn-rm" onclick="rmEl(\''+id+'\')">×</button></div><div class="cf-res" id="cfres-'+id+'"></div>';
   document.getElementById('prod-list-cf').appendChild(div);prodResetCalc();
 }
 function calcCfPrev(id){
@@ -1919,11 +1937,11 @@ async function prodCalcular(){
 
 function prodMostrarPreview(r){
   var hMP='';
-  if(r.desgloseMP&&r.desgloseMP.length){hMP='<div style="font-size:10px;font-weight:600;background:var(--indigo2);border-radius:4px;padding:2px 8px;display:inline-block;color:var(--indigo);margin-bottom:6px">🧪 Materia Prima</div>';r.desgloseMP.forEach(function(d){hMP+='<div class="drow"><span class="dn">'+esc(d.nombre)+' × '+fmtN(d.cantidad)+' '+esc(d.unidad)+'</span><span class="dv">'+fmt(d.costo)+'</span></div>'});hMP+='<div class="dsub" style="color:var(--indigo)"><span>Subtotal MP</span><span>'+fmt(r.costoMP)+'</span></div>'}
+  if(r.desgloseMP&&r.desgloseMP.length){hMP='<div style="font-size:10px;font-weight:600;background:var(--indigo2);border-radius:4px;padding:2px 8px;display:inline-block;color:var(--indigo);margin-bottom:6px">🧪 '+t('prod_raw_mat_short')+'</div>';r.desgloseMP.forEach(function(d){hMP+='<div class="drow"><span class="dn">'+esc(d.nombre)+' × '+fmtN(d.cantidad)+' '+esc(d.unidad)+'</span><span class="dv">'+fmt(d.costo)+'</span></div>'});hMP+='<div class="dsub" style="color:var(--indigo)"><span>'+t('subtotal_mp')+'</span><span>'+fmt(r.costoMP)+'</span></div>'}
   var hCF='';
-  if(r.desgloseCF&&r.desgloseCF.length){hCF='<div style="font-size:10px;font-weight:600;background:var(--amber2);border-radius:4px;padding:2px 8px;display:inline-block;color:var(--amber);margin-top:8px;margin-bottom:6px">🏢 Costos Fijos</div>';r.desgloseCF.forEach(function(d){var det=d.detalle||{};var desc=det.tarifaHora?fmt(det.tarifaHora)+'/h × '+(det.horasLote||0)+'h':'';hCF+='<div class="drow"><span class="dn">'+esc(d.nombre)+(desc?' <em style="font-size:10px;color:var(--amber)">('+desc+')</em>':'')+'</span><span class="dv">'+fmt(d.costoLote)+'</span></div>'});hCF+='<div class="dsub" style="color:var(--amber)"><span>Subtotal CF</span><span>'+fmt(r.costoCF)+'</span></div>'}
+  if(r.desgloseCF&&r.desgloseCF.length){hCF='<div style="font-size:10px;font-weight:600;background:var(--amber2);border-radius:4px;padding:2px 8px;display:inline-block;color:var(--amber);margin-top:8px;margin-bottom:6px">🏢 '+t('prod_fixed_short')+'</div>';r.desgloseCF.forEach(function(d){var det=d.detalle||{};var desc=det.tarifaHora?fmt(det.tarifaHora)+'/h × '+(det.horasLote||0)+'h':'';hCF+='<div class="drow"><span class="dn">'+esc(d.nombre)+(desc?' <em style="font-size:10px;color:var(--amber)">('+desc+')</em>':'')+'</span><span class="dv">'+fmt(d.costoLote)+'</span></div>'});hCF+='<div class="dsub" style="color:var(--amber)"><span>'+t('subtotal_cf')+'</span><span>'+fmt(r.costoCF)+'</span></div>'}
   var hMO='';
-  if(r.desgloseMO&&r.desgloseMO.length){hMO='<div style="font-size:10px;font-weight:600;background:#EDE9FE;border-radius:4px;padding:2px 8px;display:inline-block;color:#4C1D95;margin-top:8px;margin-bottom:6px">👷 Mano de Obra</div>';r.desgloseMO.forEach(function(d){var det=d.detalle||{};var desc=det.tarifaHora?fmt(det.tarifaHora)+'/h × '+(det.horasLote||0)+'h':'';hMO+='<div class="drow"><span class="dn">'+esc(d.nombre)+(desc?' <em style="font-size:10px;color:#7C3AED">('+desc+')</em>':'')+'</span><span class="dv">'+fmt(d.costoLote)+'</span></div>'});hMO+='<div class="dsub" style="color:#4C1D95"><span>Subtotal MO</span><span>'+fmt(r.costoMO)+'</span></div>'}
+  if(r.desgloseMO&&r.desgloseMO.length){hMO='<div style="font-size:10px;font-weight:600;background:#EDE9FE;border-radius:4px;padding:2px 8px;display:inline-block;color:#4C1D95;margin-top:8px;margin-bottom:6px">👷 '+t('prod_labor_short')+'</div>';r.desgloseMO.forEach(function(d){var det=d.detalle||{};var desc=det.tarifaHora?fmt(det.tarifaHora)+'/h × '+(det.horasLote||0)+'h':'';hMO+='<div class="drow"><span class="dn">'+esc(d.nombre)+(desc?' <em style="font-size:10px;color:#7C3AED">('+desc+')</em>':'')+'</span><span class="dv">'+fmt(d.costoLote)+'</span></div>'});hMO+='<div class="dsub" style="color:#4C1D95"><span>'+t('subtotal_mo')+'</span><span>'+fmt(r.costoMO)+'</span></div>'}
   document.getElementById('pv-grp-mp').innerHTML=hMP;
   document.getElementById('pv-grp-cf').innerHTML=hCF;
   document.getElementById('pv-grp-mo').innerHTML=hMO;
@@ -1934,7 +1952,7 @@ function prodMostrarPreview(r){
   document.getElementById('pv-bar-cf').style.width=r.pctCF.toFixed(1)+'%';
   document.getElementById('pv-bar-mo').style.width=r.pctMO.toFixed(1)+'%';
   document.getElementById('pv-total').textContent=fmt(r.costoTotalLote);
-  document.getElementById('pv-unit').textContent='Costo por unidad: '+fmt(r.costoUnitarioPF)+' × '+r.unidades+' und';
+  document.getElementById('pv-unit').textContent=t('cost_per_unit')+' '+fmt(r.costoUnitarioPF)+' × '+r.unidades+' und';
   document.getElementById('prod-preview').style.display='block';
 }
 
@@ -1987,8 +2005,8 @@ async function cargarHistorialProducciones(){
 
 function prodEliminarRegistro(id, producto){
   confirmar(
-    'Eliminar producción',
-    '¿Eliminar '+id+' ('+producto+')? Esto restaura la materia prima consumida y descuenta el producto terminado que había generado.',
+    t('modal_del_prod'),
+    t('confirm_del_prod_msg').replace('{id}', id).replace('{p}', producto),
     async function(){
       var { data: res, error } = await supabase.rpc('prod_eliminar', { p_id_prod: id });
       if(error){ showAlert('alert-prod',t('msg_error_prefix')+error.message,'err'); return; }
@@ -2007,7 +2025,7 @@ async function cargarPFVentas(){
   pfProductos=lista;
   var sel=document.getElementById('v-producto');var cur=sel.value;
   sel.innerHTML='<option value="">'+t('sales_select_product')+'</option>';
-  lista.forEach(function(p){var o=document.createElement('option');o.value=p.nombre;o.textContent=p.nombre+' (Stock: '+p.stock+' und)';sel.appendChild(o)});
+  lista.forEach(function(p){var o=document.createElement('option');o.value=p.nombre;o.textContent=p.nombre+' ('+t('stock_word')+' '+p.stock+' und)';sel.appendChild(o)});
   if(cur) sel.value=cur;
 }
 function vProductoChange(){
@@ -2153,8 +2171,8 @@ function renderHistorial(ventas){
 
 function ventasEliminarRegistro(id, producto){
   confirmar(
-    'Eliminar venta',
-    '¿Eliminar esta venta de "'+producto+'"? Esto recalcula el stock del producto.',
+    t('modal_del_sale'),
+    t('confirm_del_sale_msg').replace('{p}', producto),
     async function(){
       var { data: res, error } = await supabase.rpc('ventas_eliminar', { p_id: id });
       if(error){ showAlert('alert-ventas',t('msg_error_prefix')+error.message,'err'); return; }
@@ -2621,33 +2639,33 @@ function descargarReporte() { abrirModalReporte(); }
 <!-- Modal selector período reporte -->
 <div class="modal-reporte-overlay" id="modal-reporte">
   <div class="modal-reporte-box">
-    <div class="modal-reporte-title">📄 Generar Reporte</div>
-    <div class="modal-reporte-sub">Elige el período que quieres incluir en el reporte</div>
+    <div class="modal-reporte-title">📄 <span data-i18n="gen_report_title">Generar Reporte</span></div>
+    <div class="modal-reporte-sub" data-i18n="gen_report_sub">Elige el período que quieres incluir en el reporte</div>
 
     <div class="periodo-grid" id="periodo-grid">
-      <button class="periodo-btn active" id="pb-total"  onclick="setPeriodo('total')">📊 Todo el historial</button>
-      <button class="periodo-btn"        id="pb-anio"   onclick="setPeriodo('anio')">📅 Este año</button>
-      <button class="periodo-btn"        id="pb-mes"    onclick="setPeriodo('mes')">🗓️ Este mes</button>
-      <button class="periodo-btn"        id="pb-custom" onclick="setPeriodo('custom')">✏️ Rango personalizado</button>
+      <button class="periodo-btn active" id="pb-total"  onclick="setPeriodo('total')">📊 <span data-i18n="period_all">Todo el historial</span></button>
+      <button class="periodo-btn"        id="pb-anio"   onclick="setPeriodo('anio')">📅 <span data-i18n="period_year">Este año</span></button>
+      <button class="periodo-btn"        id="pb-mes"    onclick="setPeriodo('mes')">🗓️ <span data-i18n="period_month">Este mes</span></button>
+      <button class="periodo-btn"        id="pb-custom" onclick="setPeriodo('custom')">✏️ <span data-i18n="period_custom">Rango personalizado</span></button>
     </div>
 
     <div class="periodo-custom" id="periodo-custom">
       <div class="periodo-custom-row">
         <div class="form-g">
-          <label>Desde</label>
+          <label data-i18n="from_word">Desde</label>
           <input type="month" id="rep-desde">
         </div>
         <div class="form-g">
-          <label>Hasta</label>
+          <label data-i18n="to_word">Hasta</label>
           <input type="month" id="rep-hasta">
         </div>
       </div>
     </div>
 
-    <button class="btn-generar" id="btn-generar-rep" onclick="ejecutarReporte()">
+    <button class="btn-generar" id="btn-generar-rep" onclick="ejecutarReporte()" data-i18n="gen_download_pdf">
       Generar y descargar PDF →
     </button>
-    <button class="btn-cancelar-rep" onclick="cerrarModalReporte()">Cancelar</button>
+    <button class="btn-cancelar-rep" data-i18n="cancel" onclick="cerrarModalReporte()">Cancelar</button>
   </div>
 </div>
 
