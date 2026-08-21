@@ -26,6 +26,250 @@
   }
   var supabase = window._skriptoClient;
 </script>
+<script>
+/* ══════════════════════════════════════════════════════
+   SISTEMA DE IDIOMA (ES / EN)
+══════════════════════════════════════════════════════ */
+var I18N = {
+  es: {
+    app_title:'Facturación', app_sub:'Sistema de facturación de servicios',
+    email:'Correo electrónico', password:'Contraseña', forgot:'¿Olvidaste tu contraseña?', enter:'Entrar',
+    business_name:'Nombre del negocio', with_this_email:'Con este correo inicias sesión',
+    username:'Usuario (nombre visible)', min_chars:'Mínimo 6 caracteres', create_account:'Crear cuenta',
+    recover_title:'Recuperar contraseña', recover_sub:'Te enviaremos un enlace a tu correo',
+    your_email:'Tu correo electrónico', send_instructions:'Enviar instrucciones', back_to_login:'Volver al inicio de sesión',
+    new_pwd_title:'Nueva contraseña', new_pwd:'Nueva contraseña', confirm_pwd:'Confirmar contraseña',
+    repeat_pwd:'Repite la contraseña', save_new_pwd:'Guardar contraseña',
+    del_account:'Eliminar cuenta', logout:'Salir', cancel:'Cancelar', save_changes:'Guardar cambios',
+    confirm_action:'¿Confirmar acción?', delete:'Sí, eliminar', confirm:'Confirmar', notes:'Notas',
+    nav_system:'Sistema', nav_control:'Control', nav_invoices:'Facturas', nav_new_invoice:'Nueva Factura',
+    nav_catalogs:'Catálogos', nav_clients:'Clientes', nav_services:'Servicios',
+    nav_finances:'Finanzas', nav_expenses:'Gastos', nav_profitability:'Rentabilidad',
+    nav_settings:'Ajustes', nav_my_company:'Datos generales', nav_pdf_report:'Reporte PDF', nav_renew_fixed:'Renovar facturas fijas',
+    all_months:'Todos los meses', all:'Todos',
+    mo1:'Enero',mo2:'Febrero',mo3:'Marzo',mo4:'Abril',mo5:'Mayo',mo6:'Junio',mo7:'Julio',mo8:'Agosto',mo9:'Septiembre',mo10:'Octubre',mo11:'Noviembre',mo12:'Diciembre',
+    del_account_title:'Eliminar mi cuenta', del_account_p1:'Esta acción cerrará tu sesión y eliminará tu acceso.',
+    del_account_p2:'Tus datos se conservan por 30 días.', del_account_confirm:'Confirma con tu contraseña actual:',
+    current_pwd:'Tu contraseña actual',
+    loading_data:'Cargando datos…', kpi_billed_month:'Facturado (mes)', kpi_expenses_month:'Gastos (mes)',
+    kpi_profit_month:'Utilidad (mes)', kpi_pending:'Pendientes de cobro', invoices_word:'facturas',
+    top_clients_month:'Top clientes (mes)', top_services_month:'Servicios más facturados (mes)', no_data_month:'Sin datos este mes',
+    last_invoices:'Últimas facturas', view_all:'Ver todas →', th_client:'Cliente', th_date:'Fecha', th_total:'Total', th_status:'Estado',
+    invoices_title:'Facturas', invoices_sub:'Historial completo de facturas emitidas', new_invoice:'Nueva Factura',
+    chip_all:'Todas', chip_pending:'Pendientes', chip_paid:'Pagadas', chip_voided:'Anuladas',
+    search_placeholder:'Buscar cliente, NIT, número…', th_nit:'NIT/CC', th_subtotal:'Subtotal', th_iva:'IVA',
+    massive_pdf:'PDF masivo', no_invoices:'No hay facturas registradas', create_first_invoice:'Crea tu primera factura desde "Nueva Factura"',
+    label_invoices:'Facturas', label_total:'Total', label_paid:'Pagado', label_pending:'Pendiente',
+    nf_title:'Nueva Factura', nf_sub:'Individual por cliente o masiva para todos a la vez', billing_mode:'Modo de facturación',
+    individual_client:'Cliente individual', bill_all_clients:'Facturar a TODOS los clientes',
+    bill_all_warning:'Se generará una factura por cada cliente registrado usando sus servicios contratados. Los clientes sin servicios asignados serán omitidos.',
+    invoice_data:'Datos de la factura', issue_date:'Fecha de emisión', due_date_opt:'Fecha de vencimiento (opcional)',
+    client_word:'Cliente', search_by_name_nit:'Buscar por nombre o NIT/CC…', change_word:'Cambiar',
+    create_new_client_here:'Crear cliente nuevo desde aquí', services_items:'Servicios / Ítems',
+    th_service:'Servicio', th_qty_short:'Cant.', th_unit_price:'Precio unit.', th_subtotal2:'Subtotal',
+    add_item:'Agregar ítem', totals_word:'Totales', notes_opt:'Notas / Observaciones', ph_payment_30:'Ej: Pago a 30 días…',
+    subtotal_word:'Subtotal', total_word2:'TOTAL', save_invoice:'Guardar Factura', clear_word:'Limpiar',
+    preview_clients_bill:'Vista previa — clientes a facturar', loading_clients:'Cargando clientes…',
+    general_notes_opt:'Notas generales (opcional)', ph_apply_all_invoices:'Se aplicará a todas las facturas…',
+    generate_invoices_all:'Generar facturas para todos los clientes',
+    clients_title:'Clientes', clients_sub:'Base de datos de tus clientes', new_client:'Nuevo cliente',
+    search_name_nit:'Buscar por nombre o NIT/CC…', th_name:'Nombre', th_phone:'Teléfono', th_email:'Correo',
+    th_city:'Ciudad', th_iva:'IVA', th_type:'Tipo', no_clients:'No hay clientes registrados', add_first_client:'Agrega tu primer cliente con el botón de arriba',
+    svc_catalog_title:'Catálogo de Servicios', svc_catalog_sub:'Define los servicios que ofreces y su precio estándar',
+    new_service:'Nuevo servicio', th_service2:'Servicio', th_desc:'Descripción', th_category:'Categoría', th_unit:'Unidad', th_price2:'Precio',
+    no_services:'No hay servicios en el catálogo', add_services_hint:'Agrega los servicios que ofreces para usarlos rápidamente al facturar',
+    expenses_title:'Gastos', expenses_sub:'Registra los costos operativos para calcular rentabilidad', new_expense:'Registrar gasto',
+    th_amount:'Monto', no_expenses:'Sin gastos registrados',
+    profitability_title:'Rentabilidad', profitability_sub:'Ingresos vs gastos — análisis financiero del negocio', export_pdf:'Exportar PDF',
+    analysis_period:'Período de análisis', from_year_month:'Desde (año/mes)', to_year_month:'Hasta (año/mes)',
+    period_this_month:'Este mes', period_quarter:'Trimestre', period_this_year:'Este año', period_custom2:'Personalizado', update_word:'Actualizar',
+    total_billed:'Total Facturado', total_expenses:'Total Gastos', net_profit2:'Utilidad Neta', margin_word:'Margen', over_income:'sobre ingresos',
+    income_by_service:'Ingresos por servicio', expenses_by_category:'Gastos por categoría', monthly_flow:'Flujo mensual',
+    no_data_period:'Sin datos en el período', top_clients:'Top clientes',
+    my_company_sub:'Estos datos aparecen en el encabezado de tus facturas en PDF', logo_word:'Logo', no_logo:'Sin logo',
+    logo_hint:'PNG o JPG, idealmente cuadrado. Se guarda directamente en tu cuenta.', remove_logo:'Quitar logo',
+    company_data:'Datos de la empresa', company_name:'Nombre de la empresa', nit_word:'NIT', phone_word:'Teléfono',
+    city_word:'Ciudad', email_word:'Correo electrónico', default_notes:'Observaciones por defecto',
+    default_notes_hint:'Este texto aparece automáticamente en el PDF, en cada factura', save_company_data:'Guardar datos de mi empresa',
+    new_client_title:'Nuevo cliente', name_req:'Nombre *', nit_cc:'NIT / CC', phone_word2:'Teléfono', email_word2:'Correo electrónico',
+    address_word:'Dirección', city_word2:'Ciudad', notes2:'Notas', ph_client_notes:'Observaciones del cliente…',
+    billing_config:'Configuración de facturación', default_iva:'IVA por defecto', no_iva:'Sin IVA (0%)',
+    preselect_hint:'Se pre-selecciona al facturar a este cliente', invoice_type:'Tipo de factura',
+    fixed_type:'📌 Fija — se repite cada mes', temp_type:'⏱ Temporal — solo cuando se crea', fixed_persist_hint:'Las fijas persisten en la base del mes siguiente',
+    contracted_services:'Servicios contratados', loading_services:'Cargando servicios…', mark_services_hint:'Marca los servicios que este cliente tiene activos o contratados',
+    save_client:'Guardar cliente', new_service_title:'Nuevo servicio', service_name_req:'Nombre del servicio *',
+    ph_service_examples:'Ej: Diseño web, Consultoría, Asesoría…', description_word:'Descripción', ph_service_desc:'Descripción opcional del servicio…',
+    unit_price_req:'Precio unitario *', unit_word2:'Unidad', unit_opt:'Unidad', hour_opt:'Hora', month_opt:'Mes', project_opt:'Proyecto',
+    day_opt:'Día', session_opt:'Sesión', category_word:'Categoría', save_service:'Guardar servicio',
+    new_expense_title:'Registrar gasto', date_req:'Fecha *', category_word2:'Categoría', ph_rent_payroll:'Arriendo, Nómina…',
+    description_req:'Descripción *', ph_rent_example:'Ej: Arriendo oficina enero 2025…', amount_req:'Monto *',
+    ph_additional_detail:'Detalle adicional…', save_expense:'Guardar gasto', irreversible_action:'Esta acción no se puede deshacer.',
+    invoice_word:'Factura', pdf_word:'PDF', close_word:'Cerrar', mark_paid:'Marcar como pagada',
+    status_pending:'Pendiente', status_paid:'Pagada', status_voided:'Anulada',
+    invoice_singular:'factura', invoice_plural:'facturas', view_pdf_tt:'Ver/PDF', mark_paid_tt:'Marcar pagada',
+    void_tt:'Anular', void_invoice_title:'Anular factura', confirm_void_msg:'¿Seguro que deseas anular la factura {id}? Esta acción no se puede deshacer.',
+    individual_pdf_tt:'PDF individual',
+    invoice_not_found:'Factura no encontrada', client_word2:'Cliente', invoice_word2:'Factura', number_word:'N°',
+    issued_word:'Emitida:', due_word:'Vence:', notes_colon:'Notas:',
+    client_singular:'cliente', client_plural:'clientes', no_iva_short:'Sin IVA', fixed_short:'⏱ Temporal', fixed_short2:'📌 Fija',
+    delete_client_title:'Eliminar cliente', confirm_del_client_msg:'¿Eliminar a {nombre}? Solo si no tiene facturas activas.',
+    service_singular:'servicio', service_plural:'servicios', general_word:'General', unit_default:'und',
+    delete_service_title:'Eliminar servicio', confirm_del_service_msg:'¿Eliminar {nombre} del catálogo?',
+    expense_singular:'gasto', expense_plural:'gastos', total_colon:'Total:', other_word:'Otros',
+    delete_expense_title:'Eliminar gasto', confirm_del_expense_msg:'¿Eliminar este gasto de {monto}?',
+    mo_ene:'Ene',mo_feb:'Feb',mo_mar:'Mar',mo_abr:'Abr',mo_may:'May',mo_jun:'Jun',mo_jul:'Jul',mo_ago:'Ago',mo_sep:'Sep',mo_oct:'Oct',mo_nov:'Nov',mo_dic:'Dic',
+    billed_colon:'Facturado:', expenses_colon:'Gastos:',
+    no_results:'Sin resultados', assigned_service_singular:'servicio', assigned_service_plural:'servicios', no_assigned_services:'Sin servicios asignados',
+    loading_word:'Cargando…', no_client_services:'Ningún cliente tiene servicios asignados', edit_clients_first:'Edita los clientes y marca sus servicios contratados primero',
+    will_generate:'Se generarán', client_singular_omitted:'cliente', client_plural_omitted:'clientes', omitted_word:'omitido', omitted_word_pl:'omitidos', no_services_paren:'(sin servicios)',
+    omitted_no_services:'Omitidos (sin servicios):',
+    no_services_catalog:'No hay servicios en el catálogo aún.', add_from_services:'Agrégalos desde', first_word:'primero.',
+    downloading_word:'Descargando', msg_error_prefix:'Error: ', invoice_not_found2:'Factura no encontrada',
+    generating_pdf:'Generando PDF…', image_too_heavy:'La imagen es muy pesada (máx. 1MB)', no_client_has_services:'Ningún cliente tiene servicios asignados.',
+    no_invoice_selected:'No hay factura seleccionada', no_invoices_export:'No hay facturas para exportar',
+    no_data_period2:'Sin datos para el período', no_active_invoices_export:'Sin facturas activas que exportar',
+    pdf_downloaded:'PDF descargado', profitability_report_downloaded:'Reporte de rentabilidad descargado',
+    del_finanzas_access:'Acceso a Facturación eliminado. Tus datos se conservan.', msg_complete_fields:'Completa todos los campos.',
+    msg_wrong_credentials:'Correo o contraseña incorrectos.', msg_unexpected_error:'Error inesperado: ',
+    msg_enter_email_pwd:'Ingresa correo y contraseña.', msg_enter_email2:'Ingresa tu correo.',
+    msg_min_pwd:'La contraseña debe tener al menos 6 caracteres.', msg_pwd_mismatch:'Las contraseñas no coinciden.',
+    msg_min_6chars:'Mínimo 6 caracteres.', msg_no_finanzas_access:'Sin acceso a Facturación. Contacta al administrador.',
+    msg_pwd_updated:'Contraseña actualizada. Ya puedes iniciar sesión.',
+    msg_account_created_fin:'¡Cuenta creada! Revisa tu correo para confirmar y entrar directo con tus 3 días de prueba gratis.',
+    msg_recovery_sent:'Si ese correo está registrado, recibirás las instrucciones en unos minutos.',
+    msg_name_required:'El nombre es obligatorio.', msg_amount_gt0:'El monto debe ser mayor a 0.',
+    msg_desc_required:'La descripción es obligatoria.', msg_price_gt0:'El precio debe ser mayor a 0.',
+    msg_add_item_first:'Agrega al menos un ítem con nombre, cantidad y precio.', msg_select_client_first:'Selecciona un cliente primero.',
+    errors_word:'error(es). Ver consola.', invoice_generated:'factura', invoices_generated:'facturas', generated_ok:'generada', generated_ok_pl:'generadas', correctly_word:'correctamente',
+    downloading_x_of_y:'Descargando {a} de {b}…'
+  },
+  en: {
+    app_title:'Invoicing', app_sub:'Service invoicing system',
+    email:'Email address', password:'Password', forgot:'Forgot your password?', enter:'Sign in',
+    business_name:'Business name', with_this_email:'You sign in with this email',
+    username:'Username (display name)', min_chars:'Minimum 6 characters', create_account:'Create account',
+    recover_title:'Recover password', recover_sub:"We'll send a link to your email",
+    your_email:'Your email address', send_instructions:'Send instructions', back_to_login:'Back to sign in',
+    new_pwd_title:'New password', new_pwd:'New password', confirm_pwd:'Confirm password',
+    repeat_pwd:'Repeat the password', save_new_pwd:'Save password',
+    del_account:'Delete account', logout:'Log out', cancel:'Cancel', save_changes:'Save changes',
+    confirm_action:'Confirm action?', delete:'Yes, delete', confirm:'Confirm', notes:'Notes',
+    nav_system:'System', nav_control:'Control', nav_invoices:'Invoices', nav_new_invoice:'New Invoice',
+    nav_catalogs:'Catalogs', nav_clients:'Clients', nav_services:'Services',
+    nav_finances:'Finances', nav_expenses:'Expenses', nav_profitability:'Profitability',
+    nav_settings:'Settings', nav_my_company:'Company info', nav_pdf_report:'PDF Report', nav_renew_fixed:'Renew fixed invoices',
+    all_months:'All months', all:'All',
+    mo1:'January',mo2:'February',mo3:'March',mo4:'April',mo5:'May',mo6:'June',mo7:'July',mo8:'August',mo9:'September',mo10:'October',mo11:'November',mo12:'December',
+    del_account_title:'Delete my account', del_account_p1:'This action will close your session and remove your access.',
+    del_account_p2:'Your data is kept for 30 days.', del_account_confirm:'Confirm with your current password:',
+    current_pwd:'Your current password',
+    loading_data:'Loading data…', kpi_billed_month:'Billed (month)', kpi_expenses_month:'Expenses (month)',
+    kpi_profit_month:'Profit (month)', kpi_pending:'Pending collection', invoices_word:'invoices',
+    top_clients_month:'Top clients (month)', top_services_month:'Most billed services (month)', no_data_month:'No data this month',
+    last_invoices:'Latest invoices', view_all:'View all →', th_client:'Client', th_date:'Date', th_total:'Total', th_status:'Status',
+    invoices_title:'Invoices', invoices_sub:'Complete history of issued invoices', new_invoice:'New Invoice',
+    chip_all:'All', chip_pending:'Pending', chip_paid:'Paid', chip_voided:'Voided',
+    search_placeholder:'Search client, tax ID, number…', th_nit:'Tax ID', th_subtotal:'Subtotal', th_iva:'Tax',
+    massive_pdf:'Bulk PDF', no_invoices:'No invoices recorded', create_first_invoice:'Create your first invoice from "New Invoice"',
+    label_invoices:'Invoices', label_total:'Total', label_paid:'Paid', label_pending:'Pending',
+    nf_title:'New Invoice', nf_sub:'Individual per client or bulk for all at once', billing_mode:'Billing mode',
+    individual_client:'Individual client', bill_all_clients:'Bill ALL clients',
+    bill_all_warning:'An invoice will be generated for each registered client using their contracted services. Clients with no assigned services will be skipped.',
+    invoice_data:'Invoice data', issue_date:'Issue date', due_date_opt:'Due date (optional)',
+    client_word:'Client', search_by_name_nit:'Search by name or tax ID…', change_word:'Change',
+    create_new_client_here:'Create new client here', services_items:'Services / Items',
+    th_service:'Service', th_qty_short:'Qty.', th_unit_price:'Unit price', th_subtotal2:'Subtotal',
+    add_item:'Add item', totals_word:'Totals', notes_opt:'Notes / Observations', ph_payment_30:'E.g: Payment in 30 days…',
+    subtotal_word:'Subtotal', total_word2:'TOTAL', save_invoice:'Save Invoice', clear_word:'Clear',
+    preview_clients_bill:'Preview — clients to bill', loading_clients:'Loading clients…',
+    general_notes_opt:'General notes (optional)', ph_apply_all_invoices:'Will be applied to all invoices…',
+    generate_invoices_all:'Generate invoices for all clients',
+    clients_title:'Clients', clients_sub:'Your clients database', new_client:'New client',
+    search_name_nit:'Search by name or tax ID…', th_name:'Name', th_phone:'Phone', th_email:'Email',
+    th_city:'City', th_iva:'Tax', th_type:'Type', no_clients:'No clients registered', add_first_client:'Add your first client with the button above',
+    svc_catalog_title:'Service Catalog', svc_catalog_sub:'Define the services you offer and their standard price',
+    new_service:'New service', th_service2:'Service', th_desc:'Description', th_category:'Category', th_unit:'Unit', th_price2:'Price',
+    no_services:'No services in the catalog', add_services_hint:'Add the services you offer to use them quickly when billing',
+    expenses_title:'Expenses', expenses_sub:'Record operating costs to calculate profitability', new_expense:'Record expense',
+    th_amount:'Amount', no_expenses:'No expenses recorded',
+    profitability_title:'Profitability', profitability_sub:'Income vs expenses — business financial analysis', export_pdf:'Export PDF',
+    analysis_period:'Analysis period', from_year_month:'From (year/month)', to_year_month:'To (year/month)',
+    period_this_month:'This month', period_quarter:'Quarter', period_this_year:'This year', period_custom2:'Custom', update_word:'Update',
+    total_billed:'Total Billed', total_expenses:'Total Expenses', net_profit2:'Net Profit', margin_word:'Margin', over_income:'over income',
+    income_by_service:'Income by service', expenses_by_category:'Expenses by category', monthly_flow:'Monthly flow',
+    no_data_period:'No data in this period', top_clients:'Top clients',
+    my_company_sub:'This information appears in the header of your PDF invoices', logo_word:'Logo', no_logo:'No logo',
+    logo_hint:'PNG or JPG, ideally square. Saved directly to your account.', remove_logo:'Remove logo',
+    company_data:'Company information', company_name:'Company name', nit_word:'Tax ID', phone_word:'Phone',
+    city_word:'City', email_word:'Email address', default_notes:'Default observations',
+    default_notes_hint:'This text automatically appears in the PDF, on every invoice', save_company_data:'Save my company info',
+    new_client_title:'New client', name_req:'Name *', nit_cc:'Tax ID', phone_word2:'Phone', email_word2:'Email address',
+    address_word:'Address', city_word2:'City', notes2:'Notes', ph_client_notes:'Client observations…',
+    billing_config:'Billing configuration', default_iva:'Default tax', no_iva:'No tax (0%)',
+    preselect_hint:'Pre-selected when billing this client', invoice_type:'Invoice type',
+    fixed_type:'📌 Fixed — repeats every month', temp_type:'⏱ Temporary — only when created', fixed_persist_hint:'Fixed ones persist to the next month',
+    contracted_services:'Contracted services', loading_services:'Loading services…', mark_services_hint:'Check the services this client has active or contracted',
+    save_client:'Save client', new_service_title:'New service', service_name_req:'Service name *',
+    ph_service_examples:'E.g: Web design, Consulting, Advisory…', description_word:'Description', ph_service_desc:'Optional service description…',
+    unit_price_req:'Unit price *', unit_word2:'Unit', unit_opt:'Unit', hour_opt:'Hour', month_opt:'Month', project_opt:'Project',
+    day_opt:'Day', session_opt:'Session', category_word:'Category', save_service:'Save service',
+    new_expense_title:'Record expense', date_req:'Date *', category_word2:'Category', ph_rent_payroll:'Rent, Payroll…',
+    description_req:'Description *', ph_rent_example:'E.g: Office rent January 2025…', amount_req:'Amount *',
+    ph_additional_detail:'Additional detail…', save_expense:'Save expense', irreversible_action:'This action cannot be undone.',
+    invoice_word:'Invoice', pdf_word:'PDF', close_word:'Close', mark_paid:'Mark as paid',
+    status_pending:'Pending', status_paid:'Paid', status_voided:'Voided',
+    invoice_singular:'invoice', invoice_plural:'invoices', view_pdf_tt:'View/PDF', mark_paid_tt:'Mark paid',
+    void_tt:'Void', void_invoice_title:'Void invoice', confirm_void_msg:'Are you sure you want to void invoice {id}? This action cannot be undone.',
+    individual_pdf_tt:'Individual PDF',
+    invoice_not_found:'Invoice not found', client_word2:'Client', invoice_word2:'Invoice', number_word:'No.',
+    issued_word:'Issued:', due_word:'Due:', notes_colon:'Notes:',
+    client_singular:'client', client_plural:'clients', no_iva_short:'No tax', fixed_short:'⏱ Temporary', fixed_short2:'📌 Fixed',
+    delete_client_title:'Delete client', confirm_del_client_msg:'Delete {nombre}? Only if they have no active invoices.',
+    service_singular:'service', service_plural:'services', general_word:'General', unit_default:'unit',
+    delete_service_title:'Delete service', confirm_del_service_msg:'Delete {nombre} from the catalog?',
+    expense_singular:'expense', expense_plural:'expenses', total_colon:'Total:', other_word:'Other',
+    delete_expense_title:'Delete expense', confirm_del_expense_msg:'Delete this expense of {monto}?',
+    mo_ene:'Jan',mo_feb:'Feb',mo_mar:'Mar',mo_abr:'Apr',mo_may:'May',mo_jun:'Jun',mo_jul:'Jul',mo_ago:'Aug',mo_sep:'Sep',mo_oct:'Oct',mo_nov:'Nov',mo_dic:'Dec',
+    billed_colon:'Billed:', expenses_colon:'Expenses:',
+    no_results:'No results', assigned_service_singular:'service', assigned_service_plural:'services', no_assigned_services:'No services assigned',
+    loading_word:'Loading…', no_client_services:'No client has assigned services', edit_clients_first:'Edit the clients and mark their contracted services first',
+    will_generate:'will be generated', client_singular_omitted:'client', client_plural_omitted:'clients', omitted_word:'omitted', omitted_word_pl:'omitted', no_services_paren:'(no services)',
+    omitted_no_services:'Omitted (no services):',
+    no_services_catalog:'No services in the catalog yet.', add_from_services:'Add them from', first_word:'first.',
+    downloading_word:'Downloading', msg_error_prefix:'Error: ', invoice_not_found2:'Invoice not found',
+    generating_pdf:'Generating PDF…', image_too_heavy:'The image is too large (max. 1MB)', no_client_has_services:'No client has assigned services.',
+    no_invoice_selected:'No invoice selected', no_invoices_export:'No invoices to export',
+    no_data_period2:'No data for this period', no_active_invoices_export:'No active invoices to export',
+    pdf_downloaded:'PDF downloaded', profitability_report_downloaded:'Profitability report downloaded',
+    del_finanzas_access:'Access to Invoicing removed. Your data is kept.', msg_complete_fields:'Fill in all fields.',
+    msg_wrong_credentials:'Incorrect email or password.', msg_unexpected_error:'Unexpected error: ',
+    msg_enter_email_pwd:'Enter email and password.', msg_enter_email2:'Enter your email.',
+    msg_min_pwd:'Password must be at least 6 characters.', msg_pwd_mismatch:'Passwords do not match.',
+    msg_min_6chars:'Minimum 6 characters.', msg_no_finanzas_access:'No access to Invoicing. Contact the administrator.',
+    msg_pwd_updated:'Password updated. You can now sign in.',
+    msg_account_created_fin:'Account created! Check your email to confirm and get instant access with your 3 free trial days.',
+    msg_recovery_sent:'If that email is registered, you will receive instructions shortly.',
+    msg_name_required:'Name is required.', msg_amount_gt0:'Amount must be greater than 0.',
+    msg_desc_required:'Description is required.', msg_price_gt0:'Price must be greater than 0.',
+    msg_add_item_first:'Add at least one item with name, quantity and price.', msg_select_client_first:'Select a client first.',
+    errors_word:'error(s). Check console.', invoice_generated:'invoice', invoices_generated:'invoices', generated_ok:'generated', generated_ok_pl:'generated', correctly_word:'successfully',
+    downloading_x_of_y:'Downloading {a} of {b}…'
+  }
+};
+var LANG = localStorage.getItem('skripto_lang') || 'es';
+function t(k){ return (I18N[LANG] && I18N[LANG][k]) || (I18N.es[k]) || k; }
+function setLang(l){
+  LANG = l;
+  try{ localStorage.setItem('skripto_lang', l); }catch(e){}
+  aplicarIdioma();
+}
+function aplicarIdioma(){
+  document.querySelectorAll('[data-i18n]').forEach(function(el){ el.textContent = t(el.getAttribute('data-i18n')); });
+  document.querySelectorAll('[data-i18n-ph]').forEach(function(el){ el.placeholder = t(el.getAttribute('data-i18n-ph')); });
+  document.querySelectorAll('.lang-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.lang===LANG); });
+  document.documentElement.lang = LANG;
+}
+</script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -74,6 +318,10 @@ button{font-family:var(--font-sans);cursor:pointer;border:none;border-radius:var
 .alert.err{background:var(--red2);color:var(--red);border-color:var(--red3)}
 .alert.warn{background:var(--amber2);color:var(--amber);border-color:#D97706}
 .link-btn{background:none;border:none;color:var(--ink3);font-size:12px;cursor:pointer;text-decoration:underline;padding:0;font-family:var(--font-sans)}
+.lang-switch{position:fixed;top:14px;right:16px;display:flex;gap:0;background:var(--bg3);border-radius:20px;padding:3px;z-index:250;box-shadow:var(--shadow)}
+.lang-switch .lang-btn{padding:6px 12px;background:none;border-radius:16px;font-size:11px;font-weight:600;color:var(--ink2);transition:all .15s}
+.lang-switch .lang-btn.active{background:var(--blue);color:#fff}
+.topbar .lang-switch{position:static;box-shadow:none;background:var(--bg3);margin-right:8px}
 
 /* ════════ APP LAYOUT ════════ */
 #screen-app{flex-direction:column}
@@ -281,58 +529,62 @@ body {
 
 <!-- ════════ LOGIN ════════ -->
 <div id="screen-login" class="screen visible">
+  <div class="lang-switch">
+    <button class="lang-btn" data-lang="es" onclick="setLang('es')">ES</button>
+    <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+  </div>
   <div class="login-card">
     <div class="login-logo">
       <h1>Factu<span style="color:var(--blue)">ración</span></h1>
-      <span>Sistema de facturación de servicios</span>
+      <span data-i18n="app_sub">Sistema de facturación de servicios</span>
     </div>
 
     <div id="alert-auth" class="alert"></div>
 
     <!-- LOGIN -->
     <div id="blq-login">
-      <div class="form-g"><label>Correo electrónico</label>
+      <div class="form-g"><label data-i18n="email">Correo electrónico</label>
         <input type="email" id="in-user" placeholder="tu@correo.com" autocomplete="username">
       </div>
-      <div class="form-g"><label>Contraseña</label>
+      <div class="form-g"><label data-i18n="password">Contraseña</label>
         <input type="password" id="in-pwd" placeholder="••••••••" autocomplete="current-password"
           onkeydown="if(event.key==='Enter')doLogin()">
         <div style="text-align:right;margin-top:6px">
-          <button class="link-btn" onclick="mostrarRecuperacion()">¿Olvidaste tu contraseña?</button>
+          <button class="link-btn" data-i18n="forgot" onclick="mostrarRecuperacion()">¿Olvidaste tu contraseña?</button>
         </div>
       </div>
-      <button class="btn-main" id="btn-login" onclick="doLogin()">Entrar</button>
+      <button class="btn-main" id="btn-login" data-i18n="enter" onclick="doLogin()">Entrar</button>
     </div>
 
     <!-- REGISTRO -->
     <div id="blq-registro" style="display:none">
-      <div class="form-g"><label>Nombre del negocio</label>
+      <div class="form-g"><label data-i18n="business_name">Nombre del negocio</label>
         <input type="text" id="rg-nombre" placeholder="Mi Empresa S.A.S."></div>
-      <div class="form-g"><label>Correo electrónico</label>
+      <div class="form-g"><label data-i18n="email">Correo electrónico</label>
         <input type="email" id="rg-email" placeholder="tu@correo.com">
-        <div class="hint">Con este correo inicias sesión</div>
+        <div class="hint" data-i18n="with_this_email">Con este correo inicias sesión</div>
       </div>
-      <div class="form-g"><label>Usuario (nombre visible)</label>
+      <div class="form-g"><label data-i18n="username">Usuario (nombre visible)</label>
         <input type="text" id="rg-user" placeholder="minegocio (sin espacios)"></div>
-      <div class="form-g"><label>Contraseña</label>
+      <div class="form-g"><label data-i18n="password">Contraseña</label>
         <input type="password" id="rg-pwd" placeholder="Mínimo 6 caracteres"
           onkeydown="if(event.key==='Enter')doRegistro()"></div>
-      <button class="btn-main" id="btn-reg" onclick="doRegistro()">Crear cuenta</button>
+      <button class="btn-main" id="btn-reg" data-i18n="create_account" onclick="doRegistro()">Crear cuenta</button>
     </div>
 
     <!-- RECUPERAR -->
     <div id="blq-recuperar" style="display:none">
       <div style="text-align:center;margin-bottom:20px">
         <div style="font-size:28px;margin-bottom:6px">🔑</div>
-        <div style="font-size:15px;font-weight:600">Recuperar contraseña</div>
-        <div style="font-size:12px;color:var(--ink3);margin-top:4px">Te enviaremos un enlace a tu correo</div>
+        <div style="font-size:15px;font-weight:600" data-i18n="recover_title">Recuperar contraseña</div>
+        <div style="font-size:12px;color:var(--ink3);margin-top:4px" data-i18n="recover_sub">Te enviaremos un enlace a tu correo</div>
       </div>
-      <div class="form-g"><label>Tu correo electrónico</label>
+      <div class="form-g"><label data-i18n="your_email">Tu correo electrónico</label>
         <input type="email" id="rec-email" placeholder="tu@correo.com"
           onkeydown="if(event.key==='Enter')doRecuperar()"></div>
-      <button class="btn-main" id="btn-recuperar" onclick="doRecuperar()">Enviar instrucciones</button>
+      <button class="btn-main" id="btn-recuperar" data-i18n="send_instructions" onclick="doRecuperar()">Enviar instrucciones</button>
       <div style="text-align:center;margin-top:12px">
-        <button class="link-btn" onclick="volverLogin()">Volver al inicio de sesión</button>
+        <button class="link-btn" data-i18n="back_to_login" onclick="volverLogin()">Volver al inicio de sesión</button>
       </div>
     </div>
 
@@ -340,14 +592,14 @@ body {
     <div id="blq-reset" style="display:none">
       <div style="text-align:center;margin-bottom:20px">
         <div style="font-size:28px;margin-bottom:6px">🔐</div>
-        <div style="font-size:15px;font-weight:600">Nueva contraseña</div>
+        <div style="font-size:15px;font-weight:600" data-i18n="new_pwd_title">Nueva contraseña</div>
       </div>
-      <div class="form-g"><label>Nueva contraseña</label>
+      <div class="form-g"><label data-i18n="new_pwd">Nueva contraseña</label>
         <input type="password" id="reset-pwd" placeholder="Mínimo 6 caracteres"></div>
-      <div class="form-g"><label>Confirmar contraseña</label>
+      <div class="form-g"><label data-i18n="confirm_pwd">Confirmar contraseña</label>
         <input type="password" id="reset-pwd2" placeholder="Repite la contraseña"
           onkeydown="if(event.key==='Enter')doNuevaPwd()"></div>
-      <button class="btn-main" id="btn-reset" onclick="doNuevaPwd()">Guardar contraseña</button>
+      <button class="btn-main" id="btn-reset" data-i18n="save_new_pwd" onclick="doNuevaPwd()">Guardar contraseña</button>
     </div>
   </div>
 </div>
@@ -358,8 +610,12 @@ body {
     <button class="btn-menu-toggle" onclick="toggleSidebar()">☰</button>
     <div class="topbar-brand">factu<span>ración</span></div>
    <span class="topbar-user" id="tb-user"></span>
-    <button class="btn-del-account" onclick="mostrarModalEliminar()">Eliminar cuenta</button>
-    <button class="btn-logout" onclick="doLogout()">Salir</button>
+    <div class="lang-switch">
+      <button class="lang-btn" data-lang="es" onclick="setLang('es')">ES</button>
+      <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+    </div>
+    <button class="btn-del-account" data-i18n="del_account" onclick="mostrarModalEliminar()">Eliminar cuenta</button>
+    <button class="btn-logout" data-i18n="logout" onclick="doLogout()">Salir</button>
   </div>
 
   <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
@@ -367,47 +623,47 @@ body {
   <div class="app-body">
     <nav class="sidebar" id="sidebar">
       <div class="sidebar-section">
-        <div class="sidebar-label">Sistema</div>
+        <div class="sidebar-label" data-i18n="nav_system">Sistema</div>
         <button class="nav-item active" id="nav-dashboard" onclick="cambiarMod('dashboard')">
-          <span class="nav-item-icon">📊</span>Control
+          <span class="nav-item-icon">📊</span><span data-i18n="nav_control">Control</span>
         </button>
         <button class="nav-item" id="nav-facturas" onclick="cambiarMod('facturas')">
-          <span class="nav-item-icon">🧾</span>Facturas
+          <span class="nav-item-icon">🧾</span><span data-i18n="nav_invoices">Facturas</span>
         </button>
         <button class="nav-item" id="nav-nueva-factura" onclick="cambiarMod('nueva-factura')">
-          <span class="nav-item-icon">➕</span>Nueva Factura
+          <span class="nav-item-icon">➕</span><span data-i18n="nav_new_invoice">Nueva Factura</span>
         </button>
       </div>
       <div class="sidebar-section">
-        <div class="sidebar-label">Catálogos</div>
+        <div class="sidebar-label" data-i18n="nav_catalogs">Catálogos</div>
         <button class="nav-item" id="nav-clientes" onclick="cambiarMod('clientes')">
-          <span class="nav-item-icon">👥</span>Clientes
+          <span class="nav-item-icon">👥</span><span data-i18n="nav_clients">Clientes</span>
         </button>
         <button class="nav-item" id="nav-servicios" onclick="cambiarMod('servicios')">
-          <span class="nav-item-icon">🛠</span>Servicios
+          <span class="nav-item-icon">🛠</span><span data-i18n="nav_services">Servicios</span>
         </button>
       </div>
       <div class="sidebar-section">
-        <div class="sidebar-label">Finanzas</div>
+        <div class="sidebar-label" data-i18n="nav_finances">Finanzas</div>
         <button class="nav-item" id="nav-gastos" onclick="cambiarMod('gastos')">
-          <span class="nav-item-icon">💸</span>Gastos
+          <span class="nav-item-icon">💸</span><span data-i18n="nav_expenses">Gastos</span>
         </button>
         <button class="nav-item" id="nav-rentabilidad" onclick="cambiarMod('rentabilidad')">
-          <span class="nav-item-icon">📈</span>Rentabilidad
+          <span class="nav-item-icon">📈</span><span data-i18n="nav_profitability">Rentabilidad</span>
         </button>
       </div>
       <div class="sidebar-section">
-        <div class="sidebar-label">Ajustes</div>
+        <div class="sidebar-label" data-i18n="nav_settings">Ajustes</div>
         <button class="nav-item" id="nav-config" onclick="cambiarMod('config')">
-          <span class="nav-item-icon">🏢</span>Datos generales
+          <span class="nav-item-icon">🏢</span><span data-i18n="nav_my_company">Datos generales</span>
         </button>
       </div>
       <div class="sidebar-footer">
         <button class="btn-pdf-side" onclick="generarReportePDF()">
-          <span>📄</span><span>Reporte PDF</span>
+          <span>📄</span><span data-i18n="nav_pdf_report">Reporte PDF</span>
         </button>
         <button class="btn-pdf-side" style="margin-top:6px;background:var(--amber2);border-color:rgba(186,117,23,.3);color:var(--amber)" onclick="renovarFacturasManuales()" id="btn-renovar">
-          <span>🔄</span><span>Renovar facturas fijas</span>
+          <span>🔄</span><span data-i18n="nav_renew_fixed">Renovar facturas fijas</span>
         </button>
       </div>
     </nav>
@@ -418,40 +674,40 @@ body {
       <div id="mod-dashboard" class="modulo">
         <div class="panel-header">
           <div>
-            <div class="panel-title">Control</div>
-            <div class="panel-sub" id="dash-periodo-label">Cargando datos…</div>
+            <div class="panel-title" data-i18n="nav_control">Control</div>
+            <div class="panel-sub" id="dash-periodo-label" data-i18n="loading_data">Cargando datos…</div>
           </div>
         </div>
         <div id="alert-dash" class="alert"></div>
         <div class="grid-4" style="margin-bottom:16px">
-          <div class="kpi"><div class="kpi-label">Facturado (mes)</div>
+          <div class="kpi"><div class="kpi-label" data-i18n="kpi_billed_month">Facturado (mes)</div>
             <div class="kpi-value" id="kpi-fac" style="color:var(--blue)">$0</div>
             <div class="kpi-sub" id="kpi-fac-sub">0 facturas</div></div>
-          <div class="kpi"><div class="kpi-label">Gastos (mes)</div>
+          <div class="kpi"><div class="kpi-label" data-i18n="kpi_expenses_month">Gastos (mes)</div>
             <div class="kpi-value" id="kpi-gas" style="color:var(--red)">$0</div></div>
-          <div class="kpi"><div class="kpi-label">Utilidad (mes)</div>
+          <div class="kpi"><div class="kpi-label" data-i18n="kpi_profit_month">Utilidad (mes)</div>
             <div class="kpi-value" id="kpi-util">$0</div></div>
-          <div class="kpi"><div class="kpi-label">Pendientes de cobro</div>
+          <div class="kpi"><div class="kpi-label" data-i18n="kpi_pending">Pendientes de cobro</div>
             <div class="kpi-value" id="kpi-pend" style="color:var(--amber)">$0</div>
             <div class="kpi-sub" id="kpi-pend-sub">0 facturas</div></div>
         </div>
         <div class="grid-2">
           <div class="card">
-            <div class="card-title" style="color:var(--blue2)">🏆 Top clientes (mes)</div>
-            <div id="graf-clientes"><div class="empty-state" style="padding:20px 10px"><div style="font-size:12px;color:var(--ink3)">Sin datos este mes</div></div></div>
+            <div class="card-title" style="color:var(--blue2)">🏆 <span data-i18n="top_clients_month">Top clientes (mes)</span></div>
+            <div id="graf-clientes"><div class="empty-state" style="padding:20px 10px"><div style="font-size:12px;color:var(--ink3)" data-i18n="no_data_month">Sin datos este mes</div></div></div>
           </div>
           <div class="card">
-            <div class="card-title" style="color:var(--blue2)">🛠 Servicios más facturados (mes)</div>
-            <div id="graf-servicios"><div class="empty-state" style="padding:20px 10px"><div style="font-size:12px;color:var(--ink3)">Sin datos este mes</div></div></div>
+            <div class="card-title" style="color:var(--blue2)">🛠 <span data-i18n="top_services_month">Servicios más facturados (mes)</span></div>
+            <div id="graf-servicios"><div class="empty-state" style="padding:20px 10px"><div style="font-size:12px;color:var(--ink3)" data-i18n="no_data_month">Sin datos este mes</div></div></div>
           </div>
         </div>
         <div class="table-wrap">
-          <div class="table-head"><h3>Últimas facturas</h3>
-            <button class="btn-outline btn-sm" onclick="cambiarMod('facturas')">Ver todas →</button>
+          <div class="table-head"><h3 data-i18n="last_invoices">Últimas facturas</h3>
+            <button class="btn-outline btn-sm" data-i18n="view_all" onclick="cambiarMod('facturas')">Ver todas →</button>
           </div>
           <div class="table-scroll">
             <table>
-              <thead><tr><th>#</th><th>Cliente</th><th>Fecha</th><th class="r">Total</th><th>Estado</th></tr></thead>
+              <thead><tr><th>#</th><th data-i18n="th_client">Cliente</th><th data-i18n="th_date">Fecha</th><th class="r" data-i18n="th_total">Total</th><th data-i18n="th_status">Estado</th></tr></thead>
               <tbody id="dash-tbody"></tbody>
             </table>
           </div>
@@ -461,70 +717,70 @@ body {
       <!-- ════ FACTURAS ════ -->
       <div id="mod-facturas" class="modulo" style="display:none">
         <div class="panel-header">
-          <div><div class="panel-title">Facturas</div>
-            <div class="panel-sub">Historial completo de facturas emitidas</div></div>
-          <button class="btn-primary btn-sm" onclick="cambiarMod('nueva-factura')">+ Nueva Factura</button>
+          <div><div class="panel-title" data-i18n="invoices_title">Facturas</div>
+            <div class="panel-sub" data-i18n="invoices_sub">Historial completo de facturas emitidas</div></div>
+          <button class="btn-primary btn-sm" onclick="cambiarMod('nueva-factura')">+ <span data-i18n="new_invoice">Nueva Factura</span></button>
         </div>
         <div id="alert-facturas" class="alert"></div>
 
         <div class="chips" id="chips-estado">
-          <button class="chip active" onclick="setChipEstado(this,'')">Todas</button>
-          <button class="chip" onclick="setChipEstado(this,'emitida')">⏳ Pendientes</button>
-          <button class="chip" onclick="setChipEstado(this,'pagada')">✅ Pagadas</button>
-          <button class="chip" onclick="setChipEstado(this,'anulada')">❌ Anuladas</button>
+          <button class="chip active" data-i18n="chip_all" onclick="setChipEstado(this,'')">Todas</button>
+          <button class="chip" onclick="setChipEstado(this,'emitida')">⏳ <span data-i18n="chip_pending">Pendientes</span></button>
+          <button class="chip" onclick="setChipEstado(this,'pagada')">✅ <span data-i18n="chip_paid">Pagadas</span></button>
+          <button class="chip" onclick="setChipEstado(this,'anulada')">❌ <span data-i18n="chip_voided">Anuladas</span></button>
         </div>
 
         <div class="filter-row" style="margin-bottom:14px">
           <div class="search-box" style="flex:2;min-width:160px">
             <span class="search-icon">🔍</span>
-            <input type="text" id="f-fac-q" placeholder="Buscar cliente, NIT, número…" oninput="filtrarFacturas()">
+            <input type="text" id="f-fac-q" placeholder="Buscar cliente, NIT, número…" data-i18n-ph="search_placeholder" oninput="filtrarFacturas()">
           </div>
           <select id="f-fac-mes" onchange="filtrarFacturas()" style="flex:1;min-width:100px">
-            <option value="">Todos los meses</option>
-            <option value="01">Enero</option><option value="02">Febrero</option>
-            <option value="03">Marzo</option><option value="04">Abril</option>
-            <option value="05">Mayo</option><option value="06">Junio</option>
-            <option value="07">Julio</option><option value="08">Agosto</option>
-            <option value="09">Septiembre</option><option value="10">Octubre</option>
-            <option value="11">Noviembre</option><option value="12">Diciembre</option>
+            <option value="" data-i18n="all_months">Todos los meses</option>
+            <option value="01" data-i18n="mo1">Enero</option><option value="02" data-i18n="mo2">Febrero</option>
+            <option value="03" data-i18n="mo3">Marzo</option><option value="04" data-i18n="mo4">Abril</option>
+            <option value="05" data-i18n="mo5">Mayo</option><option value="06" data-i18n="mo6">Junio</option>
+            <option value="07" data-i18n="mo7">Julio</option><option value="08" data-i18n="mo8">Agosto</option>
+            <option value="09" data-i18n="mo9">Septiembre</option><option value="10" data-i18n="mo10">Octubre</option>
+            <option value="11" data-i18n="mo11">Noviembre</option><option value="12" data-i18n="mo12">Diciembre</option>
           </select>
           <select id="f-fac-anio" onchange="filtrarFacturas()" style="flex:1;min-width:80px">
-            <option value="">Todos</option>
+            <option value="" data-i18n="all">Todos</option>
           </select>
         </div>
 
         <div class="resumen-bar" id="fac-resumen" style="display:none">
           <div class="grid-4">
-            <div><div style="font-size:10px;text-transform:uppercase;color:var(--ink3);margin-bottom:2px">Facturas</div>
+            <div><div style="font-size:10px;text-transform:uppercase;color:var(--ink3);margin-bottom:2px" data-i18n="label_invoices">Facturas</div>
               <div style="font-family:var(--font-serif);font-size:18px;color:var(--ink)" id="frp-cnt">0</div></div>
-            <div><div style="font-size:10px;text-transform:uppercase;color:var(--ink3);margin-bottom:2px">Total</div>
+            <div><div style="font-size:10px;text-transform:uppercase;color:var(--ink3);margin-bottom:2px" data-i18n="label_total">Total</div>
               <div style="font-family:var(--font-serif);font-size:18px;color:var(--blue)" id="frp-total">$0</div></div>
-            <div><div style="font-size:10px;text-transform:uppercase;color:var(--ink3);margin-bottom:2px">Pagado</div>
+            <div><div style="font-size:10px;text-transform:uppercase;color:var(--ink3);margin-bottom:2px" data-i18n="label_paid">Pagado</div>
               <div style="font-family:var(--font-serif);font-size:18px;color:var(--green2)" id="frp-pag">$0</div></div>
-            <div><div style="font-size:10px;text-transform:uppercase;color:var(--ink3);margin-bottom:2px">Pendiente</div>
+            <div><div style="font-size:10px;text-transform:uppercase;color:var(--ink3);margin-bottom:2px" data-i18n="label_pending">Pendiente</div>
               <div style="font-family:var(--font-serif);font-size:18px;color:var(--amber)" id="frp-pend">$0</div></div>
           </div>
         </div>
 
         <div class="table-wrap">
-          <div class="table-head"><h3 id="fac-count">Facturas</h3>
-            <button class="btn-outline-green btn-sm" onclick="exportarFacturasMasivo()">📄 PDF masivo</button>
+          <div class="table-head"><h3 id="fac-count" data-i18n="invoices_title">Facturas</h3>
+            <button class="btn-outline-green btn-sm" onclick="exportarFacturasMasivo()">📄 <span data-i18n="massive_pdf">PDF masivo</span></button>
           </div>
           <div class="table-scroll">
             <table>
               <thead><tr>
-                <th>#</th><th>Cliente</th><th>NIT/CC</th>
-                <th>Fecha</th><th class="r">Subtotal</th>
-                <th class="r">IVA</th><th class="r">Total</th>
-                <th>Estado</th><th></th>
+                <th>#</th><th data-i18n="th_client">Cliente</th><th data-i18n="th_nit">NIT/CC</th>
+                <th data-i18n="th_date">Fecha</th><th class="r" data-i18n="th_subtotal">Subtotal</th>
+                <th class="r" data-i18n="th_iva">IVA</th><th class="r" data-i18n="th_total">Total</th>
+                <th data-i18n="th_status">Estado</th><th></th>
               </tr></thead>
               <tbody id="fac-tbody"></tbody>
             </table>
           </div>
           <div class="empty-state" id="fac-empty" style="display:none">
             <div class="empty-icon">🧾</div>
-            <div>No hay facturas registradas</div>
-            <p style="font-size:12px;margin-top:6px">Crea tu primera factura desde "Nueva Factura"</p>
+            <div data-i18n="no_invoices">No hay facturas registradas</div>
+            <p style="font-size:12px;margin-top:6px" data-i18n="create_first_invoice">Crea tu primera factura desde "Nueva Factura"</p>
           </div>
         </div>
       </div>
@@ -532,33 +788,33 @@ body {
       <!-- ════ NUEVA FACTURA ════ -->
       <div id="mod-nueva-factura" class="modulo" style="display:none">
         <div class="panel-header">
-          <div><div class="panel-title">Nueva Factura</div>
-            <div class="panel-sub">Individual por cliente o masiva para todos a la vez</div></div>
+          <div><div class="panel-title" data-i18n="nf_title">Nueva Factura</div>
+            <div class="panel-sub" data-i18n="nf_sub">Individual por cliente o masiva para todos a la vez</div></div>
         </div>
         <div id="alert-nf" class="alert"></div>
 
         <!-- Modo: individual o masivo -->
         <div class="card" style="margin-bottom:14px">
-          <div class="card-title">Modo de facturación</div>
+          <div class="card-title" data-i18n="billing_mode">Modo de facturación</div>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button class="chip active" id="nfmode-individual" onclick="setNFMode('individual')">👤 Cliente individual</button>
-            <button class="chip" id="nfmode-todos" onclick="setNFMode('todos')">👥 Facturar a TODOS los clientes</button>
+            <button class="chip active" id="nfmode-individual" onclick="setNFMode('individual')">👤 <span data-i18n="individual_client">Cliente individual</span></button>
+            <button class="chip" id="nfmode-todos" onclick="setNFMode('todos')">👥 <span data-i18n="bill_all_clients">Facturar a TODOS los clientes</span></button>
           </div>
           <div id="nf-modo-info-todos" style="display:none;margin-top:10px;background:var(--amber2);border:1px solid var(--amber);border-radius:var(--r);padding:10px 14px;font-size:12px;color:var(--amber)">
-            ⚠️ Se generará una factura por cada cliente registrado usando sus servicios contratados. Los clientes sin servicios asignados serán omitidos.
+            ⚠️ <span data-i18n="bill_all_warning">Se generará una factura por cada cliente registrado usando sus servicios contratados. Los clientes sin servicios asignados serán omitidos.</span>
           </div>
         </div>
 
         <!-- Datos generales -->
         <div class="card">
-          <div class="card-title">Datos de la factura</div>
+          <div class="card-title" data-i18n="invoice_data">Datos de la factura</div>
           <div class="grid-2">
             <div class="form-g">
-              <label>Fecha de emisión</label>
+              <label data-i18n="issue_date">Fecha de emisión</label>
               <input type="date" id="nf-fecha">
             </div>
             <div class="form-g">
-              <label>Fecha de vencimiento (opcional)</label>
+              <label data-i18n="due_date_opt">Fecha de vencimiento (opcional)</label>
               <input type="date" id="nf-vencimiento">
             </div>
           </div>
@@ -570,10 +826,10 @@ body {
         <!-- Cliente (solo en modo individual) -->
         <div id="nf-blq-individual">
           <div class="card">
-            <div class="card-title">Cliente</div>
+            <div class="card-title" data-i18n="client_word">Cliente</div>
             <div class="search-box" style="margin-bottom:10px">
               <span class="search-icon">🔍</span>
-              <input type="text" id="nf-cli-q" placeholder="Buscar por nombre o NIT/CC…" oninput="buscarClienteNF()">
+              <input type="text" id="nf-cli-q" placeholder="Buscar por nombre o NIT/CC…" data-i18n-ph="search_by_name_nit" oninput="buscarClienteNF()">
             </div>
             <div id="nf-cli-results" style="display:none;margin-bottom:10px;border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;max-height:200px;overflow-y:auto"></div>
             <div id="nf-cli-sel" style="display:none;background:var(--blue3);border:1.5px solid var(--blue);border-radius:var(--r);padding:12px 14px">
@@ -582,89 +838,89 @@ body {
                   <div style="font-weight:600;color:var(--blue2)" id="nf-cli-nombre"></div>
                   <div style="font-size:12px;color:var(--ink3)" id="nf-cli-info"></div>
                 </div>
-                <button class="icon-btn" onclick="limpiarClienteNF()">✕ Cambiar</button>
+                <button class="icon-btn" onclick="limpiarClienteNF()">✕ <span data-i18n="change_word">Cambiar</span></button>
               </div>
             </div>
             <div style="margin-top:10px">
-              <button class="link-btn" style="color:var(--blue)" onclick="abrirModalNuevoCliente()">+ Crear cliente nuevo desde aquí</button>
+              <button class="link-btn" style="color:var(--blue)" data-i18n="create_new_client_here" onclick="abrirModalNuevoCliente()">+ Crear cliente nuevo desde aquí</button>
             </div>
           </div>
 
           <!-- Ítems (modo individual) -->
           <div class="card">
-            <div class="card-title">Servicios / Ítems</div>
+            <div class="card-title" data-i18n="services_items">Servicios / Ítems</div>
             <div class="item-headers">
-              <span>Servicio</span><span>Cant.</span><span>Precio unit.</span><span>Subtotal</span><span></span>
+              <span data-i18n="th_service">Servicio</span><span data-i18n="th_qty_short">Cant.</span><span data-i18n="th_unit_price">Precio unit.</span><span data-i18n="th_subtotal2">Subtotal</span><span></span>
             </div>
             <div id="nf-items"></div>
-            <button class="btn-add" onclick="agregarItemNF()">+ Agregar ítem</button>
+            <button class="btn-add" onclick="agregarItemNF()">+ <span data-i18n="add_item">Agregar ítem</span></button>
           </div>
 
           <!-- Totales -->
           <div class="card">
-            <div class="card-title">Totales</div>
+            <div class="card-title" data-i18n="totals_word">Totales</div>
             <div class="form-g">
-              <label>Notas / Observaciones</label>
-              <input type="text" id="nf-notas" placeholder="Ej: Pago a 30 días…">
+              <label data-i18n="notes_opt">Notas / Observaciones</label>
+              <input type="text" id="nf-notas" placeholder="Ej: Pago a 30 días…" data-i18n-ph="ph_payment_30">
             </div>
             <div class="total-panel">
-              <div class="total-row"><span class="total-label">Subtotal</span><span class="total-value" id="nf-subtotal">$0</span></div>
+              <div class="total-row"><span class="total-label" data-i18n="subtotal_word">Subtotal</span><span class="total-value" id="nf-subtotal">$0</span></div>
               <div class="total-row"><span class="total-label" id="nf-iva-label">IVA (19%)</span><span class="total-value" id="nf-iva-val">$0</span></div>
-              <div class="total-row"><span class="total-label" style="font-weight:700">TOTAL</span><span class="total-value big" id="nf-total">$0</span></div>
+              <div class="total-row"><span class="total-label" style="font-weight:700" data-i18n="total_word2">TOTAL</span><span class="total-value big" id="nf-total">$0</span></div>
             </div>
           </div>
 
           <div class="btn-row">
-            <button class="btn-primary" style="flex:1" id="btn-guardar-factura" onclick="crearFactura()">💾 Guardar Factura</button>
-            <button class="btn-outline" onclick="limpiarNF()">🗑 Limpiar</button>
+            <button class="btn-primary" style="flex:1" id="btn-guardar-factura" onclick="crearFactura()">💾 <span data-i18n="save_invoice">Guardar Factura</span></button>
+            <button class="btn-outline" onclick="limpiarNF()">🗑 <span data-i18n="clear_word">Limpiar</span></button>
           </div>
         </div>
 
         <!-- Modo TODOS -->
         <div id="nf-blq-todos" style="display:none">
           <div class="card">
-            <div class="card-title">Vista previa — clientes a facturar</div>
+            <div class="card-title" data-i18n="preview_clients_bill">Vista previa — clientes a facturar</div>
             <div id="nf-todos-preview">
-              <div class="empty-state"><div class="empty-icon">👥</div><div>Cargando clientes…</div></div>
+              <div class="empty-state"><div class="empty-icon">👥</div><div data-i18n="loading_clients">Cargando clientes…</div></div>
             </div>
           </div>
           <div class="form-g">
-            <label>Notas generales (opcional)</label>
-            <input type="text" id="nf-todos-notas" placeholder="Se aplicará a todas las facturas…">
+            <label data-i18n="general_notes_opt">Notas generales (opcional)</label>
+            <input type="text" id="nf-todos-notas" placeholder="Se aplicará a todas las facturas…" data-i18n-ph="ph_apply_all_invoices">
           </div>
-          <button class="btn-green" style="width:100%" id="btn-facturar-todos" onclick="facturarTodos()">⚡ Generar facturas para todos los clientes</button>
+          <button class="btn-green" style="width:100%" id="btn-facturar-todos" onclick="facturarTodos()">⚡ <span data-i18n="generate_invoices_all">Generar facturas para todos los clientes</span></button>
         </div>
       </div>
 
       <!-- ════ CLIENTES ════ -->
       <div id="mod-clientes" class="modulo" style="display:none">
         <div class="panel-header">
-          <div><div class="panel-title">Clientes</div>
-            <div class="panel-sub">Base de datos de tus clientes</div></div>
-          <button class="btn-primary btn-sm" onclick="abrirModalNuevoCliente()">+ Nuevo cliente</button>
+          <div><div class="panel-title" data-i18n="clients_title">Clientes</div>
+            <div class="panel-sub" data-i18n="clients_sub">Base de datos de tus clientes</div></div>
+          <button class="btn-primary btn-sm" onclick="abrirModalNuevoCliente()">+ <span data-i18n="new_client">Nuevo cliente</span></button>
         </div>
         <div id="alert-clientes" class="alert"></div>
 
         <div class="search-box" style="margin-bottom:14px">
           <span class="search-icon">🔍</span>
-          <input type="text" id="cli-q" placeholder="Buscar por nombre o NIT/CC…" oninput="buscarClientes()">
+          <input type="text" id="cli-q" placeholder="Buscar por nombre o NIT/CC…" data-i18n-ph="search_name_nit" oninput="buscarClientes()">
         </div>
 
         <div class="table-wrap">
-          <div class="table-head"><h3 id="cli-count">Clientes</h3></div>
+          <div class="table-head"><h3 id="cli-count" data-i18n="clients_title">Clientes</h3></div>
           <div class="table-scroll">
             <table>
               <thead><tr>
-                <th>Nombre</th><th>NIT/CC</th><th>Teléfono</th>
-                <th>Correo</th><th>Ciudad</th><th>IVA</th><th>Tipo</th><th></th>
+                <th data-i18n="th_name">Nombre</th><th data-i18n="th_nit">NIT/CC</th><th data-i18n="th_phone">Teléfono</th>
+                <th data-i18n="th_email">Correo</th><th data-i18n="th_city">Ciudad</th><th data-i18n="th_iva">IVA</th><th data-i18n="th_type">Tipo</th><th></th>
               </tr></thead>
               <tbody id="cli-tbody"></tbody>
             </table>
           </div>
           <div class="empty-state" id="cli-empty" style="display:none">
             <div class="empty-icon">👥</div>
-            <div>No hay clientes registrados</div>
-            <p style="font-size:12px;margin-top:6px">Agrega tu primer cliente con el botón de arriba</p>
+            <div data-i18n="no_clients">No hay clientes registrados</div>
+            <p style="font-size:12px;margin-top:6px" data-i18n="add_first_client">Agrega tu primer cliente con el botón de arriba</p>
           </div>
         </div>
       </div>
@@ -672,27 +928,27 @@ body {
       <!-- ════ SERVICIOS ════ -->
       <div id="mod-servicios" class="modulo" style="display:none">
         <div class="panel-header">
-          <div><div class="panel-title">Catálogo de Servicios</div>
-            <div class="panel-sub">Define los servicios que ofreces y su precio estándar</div></div>
-          <button class="btn-primary btn-sm" onclick="abrirModalNuevoServicio()">+ Nuevo servicio</button>
+          <div><div class="panel-title" data-i18n="svc_catalog_title">Catálogo de Servicios</div>
+            <div class="panel-sub" data-i18n="svc_catalog_sub">Define los servicios que ofreces y su precio estándar</div></div>
+          <button class="btn-primary btn-sm" onclick="abrirModalNuevoServicio()">+ <span data-i18n="new_service">Nuevo servicio</span></button>
         </div>
         <div id="alert-servicios" class="alert"></div>
 
         <div class="table-wrap">
-          <div class="table-head"><h3 id="svc-count">Servicios</h3></div>
+          <div class="table-head"><h3 id="svc-count" data-i18n="nav_services">Servicios</h3></div>
           <div class="table-scroll">
             <table>
               <thead><tr>
-                <th>Servicio</th><th>Descripción</th><th>Categoría</th>
-                <th>Unidad</th><th class="r">Precio</th><th></th>
+                <th data-i18n="th_service2">Servicio</th><th data-i18n="th_desc">Descripción</th><th data-i18n="th_category">Categoría</th>
+                <th data-i18n="th_unit">Unidad</th><th class="r" data-i18n="th_price2">Precio</th><th></th>
               </tr></thead>
               <tbody id="svc-tbody"></tbody>
             </table>
           </div>
           <div class="empty-state" id="svc-empty" style="display:none">
             <div class="empty-icon">🛠</div>
-            <div>No hay servicios en el catálogo</div>
-            <p style="font-size:12px;margin-top:6px">Agrega los servicios que ofreces para usarlos rápidamente al facturar</p>
+            <div data-i18n="no_services">No hay servicios en el catálogo</div>
+            <p style="font-size:12px;margin-top:6px" data-i18n="add_services_hint">Agrega los servicios que ofreces para usarlos rápidamente al facturar</p>
           </div>
         </div>
       </div>
@@ -700,42 +956,42 @@ body {
       <!-- ════ GASTOS ════ -->
       <div id="mod-gastos" class="modulo" style="display:none">
         <div class="panel-header">
-          <div><div class="panel-title">Gastos</div>
-            <div class="panel-sub">Registra los costos operativos para calcular rentabilidad</div></div>
-          <button class="btn-primary btn-sm" onclick="abrirModalNuevoGasto()">+ Registrar gasto</button>
+          <div><div class="panel-title" data-i18n="expenses_title">Gastos</div>
+            <div class="panel-sub" data-i18n="expenses_sub">Registra los costos operativos para calcular rentabilidad</div></div>
+          <button class="btn-primary btn-sm" onclick="abrirModalNuevoGasto()">+ <span data-i18n="new_expense">Registrar gasto</span></button>
         </div>
         <div id="alert-gastos" class="alert"></div>
 
         <div class="filter-row" style="margin-bottom:14px">
           <select id="f-gas-mes" onchange="cargarGastos()" style="flex:1;min-width:100px">
-            <option value="">Todos los meses</option>
-            <option value="01">Enero</option><option value="02">Febrero</option>
-            <option value="03">Marzo</option><option value="04">Abril</option>
-            <option value="05">Mayo</option><option value="06">Junio</option>
-            <option value="07">Julio</option><option value="08">Agosto</option>
-            <option value="09">Septiembre</option><option value="10">Octubre</option>
-            <option value="11">Noviembre</option><option value="12">Diciembre</option>
+            <option value="" data-i18n="all_months">Todos los meses</option>
+            <option value="01" data-i18n="mo1">Enero</option><option value="02" data-i18n="mo2">Febrero</option>
+            <option value="03" data-i18n="mo3">Marzo</option><option value="04" data-i18n="mo4">Abril</option>
+            <option value="05" data-i18n="mo5">Mayo</option><option value="06" data-i18n="mo6">Junio</option>
+            <option value="07" data-i18n="mo7">Julio</option><option value="08" data-i18n="mo8">Agosto</option>
+            <option value="09" data-i18n="mo9">Septiembre</option><option value="10" data-i18n="mo10">Octubre</option>
+            <option value="11" data-i18n="mo11">Noviembre</option><option value="12" data-i18n="mo12">Diciembre</option>
           </select>
           <select id="f-gas-anio" onchange="cargarGastos()" style="flex:1;min-width:80px">
-            <option value="">Todos</option>
+            <option value="" data-i18n="all">Todos</option>
           </select>
         </div>
 
         <div class="table-wrap">
-          <div class="table-head"><h3 id="gas-count">Gastos</h3>
+          <div class="table-head"><h3 id="gas-count" data-i18n="expenses_title">Gastos</h3>
             <div style="font-size:12px;font-weight:600;color:var(--red)" id="gas-total-header"></div>
           </div>
           <div class="table-scroll">
             <table>
               <thead><tr>
-                <th>Fecha</th><th>Categoría</th><th>Descripción</th>
-                <th class="r">Monto</th><th>Notas</th><th></th>
+                <th data-i18n="th_date">Fecha</th><th data-i18n="th_category">Categoría</th><th data-i18n="th_desc">Descripción</th>
+                <th class="r" data-i18n="th_amount">Monto</th><th data-i18n="notes">Notas</th><th></th>
               </tr></thead>
               <tbody id="gas-tbody"></tbody>
             </table>
           </div>
           <div class="empty-state" id="gas-empty" style="display:none">
-            <div class="empty-icon">💸</div><div>Sin gastos registrados</div>
+            <div class="empty-icon">💸</div><div data-i18n="no_expenses">Sin gastos registrados</div>
           </div>
         </div>
       </div>
@@ -743,69 +999,69 @@ body {
       <!-- ════ RENTABILIDAD ════ -->
       <div id="mod-rentabilidad" class="modulo" style="display:none">
         <div class="panel-header">
-          <div><div class="panel-title">Rentabilidad</div>
-            <div class="panel-sub">Ingresos vs gastos — análisis financiero del negocio</div></div>
-          <button class="btn-green btn-sm" onclick="generarReportePDF()">📄 Exportar PDF</button>
+          <div><div class="panel-title" data-i18n="profitability_title">Rentabilidad</div>
+            <div class="panel-sub" data-i18n="profitability_sub">Ingresos vs gastos — análisis financiero del negocio</div></div>
+          <button class="btn-green btn-sm" onclick="generarReportePDF()">📄 <span data-i18n="export_pdf">Exportar PDF</span></button>
         </div>
         <div id="alert-rent" class="alert"></div>
 
         <!-- Filtro período -->
         <div class="card" style="margin-bottom:16px">
-          <div class="card-title">Período de análisis</div>
+          <div class="card-title" data-i18n="analysis_period">Período de análisis</div>
           <div class="grid-2" style="align-items:end">
             <div class="form-g" style="margin-bottom:0">
-              <label>Desde (año/mes)</label>
+              <label data-i18n="from_year_month">Desde (año/mes)</label>
               <input type="month" id="rent-desde">
             </div>
             <div class="form-g" style="margin-bottom:0">
-              <label>Hasta (año/mes)</label>
+              <label data-i18n="to_year_month">Hasta (año/mes)</label>
               <input type="month" id="rent-hasta">
             </div>
           </div>
           <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
-            <button class="chip active" id="rchip-mes" onclick="setRentPeriodo('mes')">Este mes</button>
-            <button class="chip" id="rchip-trim" onclick="setRentPeriodo('trim')">Trimestre</button>
-            <button class="chip" id="rchip-anio" onclick="setRentPeriodo('anio')">Este año</button>
-            <button class="chip" id="rchip-custom" onclick="setRentPeriodo('custom')">Personalizado</button>
-            <button class="btn-primary btn-sm" onclick="cargarRentabilidad()">Actualizar</button>
+            <button class="chip active" id="rchip-mes" data-i18n="period_this_month" onclick="setRentPeriodo('mes')">Este mes</button>
+            <button class="chip" id="rchip-trim" data-i18n="period_quarter" onclick="setRentPeriodo('trim')">Trimestre</button>
+            <button class="chip" id="rchip-anio" data-i18n="period_this_year" onclick="setRentPeriodo('anio')">Este año</button>
+            <button class="chip" id="rchip-custom" data-i18n="period_custom2" onclick="setRentPeriodo('custom')">Personalizado</button>
+            <button class="btn-primary btn-sm" data-i18n="update_word" onclick="cargarRentabilidad()">Actualizar</button>
           </div>
         </div>
 
         <div class="grid-4" style="margin-bottom:16px">
-          <div class="kpi"><div class="kpi-label">Total Facturado</div>
+          <div class="kpi"><div class="kpi-label" data-i18n="total_billed">Total Facturado</div>
             <div class="kpi-value" id="rent-fac" style="color:var(--blue)">$0</div>
             <div class="kpi-sub" id="rent-fac-sub"></div></div>
-          <div class="kpi"><div class="kpi-label">Total Gastos</div>
+          <div class="kpi"><div class="kpi-label" data-i18n="total_expenses">Total Gastos</div>
             <div class="kpi-value" id="rent-gas" style="color:var(--red)">$0</div></div>
-          <div class="kpi"><div class="kpi-label">Utilidad Neta</div>
+          <div class="kpi"><div class="kpi-label" data-i18n="net_profit2">Utilidad Neta</div>
             <div class="kpi-value" id="rent-util">$0</div></div>
-          <div class="kpi"><div class="kpi-label">Margen</div>
+          <div class="kpi"><div class="kpi-label" data-i18n="margin_word">Margen</div>
             <div class="kpi-value" id="rent-margen" style="color:var(--amber)">0%</div>
-            <div class="kpi-sub">sobre ingresos</div></div>
+            <div class="kpi-sub" data-i18n="over_income">sobre ingresos</div></div>
         </div>
 
         <div class="grid-2" style="margin-bottom:16px">
           <div class="card">
-            <div class="card-title" style="color:var(--blue2)">💹 Ingresos por servicio</div>
+            <div class="card-title" style="color:var(--blue2)">💹 <span data-i18n="income_by_service">Ingresos por servicio</span></div>
             <div id="graf-rent-svc"></div>
           </div>
           <div class="card">
-            <div class="card-title" style="color:var(--red)">💸 Gastos por categoría</div>
+            <div class="card-title" style="color:var(--red)">💸 <span data-i18n="expenses_by_category">Gastos por categoría</span></div>
             <div id="graf-rent-gas"></div>
           </div>
         </div>
 
         <!-- Flujo mensual -->
         <div class="card">
-          <div class="card-title">📅 Flujo mensual</div>
+          <div class="card-title">📅 <span data-i18n="monthly_flow">Flujo mensual</span></div>
           <div id="flujo-mensual-wrap">
-            <div class="empty-state"><div class="empty-icon">📅</div><div>Sin datos en el período</div></div>
+            <div class="empty-state"><div class="empty-icon">📅</div><div data-i18n="no_data_period">Sin datos en el período</div></div>
           </div>
         </div>
 
         <!-- Top clientes -->
         <div class="card">
-          <div class="card-title" style="color:var(--blue2)">🏆 Top clientes</div>
+          <div class="card-title" style="color:var(--blue2)">🏆 <span data-i18n="top_clients">Top clientes</span></div>
           <div id="graf-rent-cli"></div>
         </div>
       </div>
@@ -813,48 +1069,48 @@ body {
       <!-- ════ CONFIGURACIÓN DE EMPRESA ════ -->
       <div id="mod-config" class="modulo" style="display:none">
         <div class="panel-header">
-          <div><div class="panel-title">Datos generales</div>
-            <div class="panel-sub">Estos datos aparecen en el encabezado de tus facturas en PDF</div></div>
+          <div><div class="panel-title" data-i18n="nav_my_company">Datos generales</div>
+            <div class="panel-sub" data-i18n="my_company_sub">Estos datos aparecen en el encabezado de tus facturas en PDF</div></div>
         </div>
         <div id="alert-config" class="alert"></div>
 
         <div class="card">
-          <div class="card-title">Logo</div>
+          <div class="card-title" data-i18n="logo_word">Logo</div>
           <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
             <div id="config-logo-preview" style="width:90px;height:90px;border:1.5px dashed var(--border2);border-radius:var(--r);display:flex;align-items:center;justify-content:center;overflow:hidden;background:var(--bg3);flex-shrink:0">
-              <span style="font-size:11px;color:var(--ink3);text-align:center;padding:4px">Sin logo</span>
+              <span style="font-size:11px;color:var(--ink3);text-align:center;padding:4px" data-i18n="no_logo">Sin logo</span>
             </div>
             <div>
               <input type="file" id="config-logo-file" accept="image/png,image/jpeg" onchange="onLogoSeleccionado(event)" style="max-width:220px">
-              <div class="hint">PNG o JPG, idealmente cuadrado. Se guarda directamente en tu cuenta.</div>
-              <button class="link-btn" style="color:var(--red);margin-top:6px" onclick="quitarLogo()">Quitar logo</button>
+              <div class="hint" data-i18n="logo_hint">PNG o JPG, idealmente cuadrado. Se guarda directamente en tu cuenta.</div>
+              <button class="link-btn" style="color:var(--red);margin-top:6px" data-i18n="remove_logo" onclick="quitarLogo()">Quitar logo</button>
             </div>
           </div>
         </div>
 
         <div class="card">
-          <div class="card-title">Datos de la empresa</div>
+          <div class="card-title" data-i18n="company_data">Datos de la empresa</div>
           <div class="grid-2">
-            <div class="form-g"><label>Nombre de la empresa</label>
+            <div class="form-g"><label data-i18n="company_name">Nombre de la empresa</label>
               <input type="text" id="config-nombre" placeholder="Ej: Mi Negocio S.A.S."></div>
-            <div class="form-g"><label>NIT</label>
+            <div class="form-g"><label data-i18n="nit_word">NIT</label>
               <input type="text" id="config-nit" placeholder="900.123.456-7"></div>
           </div>
           <div class="grid-2">
-            <div class="form-g"><label>Teléfono</label>
+            <div class="form-g"><label data-i18n="phone_word">Teléfono</label>
               <input type="text" id="config-telefono" placeholder="(604) 300 0000"></div>
-            <div class="form-g"><label>Ciudad</label>
+            <div class="form-g"><label data-i18n="city_word">Ciudad</label>
               <input type="text" id="config-ciudad" placeholder="Medellín - Colombia"></div>
           </div>
-          <div class="form-g"><label>Correo electrónico</label>
+          <div class="form-g"><label data-i18n="email_word">Correo electrónico</label>
             <input type="email" id="config-email" placeholder="contacto@miempresa.com"></div>
-          <div class="form-g"><label>Observaciones por defecto</label>
+          <div class="form-g"><label data-i18n="default_notes">Observaciones por defecto</label>
             <textarea id="config-obs" rows="2" placeholder="Ej: Por favor realizar su pago en…"></textarea>
-            <div class="hint">Este texto aparece automáticamente en el PDF, en cada factura</div>
+            <div class="hint" data-i18n="default_notes_hint">Este texto aparece automáticamente en el PDF, en cada factura</div>
           </div>
         </div>
 
-        <button class="btn-primary" style="width:auto;padding:12px 28px" onclick="guardarConfiguracion()">💾 Guardar datos de mi empresa</button>
+        <button class="btn-primary" style="width:auto;padding:12px 28px" onclick="guardarConfiguracion()">💾 <span data-i18n="save_company_data">Guardar datos de mi empresa</span></button>
       </div>
 
     </div><!-- main-content -->
@@ -864,68 +1120,68 @@ body {
 <!-- MODAL: Cliente -->
 <div class="modal-overlay" id="modal-cliente">
   <div class="modal-box">
-    <h3 id="mcli-title">Nuevo cliente</h3>
+    <h3 id="mcli-title" data-i18n="new_client_title">Nuevo cliente</h3>
     <div id="alert-mcli" class="alert"></div>
     <input type="hidden" id="mcli-id">
     <div class="grid-2">
-      <div class="form-g"><label>Nombre *</label>
+      <div class="form-g"><label data-i18n="name_req">Nombre *</label>
         <input type="text" id="mcli-nombre" placeholder="Razón social o nombre completo"></div>
-      <div class="form-g"><label>NIT / CC</label>
+      <div class="form-g"><label data-i18n="nit_cc">NIT / CC</label>
         <input type="text" id="mcli-nitcc" placeholder="900.123.456-7"></div>
     </div>
     <div class="grid-2">
-      <div class="form-g"><label>Teléfono</label>
+      <div class="form-g"><label data-i18n="phone_word2">Teléfono</label>
         <input type="text" id="mcli-tel" placeholder="300 000 0000"></div>
-      <div class="form-g"><label>Correo electrónico</label>
+      <div class="form-g"><label data-i18n="email_word2">Correo electrónico</label>
         <input type="email" id="mcli-email" placeholder="contacto@empresa.com"></div>
     </div>
     <div class="grid-2">
-      <div class="form-g"><label>Dirección</label>
+      <div class="form-g"><label data-i18n="address_word">Dirección</label>
         <input type="text" id="mcli-dir" placeholder="Calle 00 # 00-00"></div>
-      <div class="form-g"><label>Ciudad</label>
+      <div class="form-g"><label data-i18n="city_word2">Ciudad</label>
         <input type="text" id="mcli-ciudad" placeholder="Medellín"></div>
     </div>
-    <div class="form-g"><label>Notas</label>
-      <textarea id="mcli-notas" rows="2" placeholder="Observaciones del cliente…"></textarea></div>
+    <div class="form-g"><label data-i18n="notes2">Notas</label>
+      <textarea id="mcli-notas" rows="2" placeholder="Observaciones del cliente…" data-i18n-ph="ph_client_notes"></textarea></div>
 
     <!-- ── CONFIGURACIÓN DE FACTURACIÓN ── -->
     <div style="background:var(--bg3);border-radius:var(--r);padding:14px 16px;margin-bottom:14px">
-      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink3);margin-bottom:12px">Configuración de facturación</div>
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink3);margin-bottom:12px" data-i18n="billing_config">Configuración de facturación</div>
       <div class="grid-2">
         <div class="form-g" style="margin-bottom:0">
-          <label>IVA por defecto</label>
+          <label data-i18n="default_iva">IVA por defecto</label>
           <select id="mcli-iva">
-            <option value="0">Sin IVA (0%)</option>
+            <option value="0" data-i18n="no_iva">Sin IVA (0%)</option>
             <option value="5">5%</option>
             <option value="19" selected>19%</option>
           </select>
-          <div class="hint">Se pre-selecciona al facturar a este cliente</div>
+          <div class="hint" data-i18n="preselect_hint">Se pre-selecciona al facturar a este cliente</div>
         </div>
         <div class="form-g" style="margin-bottom:0">
-          <label>Tipo de factura</label>
+          <label data-i18n="invoice_type">Tipo de factura</label>
           <select id="mcli-tipo-factura">
-            <option value="fija">📌 Fija — se repite cada mes</option>
-            <option value="temporal">⏱ Temporal — solo cuando se crea</option>
+            <option value="fija" data-i18n="fixed_type">📌 Fija — se repite cada mes</option>
+            <option value="temporal" data-i18n="temp_type">⏱ Temporal — solo cuando se crea</option>
           </select>
-          <div class="hint">Las fijas persisten en la base del mes siguiente</div>
+          <div class="hint" data-i18n="fixed_persist_hint">Las fijas persisten en la base del mes siguiente</div>
         </div>
       </div>
     </div>
 
     <!-- ── SERVICIOS CONTRATADOS ── -->
     <div class="form-g">
-      <label>Servicios contratados</label>
+      <label data-i18n="contracted_services">Servicios contratados</label>
       <div id="mcli-servicios-wrap" style="border:1.5px solid var(--border);border-radius:var(--r);background:var(--bg3);padding:8px 10px;min-height:64px;max-height:220px;overflow-y:auto">
         <div id="mcli-servicios-lista">
-          <div style="font-size:12px;color:var(--ink3);text-align:center;padding:12px 0">Cargando servicios…</div>
+          <div style="font-size:12px;color:var(--ink3);text-align:center;padding:12px 0" data-i18n="loading_services">Cargando servicios…</div>
         </div>
       </div>
-      <div class="hint">Marca los servicios que este cliente tiene activos o contratados</div>
+      <div class="hint" data-i18n="mark_services_hint">Marca los servicios que este cliente tiene activos o contratados</div>
     </div>
 
     <div class="modal-actions">
-      <button class="btn-cancel" onclick="cerrarModal('modal-cliente')">Cancelar</button>
-      <button class="btn-confirm" onclick="guardarCliente()">Guardar cliente</button>
+      <button class="btn-cancel" data-i18n="cancel" onclick="cerrarModal('modal-cliente')">Cancelar</button>
+      <button class="btn-confirm" data-i18n="save_client" onclick="guardarCliente()">Guardar cliente</button>
     </div>
   </div>
 </div>
@@ -933,33 +1189,33 @@ body {
 <!-- MODAL: Servicio -->
 <div class="modal-overlay" id="modal-servicio">
   <div class="modal-box">
-    <h3 id="msvc-title">Nuevo servicio</h3>
+    <h3 id="msvc-title" data-i18n="new_service_title">Nuevo servicio</h3>
     <div id="alert-msvc" class="alert"></div>
     <input type="hidden" id="msvc-id">
-    <div class="form-g"><label>Nombre del servicio *</label>
-      <input type="text" id="msvc-nombre" placeholder="Ej: Diseño web, Consultoría, Asesoría…"></div>
-    <div class="form-g"><label>Descripción</label>
-      <textarea id="msvc-desc" rows="2" placeholder="Descripción opcional del servicio…"></textarea></div>
+    <div class="form-g"><label data-i18n="service_name_req">Nombre del servicio *</label>
+      <input type="text" id="msvc-nombre" placeholder="Ej: Diseño web, Consultoría, Asesoría…" data-i18n-ph="ph_service_examples"></div>
+    <div class="form-g"><label data-i18n="description_word">Descripción</label>
+      <textarea id="msvc-desc" rows="2" placeholder="Descripción opcional del servicio…" data-i18n-ph="ph_service_desc"></textarea></div>
     <div class="grid-3">
-      <div class="form-g"><label>Precio unitario *</label>
+      <div class="form-g"><label data-i18n="unit_price_req">Precio unitario *</label>
         <input type="number" id="msvc-precio" min="0" step="1000" inputmode="numeric" placeholder="$0"></div>
-      <div class="form-g"><label>Unidad</label>
+      <div class="form-g"><label data-i18n="unit_word2">Unidad</label>
         <select id="msvc-unidad">
-          <option value="und">Unidad</option>
-          <option value="hora">Hora</option>
-          <option value="mes">Mes</option>
-          <option value="proyecto">Proyecto</option>
-          <option value="día">Día</option>
-          <option value="sesión">Sesión</option>
+          <option value="und" data-i18n="unit_opt">Unidad</option>
+          <option value="hora" data-i18n="hour_opt">Hora</option>
+          <option value="mes" data-i18n="month_opt">Mes</option>
+          <option value="proyecto" data-i18n="project_opt">Proyecto</option>
+          <option value="día" data-i18n="day_opt">Día</option>
+          <option value="sesión" data-i18n="session_opt">Sesión</option>
         </select></div>
-      <div class="form-g"><label>Categoría</label>
+      <div class="form-g"><label data-i18n="category_word">Categoría</label>
         <input type="text" id="msvc-cat" placeholder="General" list="svc-cats">
         <datalist id="svc-cats"><option value="Consultoría"><option value="Desarrollo"><option value="Diseño"><option value="Soporte"><option value="Capacitación"><option value="General"></datalist>
       </div>
     </div>
     <div class="modal-actions">
-      <button class="btn-cancel" onclick="cerrarModal('modal-servicio')">Cancelar</button>
-      <button class="btn-confirm" onclick="guardarServicio()">Guardar servicio</button>
+      <button class="btn-cancel" data-i18n="cancel" onclick="cerrarModal('modal-servicio')">Cancelar</button>
+      <button class="btn-confirm" data-i18n="save_service" onclick="guardarServicio()">Guardar servicio</button>
     </div>
   </div>
 </div>
@@ -967,26 +1223,26 @@ body {
 <!-- MODAL: Gasto -->
 <div class="modal-overlay" id="modal-gasto">
   <div class="modal-box">
-    <h3 id="mgas-title">Registrar gasto</h3>
+    <h3 id="mgas-title" data-i18n="new_expense_title">Registrar gasto</h3>
     <div id="alert-mgas" class="alert"></div>
     <input type="hidden" id="mgas-id">
     <div class="grid-2">
-      <div class="form-g"><label>Fecha *</label>
+      <div class="form-g"><label data-i18n="date_req">Fecha *</label>
         <input type="date" id="mgas-fecha"></div>
-      <div class="form-g"><label>Categoría</label>
-        <input type="text" id="mgas-cat" placeholder="Arriendo, Nómina…" list="gas-cats">
+      <div class="form-g"><label data-i18n="category_word2">Categoría</label>
+        <input type="text" id="mgas-cat" placeholder="Arriendo, Nómina…" data-i18n-ph="ph_rent_payroll" list="gas-cats">
         <datalist id="gas-cats"><option value="Arriendo"><option value="Nómina"><option value="Servicios públicos"><option value="Tecnología"><option value="Marketing"><option value="Transporte"><option value="Otros"></datalist>
       </div>
     </div>
-    <div class="form-g"><label>Descripción *</label>
-      <input type="text" id="mgas-desc" placeholder="Ej: Arriendo oficina enero 2025…"></div>
-    <div class="form-g"><label>Monto *</label>
+    <div class="form-g"><label data-i18n="description_req">Descripción *</label>
+      <input type="text" id="mgas-desc" placeholder="Ej: Arriendo oficina enero 2025…" data-i18n-ph="ph_rent_example"></div>
+    <div class="form-g"><label data-i18n="amount_req">Monto *</label>
       <input type="number" id="mgas-monto" min="0" step="1000" inputmode="numeric" placeholder="$0"></div>
-    <div class="form-g"><label>Notas</label>
-      <input type="text" id="mgas-notas" placeholder="Detalle adicional…"></div>
+    <div class="form-g"><label data-i18n="notes2">Notas</label>
+      <input type="text" id="mgas-notas" placeholder="Detalle adicional…" data-i18n-ph="ph_additional_detail"></div>
     <div class="modal-actions">
-      <button class="btn-cancel" onclick="cerrarModal('modal-gasto')">Cancelar</button>
-      <button class="btn-confirm" onclick="guardarGasto()">Guardar gasto</button>
+      <button class="btn-cancel" data-i18n="cancel" onclick="cerrarModal('modal-gasto')">Cancelar</button>
+      <button class="btn-confirm" data-i18n="save_expense" onclick="guardarGasto()">Guardar gasto</button>
     </div>
   </div>
 </div>
@@ -994,11 +1250,11 @@ body {
 <!-- MODAL: Confirmar eliminación -->
 <div class="modal-overlay center" id="modal-confirmar">
   <div class="modal-box">
-    <h3 id="mconf-title">¿Confirmar acción?</h3>
-    <p id="mconf-msg">Esta acción no se puede deshacer.</p>
+    <h3 id="mconf-title" data-i18n="confirm_action">¿Confirmar acción?</h3>
+    <p id="mconf-msg" data-i18n="irreversible_action">Esta acción no se puede deshacer.</p>
     <div class="modal-actions">
-      <button class="btn-cancel" onclick="cerrarModal('modal-confirmar')">Cancelar</button>
-      <button class="btn-danger" id="mconf-btn" onclick="">Confirmar</button>
+      <button class="btn-cancel" data-i18n="cancel" onclick="cerrarModal('modal-confirmar')">Cancelar</button>
+      <button class="btn-danger" id="mconf-btn" data-i18n="confirm" onclick="">Confirmar</button>
     </div>
   </div>
 </div>
@@ -1007,34 +1263,34 @@ body {
 <div class="modal-overlay" id="modal-ver-factura">
   <div class="modal-box" style="max-width:640px">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
-      <h3 id="vf-titulo">Factura</h3>
+      <h3 id="vf-titulo" data-i18n="invoice_word">Factura</h3>
       <div style="display:flex;gap:8px">
-        <button class="icon-btn" onclick="descargarFacturaPDF()">📄 PDF</button>
+        <button class="icon-btn" onclick="descargarFacturaPDF()">📄 <span data-i18n="pdf_word">PDF</span></button>
         <button class="icon-btn" onclick="cerrarModal('modal-ver-factura')">✕</button>
       </div>
     </div>
     <div id="vf-contenido"></div>
     <div class="modal-actions" style="margin-top:16px">
-      <button class="btn-cancel" onclick="cerrarModal('modal-ver-factura')">Cerrar</button>
-      <button class="btn-green" id="vf-btn-pagar" onclick="marcarPagada()">✅ Marcar como pagada</button>
+      <button class="btn-cancel" data-i18n="close_word" onclick="cerrarModal('modal-ver-factura')">Cerrar</button>
+      <button class="btn-green" id="vf-btn-pagar" onclick="marcarPagada()">✅ <span data-i18n="mark_paid">Marcar como pagada</span></button>
     </div>
   </div>
 </div>
 <!-- Modal eliminar cuenta -->
 <div class="modal-overlay center" id="modal-eliminar-cuenta">
   <div class="modal-box">
-    <h3>Eliminar mi cuenta</h3>
-    <p>Esta acción cerrará tu sesión y eliminará tu acceso.<br><br>
-    <strong>Tus datos se conservan por 30 días.</strong><br><br>
-    Confirma con tu contraseña actual:</p>
+    <h3 data-i18n="del_account_title">Eliminar mi cuenta</h3>
+    <p><span data-i18n="del_account_p1">Esta acción cerrará tu sesión y eliminará tu acceso.</span><br><br>
+    <strong data-i18n="del_account_p2">Tus datos se conservan por 30 días.</strong><br><br>
+    <span data-i18n="del_account_confirm">Confirma con tu contraseña actual:</span></p>
     <div class="form-g">
-      <input type="password" id="del-pwd" placeholder="Tu contraseña actual"
+      <input type="password" id="del-pwd" placeholder="Tu contraseña actual" data-i18n-ph="current_pwd"
         onkeydown="if(event.key==='Enter')doEliminarCuenta()">
     </div>
     <div id="del-error" style="display:none;color:var(--red);font-size:12px;margin-bottom:4px"></div>
     <div class="modal-actions">
-      <button class="btn-cancel" onclick="cerrarModal('modal-eliminar-cuenta')">Cancelar</button>
-      <button class="btn-danger" id="btn-del-confirm" onclick="doEliminarCuenta()">Sí, eliminar</button>
+      <button class="btn-cancel" data-i18n="cancel" onclick="cerrarModal('modal-eliminar-cuenta')">Cancelar</button>
+      <button class="btn-danger" id="btn-del-confirm" data-i18n="delete" onclick="doEliminarCuenta()">Sí, eliminar</button>
     </div>
   </div>
 </div>
@@ -1042,6 +1298,7 @@ body {
 
 <script>
 var SESSION = null;
+aplicarIdioma();
 
 var _clientes     = [];
 var _servicios    = [];
@@ -1070,9 +1327,9 @@ function showAlert(id,msg,tipo){
 function hideAlert(id){ var a=document.getElementById(id); if(a) a.style.display='none'; }
 
 function toast(msg,tipo){
-  var t=document.getElementById('toast');
-  t.textContent=msg; t.className='toast visible '+(tipo||'ok');
-  setTimeout(function(){t.className='toast';},4000);
+  var el=document.getElementById('toast');
+  el.textContent=msg; el.className='toast visible '+(tipo||'ok');
+  setTimeout(function(){el.className='toast';},4000);
 }
 
 function fechaHoy(){
@@ -1119,12 +1376,12 @@ function cambiarMod(mod){
 /* ─────────────────────────────────────────────────
    AUTH — convertido a Supabase
 ───────────────────────────────────────────────── */
-function setAuthTab(t){
+function setAuthTab(tab){
   document.querySelectorAll('.tab-auth button').forEach(function(b,i){
-    b.classList.toggle('active',(i===0&&t==='login')||(i===1&&t==='registro'));
+    b.classList.toggle('active',(i===0&&tab==='login')||(i===1&&tab==='registro'));
   });
-  document.getElementById('blq-login').style.display     = t==='login'?'block':'none';
-  document.getElementById('blq-registro').style.display  = t==='registro'?'block':'none';
+  document.getElementById('blq-login').style.display     = tab==='login'?'block':'none';
+  document.getElementById('blq-registro').style.display  = tab==='registro'?'block':'none';
   document.getElementById('blq-recuperar').style.display = 'none';
   document.getElementById('blq-reset').style.display     = 'none';
   hideAlert('alert-auth');
@@ -1133,13 +1390,13 @@ function setAuthTab(t){
 async function doLogin(){
   var email=document.getElementById('in-user').value.trim();
   var p=document.getElementById('in-pwd').value;
-  if(!email||!p) return showAlert('alert-auth','Ingresa correo y contraseña.','err');
+  if(!email||!p) return showAlert('alert-auth',t('msg_enter_email_pwd'),'err');
   var btn=document.getElementById('btn-login');
   btn.disabled=true; btn.textContent='Entrando…';
 
   try {
     var { data, error } = await supabase.auth.signInWithPassword({ email:email, password:p });
-    if(error){ return showAlert('alert-auth','Correo o contraseña incorrectos.','err'); }
+    if(error){ return showAlert('alert-auth',t('msg_wrong_credentials'),'err'); }
 
     var { data: perfil } = await supabase.from('perfiles').select('*').eq('id', data.user.id).single();
 
@@ -1154,7 +1411,7 @@ async function doLogin(){
     SESSION={usuario:perfil.usuario,nombre:perfil.nombre};
     entrarApp();
   } catch(e) {
-    showAlert('alert-auth','Error inesperado: '+e.message,'err');
+    showAlert('alert-auth',t('msg_unexpected_error')+e.message,'err');
     console.error(e);
   } finally {
     btn.disabled=false; btn.textContent='Entrar';
@@ -1166,8 +1423,8 @@ async function doRegistro(){
   var e=document.getElementById('rg-email').value.trim();
   var u=document.getElementById('rg-user').value.trim().toLowerCase().replace(/\s+/g,'_');
   var p=document.getElementById('rg-pwd').value;
-  if(!n||!e||!u||!p) return showAlert('alert-auth','Completa todos los campos.','err');
-  if(p.length<6) return showAlert('alert-auth','La contraseña debe tener al menos 6 caracteres.','err');
+  if(!n||!e||!u||!p) return showAlert('alert-auth',t('msg_complete_fields'),'err');
+  if(p.length<6) return showAlert('alert-auth',t('msg_min_pwd'),'err');
   var btn=document.getElementById('btn-reg'); btn.disabled=true; btn.textContent='Creando cuenta…';
 
   try {
@@ -1176,7 +1433,7 @@ async function doRegistro(){
       options: { data: { nombre: n, usuario: u, app: 'finanzas' } }
     });
     if(error) return showAlert('alert-auth', error.message,'err');
-    showAlert('alert-auth','🎉 ¡Cuenta creada! Revisa tu correo para confirmar y entrar directo con tus 3 días de prueba gratis.','ok');
+    showAlert('alert-auth','🎉 '+t('msg_account_created_fin'),'ok');
     setAuthTab('login');
   } catch(err) {
     showAlert('alert-auth','Error inesperado: '+err.message,'err');
@@ -1202,11 +1459,11 @@ function volverLogin(){ document.getElementById('blq-recuperar').style.display='
 
 async function doRecuperar(){
   var email=document.getElementById('rec-email').value.trim();
-  if(!email) return showAlert('alert-auth','Ingresa tu correo.','err');
+  if(!email) return showAlert('alert-auth',t('msg_enter_email2'),'err');
   var btn=document.getElementById('btn-recuperar'); btn.disabled=true; btn.textContent='Enviando…';
   try {
     await supabase.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + window.location.pathname });
-    showAlert('alert-auth','📧 Si ese correo está registrado, recibirás las instrucciones en unos minutos.','ok');
+    showAlert('alert-auth','📧 '+t('msg_recovery_sent'),'ok');
   } catch(e) {
     showAlert('alert-auth','Error: '+e.message,'err');
   } finally {
@@ -1216,13 +1473,13 @@ async function doRecuperar(){
 
 async function doNuevaPwd(){
   var pwd=document.getElementById('reset-pwd').value, pwd2=document.getElementById('reset-pwd2').value;
-  if(!pwd||pwd.length<6) return showAlert('alert-auth','Mínimo 6 caracteres.','err');
-  if(pwd!==pwd2) return showAlert('alert-auth','Las contraseñas no coinciden.','err');
+  if(!pwd||pwd.length<6) return showAlert('alert-auth',t('msg_min_6chars'),'err');
+  if(pwd!==pwd2) return showAlert('alert-auth',t('msg_pwd_mismatch'),'err');
   var btn=document.getElementById('btn-reset'); btn.disabled=true; btn.textContent='Guardando…';
   try {
     var { error } = await supabase.auth.updateUser({ password: pwd });
     if(error) return showAlert('alert-auth', error.message,'err');
-    showAlert('alert-auth','✅ Contraseña actualizada. Ya puedes iniciar sesión.','ok');
+    showAlert('alert-auth','✅ '+t('msg_pwd_updated'),'ok');
     setTimeout(volverLogin,2000);
   } catch(e) {
     showAlert('alert-auth','Error: '+e.message,'err');
@@ -1249,7 +1506,7 @@ supabase.auth.onAuthStateChange(function(event){
     entrarApp();
   } else if(perfil && !perfil.apps.includes('finanzas')){
     await supabase.auth.signOut();
-    showAlert('alert-auth','⚠️ Sin acceso a Facturación. Contacta al administrador.','warn');
+    showAlert('alert-auth','⚠️ '+t('msg_no_finanzas_access'),'warn');
   }
 })();
 
@@ -1314,7 +1571,7 @@ async function cargarDashboard(){
 }
 
 function badgeLabel(estado){
-  return estado==='emitida'?'⏳ Pendiente':estado==='pagada'?'✅ Pagada':'❌ Anulada';
+  return estado==='emitida'?'⏳ '+t('status_pending'):estado==='pagada'?'✅ '+t('status_paid'):'❌ '+t('status_voided');
 }
 
 function renderGrafico(id,data,vals,color){
@@ -1340,7 +1597,7 @@ async function cargarFacturas(){
   var { data: lista } = await supabase.rpc('fac_factura_listar');
   _facturas=lista||[];
   var fa=document.getElementById('f-fac-anio'); var va=fa.value;
-  fa.innerHTML='<option value="">Todos</option>';
+  fa.innerHTML='<option value="">'+t('all')+'</option>';
   var anios=[]; _facturas.forEach(function(f){
     var p=(f.fechaSolo||'').split('/'); if(p.length>=3&&!anios.includes(p[2]))anios.push(p[2]);
   });
@@ -1374,7 +1631,7 @@ function filtrarFacturas(){
   var empty=document.getElementById('fac-empty');
   var resumen=document.getElementById('fac-resumen');
   tbody.innerHTML='';
-  document.getElementById('fac-count').textContent=filtradas.length+' factura'+(filtradas.length!==1?'s':'');
+  document.getElementById('fac-count').textContent=filtradas.length+' '+(filtradas.length!==1?t('invoice_plural'):t('invoice_singular'));
 
   if(!filtradas.length){ empty.style.display='block'; resumen.style.display='none'; return; }
   empty.style.display='none'; resumen.style.display='block';
@@ -1396,10 +1653,10 @@ function filtrarFacturas(){
       '<td class="r"><strong>'+fmt(f.total)+'</strong></td>'+
       '<td><span class="badge badge-'+esc(f.estado)+'">'+badgeLabel(f.estado)+'</span></td>'+
       '<td><div style="display:flex;gap:4px">'+
-        '<button class="icon-btn btn-sm" title="Ver/PDF" onclick="verFactura(\''+esc(f.id)+'\')">👁</button>'+
-        (f.estado==='emitida'?'<button class="icon-btn btn-sm" title="Marcar pagada" onclick="cambiarEstadoFac(\''+esc(f.id)+'\',\'pagada\')">✅</button>':'')+
-        (f.estado!=='anulada'?'<button class="icon-btn btn-sm danger" title="Anular" onclick="confirmar(\'Anular factura\',\'¿Seguro que deseas anular la factura '+esc(f.id)+'? Esta acción no se puede deshacer.\',function(){cambiarEstadoFac(\''+esc(f.id)+'\',\'anulada\');})">❌</button>':'')+
-        '<button class="icon-btn btn-sm" title="PDF individual" onclick="pdfFactura(\''+esc(f.id)+'\')">📄</button>'+
+        '<button class="icon-btn btn-sm" title="'+t('view_pdf_tt')+'" onclick="verFactura(\''+esc(f.id)+'\')">👁</button>'+
+        (f.estado==='emitida'?'<button class="icon-btn btn-sm" title="'+t('mark_paid_tt')+'" onclick="cambiarEstadoFac(\''+esc(f.id)+'\',\'pagada\')">✅</button>':'')+
+        (f.estado!=='anulada'?'<button class="icon-btn btn-sm danger" title="'+t('void_tt')+'" onclick="confirmar(\''+t('void_invoice_title')+'\',\''+t('confirm_void_msg').replace('{id}',esc(f.id))+'\',function(){cambiarEstadoFac(\''+esc(f.id)+'\',\'anulada\');})">❌</button>':'')+
+        '<button class="icon-btn btn-sm" title="'+t('individual_pdf_tt')+'" onclick="pdfFactura(\''+esc(f.id)+'\')">📄</button>'+
       '</div></td>';
     tbody.appendChild(tr);
   });
@@ -1412,7 +1669,7 @@ function filtrarFacturas(){
 
 async function cambiarEstadoFac(id,estado){
   var { data: res, error } = await supabase.rpc('fac_factura_cambiar_estado', { p_id:id, p_estado:estado });
-  if(error){ toast('Error: '+error.message,'err'); return; }
+  if(error){ toast(t('msg_error_prefix')+error.message,'err'); return; }
   if(res.success){ toast(res.mensaje,'ok'); cargarFacturas(); cargarDashboard(); }
   else toast(res.mensaje,'err');
 }
@@ -1428,28 +1685,28 @@ function formatFechaCorta(v){
 
 async function verFactura(id){
   var { data: f } = await supabase.rpc('fac_factura_get_by_id', { p_id:id });
-  if(!f){toast('Factura no encontrada','err');return;}
+  if(!f){toast(t('invoice_not_found'),'err');return;}
   _facturaActual=f;
-  document.getElementById('vf-titulo').textContent='Factura '+f.id;
+  document.getElementById('vf-titulo').textContent=t('invoice_word2')+' '+f.id;
   var html='<div style="background:var(--bg3);border-radius:var(--r);padding:14px 16px;margin-bottom:14px">'+
     '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px">'+
-    '<div><div style="color:var(--ink3);font-size:10px;text-transform:uppercase;font-weight:600;margin-bottom:3px">Cliente</div>'+
+    '<div><div style="color:var(--ink3);font-size:10px;text-transform:uppercase;font-weight:600;margin-bottom:3px">'+t('client_word2')+'</div>'+
     '<div style="font-weight:600">'+esc(f.clienteNombre)+'</div>'+
     (f.clienteNitcc?'<div style="color:var(--ink3)">NIT/CC: '+esc(f.clienteNitcc)+'</div>':'')+
     (f.clienteTelefono?'<div style="color:var(--ink3)">Tel: '+esc(f.clienteTelefono)+'</div>':'')+
     '</div>'+
-    '<div><div style="color:var(--ink3);font-size:10px;text-transform:uppercase;font-weight:600;margin-bottom:3px">Factura</div>'+
-    '<div>N° <strong>'+esc(f.numero)+'</strong></div>'+
-    '<div style="color:var(--ink3)">Emitida: '+esc(f.fechaSolo)+'</div>'+
-    (f.fechaVencimiento?'<div style="color:var(--amber)">Vence: '+esc(formatFechaCorta(f.fechaVencimiento))+'</div>':'')+
+    '<div><div style="color:var(--ink3);font-size:10px;text-transform:uppercase;font-weight:600;margin-bottom:3px">'+t('invoice_word2')+'</div>'+
+    '<div>'+t('number_word')+' <strong>'+esc(f.numero)+'</strong></div>'+
+    '<div style="color:var(--ink3)">'+t('issued_word')+' '+esc(f.fechaSolo)+'</div>'+
+    (f.fechaVencimiento?'<div style="color:var(--amber)">'+t('due_word')+' '+esc(formatFechaCorta(f.fechaVencimiento))+'</div>':'')+
     '<div style="margin-top:4px"><span class="badge badge-'+esc(f.estado)+'">'+badgeLabel(f.estado)+'</span></div>'+
     '</div></div></div>';
 
   html+='<table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:12px">'+
-    '<thead><tr style="background:var(--bg3)"><th style="padding:8px;text-align:left;font-size:10px;color:var(--ink3);text-transform:uppercase">Servicio</th>'+
-    '<th style="padding:8px;text-align:right;font-size:10px;color:var(--ink3);text-transform:uppercase">Cant.</th>'+
-    '<th style="padding:8px;text-align:right;font-size:10px;color:var(--ink3);text-transform:uppercase">Precio</th>'+
-    '<th style="padding:8px;text-align:right;font-size:10px;color:var(--ink3);text-transform:uppercase">Subtotal</th></tr></thead><tbody>';
+    '<thead><tr style="background:var(--bg3)"><th style="padding:8px;text-align:left;font-size:10px;color:var(--ink3);text-transform:uppercase">'+t('th_service')+'</th>'+
+    '<th style="padding:8px;text-align:right;font-size:10px;color:var(--ink3);text-transform:uppercase">'+t('th_qty_short')+'</th>'+
+    '<th style="padding:8px;text-align:right;font-size:10px;color:var(--ink3);text-transform:uppercase">'+t('th_price')+'</th>'+
+    '<th style="padding:8px;text-align:right;font-size:10px;color:var(--ink3);text-transform:uppercase">'+t('th_subtotal2')+'</th></tr></thead><tbody>';
   (f.items||[]).forEach(function(it){
     html+='<tr style="border-bottom:1px solid var(--border)">'+
       '<td style="padding:8px"><div style="font-weight:500">'+esc(it.nombre)+'</div>'+
@@ -1462,11 +1719,11 @@ async function verFactura(id){
   html+='</tbody></table>';
 
   html+='<div style="background:var(--blue3);border-radius:var(--r);padding:12px 16px">'+
-    '<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0"><span style="color:var(--ink2)">Subtotal</span><span>'+fmt(f.subtotal)+'</span></div>'+
-    (f.ivaPorc>0?'<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0"><span style="color:var(--ink2)">IVA ('+f.ivaPorc+'%)</span><span>'+fmt(f.ivaValor)+'</span></div>':'')+
-    '<div style="display:flex;justify-content:space-between;font-size:16px;font-weight:700;padding:8px 0 3px;border-top:1px solid rgba(26,86,219,.2);margin-top:6px"><span style="color:var(--blue2)">TOTAL</span><span style="color:var(--blue);font-family:var(--font-serif);font-size:22px">'+fmt(f.total)+'</span></div></div>';
+    '<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0"><span style="color:var(--ink2)">'+t('subtotal_word')+'</span><span>'+fmt(f.subtotal)+'</span></div>'+
+    (f.ivaPorc>0?'<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0"><span style="color:var(--ink2)">'+t('th_iva')+' ('+f.ivaPorc+'%)</span><span>'+fmt(f.ivaValor)+'</span></div>':'')+
+    '<div style="display:flex;justify-content:space-between;font-size:16px;font-weight:700;padding:8px 0 3px;border-top:1px solid rgba(26,86,219,.2);margin-top:6px"><span style="color:var(--blue2)">'+t('total_word2')+'</span><span style="color:var(--blue);font-family:var(--font-serif);font-size:22px">'+fmt(f.total)+'</span></div></div>';
 
-  if(f.notas) html+='<div style="margin-top:10px;font-size:12px;color:var(--ink2);background:var(--bg3);border-radius:var(--r);padding:10px 14px"><strong>Notas:</strong> '+esc(f.notas)+'</div>';
+  if(f.notas) html+='<div style="margin-top:10px;font-size:12px;color:var(--ink2);background:var(--bg3);border-radius:var(--r);padding:10px 14px"><strong>'+t('notes_colon')+'</strong> '+esc(f.notas)+'</div>';
 
   document.getElementById('vf-contenido').innerHTML=html;
   document.getElementById('vf-btn-pagar').style.display=f.estado==='emitida'?'block':'none';
@@ -1519,11 +1776,11 @@ async function buscarClienteNF(){
   if(!q){document.getElementById('nf-cli-results').style.display='none';return;}
   var { data: lista } = await supabase.rpc('fac_cliente_buscar', { p_q: q });
   var res=document.getElementById('nf-cli-results');
-  if(!lista||!lista.length){res.innerHTML='<div style="padding:10px 14px;font-size:13px;color:var(--ink3)">Sin resultados</div>';res.style.display='block';return;}
+  if(!lista||!lista.length){res.innerHTML='<div style="padding:10px 14px;font-size:13px;color:var(--ink3)">'+t('no_results')+'</div>';res.style.display='block';return;}
   res.innerHTML=lista.map(function(c){
     var svcs=(c.serviciosContratados&&c.serviciosContratados.length)
-      ? '<span style="color:var(--green2);font-size:10px">● '+c.serviciosContratados.length+' servicio'+(c.serviciosContratados.length!==1?'s':'')+'</span>'
-      : '<span style="color:var(--ink3);font-size:10px">Sin servicios asignados</span>';
+      ? '<span style="color:var(--green2);font-size:10px">● '+c.serviciosContratados.length+' '+(c.serviciosContratados.length!==1?t('assigned_service_plural'):t('assigned_service_singular'))+'</span>'
+      : '<span style="color:var(--ink3);font-size:10px">'+t('no_assigned_services')+'</span>';
     return '<div onclick="seleccionarClienteNF(\''+esc(c.id)+'\',\''+esc(c.nombre)+'\',\''+esc(c.nitcc||'')+'\',\''+esc(c.telefono||'')+'\',\''+esc(c.ciudad||'')+'\')" style="padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--border);font-size:13px;transition:background .1s" onmouseover="this.style.background=\'var(--blue3)\'" onmouseout="this.style.background=\'\'">'+
       '<div style="font-weight:500">'+esc(c.nombre)+'</div>'+
       '<div style="display:flex;gap:8px;align-items:center;margin-top:2px">'+
@@ -1673,9 +1930,9 @@ function leerItemsNF(){
 }
 
 async function crearFactura(){
-  if(!_nfClienteId) return showAlert('alert-nf','Selecciona un cliente primero.','err');
+  if(!_nfClienteId) return showAlert('alert-nf',t('msg_select_client_first'),'err');
   var items=leerItemsNF();
-  if(!items.length) return showAlert('alert-nf','Agrega al menos un ítem con nombre, cantidad y precio.','err');
+  if(!items.length) return showAlert('alert-nf',t('msg_add_item_first'),'err');
   var btn=document.getElementById('btn-guardar-factura');
   btn.disabled=true; btn.textContent='Guardando…';
 
@@ -1689,7 +1946,7 @@ async function crearFactura(){
       p_fecha_emision_manual: document.getElementById('nf-fecha').value,
       p_tipo_factura: document.getElementById('nf-tipo').value||'fija'
     });
-    if(error){ showAlert('alert-nf','Error: '+error.message,'err'); return; }
+    if(error){ showAlert('alert-nf',t('msg_error_prefix')+error.message,'err'); return; }
     if(res.success){
       toast(res.mensaje,'ok');
       limpiarNF();
@@ -1719,16 +1976,16 @@ function limpiarNF(){
 ───────────────────────────────────────────────── */
 async function cargarVistaPreviaTodos(){
   var wrap=document.getElementById('nf-todos-preview');
-  wrap.innerHTML='<div style="font-size:12px;color:var(--ink3);padding:12px 0">Cargando…</div>';
+  wrap.innerHTML='<div style="font-size:12px;color:var(--ink3);padding:12px 0">'+t('loading_word')+'</div>';
   var { data: lista } = await supabase.rpc('fac_cliente_listar');
   _clientes=lista||[];
   var aptos=lista.filter(function(c){return c.serviciosContratados&&c.serviciosContratados.length>0;});
   var omitidos=lista.filter(function(c){return !c.serviciosContratados||!c.serviciosContratados.length;});
   if(!aptos.length){
-    wrap.innerHTML='<div class="empty-state" style="padding:20px 10px"><div class="empty-icon">👥</div><div>Ningún cliente tiene servicios asignados</div><p style="font-size:12px;margin-top:6px">Edita los clientes y marca sus servicios contratados primero</p></div>';
+    wrap.innerHTML='<div class="empty-state" style="padding:20px 10px"><div class="empty-icon">👥</div><div>'+t('no_client_services')+'</div><p style="font-size:12px;margin-top:6px">'+t('edit_clients_first')+'</p></div>';
     return;
   }
-  var html='<div style="margin-bottom:12px;font-size:12px;color:var(--green4);background:var(--green3);border-radius:var(--r);padding:8px 12px">✅ Se generarán <strong>'+aptos.length+'</strong> factura'+(aptos.length!==1?'s':'')+' · '+omitidos.length+' cliente'+(omitidos.length!==1?'s':'')+' omitido'+(omitidos.length!==1?'s':'')+' (sin servicios)</div>';
+  var html='<div style="margin-bottom:12px;font-size:12px;color:var(--green4);background:var(--green3);border-radius:var(--r);padding:8px 12px">✅ '+t('will_generate')+' <strong>'+aptos.length+'</strong> '+(aptos.length!==1?t('invoice_plural'):t('invoice_singular'))+' · '+omitidos.length+' '+(omitidos.length!==1?t('client_plural_omitted'):t('client_singular_omitted'))+' '+(omitidos.length!==1?t('omitted_word_pl'):t('omitted_word'))+' '+t('no_services_paren')+'</div>';
   html+='<div style="display:flex;flex-direction:column;gap:6px">';
   aptos.forEach(function(c){
     var ivaPct=c.ivaDefault||0;
@@ -1744,16 +2001,16 @@ async function cargarVistaPreviaTodos(){
       '<div>'+
         '<div style="font-weight:600;font-size:13px">'+esc(c.nombre)+'</div>'+
         '<div style="font-size:11px;color:var(--ink3);margin-top:2px">'+svcNames.map(esc).join(' · ')+'</div>'+
-        (ivaPct>0?'<div style="font-size:10px;color:var(--ink3)">IVA '+ivaPct+'%: '+fmt(ivaVal)+'</div>':'')+
+        (ivaPct>0?'<div style="font-size:10px;color:var(--ink3)">'+t('th_iva')+' '+ivaPct+'%: '+fmt(ivaVal)+'</div>':'')+
       '</div>'+
       '<div style="text-align:right;flex-shrink:0">'+
         '<div style="font-family:var(--font-serif);font-size:16px;color:var(--blue)">'+fmt(total)+'</div>'+
-        '<div style="font-size:10px;color:var(--ink3)">'+(c.tipoFactura==='temporal'?'⏱ Temporal':'📌 Fija')+'</div>'+
+        '<div style="font-size:10px;color:var(--ink3)">'+(c.tipoFactura==='temporal'?t('fixed_short'):t('fixed_short2'))+'</div>'+
       '</div>'+
     '</div>';
   });
   if(omitidos.length){
-    html+='<div style="font-size:11px;color:var(--ink3);padding:8px 12px;background:var(--bg);border-radius:var(--r)">Omitidos (sin servicios): '+omitidos.map(function(c){return esc(c.nombre);}).join(', ')+'</div>';
+    html+='<div style="font-size:11px;color:var(--ink3);padding:8px 12px;background:var(--bg);border-radius:var(--r)">'+t('omitted_no_services')+' '+omitidos.map(function(c){return esc(c.nombre);}).join(', ')+'</div>';
   }
   html+='</div>';
   wrap.innerHTML=html;
@@ -1761,7 +2018,7 @@ async function cargarVistaPreviaTodos(){
 
 async function facturarTodos(){
   var aptos=_clientes.filter(function(c){return c.serviciosContratados&&c.serviciosContratados.length>0;});
-  if(!aptos.length){ toast('Ningún cliente tiene servicios asignados.','warn'); return; }
+  if(!aptos.length){ toast(t('no_client_has_services'),'warn'); return; }
   var btn=document.getElementById('btn-facturar-todos');
   btn.disabled=true; btn.textContent='Generando facturas…';
   var fecha=document.getElementById('nf-fecha').value;
@@ -1788,8 +2045,8 @@ async function facturarTodos(){
   }
 
   btn.disabled=false; btn.textContent='⚡ Generar facturas para todos los clientes';
-  if(errores.length) toast('⚠️ '+errores.length+' error(es). Ver consola.','warn');
-  else toast('✅ '+total+' factura'+(total!==1?'s':'')+' generada'+(total!==1?'s':'')+' correctamente','ok');
+  if(errores.length) toast('⚠️ '+errores.length+' '+t('errors_word'),'warn');
+  else toast('✅ '+total+' '+(total!==1?t('invoices_generated'):t('invoice_generated'))+' '+(total!==1?t('generated_ok_pl'):t('generated_ok'))+' '+t('correctly_word'),'ok');
   cambiarMod('facturas');
 }
 
@@ -1812,7 +2069,7 @@ function renderClientes(lista){
   var tbody=document.getElementById('cli-tbody');
   var empty=document.getElementById('cli-empty');
   tbody.innerHTML='';
-  document.getElementById('cli-count').textContent=lista.length+' cliente'+(lista.length!==1?'s':'');
+  document.getElementById('cli-count').textContent=lista.length+' '+(lista.length!==1?t('client_plural'):t('client_singular'));
   if(!lista.length){empty.style.display='block';return;}
   empty.style.display='none';
   lista.forEach(function(c){
@@ -1832,14 +2089,14 @@ function renderClientes(lista){
       '</td>'+
       '<td style="font-family:var(--font-mono);font-size:11px">'+esc(c.nitcc||'—')+'</td>'+
       '<td>'+esc(c.telefono||'—')+'</td><td>'+esc(c.email||'—')+'</td><td>'+esc(c.ciudad||'—')+'</td>'+
-      '<td style="font-size:11px;font-weight:600;color:var(--ink2)">'+(c.ivaDefault>0?c.ivaDefault+'%':'Sin IVA')+'</td>'+
+      '<td style="font-size:11px;font-weight:600;color:var(--ink2)">'+(c.ivaDefault>0?c.ivaDefault+'%':t('no_iva_short'))+'</td>'+
       '<td>'+(c.tipoFactura==='temporal'
-        ? '<span class="badge" style="background:var(--amber2);color:var(--amber)">⏱ Temporal</span>'
-        : '<span class="badge badge-blue">📌 Fija</span>')+
+        ? '<span class="badge" style="background:var(--amber2);color:var(--amber)">'+t('fixed_short')+'</span>'
+        : '<span class="badge badge-blue">'+t('fixed_short2')+'</span>')+
       '</td>'+
       '<td><div style="display:flex;gap:4px">'+
         '<button class="icon-btn btn-sm" onclick="editarCliente(\''+esc(c.id)+'\')">✏️</button>'+
-        '<button class="icon-btn btn-sm danger" onclick="confirmar(\'Eliminar cliente\',\'¿Eliminar a '+esc(c.nombre)+'? Solo si no tiene facturas activas.\',function(){eliminarCliente(\''+esc(c.id)+'\');})">🗑</button>'+
+        '<button class="icon-btn btn-sm danger" onclick="confirmar(\''+t('delete_client_title')+'\',\''+t('confirm_del_client_msg').replace('{nombre}',esc(c.nombre))+'\',function(){eliminarCliente(\''+esc(c.id)+'\');})">🗑</button>'+
       '</div></td>';
     tbody.appendChild(tr);
   });
@@ -1848,12 +2105,12 @@ function renderClientes(lista){
 function _renderServiciosEnModal(seleccionados){
   var lista=document.getElementById('mcli-servicios-lista');
   if(!_servicios||!_servicios.length){
-    lista.innerHTML='<div style="font-size:12px;color:var(--ink3);text-align:center;padding:12px 0">No hay servicios en el catálogo aún.<br><span style="font-size:11px">Agrégalos desde <strong>Servicios</strong> primero.</span></div>';
+    lista.innerHTML='<div style="font-size:12px;color:var(--ink3);text-align:center;padding:12px 0">'+t('no_services_catalog')+'<br><span style="font-size:11px">'+t('add_from_services')+' <strong>'+t('nav_services')+'</strong> '+t('first_word')+'</span></div>';
     return;
   }
   var cats={};
   _servicios.forEach(function(s){
-    var cat=s.categoria||'General';
+    var cat=s.categoria||t('general_word');
     if(!cats[cat]) cats[cat]=[];
     cats[cat].push(s);
   });
@@ -1912,7 +2169,7 @@ async function guardarCliente(){
     svcsSeleccionados.push(cb.value);
   });
   var nombre=document.getElementById('mcli-nombre').value.trim();
-  if(!nombre) return showAlert('alert-mcli','El nombre es obligatorio.','err');
+  if(!nombre) return showAlert('alert-mcli',t('msg_name_required'),'err');
 
   var { data: res, error } = await supabase.rpc('fac_cliente_guardar', {
     p_id: document.getElementById('mcli-id').value || null,
@@ -1927,14 +2184,14 @@ async function guardarCliente(){
     p_tipo_factura: document.getElementById('mcli-tipo-factura').value||'fija',
     p_servicios_contratados: svcsSeleccionados
   });
-  if(error){ showAlert('alert-mcli','Error: '+error.message,'err'); return; }
+  if(error){ showAlert('alert-mcli',t('msg_error_prefix')+error.message,'err'); return; }
   if(res.success){ toast(res.mensaje,'ok'); cerrarModal('modal-cliente'); cargarClientes(); }
   else showAlert('alert-mcli',res.mensaje,'err');
 }
 
 async function eliminarCliente(id){
   var { data: res, error } = await supabase.rpc('fac_cliente_eliminar', { p_id:id });
-  if(error){ toast('Error: '+error.message,'err'); return; }
+  if(error){ toast(t('msg_error_prefix')+error.message,'err'); return; }
   if(res.success){ toast(res.mensaje,'ok'); cargarClientes(); }
   else toast(res.mensaje,'err');
 }
@@ -1952,19 +2209,19 @@ function renderServicios(lista){
   var tbody=document.getElementById('svc-tbody');
   var empty=document.getElementById('svc-empty');
   tbody.innerHTML='';
-  document.getElementById('svc-count').textContent=lista.length+' servicio'+(lista.length!==1?'s':'');
+  document.getElementById('svc-count').textContent=lista.length+' '+(lista.length!==1?t('service_plural'):t('service_singular'));
   if(!lista.length){empty.style.display='block';return;}
   empty.style.display='none';
   lista.forEach(function(s){
     var tr=document.createElement('tr');
     tr.innerHTML='<td><strong>'+esc(s.nombre)+'</strong></td>'+
       '<td style="font-size:12px;color:var(--ink2)">'+esc(s.descripcion||'—')+'</td>'+
-      '<td><span class="badge badge-blue">'+esc(s.categoria||'General')+'</span></td>'+
+      '<td><span class="badge badge-blue">'+esc(s.categoria||t('general_word'))+'</span></td>'+
       '<td>'+esc(s.unidad||'und')+'</td>'+
       '<td class="r"><strong>'+fmt(s.precio)+'</strong></td>'+
       '<td><div style="display:flex;gap:4px">'+
         '<button class="icon-btn btn-sm" onclick="editarServicio(\''+esc(s.id)+'\')">✏️</button>'+
-        '<button class="icon-btn btn-sm danger" onclick="confirmar(\'Eliminar servicio\',\'¿Eliminar '+esc(s.nombre)+' del catálogo?\',function(){eliminarServicio(\''+esc(s.id)+'\');})">🗑</button>'+
+        '<button class="icon-btn btn-sm danger" onclick="confirmar(\''+t('delete_service_title')+'\',\''+t('confirm_del_service_msg').replace('{nombre}',esc(s.nombre))+'\',function(){eliminarServicio(\''+esc(s.id)+'\');})">🗑</button>'+
       '</div></td>';
     tbody.appendChild(tr);
   });
@@ -1996,8 +2253,8 @@ function editarServicio(id){
 async function guardarServicio(){
   var nombre=document.getElementById('msvc-nombre').value.trim();
   var precio=parseFloat(document.getElementById('msvc-precio').value)||0;
-  if(!nombre) return showAlert('alert-msvc','El nombre es obligatorio.','err');
-  if(precio<=0) return showAlert('alert-msvc','El precio debe ser mayor a 0.','err');
+  if(!nombre) return showAlert('alert-msvc',t('msg_name_required'),'err');
+  if(precio<=0) return showAlert('alert-msvc',t('msg_price_gt0'),'err');
 
   var { data: res, error } = await supabase.rpc('fac_servicio_guardar', {
     p_id: document.getElementById('msvc-id').value || null,
@@ -2007,14 +2264,14 @@ async function guardarServicio(){
     p_unidad: document.getElementById('msvc-unidad').value,
     p_categoria: document.getElementById('msvc-cat').value.trim()||'General'
   });
-  if(error){ showAlert('alert-msvc','Error: '+error.message,'err'); return; }
+  if(error){ showAlert('alert-msvc',t('msg_error_prefix')+error.message,'err'); return; }
   if(res.success){ toast(res.mensaje,'ok'); cerrarModal('modal-servicio'); cargarServicios(); }
   else showAlert('alert-msvc',res.mensaje,'err');
 }
 
 async function eliminarServicio(id){
   var { data: res, error } = await supabase.rpc('fac_servicio_eliminar', { p_id:id });
-  if(error){ toast('Error: '+error.message,'err'); return; }
+  if(error){ toast(t('msg_error_prefix')+error.message,'err'); return; }
   if(res.success){ toast(res.mensaje,'ok'); cargarServicios(); }
 }
 
@@ -2027,7 +2284,7 @@ async function cargarGastos(){
   var { data: lista } = await supabase.rpc('fac_gasto_listar');
   _gastos=lista||[];
   var fa=document.getElementById('f-gas-anio'); var va=fa.value;
-  fa.innerHTML='<option value="">Todos</option>';
+  fa.innerHTML='<option value="">'+t('all')+'</option>';
   var anios=[];
   _gastos.forEach(function(g){var p=(g.fechaSolo||'').split('/');if(p.length>=3&&!anios.includes(p[2]))anios.push(p[2]);});
   anios.sort().reverse().forEach(function(a){var o=document.createElement('option');o.value=a;o.textContent=a;fa.appendChild(o);});
@@ -2043,19 +2300,19 @@ function renderGastos(lista){
   var tbody=document.getElementById('gas-tbody');
   var empty=document.getElementById('gas-empty');
   tbody.innerHTML='';
-  document.getElementById('gas-count').textContent=lista.length+' gasto'+(lista.length!==1?'s':'');
+  document.getElementById('gas-count').textContent=lista.length+' '+(lista.length!==1?t('expense_plural'):t('expense_singular'));
   var totalG=lista.reduce(function(s,g){return s+g.monto;},0);
-  document.getElementById('gas-total-header').textContent=lista.length?'Total: '+fmt(totalG):'';
+  document.getElementById('gas-total-header').textContent=lista.length?t('total_colon')+' '+fmt(totalG):'';
   if(!lista.length){empty.style.display='block';return;}
   empty.style.display='none';
   lista.forEach(function(g){
     var tr=document.createElement('tr');
     tr.innerHTML='<td>'+esc(g.fechaSolo)+'</td>'+
-      '<td><span class="badge badge-blue">'+esc(g.categoria||'Otros')+'</span></td>'+
+      '<td><span class="badge badge-blue">'+esc(g.categoria||t('other_word'))+'</span></td>'+
       '<td>'+esc(g.descripcion)+'</td>'+
       '<td class="r"><strong style="color:var(--red)">'+fmt(g.monto)+'</strong></td>'+
       '<td style="font-size:11px;color:var(--ink3)">'+esc(g.notas||'—')+'</td>'+
-      '<td><button class="icon-btn btn-sm danger" onclick="confirmar(\'Eliminar gasto\',\'¿Eliminar este gasto de '+fmt(g.monto)+'?\',function(){eliminarGasto(\''+esc(g.id)+'\');})">🗑</button></td>';
+      '<td><button class="icon-btn btn-sm danger" onclick="confirmar(\''+t('delete_expense_title')+'\',\''+t('confirm_del_expense_msg').replace('{monto}',fmt(g.monto))+'\',function(){eliminarGasto(\''+esc(g.id)+'\');})">🗑</button></td>';
     tbody.appendChild(tr);
   });
 }
@@ -2072,8 +2329,8 @@ function abrirModalNuevoGasto(){
 async function guardarGasto(){
   var descripcion=document.getElementById('mgas-desc').value.trim();
   var monto=parseFloat(document.getElementById('mgas-monto').value)||0;
-  if(!descripcion) return showAlert('alert-mgas','La descripción es obligatoria.','err');
-  if(monto<=0) return showAlert('alert-mgas','El monto debe ser mayor a 0.','err');
+  if(!descripcion) return showAlert('alert-mgas',t('msg_desc_required'),'err');
+  if(monto<=0) return showAlert('alert-mgas',t('msg_amount_gt0'),'err');
 
   var { data: res, error } = await supabase.rpc('fac_gasto_guardar', {
     p_id: document.getElementById('mgas-id').value || null,
@@ -2083,14 +2340,14 @@ async function guardarGasto(){
     p_fecha: document.getElementById('mgas-fecha').value,
     p_notas: document.getElementById('mgas-notas').value.trim()
   });
-  if(error){ showAlert('alert-mgas','Error: '+error.message,'err'); return; }
+  if(error){ showAlert('alert-mgas',t('msg_error_prefix')+error.message,'err'); return; }
   if(res.success){ toast(res.mensaje,'ok'); cerrarModal('modal-gasto'); cargarGastos(); }
   else showAlert('alert-mgas',res.mensaje,'err');
 }
 
 async function eliminarGasto(id){
   var { data: res, error } = await supabase.rpc('fac_gasto_eliminar', { p_id:id });
-  if(error){ toast('Error: '+error.message,'err'); return; }
+  if(error){ toast(t('msg_error_prefix')+error.message,'err'); return; }
   if(res.success){ toast(res.mensaje,'ok'); cargarGastos(); }
 }
 
@@ -2132,7 +2389,7 @@ async function cargarRentabilidad(){
   var u=r.utilidad; var ku=document.getElementById('rent-util');
   ku.textContent=fmt(u); ku.style.color=u>=0?'var(--green2)':'var(--red)';
   document.getElementById('rent-fac').textContent=fmt(r.totalFacturado);
-  document.getElementById('rent-fac-sub').textContent=r.totalFacturas+' factura'+(r.totalFacturas!==1?'s':', ')+', '+r.pagadas+' pagada'+(r.pagadas!==1?'s':'');
+  document.getElementById('rent-fac-sub').textContent=r.totalFacturas+' '+(r.totalFacturas!==1?t('invoice_plural'):t('invoice_singular'))+', '+r.pagadas+' '+t('status_paid').toLowerCase();
   document.getElementById('rent-gas').textContent=fmt(r.totalGastos);
   document.getElementById('rent-margen').textContent=r.margen.toFixed(1)+'%';
 
@@ -2142,7 +2399,7 @@ async function cargarRentabilidad(){
 
   var flujoWrap=document.getElementById('flujo-mensual-wrap');
   if(!r.flujoMensual||!r.flujoMensual.length){
-    flujoWrap.innerHTML='<div class="empty-state"><div class="empty-icon">📅</div><div>Sin datos en el período</div></div>';
+    flujoWrap.innerHTML='<div class="empty-state"><div class="empty-icon">📅</div><div>'+t('no_data_period')+'</div></div>';
     return;
   }
   var maxF=Math.max.apply(null,r.flujoMensual.map(function(m){return Math.max(m.ingresos,m.gastos);}));
@@ -2152,14 +2409,14 @@ async function cargarRentabilidad(){
     var pG=maxF>0?Math.round(m.gastos/maxF*100):0;
     var pos=m.utilidad>=0;
     var partes=m.mes.split('/');
-    var meses=['','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-    var label=partes.length>=2?(meses[parseInt(partes[1])]||partes[1])+' '+partes[0]:m.mes;
+    var mesesKeys=['','mo_ene','mo_feb','mo_mar','mo_abr','mo_may','mo_jun','mo_jul','mo_ago','mo_sep','mo_oct','mo_nov','mo_dic'];
+    var label=partes.length>=2?(t(mesesKeys[parseInt(partes[1])])||partes[1])+' '+partes[0]:m.mes;
     html+='<div style="background:var(--bg3);border-radius:var(--r);padding:10px 14px">'+
       '<div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;margin-bottom:6px">'+
         '<span>'+esc(label)+'</span>'+
         '<span style="color:'+(pos?'var(--green2)':'var(--red)')+'">'+( pos?'+':'')+fmt(m.utilidad)+'</span>'+
       '</div>'+
-      '<div style="font-size:11px;color:var(--ink3);margin-bottom:5px">Facturado: '+fmt(m.ingresos)+' · Gastos: '+fmt(m.gastos)+'</div>'+
+      '<div style="font-size:11px;color:var(--ink3);margin-bottom:5px">'+t('billed_colon')+' '+fmt(m.ingresos)+' · '+t('expenses_colon')+' '+fmt(m.gastos)+'</div>'+
       '<div style="display:flex;height:5px;background:var(--bg2);border-radius:3px;overflow:hidden;margin-bottom:3px">'+
         '<div style="width:'+pI+'%;background:var(--blue);border-radius:3px;transition:width .5s"></div></div>'+
       '<div style="display:flex;height:4px;background:var(--bg2);border-radius:3px;overflow:hidden">'+
@@ -2195,7 +2452,7 @@ async function cargarConfiguracion(){
 function onLogoSeleccionado(e){
   var file = e.target.files[0];
   if(!file) return;
-  if(file.size > 1024*1024){ toast('La imagen es muy pesada (máx. 1MB)','warn'); return; }
+  if(file.size > 1024*1024){ toast(t('image_too_heavy'),'warn'); return; }
   var reader = new FileReader();
   reader.onload = function(ev){
     _config.logoBase64 = ev.target.result;
@@ -2223,7 +2480,7 @@ async function guardarConfiguracion(){
     p_observaciones_default: document.getElementById('config-obs').value.trim()
   };
   var { data: res, error } = await supabase.rpc('fac_configuracion_guardar', nuevosDatos);
-  if(error){ showAlert('alert-config','Error: '+error.message,'err'); return; }
+  if(error){ showAlert('alert-config',t('msg_error_prefix')+error.message,'err'); return; }
 
   // Actualizamos la copia en memoria con lo recién guardado,
   // así el PDF ya no depende de recargar la página.
@@ -2246,13 +2503,13 @@ async function guardarConfiguracion(){
    Venta" a la derecha, igual al ejemplo de referencia)
 ───────────────────────────────────────────────── */
 function descargarFacturaPDF(){
-  if(!_facturaActual){ toast('No hay factura seleccionada','err'); return; }
+  if(!_facturaActual){ toast(t('no_invoice_selected'),'err'); return; }
   pdfFacturaObj(_facturaActual);
 }
 
 async function pdfFactura(id){
   var { data: f } = await supabase.rpc('fac_factura_get_by_id', { p_id:id });
-  if(f){ _facturaActual=f; pdfFacturaObj(f); } else toast('Factura no encontrada','err');
+  if(f){ _facturaActual=f; pdfFacturaObj(f); } else toast(t('invoice_not_found2'),'err');
 }
 
 async function pdfFacturaObj(f){
@@ -2390,12 +2647,12 @@ async function pdfFacturaObj(f){
   doc.text('Generado con Skripto Apps',W/2,H-6,{align:'center'});
 
   doc.save('Factura_'+f.numero+'_'+f.clienteNombre.replace(/\s+/g,'_').substring(0,20)+'.pdf');
-  toast('📄 PDF descargado','ok');
+  toast('📄 '+t('pdf_downloaded'),'ok');
 }
 
 function exportarFacturasMasivo(){
   var tbody=document.getElementById('fac-tbody');
-  if(!tbody.rows.length){ toast('No hay facturas para exportar','warn'); return; }
+  if(!tbody.rows.length){ toast(t('no_invoices_export'),'warn'); return; }
 
   var ids=[];
   _facturas.forEach(function(f){
@@ -2410,7 +2667,7 @@ function exportarFacturasMasivo(){
     if(ok&&f.estado!=='anulada') ids.push(f.id);
   });
 
-  if(!ids.length){ toast('Sin facturas activas que exportar','warn'); return; }
+  if(!ids.length){ toast(t('no_active_invoices_export'),'warn'); return; }
 
   function descargarSiguiente(index){
     if(index>=ids.length) return;
@@ -2419,7 +2676,7 @@ function exportarFacturasMasivo(){
     if(!f){ descargarSiguiente(index+1); return; }
     setTimeout(function(){
       pdfFacturaObj(f);
-      toast('Descargando '+(index+1)+' de '+ids.length+'…','ok');
+      toast(t('downloading_x_of_y').replace('{a}',(index+1)).replace('{b}',ids.length),'ok');
       descargarSiguiente(index+1);
     }, index===0?0:600);
   }
@@ -2442,7 +2699,7 @@ async function generarReportePDF(){
 
   toast('Generando PDF…','ok');
   var { data: r } = await supabase.rpc('fac_reporte_rentabilidad', { p_desde:d, p_hasta:h });
-  if(!r){ toast('Sin datos para el período','warn'); return; }
+  if(!r){ toast(t('no_data_period2'),'warn'); return; }
 
   var doc=new window.jspdf.jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
   var W=doc.internal.pageSize.getWidth(), H=doc.internal.pageSize.getHeight();
@@ -2589,7 +2846,7 @@ async function generarReportePDF(){
   pie();
   var fecha=new Date().toISOString().slice(0,10).replace(/-/g,'');
   doc.save('Rentabilidad_'+empresa.replace(/\s+/g,'_')+'_'+fecha+'.pdf');
-  toast('📄 Reporte de rentabilidad descargado','ok');
+  toast('📄 '+t('profitability_report_downloaded'),'ok');
 }
 
 /* ─────────────────────────────────────────────────
@@ -2604,7 +2861,7 @@ async function renovarFacturasManuales(){
       btn.style.opacity='0.6'; btn.style.pointerEvents='none';
       var { data: res, error } = await supabase.rpc('fac_renovar_facturas_mensuales');
       btn.style.opacity=''; btn.style.pointerEvents='';
-      if(error){ toast('Error: '+error.message,'err'); return; }
+      if(error){ toast(t('msg_error_prefix')+error.message,'err'); return; }
       if(res.success) toast('🔄 '+res.mensaje,'ok');
       else toast(res.mensaje,'err');
       cambiarMod('facturas');
@@ -2641,7 +2898,7 @@ async function doEliminarCuenta(){
   cerrarModal('modal-eliminar-cuenta');
   document.getElementById('screen-app').classList.remove('visible');
   document.getElementById('screen-login').classList.add('visible');
-  showAlert('alert-auth','Acceso a Facturación eliminado. Tus datos se conservan.','ok');
+  showAlert('alert-auth',t('del_finanzas_access'),'ok');
 }
 </script>
 
