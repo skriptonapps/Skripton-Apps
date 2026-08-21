@@ -312,6 +312,12 @@ function aplicarIdioma(){
   document.documentElement.lang = LANG;
   var langTag = LANG==='en' ? 'en-US' : 'es-CO';
   document.querySelectorAll('input[type="month"], input[type="date"]').forEach(function(el){ el.setAttribute('lang', langTag); });
+  if(typeof _pobMesSelect === 'function'){
+    ['rent-desde-mes','rent-hasta-mes'].forEach(function(id){
+      var sel=document.getElementById(id);
+      if(sel && sel.options.length) _pobMesSelect(sel);
+    });
+  }
 }
 </script>
 <style>
@@ -1055,11 +1061,17 @@ body {
           <div class="grid-2" style="align-items:end">
             <div class="form-g" style="margin-bottom:0">
               <label data-i18n="from_year_month">Desde (año/mes)</label>
-              <input type="month" id="rent-desde">
+              <div style="display:flex;gap:6px">
+                <select id="rent-desde-mes" style="flex:1.3"></select>
+                <select id="rent-desde-anio" style="flex:1"></select>
+              </div>
             </div>
             <div class="form-g" style="margin-bottom:0">
               <label data-i18n="to_year_month">Hasta (año/mes)</label>
-              <input type="month" id="rent-hasta">
+              <div style="display:flex;gap:6px">
+                <select id="rent-hasta-mes" style="flex:1.3"></select>
+                <select id="rent-hasta-anio" style="flex:1"></select>
+              </div>
             </div>
           </div>
           <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
@@ -2399,8 +2411,43 @@ async function eliminarGasto(id){
    RENTABILIDAD
 ───────────────────────────────────────────────── */
 function initRentabilidad(){
+  _initSelectsRentPeriodo();
   setRentPeriodo('mes');
 }
+
+/* ── Selects propios de mes/año (reemplazan el <input type="month">
+   nativo, que el navegador siempre muestra en el idioma del sistema
+   operativo, sin importar el idioma elegido en la app) ── */
+function _pobMesSelect(sel){
+  var cur=sel.value;
+  sel.innerHTML='';
+  for(var i=1;i<=12;i++){
+    var mm=String(i).padStart(2,'0');
+    var o=document.createElement('option');
+    o.value=mm; o.textContent=t('mo'+i);
+    sel.appendChild(o);
+  }
+  if(cur) sel.value=cur;
+}
+function _pobAnioSelect(sel){
+  var cur=sel.value;
+  var anioActual=(new Date()).getFullYear();
+  sel.innerHTML='';
+  for(var y=anioActual-5;y<=anioActual+1;y++){
+    var o=document.createElement('option');
+    o.value=String(y); o.textContent=String(y);
+    sel.appendChild(o);
+  }
+  if(cur) sel.value=cur; else sel.value=String(anioActual);
+}
+function _initSelectsRentPeriodo(){
+  ['rent-desde-mes','rent-hasta-mes'].forEach(function(id){ _pobMesSelect(document.getElementById(id)); });
+  ['rent-desde-anio','rent-hasta-anio'].forEach(function(id){ _pobAnioSelect(document.getElementById(id)); });
+}
+function getRentDesde(){ return document.getElementById('rent-desde-anio').value+'-'+document.getElementById('rent-desde-mes').value; }
+function getRentHasta(){ return document.getElementById('rent-hasta-anio').value+'-'+document.getElementById('rent-hasta-mes').value; }
+function setRentDesde(v){ var p=v.split('-'); document.getElementById('rent-desde-anio').value=p[0]; document.getElementById('rent-desde-mes').value=p[1]; }
+function setRentHasta(v){ var p=v.split('-'); document.getElementById('rent-hasta-anio').value=p[0]; document.getElementById('rent-hasta-mes').value=p[1]; }
 
 function setRentPeriodo(p){
   _rentPeriodo=p;
@@ -2409,23 +2456,23 @@ function setRentPeriodo(p){
   var y=hoy.getFullYear(), m=String(hoy.getMonth()+1).padStart(2,'0');
   var yStr=y+'-'+m;
   if(p==='mes'){
-    document.getElementById('rent-desde').value=yStr;
-    document.getElementById('rent-hasta').value=yStr;
+    setRentDesde(yStr);
+    setRentHasta(yStr);
   } else if(p==='trim'){
     var trim=Math.floor(hoy.getMonth()/3);
     var mStart=String(trim*3+1).padStart(2,'0'), mEnd=String(trim*3+3).padStart(2,'0');
-    document.getElementById('rent-desde').value=y+'-'+mStart;
-    document.getElementById('rent-hasta').value=y+'-'+mEnd;
+    setRentDesde(y+'-'+mStart);
+    setRentHasta(y+'-'+mEnd);
   } else if(p==='anio'){
-    document.getElementById('rent-desde').value=y+'-01';
-    document.getElementById('rent-hasta').value=y+'-12';
+    setRentDesde(y+'-01');
+    setRentHasta(y+'-12');
   }
   if(p!=='custom') cargarRentabilidad();
 }
 
 async function cargarRentabilidad(){
-  var desde=document.getElementById('rent-desde').value;
-  var hasta=document.getElementById('rent-hasta').value;
+  var desde=getRentDesde();
+  var hasta=getRentHasta();
   var d=desde?desde.replace('-','/'):'';
   var h=hasta?hasta.replace('-','/'):'';
   var { data: r } = await supabase.rpc('fac_reporte_rentabilidad', { p_desde:d, p_hasta:h });
@@ -2736,8 +2783,8 @@ function exportarFacturasMasivo(){
    REPORTE RENTABILIDAD PDF
 ───────────────────────────────────────────────── */
 async function generarReportePDF(){
-  var desde=document.getElementById('rent-desde')?document.getElementById('rent-desde').value:'';
-  var hasta=document.getElementById('rent-hasta')?document.getElementById('rent-hasta').value:'';
+  var desde=document.getElementById('rent-desde-mes')?getRentDesde():'';
+  var hasta=document.getElementById('rent-hasta-mes')?getRentHasta():'';
   var d=desde?desde.replace('-','/'):'';
   var h=hasta?hasta.replace('-','/'):'';
 
