@@ -141,7 +141,27 @@ var I18N = {
     msg_desc_required:'La descripción es obligatoria.', msg_price_gt0:'El precio debe ser mayor a 0.',
     msg_add_item_first:'Agrega al menos un ítem con nombre, cantidad y precio.', msg_select_client_first:'Selecciona un cliente primero.',
     errors_word:'error(es). Ver consola.', invoice_generated:'factura', invoices_generated:'facturas', generated_ok:'generada', generated_ok_pl:'generadas', correctly_word:'correctamente',
-    downloading_x_of_y:'Descargando {a} de {b}…'
+    downloading_x_of_y:'Descargando {a} de {b}…',
+    modal_edit_client:'Editar cliente', modal_edit_service:'Editar servicio', write_manually:'Escribir manualmente…',
+    current_month_label:'Mes actual', config_saved:'Configuración guardada.',
+    renew_fixed_title:'Renovar facturas fijas', renew_fixed_msg:'Se generará una factura del mes actual para cada cliente con tipo "Fija". Los que ya tengan factura este mes serán omitidos. ¿Continuar?',
+    service_name_ph:'Nombre del servicio',
+    pdf_invoice_of_sale:'Factura de Venta', pdf_invoice_datetime:'Fecha y hora Factura', pdf_generation:'Generación',
+    pdf_expedition:'Expedición', pdf_due:'Vencimiento', pdf_sirs:'Señores', pdf_phone_label:'Teléfono',
+    pdf_address_label:'Dirección', pdf_city_label:'Ciudad', pdf_item:'Ítem', pdf_description:'Descripción',
+    pdf_quantity:'Cantidad', pdf_total_value:'Vr. Total', pdf_total_items:'Total items:', pdf_gross_total:'Total Bruto',
+    pdf_total_pay:'Total a Pagar', pdf_observations:'Observaciones:', pdf_generated_with:'Generado con Skripto Apps',
+    invalid_logo:'Logo no válido para PDF',
+    pdf_rep_footer_brand:'Skripto Apps · ', pdf_rep_invoicing_system:'Sistema de Facturación', pdf_rep_page:'Página', pdf_rep_of:'de',
+    pdf_rep_title:'REPORTE DE RENTABILIDAD', pdf_rep_all_word:'Todo', pdf_rep_to_word:'a',
+    pdf_rep_total_billed:'Total Facturado', pdf_rep_invoices_suffix:'facturas', pdf_rep_total_expenses:'Total Gastos',
+    pdf_rep_net_profit:'Utilidad Neta', pdf_rep_positive:'Positiva', pdf_rep_negative:'Negativa',
+    pdf_rep_margin:'Margen', pdf_rep_over_income:'sobre ingresos',
+    pdf_rep_income_by_service:'Ingresos por Servicio', pdf_rep_th_service:'Servicio', pdf_rep_th_qty:'Cant.', pdf_rep_th_total:'Total', pdf_rep_total_word:'TOTAL',
+    pdf_rep_top_clients:'Top Clientes', pdf_rep_th_client:'Cliente', pdf_rep_th_invoices:'Facturas',
+    pdf_rep_expenses_by_cat:'Gastos por Categoría', pdf_rep_th_category:'Categoría',
+    pdf_rep_monthly_flow:'Flujo Mensual', pdf_rep_th_month:'Mes', pdf_rep_th_billed:'Facturado', pdf_rep_th_expenses:'Gastos', pdf_rep_th_profit:'Utilidad',
+    pdf_rep_invoice_detail:'Detalle de Facturas', pdf_rep_th_id:'#', pdf_rep_th_date:'Fecha', pdf_rep_paid_word:'Pagada', pdf_rep_pending_word:'Pendiente', pdf_rep_th_status:'Estado'
   },
   en: {
     app_title:'Invoicing', app_sub:'Service invoicing system',
@@ -253,7 +273,27 @@ var I18N = {
     msg_desc_required:'Description is required.', msg_price_gt0:'Price must be greater than 0.',
     msg_add_item_first:'Add at least one item with name, quantity and price.', msg_select_client_first:'Select a client first.',
     errors_word:'error(s). Check console.', invoice_generated:'invoice', invoices_generated:'invoices', generated_ok:'generated', generated_ok_pl:'generated', correctly_word:'successfully',
-    downloading_x_of_y:'Downloading {a} of {b}…'
+    downloading_x_of_y:'Downloading {a} of {b}…',
+    modal_edit_client:'Edit client', modal_edit_service:'Edit service', write_manually:'Write manually…',
+    current_month_label:'Current month', config_saved:'Settings saved.',
+    renew_fixed_title:'Renew fixed invoices', renew_fixed_msg:'An invoice for the current month will be generated for each client with type "Fixed". Those that already have an invoice this month will be skipped. Continue?',
+    service_name_ph:'Service name',
+    pdf_invoice_of_sale:'Sales Invoice', pdf_invoice_datetime:'Invoice Date and Time', pdf_generation:'Generation',
+    pdf_expedition:'Issuance', pdf_due:'Due date', pdf_sirs:'Bill To', pdf_phone_label:'Phone',
+    pdf_address_label:'Address', pdf_city_label:'City', pdf_item:'Item', pdf_description:'Description',
+    pdf_quantity:'Quantity', pdf_total_value:'Total Val.', pdf_total_items:'Total items:', pdf_gross_total:'Gross Total',
+    pdf_total_pay:'Total Due', pdf_observations:'Observations:', pdf_generated_with:'Generated with Skripto Apps',
+    invalid_logo:'Invalid logo for PDF',
+    pdf_rep_footer_brand:'Skripto Apps · ', pdf_rep_invoicing_system:'Invoicing System', pdf_rep_page:'Page', pdf_rep_of:'of',
+    pdf_rep_title:'PROFITABILITY REPORT', pdf_rep_all_word:'All', pdf_rep_to_word:'to',
+    pdf_rep_total_billed:'Total Billed', pdf_rep_invoices_suffix:'invoices', pdf_rep_total_expenses:'Total Expenses',
+    pdf_rep_net_profit:'Net Profit', pdf_rep_positive:'Positive', pdf_rep_negative:'Negative',
+    pdf_rep_margin:'Margin', pdf_rep_over_income:'over income',
+    pdf_rep_income_by_service:'Income by Service', pdf_rep_th_service:'Service', pdf_rep_th_qty:'Qty.', pdf_rep_th_total:'Total', pdf_rep_total_word:'TOTAL',
+    pdf_rep_top_clients:'Top Clients', pdf_rep_th_client:'Client', pdf_rep_th_invoices:'Invoices',
+    pdf_rep_expenses_by_cat:'Expenses by Category', pdf_rep_th_category:'Category',
+    pdf_rep_monthly_flow:'Monthly Flow', pdf_rep_th_month:'Month', pdf_rep_th_billed:'Billed', pdf_rep_th_expenses:'Expenses', pdf_rep_th_profit:'Profit',
+    pdf_rep_invoice_detail:'Invoice Detail', pdf_rep_th_id:'#', pdf_rep_th_date:'Date', pdf_rep_paid_word:'Paid', pdf_rep_pending_word:'Pending', pdf_rep_th_status:'Status'
   }
 };
 var LANG = localStorage.getItem('skripto_lang') || 'es';
@@ -1542,7 +1582,7 @@ async function cargarDashboard(){
   if(!r) return;
 
   var mesLbl=document.getElementById('dash-periodo-label');
-  mesLbl.textContent='Mes actual · '+(new Date()).toLocaleDateString('es-CO',{month:'long',year:'numeric'});
+  mesLbl.textContent=t('current_month_label')+' · '+(new Date()).toLocaleDateString(LANG==='en'?'en-US':'es-CO',{month:'long',year:'numeric'});
   document.getElementById('kpi-fac').textContent=fmt(r.totalFacturado);
   document.getElementById('kpi-fac-sub').textContent=r.totalFacturas+' factura'+(r.totalFacturas!==1?'s':'');
   document.getElementById('kpi-gas').textContent=fmt(r.totalGastos);
@@ -1838,9 +1878,9 @@ function agregarItemNF(){
   }).join('');
   div.innerHTML=
     '<div><select class="nf-svc-sel" onchange="onSvcSel(\''+id+'\')" style="width:100%">'+
-      '<option value="">Escribir manualmente…</option>'+opts+
+      '<option value="">'+t('write_manually')+'</option>'+opts+
     '</select>'+
-    '<input type="text" class="nf-item-nombre" placeholder="Nombre del servicio" style="margin-top:6px;display:none" oninput="recalcularNF()"></div>'+
+    '<input type="text" class="nf-item-nombre" placeholder="'+t('service_name_ph')+'" style="margin-top:6px;display:none" oninput="recalcularNF()"></div>'+
     '<input type="number" class="nf-item-cant" value="1" min="0.001" step="0.001" inputmode="decimal" oninput="recalcularNF()" style="width:100%">'+
     '<input type="number" class="nf-item-precio" min="0" step="1000" inputmode="numeric" placeholder="$0" oninput="recalcularNF()" style="width:100%">'+
     '<div class="item-subtotal" id="nf-sub-'+id+'">$0</div>'+
@@ -1860,9 +1900,9 @@ function agregarItemNFConServicio(svc){
   }).join('');
   div.innerHTML=
     '<div><select class="nf-svc-sel" onchange="onSvcSel(\''+id+'\')" style="width:100%">'+
-      '<option value="">Escribir manualmente…</option>'+opts+
+      '<option value="">'+t('write_manually')+'</option>'+opts+
     '</select>'+
-    '<input type="text" class="nf-item-nombre" placeholder="Nombre del servicio" style="margin-top:6px;display:none" oninput="recalcularNF()"></div>'+
+    '<input type="text" class="nf-item-nombre" placeholder="'+t('service_name_ph')+'" style="margin-top:6px;display:none" oninput="recalcularNF()"></div>'+
     '<input type="number" class="nf-item-cant" value="1" min="0.001" step="0.001" inputmode="decimal" oninput="recalcularNF()" style="width:100%">'+
     '<input type="number" class="nf-item-precio" value="'+svc.precio+'" min="0" step="1000" inputmode="numeric" oninput="recalcularNF()" style="width:100%">'+
     '<div class="item-subtotal" id="nf-sub-'+id+'">'+ fmt(svc.precio)+'</div>'+
@@ -2130,7 +2170,7 @@ function _renderServiciosEnModal(seleccionados){
 }
 
 async function abrirModalNuevoCliente(){
-  document.getElementById('mcli-title').textContent='Nuevo cliente';
+  document.getElementById('mcli-title').textContent=t('new_client_title');
   document.getElementById('mcli-id').value='';
   ['mcli-nombre','mcli-nitcc','mcli-tel','mcli-email','mcli-dir','mcli-ciudad','mcli-notas']
     .forEach(function(id){document.getElementById(id).value='';});
@@ -2145,7 +2185,7 @@ async function abrirModalNuevoCliente(){
 async function editarCliente(id){
   var c=_clientes.find(function(x){return x.id===id;});
   if(!c)return;
-  document.getElementById('mcli-title').textContent='Editar cliente';
+  document.getElementById('mcli-title').textContent=t('modal_edit_client');
   document.getElementById('mcli-id').value=c.id;
   document.getElementById('mcli-nombre').value=c.nombre;
   document.getElementById('mcli-nitcc').value=c.nitcc||'';
@@ -2228,7 +2268,7 @@ function renderServicios(lista){
 }
 
 function abrirModalNuevoServicio(){
-  document.getElementById('msvc-title').textContent='Nuevo servicio';
+  document.getElementById('msvc-title').textContent=t('new_service_title');
   document.getElementById('msvc-id').value='';
   ['msvc-nombre','msvc-desc','msvc-precio','msvc-cat'].forEach(function(id){document.getElementById(id).value='';});
   document.getElementById('msvc-unidad').value='und';
@@ -2239,7 +2279,7 @@ function abrirModalNuevoServicio(){
 function editarServicio(id){
   var s=_servicios.find(function(x){return x.id===id;});
   if(!s)return;
-  document.getElementById('msvc-title').textContent='Editar servicio';
+  document.getElementById('msvc-title').textContent=t('modal_edit_service');
   document.getElementById('msvc-id').value=s.id;
   document.getElementById('msvc-nombre').value=s.nombre;
   document.getElementById('msvc-desc').value=s.descripcion||'';
@@ -2318,7 +2358,7 @@ function renderGastos(lista){
 }
 
 function abrirModalNuevoGasto(){
-  document.getElementById('mgas-title').textContent='Registrar gasto';
+  document.getElementById('mgas-title').textContent=t('new_expense_title');
   document.getElementById('mgas-id').value='';
   document.getElementById('mgas-fecha').value=fechaHoy();
   ['mgas-cat','mgas-desc','mgas-monto','mgas-notas'].forEach(function(id){document.getElementById(id).value='';});
@@ -2494,7 +2534,7 @@ async function guardarConfiguracion(){
     observacionesDefault: nuevosDatos.p_observaciones_default
   };
 
-  showAlert('alert-config',res.mensaje,'ok');
+  showAlert('alert-config',t('config_saved'),'ok');
 }
 
 /* ─────────────────────────────────────────────────
@@ -2531,14 +2571,14 @@ async function pdfFacturaObj(f){
       var imgFmt = _config.logoBase64.indexOf('image/png')>-1 ? 'PNG' : 'JPEG';
       doc.addImage(_config.logoBase64, imgFmt, MX, y, 24, 24);
       textX = MX + 30;
-    }catch(e){ console.error('Logo no válido para PDF', e); }
+    }catch(e){ console.error(t('invalid_logo'), e); }
   }
   doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.setTextColor.apply(doc,NEGRO);
   doc.text((_config.nombreEmpresa || (SESSION.nombre||SESSION.usuario)).toUpperCase(), textX, y+5);
   doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor.apply(doc,GRIS);
   var ly = y+11;
   if(_config.nit){ doc.text('NIT '+_config.nit, textX, ly); ly+=4.5; }
-  if(_config.telefono){ doc.text('Tel: '+_config.telefono, textX, ly); ly+=4.5; }
+  if(_config.telefono){ doc.text(t('pdf_phone_label')+': '+_config.telefono, textX, ly); ly+=4.5; }
   if(_config.ciudad){ doc.text(_config.ciudad, textX, ly); ly+=4.5; }
   if(_config.email){ doc.text(_config.email, textX, ly); ly+=4.5; }
 
@@ -2547,9 +2587,9 @@ async function pdfFacturaObj(f){
   doc.setDrawColor(0,0,0); doc.setLineWidth(0.4);
   doc.rect(boxX, y, boxW, 9);
   doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor.apply(doc,NEGRO);
-  doc.text('Factura de Venta', boxX+boxW/2, y+6, {align:'center'});
+  doc.text(t('pdf_invoice_of_sale'), boxX+boxW/2, y+6, {align:'center'});
   doc.setFont('helvetica','bold'); doc.setFontSize(9);
-  doc.text('N° '+f.numero, boxX+boxW/2, y+9+6, {align:'center'});
+  doc.text(t('number_word')+' '+f.numero, boxX+boxW/2, y+9+6, {align:'center'});
 
   // ── Caja "Fecha y hora Factura" — justo debajo del número ──
   var fy = y+9+10;
@@ -2559,11 +2599,11 @@ async function pdfFacturaObj(f){
     tableWidth: boxW,
     theme: 'grid',
     styles: { fontSize:8, cellPadding:1.8, textColor:NEGRO, lineColor:[0,0,0], lineWidth:0.3, valign:'middle' },
-    head: [[{ content:'Fecha y hora Factura', colSpan:2, styles:{ halign:'center', fontStyle:'bold', fontSize:8.5, fillColor:[255,255,255] } }]],
+    head: [[{ content:t('pdf_invoice_datetime'), colSpan:2, styles:{ halign:'center', fontStyle:'bold', fontSize:8.5, fillColor:[255,255,255] } }]],
     body: [
-      ['Generación', f.fechaSolo||'—'],
-      ['Expedición', f.fechaSolo||'—'],
-      ['Vencimiento', formatFechaCorta(f.fechaVencimiento)]
+      [t('pdf_generation'), f.fechaSolo||'—'],
+      [t('pdf_expedition'), f.fechaSolo||'—'],
+      [t('pdf_due'), formatFechaCorta(f.fechaVencimiento)]
     ],
     columnStyles: { 0:{fontStyle:'bold', cellWidth: boxW*0.45}, 1:{cellWidth: boxW*0.55} }
   });
@@ -2576,7 +2616,7 @@ async function pdfFacturaObj(f){
   doc.setLineWidth(0.3);
   doc.rect(cx, y, cw, ch);
   doc.setFont('helvetica','bold'); doc.setFontSize(8.5);
-  doc.text('Señores', cx+2, y+5.5);
+  doc.text(t('pdf_sirs'), cx+2, y+5.5);
   doc.setFont('helvetica','normal');
   doc.text(f.clienteNombre||'', cx+22, y+5.5);
   y+=ch;
@@ -2585,15 +2625,15 @@ async function pdfFacturaObj(f){
   doc.rect(cx+cw*0.5, y, cw*0.5, ch);
   doc.setFont('helvetica','bold'); doc.text('NIT/CC', cx+2, y+5.5);
   doc.setFont('helvetica','normal'); doc.text(f.clienteNitcc||'', cx+22, y+5.5);
-  doc.setFont('helvetica','bold'); doc.text('Teléfono', cx+cw*0.5+2, y+5.5);
+  doc.setFont('helvetica','bold'); doc.text(t('pdf_phone_label'), cx+cw*0.5+2, y+5.5);
   doc.setFont('helvetica','normal'); doc.text(f.clienteTelefono||'', cx+cw*0.5+24, y+5.5);
   y+=ch;
 
   doc.rect(cx, y, cw*0.5, ch);
   doc.rect(cx+cw*0.5, y, cw*0.5, ch);
-  doc.setFont('helvetica','bold'); doc.text('Dirección', cx+2, y+5.5);
+  doc.setFont('helvetica','bold'); doc.text(t('pdf_address_label'), cx+2, y+5.5);
   doc.setFont('helvetica','normal'); doc.text(f.clienteDireccion||'', cx+24, y+5.5);
-  doc.setFont('helvetica','bold'); doc.text('Ciudad', cx+cw*0.5+2, y+5.5);
+  doc.setFont('helvetica','bold'); doc.text(t('pdf_city_label'), cx+cw*0.5+2, y+5.5);
   doc.setFont('helvetica','normal'); doc.text(f.clienteCiudad||'', cx+cw*0.5+20, y+5.5);
   y+=ch+8;
 
@@ -2603,7 +2643,7 @@ async function pdfFacturaObj(f){
   });
   doc.autoTable({
     startY:y,
-    head:[['Ítem','Descripción','Cantidad','Vr. Total']],
+    head:[[t('pdf_item'),t('pdf_description'),t('pdf_quantity'),t('pdf_total_value')]],
     body:bodyItems,
     theme:'grid',
     styles:{fontSize:9,cellPadding:3,textColor:NEGRO,lineColor:[0,0,0],lineWidth:0.3},
@@ -2615,12 +2655,12 @@ async function pdfFacturaObj(f){
 
   // ── Total de ítems (izq) + Totales (der) ────────────────────
   doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor.apply(doc,NEGRO);
-  doc.text('Total items: '+(f.items||[]).length, MX, y+4);
+  doc.text(t('pdf_total_items')+' '+(f.items||[]).length, MX, y+4);
 
   var tw=70, tx=W-MX-tw;
-  var filasTot=[['Total Bruto', fmt(f.subtotal)]];
-  if(f.ivaPorc>0) filasTot.push(['IVA '+f.ivaPorc+'%', fmt(f.ivaValor)]);
-  filasTot.push(['Total a Pagar', fmt(f.total)]);
+  var filasTot=[[t('pdf_gross_total'), fmt(f.subtotal)]];
+  if(f.ivaPorc>0) filasTot.push([t('th_iva')+' '+f.ivaPorc+'%', fmt(f.ivaValor)]);
+  filasTot.push([t('pdf_total_pay'), fmt(f.total)]);
   filasTot.forEach(function(r,i){
     var ry=y+i*7;
     doc.rect(tx, ry, tw*0.55, 7);
@@ -2635,7 +2675,7 @@ async function pdfFacturaObj(f){
   var obs = f.notas || _config.observacionesDefault || '';
   if(obs){
     doc.setFont('helvetica','bold'); doc.setFontSize(8.5); doc.setTextColor.apply(doc,NEGRO);
-    doc.text('Observaciones:', MX, y);
+    doc.text(t('pdf_observations'), MX, y);
     doc.setFont('helvetica','normal');
     var obsLines = doc.splitTextToSize(obs, W-MX*2-32);
     doc.text(obsLines, MX+32, y);
@@ -2644,7 +2684,7 @@ async function pdfFacturaObj(f){
   // ── Pie de página ─────────────────────────────────────────────
   doc.setDrawColor(220,220,220); doc.setLineWidth(0.2); doc.line(MX,H-10,W-MX,H-10);
   doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(150,150,150);
-  doc.text('Generado con Skripto Apps',W/2,H-6,{align:'center'});
+  doc.text(t('pdf_generated_with'),W/2,H-6,{align:'center'});
 
   doc.save('Factura_'+f.numero+'_'+f.clienteNombre.replace(/\s+/g,'_').substring(0,20)+'.pdf');
   toast('📄 '+t('pdf_downloaded'),'ok');
@@ -2697,7 +2737,7 @@ async function generarReportePDF(){
   var d=desde?desde.replace('-','/'):'';
   var h=hasta?hasta.replace('-','/'):'';
 
-  toast('Generando PDF…','ok');
+  toast(t('generating_pdf'),'ok');
   var { data: r } = await supabase.rpc('fac_reporte_rentabilidad', { p_desde:d, p_hasta:h });
   if(!r){ toast(t('no_data_period2'),'warn'); return; }
 
@@ -2710,14 +2750,14 @@ async function generarReportePDF(){
   var GRIS1=[28,27,24], GRIS2=[92,90,85], GRIS3=[156,154,148], BORDE=[226,224,218];
   var AMBAR=[186,117,23];
   var empresa=SESSION.nombre||SESSION.usuario;
-  var fechaGen=new Date().toLocaleDateString('es-CO',{day:'2-digit',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  var fechaGen=new Date().toLocaleDateString(LANG==='en'?'en-US':'es-CO',{day:'2-digit',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
 
   function pie(){
     var pg=doc.internal.getCurrentPageInfo().pageNumber, tot=doc.internal.getNumberOfPages();
     doc.setDrawColor.apply(doc,BORDE); doc.setLineWidth(0.3); doc.line(MX,H-10,W-MX,H-10);
     doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor.apply(doc,GRIS3);
-    doc.text('Skripto Apps · '+empresa+' · Sistema de Facturación',MX,H-6);
-    doc.text('Página '+pg+' de '+tot,W-MX,H-6,{align:'right'});
+    doc.text(t('pdf_rep_footer_brand')+empresa+' · '+t('pdf_rep_invoicing_system'),MX,H-6);
+    doc.text(t('pdf_rep_page')+' '+pg+' '+t('pdf_rep_of')+' '+tot,W-MX,H-6,{align:'right'});
   }
   function checkY(esp){ if(y+esp>H-18){ pie(); doc.addPage(); y=14; } }
   function seccion(titulo,color){
@@ -2744,25 +2784,25 @@ async function generarReportePDF(){
 
   doc.setFillColor.apply(doc,AZUL); doc.rect(0,0,W,28,'F');
   doc.setFont('helvetica','bold'); doc.setFontSize(18); doc.setTextColor(255,255,255);
-  doc.text('REPORTE DE RENTABILIDAD',MX,14);
+  doc.text(t('pdf_rep_title'),MX,14);
   doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(200,220,255);
   doc.text(empresa+' · '+fechaGen,MX,21);
   doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(255,255,255);
-  doc.text((d||'Todo')+(h&&h!==d?' a '+h:''),W-MX,14,{align:'right'});
+  doc.text((d||t('pdf_rep_all_word'))+(h&&h!==d?' '+t('pdf_rep_to_word')+' '+h:''),W-MX,14,{align:'right'});
   y=34;
 
   var kW=(W-MX*2-9)/4, kH=26, pos=r.utilidad>=0;
-  kpiCard(MX,         y,kW,kH,'Total Facturado',fmt(r.totalFacturado),r.totalFacturas+' facturas',AZUL,AZUL);
-  kpiCard(MX+kW+3,    y,kW,kH,'Total Gastos',fmt(r.totalGastos),'',GRIS1,GRIS3);
-  kpiCard(MX+(kW+3)*2,y,kW,kH,'Utilidad Neta',fmt(r.utilidad),pos?'Positiva':'Negativa',pos?VERDE:ROJO,pos?VERDE:ROJO);
-  kpiCard(MX+(kW+3)*3,y,kW,kH,'Margen',r.margen.toFixed(1)+'%','sobre ingresos',AMBAR,AMBAR);
+  kpiCard(MX,         y,kW,kH,t('pdf_rep_total_billed'),fmt(r.totalFacturado),r.totalFacturas+' '+t('pdf_rep_invoices_suffix'),AZUL,AZUL);
+  kpiCard(MX+kW+3,    y,kW,kH,t('pdf_rep_total_expenses'),fmt(r.totalGastos),'',GRIS1,GRIS3);
+  kpiCard(MX+(kW+3)*2,y,kW,kH,t('pdf_rep_net_profit'),fmt(r.utilidad),pos?t('pdf_rep_positive'):t('pdf_rep_negative'),pos?VERDE:ROJO,pos?VERDE:ROJO);
+  kpiCard(MX+(kW+3)*3,y,kW,kH,t('pdf_rep_margin'),r.margen.toFixed(1)+'%',t('pdf_rep_over_income'),AMBAR,AMBAR);
   y+=kH+10;
 
   if(r.porServicio&&r.porServicio.length){
-    seccion('Ingresos por Servicio',AZUL); y+=2;
+    seccion(t('pdf_rep_income_by_service'),AZUL); y+=2;
     var bSvc=r.porServicio.map(function(s){return[s.nombre,String(Math.round(s.cantidad)),fmt(s.total)];});
-    bSvc.push(['TOTAL','',fmt(r.totalFacturado)]);
-    doc.autoTable({startY:y,head:[['Servicio','Cant.','Total']],body:bSvc,theme:'plain',
+    bSvc.push([t('pdf_rep_total_word'),'',fmt(r.totalFacturado)]);
+    doc.autoTable({startY:y,head:[[t('pdf_rep_th_service'),t('pdf_rep_th_qty'),t('pdf_rep_th_total')]],body:bSvc,theme:'plain',
       styles:{fontSize:8.5,cellPadding:3,textColor:GRIS2,lineColor:BORDE,lineWidth:0.3},
       headStyles:{fillColor:AZUL_L,textColor:AZUL,fontStyle:'bold',fontSize:7.5},
       columnStyles:{1:{halign:'right',cellWidth:20},2:{halign:'right',cellWidth:35,fontStyle:'bold'}},
@@ -2773,9 +2813,9 @@ async function generarReportePDF(){
 
   if(r.porCliente&&r.porCliente.length){
     checkY(30);
-    seccion('Top Clientes',VERDE); y+=2;
+    seccion(t('pdf_rep_top_clients'),VERDE); y+=2;
     var bCli=r.porCliente.map(function(c){return[c.nombre,String(c.facturas),fmt(c.total)];});
-    doc.autoTable({startY:y,head:[['Cliente','Facturas','Total']],body:bCli,theme:'plain',
+    doc.autoTable({startY:y,head:[[t('pdf_rep_th_client'),t('pdf_rep_th_invoices'),t('pdf_rep_th_total')]],body:bCli,theme:'plain',
       styles:{fontSize:8.5,cellPadding:3,textColor:GRIS2,lineColor:BORDE,lineWidth:0.3},
       headStyles:{fillColor:VERDE_L,textColor:VERDE,fontStyle:'bold',fontSize:7.5},
       columnStyles:{1:{halign:'center',cellWidth:20},2:{halign:'right',cellWidth:35,fontStyle:'bold'}},
@@ -2785,10 +2825,10 @@ async function generarReportePDF(){
 
   if(r.porCatGasto&&r.porCatGasto.length){
     checkY(30);
-    seccion('Gastos por Categoría',ROJO); y+=2;
+    seccion(t('pdf_rep_expenses_by_cat'),ROJO); y+=2;
     var bGas=r.porCatGasto.map(function(g){return[g.cat,fmt(g.total)];});
-    bGas.push(['TOTAL',fmt(r.totalGastos)]);
-    doc.autoTable({startY:y,head:[['Categoría','Total']],body:bGas,theme:'plain',
+    bGas.push([t('pdf_rep_total_word'),fmt(r.totalGastos)]);
+    doc.autoTable({startY:y,head:[[t('pdf_rep_th_category'),t('pdf_rep_th_total')]],body:bGas,theme:'plain',
       styles:{fontSize:8.5,cellPadding:3,textColor:GRIS2,lineColor:BORDE,lineWidth:0.3},
       headStyles:{fillColor:ROJO_L,textColor:ROJO,fontStyle:'bold',fontSize:7.5},
       columnStyles:{1:{halign:'right',cellWidth:40,fontStyle:'bold'}},
@@ -2799,14 +2839,14 @@ async function generarReportePDF(){
 
   if(r.flujoMensual&&r.flujoMensual.length){
     checkY(30);
-    seccion('Flujo Mensual',AMBAR); y+=2;
-    var meses=['','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    seccion(t('pdf_rep_monthly_flow'),AMBAR); y+=2;
+    var mesesKeys=['','mo1','mo2','mo3','mo4','mo5','mo6','mo7','mo8','mo9','mo10','mo11','mo12'];
     var bFluj=r.flujoMensual.map(function(m){
-      var p=m.mes.split('/'); var lbl=(meses[parseInt(p[1])]||p[1])+' '+(p[0]||'');
+      var p=m.mes.split('/'); var lbl=(t(mesesKeys[parseInt(p[1])])||p[1])+' '+(p[0]||'');
       var pos2=m.utilidad>=0;
       return[lbl,fmt(m.ingresos),fmt(m.gastos),(pos2?'+':'')+fmt(m.utilidad)];
     });
-    doc.autoTable({startY:y,head:[['Mes','Facturado','Gastos','Utilidad']],body:bFluj,theme:'plain',
+    doc.autoTable({startY:y,head:[[t('pdf_rep_th_month'),t('pdf_rep_th_billed'),t('pdf_rep_th_expenses'),t('pdf_rep_th_profit')]],body:bFluj,theme:'plain',
       styles:{fontSize:8.5,cellPadding:3,textColor:GRIS2,lineColor:BORDE,lineWidth:0.3},
       headStyles:{fillColor:[254,243,199],textColor:AMBAR,fontStyle:'bold',fontSize:7.5},
       columnStyles:{1:{halign:'right',cellWidth:38},2:{halign:'right',cellWidth:38},3:{halign:'right',cellWidth:38,fontStyle:'bold'}},
@@ -2822,13 +2862,13 @@ async function generarReportePDF(){
 
   if(r.facturas&&r.facturas.length){
     checkY(30);
-    seccion('Detalle de Facturas',AZUL); y+=2;
+    seccion(t('pdf_rep_invoice_detail'),AZUL); y+=2;
     var bFac=r.facturas.map(function(f){
-      return[f.id,f.fechaSolo,f.clienteNombre.substring(0,22),fmt(f.total),f.estado==='pagada'?'Pagada':'Pendiente'];
+      return[f.id,f.fechaSolo,f.clienteNombre.substring(0,22),fmt(f.total),f.estado==='pagada'?t('pdf_rep_paid_word'):t('pdf_rep_pending_word')];
     });
     var sumFac=r.facturas.reduce(function(s,f){return s+f.total;},0);
-    bFac.push(['','','TOTAL',fmt(sumFac),'']);
-    doc.autoTable({startY:y,head:[['#','Fecha','Cliente','Total','Estado']],body:bFac,theme:'plain',
+    bFac.push(['','',t('pdf_rep_total_word'),fmt(sumFac),'']);
+    doc.autoTable({startY:y,head:[[t('pdf_rep_th_id'),t('pdf_rep_th_date'),t('pdf_rep_th_client'),t('pdf_rep_th_total'),t('pdf_rep_th_status')]],body:bFac,theme:'plain',
       styles:{fontSize:8,cellPadding:3,textColor:GRIS2,lineColor:BORDE,lineWidth:0.3},
       headStyles:{fillColor:AZUL_L,textColor:AZUL,fontStyle:'bold',fontSize:7.5},
       columnStyles:{0:{cellWidth:22,textColor:GRIS3,fontSize:7},1:{cellWidth:24},3:{halign:'right',cellWidth:30,fontStyle:'bold'},4:{halign:'center',cellWidth:24}},
@@ -2854,8 +2894,8 @@ async function generarReportePDF(){
 ───────────────────────────────────────────────── */
 async function renovarFacturasManuales(){
   confirmar(
-    'Renovar facturas fijas',
-    'Se generará una factura del mes actual para cada cliente con tipo "Fija". Los que ya tengan factura este mes serán omitidos. ¿Continuar?',
+    t('renew_fixed_title'),
+    t('renew_fixed_msg'),
     async function(){
       var btn=document.getElementById('btn-renovar');
       btn.style.opacity='0.6'; btn.style.pointerEvents='none';
