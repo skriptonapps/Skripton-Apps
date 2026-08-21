@@ -616,7 +616,46 @@ var I18N = {
     cancel:'Cancelar', save_changes:'Guardar cambios', confirm_action:'¿Confirmar acción?', delete:'Sí, eliminar',
     del_account_title:'Eliminar mi cuenta', del_account_p1:'Esta acción cerrará tu sesión y eliminará tu acceso.',
     del_account_p2:'Tus datos se conservan por 30 días.', del_account_confirm:'Confirma con tu contraseña actual:',
-    current_pwd:'Tu contraseña actual'
+    current_pwd:'Tu contraseña actual',
+    mp_calc_unit_val:'Valor unitario calculado', mp_curr_stock:'Stock actual', mp_curr_cpp:'CPP actual', mp_unit_label:'Unidad',
+    unit_und:'Unidad (und)', unit_kg:'Kilogramo (kg)', unit_g:'Gramo (g)', unit_l:'Litro (l)', unit_ml:'Mililitro (ml)', unit_m:'Metro (m)',
+    th_num:'#', th_date:'Fecha', th_type:'Tipo', th_qty:'Cant.', th_unit_col:'Und', th_unit_val:'V. Unit.', th_total_val:'V. Total',
+    prod_th_id:'ID', prod_th_date:'Fecha', prod_th_final:'Producto Final', prod_th_units:'Unidades', prod_th_lot_cost:'Costo Lote', prod_th_unit_cost:'Costo/und',
+    prod_cost_breakdown:'Desglose de Costos', prod_raw_mat_short:'Materia Prima', prod_fixed_short:'Costos Fijos', prod_labor_short:'Mano de Obra',
+    prod_lot_total:'Costo Total del Lote', prod_formula_cf:'Costo mensual ÷ horas/mes × horas de este lote', prod_formula_mo:'Salario mensual ÷ horas/mes × horas en este lote', formula_label:'Fórmula:',
+    sales_util_preview:'Costo total', sales_income:'Ingreso total', sales_real_margin:'Margen real', sales_gross_profit:'Utilidad Bruta',
+    sales_filter_prod:'Producto', th_sale_id:'ID', th_sale_date:'Fecha', th_sale_prod:'Producto', th_unit_cost:'C.Unit.', th_price:'Precio', th_income:'Ingreso', th_margin:'Margen', th_profit:'Utilidad', th_notes:'Notas',
+    ph_supply_name:'Ej: Harina, Azúcar…', ph_final_product:'Nombre del producto a fabricar', ph_concept:'Arriendo, Electricidad…',
+    ph_monthly_cost:'¿Cuánto pagas al mes?', ph_role_name:'Ej: Panadero', ph_monthly_salary:'Salario + prestaciones',
+    ph_client_order:'Cliente, pedido…', ph_manual_price:'$0.00',
+    modal_del_movement:'Eliminar movimiento', modal_del_sale:'Eliminar venta', modal_del_prod:'Eliminar producción',
+    edit_purchase:'Editar compra', edit_sale:'Editar venta', supply_label:'Insumo:', product_label:'Producto:',
+    qty_bought:'Cantidad comprada', total_invoice_val:'Valor total de la factura', qty_sold:'Cantidad vendida', unit_sale_price:'Precio de venta unitario', notes:'Notas',
+    mo1:'Enero',mo2:'Febrero',mo3:'Marzo',mo4:'Abril',mo5:'Mayo',mo6:'Junio',mo7:'Julio',mo8:'Agosto',mo9:'Septiembre',mo10:'Octubre',mo11:'Noviembre',mo12:'Diciembre',
+    auto_margin:'Por margen %', manual_price:'Precio manual', preview:'Previsualizar', confirm:'Confirmar',
+    sales_no_stock_title:'No hay productos finales en inventario', sales_registered_title:'Ventas registradas',
+    th_income_col:'Ingresos', th_cost_col:'Costos', th_profit_col:'Utilidad', th_margin_col:'Margen',
+    reorder_bold:'Punto de reorden:', reorder_rest:'la cantidad mínima que quieres tener antes de que te avisemos.',
+    days_left_bold:'Días restantes:', days_left_rest:'se calcula solo con tu consumo real de los últimos 30 días — mientras más muevas el insumo, más precisa es la predicción.',
+    choose_option:'-- Elegir --', available_label:'Disponible:', rate_hour:'Tarifa/h:', batch_label:'Lote:', per_unit_label:'Por und:',
+    concept:'Concepto', monthly_cost:'Costo mensual ($)', monthly_cost_hint:'¿Cuánto pagas al mes?',
+    hours_month_use:'Horas uso/mes', hours_this_batch:'Horas este lote',
+    name_role:'Nombre / Cargo', monthly_salary:'Salario mensual ($)', monthly_salary_hint:'Salario + prestaciones',
+    work_hours_month:'Horas laborales/mes', work_hours_hint:'Estándar: 192 h/mes',
+    stock_available:'Stock disponible', units_to_sell:'unidades para vender', inv_value:'Valor en inventario', all_year:'Todo el año',
+    badge_below_reorder:'Bajo el punto de reorden', badge_running_out:'Se agota pronto', badge_ok:'OK', per_day:'/día', days_word:'días',
+    msg_del_access:'Acceso a Inventario eliminado. Tus datos se conservan.', msg_complete_fields:'Completa todos los campos.',
+    msg_wrong_credentials:'Correo o contraseña incorrectos.', msg_unexpected_error:'Error inesperado: ',
+    msg_enter_email_pwd:'Ingresa correo y contraseña.', msg_enter_email:'Ingresa tu correo electrónico.',
+    msg_min_pwd:'La contraseña debe tener al menos 6 caracteres.', msg_pwd_mismatch:'Las contraseñas no coinciden.',
+    msg_no_subscription:'Tu cuenta no tiene suscripción activa para Inventario.', msg_pwd_updated:'Contraseña actualizada. Ya puedes iniciar sesión.',
+    msg_account_created:'¡Cuenta creada! Ya tienes 3 días de prueba gratis — inicia sesión con tu correo.',
+    msg_recovery_sent:'Si ese correo está registrado, recibirás las instrucciones en unos minutos.',
+    msg_invalid_qty:'Cantidad inválida.', msg_error_prefix:'Error: ', msg_enter_supply_name:'Ingresa el nombre del insumo.',
+    msg_invalid_total:'Valor total inválido.', msg_enter_final_product:'Ingresa el nombre del producto final.',
+    msg_enter_units:'Ingresa las unidades a producir.', msg_calc_first:'Primero calcula el costo.',
+    msg_invalid_margin:'Margen inválido.', msg_invalid_price:'Precio inválido.', msg_preview_first:'Primero previsualiza la venta.',
+    msg_product_not_found:'Producto no encontrado.', msg_select_product:'Selecciona un producto.', msg_insufficient_stock:'Stock insuficiente. Disponible: '
   },
   en: {
     app_title:'Inventory', app_sub:'Cost management system',
@@ -665,7 +704,46 @@ var I18N = {
     cancel:'Cancel', save_changes:'Save changes', confirm_action:'Confirm action?', delete:'Yes, delete',
     del_account_title:'Delete my account', del_account_p1:'This action will close your session and remove your access.',
     del_account_p2:'Your data is kept for 30 days.', del_account_confirm:'Confirm with your current password:',
-    current_pwd:'Your current password'
+    current_pwd:'Your current password',
+    mp_calc_unit_val:'Calculated unit value', mp_curr_stock:'Current stock', mp_curr_cpp:'Current avg. cost', mp_unit_label:'Unit',
+    unit_und:'Unit (und)', unit_kg:'Kilogram (kg)', unit_g:'Gram (g)', unit_l:'Liter (l)', unit_ml:'Milliliter (ml)', unit_m:'Meter (m)',
+    th_num:'#', th_date:'Date', th_type:'Type', th_qty:'Qty.', th_unit_col:'Unit', th_unit_val:'Unit Val.', th_total_val:'Total Val.',
+    prod_th_id:'ID', prod_th_date:'Date', prod_th_final:'Final Product', prod_th_units:'Units', prod_th_lot_cost:'Batch Cost', prod_th_unit_cost:'Cost/unit',
+    prod_cost_breakdown:'Cost Breakdown', prod_raw_mat_short:'Raw Materials', prod_fixed_short:'Fixed Costs', prod_labor_short:'Labor',
+    prod_lot_total:'Total Batch Cost', prod_formula_cf:'Monthly cost ÷ hours/month × hours for this batch', prod_formula_mo:'Monthly salary ÷ hours/month × hours in this batch', formula_label:'Formula:',
+    sales_util_preview:'Total cost', sales_income:'Total income', sales_real_margin:'Real margin', sales_gross_profit:'Gross Profit',
+    sales_filter_prod:'Product', th_sale_id:'ID', th_sale_date:'Date', th_sale_prod:'Product', th_unit_cost:'Unit Cost', th_price:'Price', th_income:'Income', th_margin:'Margin', th_profit:'Profit', th_notes:'Notes',
+    ph_supply_name:'E.g: Flour, Sugar…', ph_final_product:'Name of the product to manufacture', ph_concept:'Rent, Electricity…',
+    ph_monthly_cost:'How much do you pay monthly?', ph_role_name:'E.g: Baker', ph_monthly_salary:'Salary + benefits',
+    ph_client_order:'Client, order…', ph_manual_price:'$0.00',
+    modal_del_movement:'Delete movement', modal_del_sale:'Delete sale', modal_del_prod:'Delete production',
+    edit_purchase:'Edit purchase', edit_sale:'Edit sale', supply_label:'Supply:', product_label:'Product:',
+    qty_bought:'Quantity purchased', total_invoice_val:'Total invoice value', qty_sold:'Quantity sold', unit_sale_price:'Unit sale price', notes:'Notes',
+    mo1:'January',mo2:'February',mo3:'March',mo4:'April',mo5:'May',mo6:'June',mo7:'July',mo8:'August',mo9:'September',mo10:'October',mo11:'November',mo12:'December',
+    auto_margin:'By margin %', manual_price:'Manual price', preview:'Preview', confirm:'Confirm',
+    sales_no_stock_title:'No finished products in inventory', sales_registered_title:'Recorded sales',
+    th_income_col:'Income', th_cost_col:'Costs', th_profit_col:'Profit', th_margin_col:'Margin',
+    reorder_bold:'Reorder point:', reorder_rest:'the minimum quantity you want before we notify you.',
+    days_left_bold:'Days remaining:', days_left_rest:'calculated only from your actual consumption over the last 30 days — the more you move the supply, the more accurate the prediction.',
+    choose_option:'-- Choose --', available_label:'Available:', rate_hour:'Rate/h:', batch_label:'Batch:', per_unit_label:'Per unit:',
+    concept:'Concept', monthly_cost:'Monthly cost ($)', monthly_cost_hint:'How much do you pay monthly?',
+    hours_month_use:'Hours used/month', hours_this_batch:'Hours for this batch',
+    name_role:'Name / Role', monthly_salary:'Monthly salary ($)', monthly_salary_hint:'Salary + benefits',
+    work_hours_month:'Work hours/month', work_hours_hint:'Standard: 192 h/month',
+    stock_available:'Available stock', units_to_sell:'units to sell', inv_value:'Inventory value', all_year:'Whole year',
+    badge_below_reorder:'Below reorder point', badge_running_out:'Running out soon', badge_ok:'OK', per_day:'/day', days_word:'days',
+    msg_del_access:'Access to Inventory removed. Your data is kept.', msg_complete_fields:'Fill in all fields.',
+    msg_wrong_credentials:'Incorrect email or password.', msg_unexpected_error:'Unexpected error: ',
+    msg_enter_email_pwd:'Enter email and password.', msg_enter_email:'Enter your email address.',
+    msg_min_pwd:'Password must be at least 6 characters.', msg_pwd_mismatch:'Passwords do not match.',
+    msg_no_subscription:'Your account has no active subscription for Inventory.', msg_pwd_updated:'Password updated. You can now sign in.',
+    msg_account_created:'Account created! You now have 3 free trial days — sign in with your email.',
+    msg_recovery_sent:'If that email is registered, you will receive instructions shortly.',
+    msg_invalid_qty:'Invalid quantity.', msg_error_prefix:'Error: ', msg_enter_supply_name:'Enter the supply name.',
+    msg_invalid_total:'Invalid total value.', msg_enter_final_product:'Enter the final product name.',
+    msg_enter_units:'Enter the units to produce.', msg_calc_first:'Calculate the cost first.',
+    msg_invalid_margin:'Invalid margin.', msg_invalid_price:'Invalid price.', msg_preview_first:'Preview the sale first.',
+    msg_product_not_found:'Product not found.', msg_select_product:'Select a product.', msg_insufficient_stock:'Insufficient stock. Available: '
   }
 };
 var LANG = localStorage.getItem('skripto_lang') || 'es';
@@ -864,8 +942,8 @@ function aplicarIdioma(){
       <div id="mod-mp" class="modulo">
         <div class="panel-header">
           <div class="panel-header-left">
-            <div class="panel-title" id="mp-panel-title">Entrada de insumo</div>
-            <div class="panel-sub" id="mp-panel-sub">Registra una compra de materia prima</div>
+            <div class="panel-title" id="mp-panel-title" data-i18n="mp_entry_title">Entrada de insumo</div>
+            <div class="panel-sub" id="mp-panel-sub" data-i18n="mp_entry_sub">Registra una compra de materia prima</div>
           </div>
         </div>
 
@@ -874,37 +952,37 @@ function aplicarIdioma(){
         <!-- MP: Entrada -->
         <div id="mpanel-entrada" class="panel active">
           <div class="card">
-            <div class="card-title">Registrar compra de insumo</div>
+            <div class="card-title" data-i18n="mp_card_title">Registrar compra de insumo</div>
             <div class="form-g">
-              <label>Nombre del insumo</label>
-              <input type="text" id="mp-nombre" list="mp-lista" oninput="onMpNombreInput()">
+              <label data-i18n="mp_ins_name">Nombre del insumo</label>
+              <input type="text" id="mp-nombre" list="mp-lista" oninput="onMpNombreInput()" data-i18n-ph="ph_supply_name">
               <datalist id="mp-lista"></datalist>
             </div>
             <div class="grid-2">
               <div class="form-g">
-                <label>Cantidad comprada</label>
+                <label data-i18n="mp_qty_bought">Cantidad comprada</label>
                 <input type="number" id="mp-cantidad" min="0.001" step="0.001" placeholder="0.000" oninput="mpCalc()" inputmode="decimal">
               </div>
               <div class="form-g">
-                <label>Unidad de medida</label>
+                <label data-i18n="mp_unit">Unidad de medida</label>
                 <select id="mp-unidad">
-                  <option value="und">Unidad (und)</option>
-                  <option value="kg">Kilogramo (kg)</option>
-                  <option value="g">Gramo (g)</option>
-                  <option value="l">Litro (l)</option>
-                  <option value="ml">Mililitro (ml)</option>
-                  <option value="m">Metro (m)</option>
+                  <option value="und" data-i18n="unit_und">Unidad (und)</option>
+                  <option value="kg" data-i18n="unit_kg">Kilogramo (kg)</option>
+                  <option value="g" data-i18n="unit_g">Gramo (g)</option>
+                  <option value="l" data-i18n="unit_l">Litro (l)</option>
+                  <option value="ml" data-i18n="unit_ml">Mililitro (ml)</option>
+                  <option value="m" data-i18n="unit_m">Metro (m)</option>
                 </select>
               </div>
             </div>
             <div class="form-g">
-              <label>Valor total factura</label>
+              <label data-i18n="mp_total_val">Valor total factura</label>
               <input type="number" id="mp-vtotal" min="0" step="0.01" placeholder="$0.00" oninput="mpCalc()" inputmode="decimal">
             </div>
           </div>
 
           <div class="calc-box" id="mp-calc">
-            <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px">Valor unitario calculado</div>
+            <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px" data-i18n="mp_calc_unit_val">Valor unitario calculado</div>
             <div class="calc-formula">
               <div class="calc-chip" id="calc-total">$0</div>
               <div class="calc-op">÷</div>
@@ -917,39 +995,39 @@ function aplicarIdioma(){
           <div class="cpp-preview" id="mp-cpp-preview">
             <div style="font-size:12px;font-weight:600;margin-bottom:8px" id="mp-cpp-nombre"></div>
             <div class="cpp-row">
-              <div class="cpp-item"><label>Stock actual</label><span id="mp-cpp-stock"></span></div>
-              <div class="cpp-item"><label>CPP actual</label><span id="mp-cpp-val"></span></div>
-              <div class="cpp-item"><label>Unidad</label><span id="mp-cpp-uni"></span></div>
+              <div class="cpp-item"><label data-i18n="mp_curr_stock">Stock actual</label><span id="mp-cpp-stock"></span></div>
+              <div class="cpp-item"><label data-i18n="mp_curr_cpp">CPP actual</label><span id="mp-cpp-val"></span></div>
+              <div class="cpp-item"><label data-i18n="mp_unit_label">Unidad</label><span id="mp-cpp-uni"></span></div>
             </div>
           </div>
 
-          <button class="btn-primary" id="btn-mp-reg" onclick="mpRegistrar()">📥 Registrar Entrada</button>
+          <button class="btn-primary" id="btn-mp-reg" onclick="mpRegistrar()">📥 <span data-i18n="mp_register_entry">Registrar Entrada</span></button>
         </div>
 
         <!-- MP: Consultar -->
         <div id="mpanel-consultar" class="panel">
           <div class="sel-box">
-            <label style="font-size:12px;font-weight:500;white-space:nowrap">Insumo:</label>
+            <label style="font-size:12px;font-weight:500;white-space:nowrap" data-i18n="mp_select_insumo">Insumo:</label>
             <select id="mp-sel-consulta" onchange="mpConsultar()">
-              <option value="">-- Selecciona un insumo --</option>
+              <option value="" data-i18n="mp_select_placeholder">-- Selecciona un insumo --</option>
             </select>
           </div>
 
           <div id="mp-resultado" style="display:none">
             <div class="grid-3" style="margin-bottom:14px">
-              <div class="kpi"><div class="kpi-label">COSTO</div><div class="kpi-value" id="mp-kpi-cpp" style="color:var(--green)">$0</div></div>
-              <div class="kpi"><div class="kpi-label">Stock</div><div class="kpi-value" id="mp-kpi-stock">0</div><div class="kpi-sub" id="mp-kpi-uni"></div></div>
-              <div class="kpi"><div class="kpi-label">Valor inventario</div><div class="kpi-value" id="mp-kpi-valor" style="color:var(--indigo)">$0</div></div>
+              <div class="kpi"><div class="kpi-label" data-i18n="mp_cost">COSTO</div><div class="kpi-value" id="mp-kpi-cpp" style="color:var(--green)">$0</div></div>
+              <div class="kpi"><div class="kpi-label" data-i18n="mp_stock">Stock</div><div class="kpi-value" id="mp-kpi-stock">0</div><div class="kpi-sub" id="mp-kpi-uni"></div></div>
+              <div class="kpi"><div class="kpi-label" data-i18n="mp_inv_value">Valor inventario</div><div class="kpi-value" id="mp-kpi-valor" style="color:var(--indigo)">$0</div></div>
             </div>
             <div class="table-wrap">
-              <div class="table-head"><h3>Historial de movimientos</h3><span id="mp-mov-cnt" style="font-size:11px;color:var(--ink3)"></span></div>
+              <div class="table-head"><h3 data-i18n="mp_history">Historial de movimientos</h3><span id="mp-mov-cnt" style="font-size:11px;color:var(--ink3)"></span></div>
               <div class="table-scroll">
                 <table>
                   <thead><tr>
-                    <th>#</th><th>Fecha</th><th>Tipo</th>
-                    <th class="r">Cant.</th><th>Und</th>
-                    <th class="r">V. Unit.</th><th class="r">V. Total</th>
-                    <th class="r">Stock</th><th class="r">CPP</th><th></th>
+                    <th data-i18n="th_num">#</th><th data-i18n="th_date">Fecha</th><th data-i18n="th_type">Tipo</th>
+                    <th class="r" data-i18n="th_qty">Cant.</th><th data-i18n="th_unit_col">Und</th>
+                    <th class="r" data-i18n="th_unit_val">V. Unit.</th><th class="r" data-i18n="th_total_val">V. Total</th>
+                    <th class="r" data-i18n="mp_stock">Stock</th><th class="r">CPP</th><th></th>
                   </tr></thead>
                   <tbody id="mp-tbody"></tbody>
                 </table>
@@ -959,8 +1037,8 @@ function aplicarIdioma(){
 
           <div id="mp-sin-sel" class="empty-state">
             <div class="empty-icon">🔍</div>
-            <div style="font-weight:500">Selecciona un insumo para ver su detalle</div>
-            <p style="font-size:12px;margin-top:6px">Stock actual, costo promedio y todos los movimientos</p>
+            <div style="font-weight:500" data-i18n="mp_select_empty_title">Selecciona un insumo para ver su detalle</div>
+            <p style="font-size:12px;margin-top:6px" data-i18n="mp_select_empty_sub">Stock actual, costo promedio y todos los movimientos</p>
           </div>
         </div>
       </div>
@@ -969,8 +1047,8 @@ function aplicarIdioma(){
       <div id="mod-prod" class="modulo" style="display:none">
         <div class="panel-header">
           <div class="panel-header-left">
-            <div class="panel-title">Producción</div>
-            <div class="panel-sub">Registra un lote de producción y calcula costos</div>
+            <div class="panel-title" data-i18n="prod_title">Producción</div>
+            <div class="panel-sub" data-i18n="prod_sub">Registra un lote de producción y calcula costos</div>
           </div>
         </div>
 
@@ -979,88 +1057,88 @@ function aplicarIdioma(){
         <div class="grid-2" style="margin-bottom:14px">
           <div class="card" style="margin-bottom:0">
             <div class="form-g">
-              <label>Producto Final</label>
-              <input type="text" id="pf-nombre" list="pf-lista" placeholder="Nombre del producto a fabricar">
+              <label data-i18n="prod_final_product">Producto Final</label>
+              <input type="text" id="pf-nombre" list="pf-lista" placeholder="Nombre del producto a fabricar" data-i18n-ph="ph_final_product">
               <datalist id="pf-lista"></datalist>
             </div>
           </div>
           <div class="card" style="margin-bottom:0">
             <div class="form-g">
-              <label>Unidades a Producir</label>
+              <label data-i18n="prod_units">Unidades a Producir</label>
               <input type="number" id="pf-unidades" min="1" step="1" oninput="prodUnidadesChange()" inputmode="numeric">
-              <div class="hint">CF y MO se prorratean entre estas unidades</div>
+              <div class="hint" data-i18n="prod_units_hint">CF y MO se prorratean entre estas unidades</div>
             </div>
           </div>
         </div>
 
         <div class="card">
-          <div class="card-title" style="color:#4338CA">📋 Materias Primas</div>
-          <div class="mp-headers"><span>Insumo</span><span>Cantidad</span><span>Costo</span><span></span></div>
+          <div class="card-title" style="color:#4338CA">📋 <span data-i18n="prod_raw_materials">Materias Primas</span></div>
+          <div class="mp-headers"><span data-i18n="th_insumo">Insumo</span><span data-i18n="th_qty">Cantidad</span><span data-i18n="mp_cost">Costo</span><span></span></div>
           <div id="prod-list-mp"></div>
-          <button class="btn-add" onclick="prodAddMp()">+ Agregar Materia Prima</button>
+          <button class="btn-add" onclick="prodAddMp()">+ <span data-i18n="prod_add_mp">Agregar Materia Prima</span></button>
         </div>
 
         <div class="card">
-          <div class="card-title" style="color:#92400E">🏢 Costos Fijos</div>
+          <div class="card-title" style="color:#92400E">🏢 <span data-i18n="prod_fixed_costs">Costos Fijos</span></div>
           <div style="background:var(--amber2);border-left:3px solid var(--amber);border-radius:var(--r);padding:8px 12px;font-size:11px;color:var(--amber);margin-bottom:12px">
-            <strong>Fórmula:</strong> Costo mensual ÷ horas/mes × horas de este lote
+            <strong data-i18n="formula_label">Fórmula:</strong> <span data-i18n="prod_formula_cf">Costo mensual ÷ horas/mes × horas de este lote</span>
           </div>
           <div id="prod-list-cf"></div>
-          <button class="btn-add" onclick="prodAddCf()" style="border-color:#FDE68A;color:#D97706">+ Agregar Costo Fijo</button>
+          <button class="btn-add" onclick="prodAddCf()" style="border-color:#FDE68A;color:#D97706">+ <span data-i18n="prod_add_cf">Agregar Costo Fijo</span></button>
         </div>
 
         <div class="card">
-          <div class="card-title" style="color:#4C1D95">👷 Mano de Obra</div>
+          <div class="card-title" style="color:#4C1D95">👷 <span data-i18n="prod_labor">Mano de Obra</span></div>
           <div style="background:var(--indigo2);border-left:3px solid var(--indigo);border-radius:var(--r);padding:8px 12px;font-size:11px;color:var(--indigo);margin-bottom:12px">
-            <strong>Fórmula:</strong> Salario mensual ÷ horas/mes × horas en este lote
+            <strong data-i18n="formula_label">Fórmula:</strong> <span data-i18n="prod_formula_mo">Salario mensual ÷ horas/mes × horas en este lote</span>
           </div>
           <div id="prod-list-mo"></div>
-          <button class="btn-add" onclick="prodAddMo()" style="border-color:#DDD6FE;color:#7C3AED">+ Agregar Mano de Obra</button>
+          <button class="btn-add" onclick="prodAddMo()" style="border-color:#DDD6FE;color:#7C3AED">+ <span data-i18n="prod_add_mo">Agregar Mano de Obra</span></button>
         </div>
 
         <div class="preview-box" id="prod-preview">
-          <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--indigo);margin-bottom:12px">📊 Desglose de Costos</div>
+          <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--indigo);margin-bottom:12px">📊 <span data-i18n="prod_cost_breakdown">Desglose de Costos</span></div>
           <div id="pv-grp-mp"></div>
           <div id="pv-grp-cf"></div>
           <div id="pv-grp-mo"></div>
           <div style="margin:10px 0 6px">
-            <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--ink3);margin-bottom:3px"><span style="color:#4338CA">🧪 Materia Prima</span><span id="pv-pct-mp">0%</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--ink3);margin-bottom:3px"><span style="color:#4338CA">🧪 <span data-i18n="prod_raw_mat_short">Materia Prima</span></span><span id="pv-pct-mp">0%</span></div>
             <div class="bar-track"><div class="bar-fill mp" id="pv-bar-mp" style="width:0%"></div></div>
           </div>
           <div style="margin-bottom:6px">
-            <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--ink3);margin-bottom:3px"><span style="color:#92400E">🏢 Costos Fijos</span><span id="pv-pct-cf">0%</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--ink3);margin-bottom:3px"><span style="color:#92400E">🏢 <span data-i18n="prod_fixed_short">Costos Fijos</span></span><span id="pv-pct-cf">0%</span></div>
             <div class="bar-track"><div class="bar-fill cf" id="pv-bar-cf" style="width:0%"></div></div>
           </div>
           <div style="margin-bottom:10px">
-            <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--ink3);margin-bottom:3px"><span style="color:#4C1D95">👷 Mano de Obra</span><span id="pv-pct-mo">0%</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--ink3);margin-bottom:3px"><span style="color:#4C1D95">👷 <span data-i18n="prod_labor_short">Mano de Obra</span></span><span id="pv-pct-mo">0%</span></div>
             <div class="bar-track"><div class="bar-fill mo" id="pv-bar-mo" style="width:0%"></div></div>
           </div>
           <div class="total-box">
-            <div><div class="tl">Costo Total del Lote</div><div class="tu" id="pv-unit"></div></div>
+            <div><div class="tl" data-i18n="prod_lot_total">Costo Total del Lote</div><div class="tu" id="pv-unit"></div></div>
             <div class="tv" id="pv-total">$0</div>
           </div>
         </div>
 
         <div class="btn-row">
-          <button class="btn-outline" onclick="prodCalcular()" style="flex:1">🧮 Calcular</button>
-          <button class="btn-indigo" id="btn-prod-reg" onclick="prodRegistrar()" disabled>✅ Registrar</button>
+          <button class="btn-outline" onclick="prodCalcular()" style="flex:1">🧮 <span data-i18n="prod_calc">Calcular</span></button>
+          <button class="btn-indigo" id="btn-prod-reg" onclick="prodRegistrar()" disabled>✅ <span data-i18n="prod_register">Registrar</span></button>
         </div>
 
         <div class="table-wrap" style="margin-top:24px">
-          <div class="table-head"><h3>Historial de producciones</h3></div>
+          <div class="table-head"><h3 data-i18n="prod_history">Historial de producciones</h3></div>
           <div class="table-scroll">
             <table>
               <thead><tr>
-                <th>ID</th><th>Fecha</th><th>Producto Final</th>
-                <th class="r">Unidades</th><th class="r">Costo Lote</th>
-                <th class="r">Costo/und</th><th></th>
+                <th data-i18n="prod_th_id">ID</th><th data-i18n="prod_th_date">Fecha</th><th data-i18n="prod_th_final">Producto Final</th>
+                <th class="r" data-i18n="prod_th_units">Unidades</th><th class="r" data-i18n="prod_th_lot_cost">Costo Lote</th>
+                <th class="r" data-i18n="prod_th_unit_cost">Costo/und</th><th></th>
               </tr></thead>
               <tbody id="prod-hist-tbody"></tbody>
             </table>
           </div>
           <div class="empty-state" id="prod-hist-empty" style="display:none">
             <div class="empty-icon">🏭</div>
-            <div>Aún no has registrado ninguna producción</div>
+            <div data-i18n="prod_no_history">Aún no has registrado ninguna producción</div>
           </div>
         </div>
       </div>
@@ -1069,8 +1147,8 @@ function aplicarIdioma(){
       <div id="mod-ventas" class="modulo" style="display:none">
         <div class="panel-header">
           <div class="panel-header-left">
-            <div class="panel-title" id="ventas-panel-title">Registrar venta</div>
-            <div class="panel-sub" id="ventas-panel-sub">Registra una nueva venta de producto terminado</div>
+            <div class="panel-title" id="ventas-panel-title" data-i18n="sales_reg_title">Registrar venta</div>
+            <div class="panel-sub" id="ventas-panel-sub" data-i18n="sales_reg_sub">Registra una nueva venta de producto terminado</div>
           </div>
         </div>
 
@@ -1078,65 +1156,66 @@ function aplicarIdioma(){
         <div id="vpanel-registrar" class="panel active">
           <div id="alert-ventas" class="alert"></div>
           <div class="card">
-            <div class="card-title">Producto a vender</div>
+            <div class="card-title" data-i18n="sales_product">Producto a vender</div>
             <div class="form-g">
-              <label>Producto Final</label>
+              <label data-i18n="sales_final_product">Producto Final</label>
               <select id="v-producto" onchange="vProductoChange()">
-                <option value="">-- Selecciona producto --</option>
+                <option value="" data-i18n="sales_select_product">-- Selecciona producto --</option>
               </select>
               <div class="hint" id="v-stock-info"></div>
               <div class="hint" id="v-cpp-info" style="color:var(--indigo)"></div>
             </div>
             <div class="grid-2">
               <div class="form-g">
-                <label>Cantidad a Vender</label>
+                <label data-i18n="sales_qty">Cantidad a Vender</label>
                 <input type="number" id="v-cantidad" min="1" step="1" placeholder="0" oninput="vRecalc()" inputmode="numeric">
               </div>
               <div class="form-g">
-                <label>Notas (opcional)</label>
-                <input type="text" id="v-notas" placeholder="Cliente, pedido…">
+                <label data-i18n="sales_notes">Notas (opcional)</label>
+                <input type="text" id="v-notas" placeholder="Cliente, pedido…" data-i18n-ph="ph_client_order">
               </div>
             </div>
           </div>
 
+
           <div class="card">
-            <div class="card-title">Precio de Venta</div>
+            <div class="card-title" data-i18n="sales_price">Precio de Venta</div>
             <div class="precio-toggle">
-              <button class="ptoggle auto active" id="ptog-auto" onclick="vSetModo('auto')">🧮 Por margen %</button>
-              <button class="ptoggle manual" id="ptog-manual" onclick="vSetModo('manual')">✏️ Precio manual</button>
+              <button class="ptoggle auto active" id="ptog-auto" onclick="vSetModo('auto')">🧮 <span data-i18n="auto_margin">Por margen %</span></button>
+              <button class="ptoggle manual" id="ptog-manual" onclick="vSetModo('manual')">✏️ <span data-i18n="manual_price">Precio manual</span></button>
             </div>
             <div id="vblq-auto">
               <div class="form-g">
-                <label>Margen de Ganancia (%)</label>
+                <label data-i18n="sales_margin_pct">Margen de Ganancia (%)</label>
                 <input type="number" id="v-margen" min="0" step="0.1" placeholder="Ej: 40" oninput="vRecalc()" inputmode="decimal">
               </div>
               <div class="precio-box" id="v-precio-calc-box">
-                <div style="font-size:10px;font-weight:600;text-transform:uppercase;color:var(--green4);letter-spacing:.07em;margin-bottom:4px">Precio de Venta Calculado</div>
+                <div style="font-size:10px;font-weight:600;text-transform:uppercase;color:var(--green4);letter-spacing:.07em;margin-bottom:4px" data-i18n="sales_calc_price">Precio de Venta Calculado</div>
                 <div style="font-family:var(--font-serif);font-size:26px;color:var(--green4)" id="v-precio-calc">$0</div>
                 <div style="font-size:11px;color:var(--green)" id="v-precio-sub"></div>
               </div>
             </div>
             <div id="vblq-manual" style="display:none">
               <div class="form-g">
-                <label>Precio de Venta Unitario</label>
+                <label data-i18n="sales_manual_price">Precio de Venta Unitario</label>
                 <input type="number" id="v-precio-manual" min="0" step="0.01" placeholder="$0.00" oninput="vRecalc()" inputmode="decimal">
               </div>
             </div>
           </div>
 
           <div class="util-preview" id="v-util-preview">
-            <div class="drow"><span class="dn">Costo total</span><span class="dv" id="v-prev-costo"></span></div>
-            <div class="drow"><span class="dn">Ingreso total</span><span class="dv" id="v-prev-ingreso"></span></div>
-            <div class="drow"><span class="dn">Margen real</span><span class="dv" id="v-prev-margen"></span></div>
+            <div class="drow"><span class="dn" data-i18n="sales_util_preview">Costo total</span><span class="dv" id="v-prev-costo"></span></div>
+            <div class="drow"><span class="dn" data-i18n="sales_income">Ingreso total</span><span class="dv" id="v-prev-ingreso"></span></div>
+            <div class="drow"><span class="dn" data-i18n="sales_real_margin">Margen real</span><span class="dv" id="v-prev-margen"></span></div>
             <div class="drow" style="padding-top:6px">
-              <span style="font-size:13px;font-weight:600">Utilidad Bruta</span>
+              <span style="font-size:13px;font-weight:600" data-i18n="sales_gross_profit">Utilidad Bruta</span>
               <span style="font-family:var(--font-serif);font-size:20px" id="v-prev-util"></span>
             </div>
           </div>
 
           <div class="btn-row">
-            <button class="btn-outline" onclick="vPrevisualizar()" style="flex:1">👁️ Previsualizar</button>
-            <button class="btn-primary" id="btn-vender" onclick="vConfirmar()" disabled style="flex:1">✅ Confirmar</button>
+            <button class="btn-outline" onclick="vPrevisualizar()" style="flex:1">👁️ <span data-i18n="preview">Previsualizar</span></button>
+            <button class="btn-primary" id="btn-vender" onclick="vConfirmar()" disabled style="flex:1">✅ <span data-i18n="confirm">Confirmar</span></button>
           </div>
         </div>
 
@@ -1145,8 +1224,8 @@ function aplicarIdioma(){
           <div id="v-stock-grid" class="grid-3"></div>
           <div id="v-stock-empty" class="empty-state" style="display:none">
             <div class="empty-icon">📦</div>
-            <div>No hay productos finales en inventario</div>
-            <p style="font-size:12px;margin-top:6px">Registra una producción para ver el stock aquí</p>
+            <div data-i18n="sales_no_stock">No hay productos finales en inventario</div>
+            <p style="font-size:12px;margin-top:6px" data-i18n="sales_no_stock_sub">Registra una producción para ver el stock aquí</p>
           </div>
         </div>
 
@@ -1154,44 +1233,44 @@ function aplicarIdioma(){
         <div id="vpanel-historial" class="panel">
           <div class="table-wrap">
             <div class="table-head">
-              <h3>Ventas registradas</h3>
+              <h3 data-i18n="sales_registered_title">Ventas registradas</h3>
               <div class="filter-row">
                 <select id="filtro-anio" onchange="vFiltrar()" style="width:90px;min-width:80px"></select>
                 <select id="filtro-mes" onchange="vFiltrar()">
-                  <option value="">Todos los meses</option>
-                  <option value="01">Enero</option><option value="02">Febrero</option>
-                  <option value="03">Marzo</option><option value="04">Abril</option>
-                  <option value="05">Mayo</option><option value="06">Junio</option>
-                  <option value="07">Julio</option><option value="08">Agosto</option>
-                  <option value="09">Septiembre</option><option value="10">Octubre</option>
-                  <option value="11">Noviembre</option><option value="12">Diciembre</option>
+                  <option value="" data-i18n="all_months">Todos los meses</option>
+                  <option value="01" data-i18n="mo1">Enero</option><option value="02" data-i18n="mo2">Febrero</option>
+                  <option value="03" data-i18n="mo3">Marzo</option><option value="04" data-i18n="mo4">Abril</option>
+                  <option value="05" data-i18n="mo5">Mayo</option><option value="06" data-i18n="mo6">Junio</option>
+                  <option value="07" data-i18n="mo7">Julio</option><option value="08" data-i18n="mo8">Agosto</option>
+                  <option value="09" data-i18n="mo9">Septiembre</option><option value="10" data-i18n="mo10">Octubre</option>
+                  <option value="11" data-i18n="mo11">Noviembre</option><option value="12" data-i18n="mo12">Diciembre</option>
                 </select>
-                <select id="filtro-prod" onchange="vFiltrar()"><option value="">Todos</option></select>
+                <select id="filtro-prod" onchange="vFiltrar()"><option value="" data-i18n="all">Todos</option></select>
               </div>
             </div>
             <div class="resumen-periodo" id="rp-box">
               <div class="grid-4">
-                <div><div style="font-size:10px;text-transform:uppercase;color:var(--ink3);margin-bottom:2px">Ingresos</div><div style="font-family:var(--font-serif);font-size:18px;color:var(--green)" id="rp-ing">$0</div></div>
-                <div><div style="font-size:10px;text-transform:uppercase;color:var(--ink3);margin-bottom:2px">Costos</div><div style="font-family:var(--font-serif);font-size:18px;color:#2563EB" id="rp-cos">$0</div></div>
-                <div><div style="font-size:10px;text-transform:uppercase;color:var(--ink3);margin-bottom:2px">Utilidad</div><div style="font-family:var(--font-serif);font-size:18px" id="rp-util">$0</div></div>
-                <div><div style="font-size:10px;text-transform:uppercase;color:var(--ink3);margin-bottom:2px">Margen</div><div style="font-family:var(--font-serif);font-size:18px;color:var(--amber)" id="rp-mrg">0%</div></div>
+                <div><div style="font-size:10px;text-transform:uppercase;color:var(--ink3);margin-bottom:2px" data-i18n="th_income_col">Ingresos</div><div style="font-family:var(--font-serif);font-size:18px;color:var(--green)" id="rp-ing">$0</div></div>
+                <div><div style="font-size:10px;text-transform:uppercase;color:var(--ink3);margin-bottom:2px" data-i18n="th_cost_col">Costos</div><div style="font-family:var(--font-serif);font-size:18px;color:#2563EB" id="rp-cos">$0</div></div>
+                <div><div style="font-size:10px;text-transform:uppercase;color:var(--ink3);margin-bottom:2px" data-i18n="th_profit_col">Utilidad</div><div style="font-family:var(--font-serif);font-size:18px" id="rp-util">$0</div></div>
+                <div><div style="font-size:10px;text-transform:uppercase;color:var(--ink3);margin-bottom:2px" data-i18n="th_margin_col">Margen</div><div style="font-family:var(--font-serif);font-size:18px;color:var(--amber)" id="rp-mrg">0%</div></div>
               </div>
             </div>
             <div class="table-scroll">
               <table id="v-tabla" style="display:none">
                 <thead><tr>
-                  <th>ID</th><th>Fecha</th><th>Producto</th>
-                  <th class="r">Cant.</th><th class="r">C.Unit.</th>
-                  <th class="r">Precio</th><th class="r">Ingreso</th>
-                  <th class="r">Margen</th><th class="r">Utilidad</th>
-                  <th>Notas</th><th></th>
+                  <th data-i18n="th_sale_id">ID</th><th data-i18n="th_sale_date">Fecha</th><th data-i18n="th_sale_prod">Producto</th>
+                  <th class="r" data-i18n="th_qty">Cant.</th><th class="r" data-i18n="th_unit_cost">C.Unit.</th>
+                  <th class="r" data-i18n="th_price">Precio</th><th class="r" data-i18n="th_income">Ingreso</th>
+                  <th class="r" data-i18n="th_margin">Margen</th><th class="r" data-i18n="th_profit">Utilidad</th>
+                  <th data-i18n="th_notes">Notas</th><th></th>
                 </tr></thead>
                 <tbody id="v-tbody"></tbody>
               </table>
             </div>
             <div class="empty-state" id="v-hist-empty" style="display:none">
               <div class="empty-icon">🛒</div>
-              <div>No hay ventas registradas aún</div>
+              <div data-i18n="sales_no_history">No hay ventas registradas aún</div>
             </div>
           </div>
         </div>
@@ -1201,39 +1280,39 @@ function aplicarIdioma(){
       <div id="mod-alertas" class="modulo" style="display:none">
         <div class="panel-header">
           <div class="panel-header-left">
-            <div class="panel-title">Alertas de stock</div>
-            <div class="panel-sub">Configura cuándo avisarte, y revisa tu predicción de días restantes</div>
+            <div class="panel-title" data-i18n="alerts_title">Alertas de stock</div>
+            <div class="panel-sub" data-i18n="alerts_sub">Configura cuándo avisarte, y revisa tu predicción de días restantes</div>
           </div>
         </div>
 
         <div id="alert-alertas" class="alert"></div>
 
         <div id="alertas-resumen" class="grid-3" style="margin-bottom:14px">
-          <div class="kpi"><div class="kpi-label">Insumos monitoreados</div><div class="kpi-value" id="al-kpi-total" style="color:var(--indigo)">0</div></div>
-          <div class="kpi"><div class="kpi-label">En alerta ahora</div><div class="kpi-value" id="al-kpi-alerta" style="color:var(--red)">0</div></div>
-          <div class="kpi"><div class="kpi-label">Se agotan en ≤ 7 días</div><div class="kpi-value" id="al-kpi-urgente" style="color:var(--amber)">0</div></div>
+          <div class="kpi"><div class="kpi-label" data-i18n="alerts_monitored">Insumos monitoreados</div><div class="kpi-value" id="al-kpi-total" style="color:var(--indigo)">0</div></div>
+          <div class="kpi"><div class="kpi-label" data-i18n="alerts_now">En alerta ahora</div><div class="kpi-value" id="al-kpi-alerta" style="color:var(--red)">0</div></div>
+          <div class="kpi"><div class="kpi-label" data-i18n="alerts_urgent">Se agotan en ≤ 7 días</div><div class="kpi-value" id="al-kpi-urgente" style="color:var(--amber)">0</div></div>
         </div>
 
         <div style="background:var(--indigo2);border-left:3px solid var(--indigo);border-radius:var(--r);padding:10px 14px;font-size:12px;color:var(--indigo);margin-bottom:14px">
-          💡 <strong>Punto de reorden:</strong> la cantidad mínima que quieres tener antes de que te avisemos. <strong>Días restantes:</strong> se calcula solo con tu consumo real de los últimos 30 días — mientras más muevas el insumo, más precisa es la predicción.
+          💡 <strong data-i18n="reorder_bold">Punto de reorden:</strong> <span data-i18n="reorder_rest">la cantidad mínima que quieres tener antes de que te avisemos.</span> <strong data-i18n="days_left_bold">Días restantes:</strong> <span data-i18n="days_left_rest">se calcula solo con tu consumo real de los últimos 30 días — mientras más muevas el insumo, más precisa es la predicción.</span>
         </div>
 
         <div class="table-wrap">
-          <div class="table-head"><h3>Todos los insumos</h3></div>
+          <div class="table-head"><h3 data-i18n="alerts_all_insumos">Todos los insumos</h3></div>
           <div class="table-scroll">
             <table>
               <thead><tr>
-                <th>Insumo</th><th class="r">Stock actual</th>
-                <th class="r">Punto de reorden</th><th class="r">Consumo diario prom.</th>
-                <th class="r">Días restantes est.</th><th>Estado</th>
+                <th data-i18n="th_insumo">Insumo</th><th class="r" data-i18n="th_stock_now">Stock actual</th>
+                <th class="r" data-i18n="th_reorder">Punto de reorden</th><th class="r" data-i18n="th_daily">Consumo diario prom.</th>
+                <th class="r" data-i18n="th_days_left">Días restantes est.</th><th data-i18n="th_status">Estado</th>
               </tr></thead>
               <tbody id="alertas-tbody"></tbody>
             </table>
           </div>
           <div class="empty-state" id="alertas-empty" style="display:none">
             <div class="empty-icon">🔔</div>
-            <div>Aún no tienes insumos registrados</div>
-            <p style="font-size:12px;margin-top:6px">Registra materia prima primero para ver sus alertas aquí</p>
+            <div data-i18n="alerts_none">Aún no tienes insumos registrados</div>
+            <p style="font-size:12px;margin-top:6px" data-i18n="alerts_none_sub">Registra materia prima primero para ver sus alertas aquí</p>
           </div>
         </div>
       </div>
@@ -1245,18 +1324,18 @@ function aplicarIdioma(){
 <!-- Modal eliminar cuenta -->
 <div class="modal-overlay" id="modal-eliminar-cuenta">
   <div class="modal-box">
-    <h3>Eliminar mi cuenta</h3>
-    <p>Esta acción cerrará tu sesión y eliminará tu acceso.<br><br>
-    <strong>Tus datos se conservan por 30 días.</strong><br><br>
-    Confirma con tu contraseña actual:</p>
+    <h3 data-i18n="del_account_title">Eliminar mi cuenta</h3>
+    <p><span data-i18n="del_account_p1">Esta acción cerrará tu sesión y eliminará tu acceso.</span><br><br>
+    <strong data-i18n="del_account_p2">Tus datos se conservan por 30 días.</strong><br><br>
+    <span data-i18n="del_account_confirm">Confirma con tu contraseña actual:</span></p>
     <div class="form-g">
-      <input type="password" id="del-pwd" placeholder="Tu contraseña actual"
+      <input type="password" id="del-pwd" placeholder="Tu contraseña actual" data-i18n-ph="current_pwd"
         onkeydown="if(event.key==='Enter')doEliminarCuenta()">
     </div>
     <div id="del-error" style="display:none;color:var(--red);font-size:12px;margin-bottom:4px"></div>
     <div class="modal-actions">
-      <button class="btn-cancel" onclick="cerrarModalEliminar()">Cancelar</button>
-      <button class="btn-danger" id="btn-del-confirm" onclick="doEliminarCuenta()">Sí, eliminar</button>
+      <button class="btn-cancel" data-i18n="cancel" onclick="cerrarModalEliminar()">Cancelar</button>
+      <button class="btn-danger" id="btn-del-confirm" data-i18n="delete" onclick="doEliminarCuenta()">Sí, eliminar</button>
     </div>
   </div>
 </div>
@@ -1264,11 +1343,11 @@ function aplicarIdioma(){
 <!-- Modal de confirmación genérico (eliminar movimientos, ventas, etc) -->
 <div class="modal-overlay" id="modal-confirmar-app">
   <div class="modal-box" style="max-width:400px">
-    <h3 id="mconf-app-title">¿Confirmar acción?</h3>
+    <h3 id="mconf-app-title" data-i18n="confirm_action">¿Confirmar acción?</h3>
     <p id="mconf-app-msg">Esta acción no se puede deshacer.</p>
     <div class="modal-actions">
-      <button class="btn-cancel" onclick="cerrarModalConfirmar()">Cancelar</button>
-      <button class="btn-danger" id="mconf-app-btn" onclick="">Sí, eliminar</button>
+      <button class="btn-cancel" data-i18n="cancel" onclick="cerrarModalConfirmar()">Cancelar</button>
+      <button class="btn-danger" id="mconf-app-btn" data-i18n="delete" onclick="">Sí, eliminar</button>
     </div>
   </div>
 </div>
@@ -1276,21 +1355,21 @@ function aplicarIdioma(){
 <!-- Modal editar movimiento de Materia Prima -->
 <div class="modal-overlay" id="modal-editar-mp">
   <div class="modal-box" style="max-width:420px">
-    <h3>Editar compra</h3>
-    <p>Insumo: <strong id="medit-producto"></strong></p>
+    <h3 data-i18n="edit_purchase">Editar compra</h3>
+    <p><span data-i18n="supply_label">Insumo:</span> <strong id="medit-producto"></strong></p>
     <input type="hidden" id="medit-id">
     <div id="medit-error" style="display:none;color:var(--red);font-size:12px;margin-bottom:10px"></div>
     <div class="form-g">
-      <label>Cantidad comprada</label>
+      <label data-i18n="qty_bought">Cantidad comprada</label>
       <input type="number" id="medit-cantidad" min="0.001" step="0.001">
     </div>
     <div class="form-g">
-      <label>Valor total de la factura</label>
+      <label data-i18n="total_invoice_val">Valor total de la factura</label>
       <input type="number" id="medit-vtotal" min="0" step="0.01">
     </div>
     <div class="modal-actions">
-      <button class="btn-cancel" onclick="cerrarModalEditarMp()">Cancelar</button>
-      <button class="btn-primary" style="flex:1" onclick="guardarEdicionMp()">Guardar cambios</button>
+      <button class="btn-cancel" data-i18n="cancel" onclick="cerrarModalEditarMp()">Cancelar</button>
+      <button class="btn-primary" style="flex:1" data-i18n="save_changes" onclick="guardarEdicionMp()">Guardar cambios</button>
     </div>
   </div>
 </div>
@@ -1298,25 +1377,25 @@ function aplicarIdioma(){
 <!-- Modal editar venta -->
 <div class="modal-overlay" id="modal-editar-venta">
   <div class="modal-box" style="max-width:420px">
-    <h3>Editar venta</h3>
-    <p>Producto: <strong id="vedit-producto"></strong></p>
+    <h3 data-i18n="edit_sale">Editar venta</h3>
+    <p><span data-i18n="product_label">Producto:</span> <strong id="vedit-producto"></strong></p>
     <input type="hidden" id="vedit-id">
     <div id="vedit-error" style="display:none;color:var(--red);font-size:12px;margin-bottom:10px"></div>
     <div class="form-g">
-      <label>Cantidad vendida</label>
+      <label data-i18n="qty_sold">Cantidad vendida</label>
       <input type="number" id="vedit-cantidad" min="1" step="1">
     </div>
     <div class="form-g">
-      <label>Precio de venta unitario</label>
+      <label data-i18n="unit_sale_price">Precio de venta unitario</label>
       <input type="number" id="vedit-precio" min="0" step="0.01">
     </div>
     <div class="form-g">
-      <label>Notas</label>
+      <label data-i18n="notes">Notas</label>
       <input type="text" id="vedit-notas">
     </div>
     <div class="modal-actions">
-      <button class="btn-cancel" onclick="cerrarModalEditarVenta()">Cancelar</button>
-      <button class="btn-primary" style="flex:1" onclick="guardarEdicionVenta()">Guardar cambios</button>
+      <button class="btn-cancel" data-i18n="cancel" onclick="cerrarModalEditarVenta()">Cancelar</button>
+      <button class="btn-primary" style="flex:1" data-i18n="save_changes" onclick="guardarEdicionVenta()">Guardar cambios</button>
     </div>
   </div>
 </div>
@@ -1412,13 +1491,13 @@ function setAuthTab(tab){
 async function doLogin(){
   var email=document.getElementById('in-user').value.trim();
   var p=document.getElementById('in-pwd').value;
-  if(!email||!p) return showAlert('alert-auth','Ingresa correo y contraseña.','err');
+  if(!email||!p) return showAlert('alert-auth',t('msg_enter_email_pwd'),'err');
   var btn=document.getElementById('btn-login');
   btn.disabled=true;btn.textContent='Entrando…';
 
   try {
     var { data, error } = await supabase.auth.signInWithPassword({ email:email, password:p });
-    if(error){ return showAlert('alert-auth','Correo o contraseña incorrectos.','err'); }
+    if(error){ return showAlert('alert-auth',t('msg_wrong_credentials'),'err'); }
 
     var { data: perfil } = await supabase.from('perfiles').select('*').eq('id', data.user.id).single();
 
@@ -1433,7 +1512,7 @@ async function doLogin(){
     SESSION={usuario:perfil.usuario,nombre:perfil.nombre};
     entrarApp();
   } catch(e) {
-    showAlert('alert-auth','Error inesperado: '+e.message,'err');
+    showAlert('alert-auth',t('msg_unexpected_error')+e.message,'err');
     console.error(e);
   } finally {
     btn.disabled=false;btn.textContent='Entrar';
@@ -1446,8 +1525,8 @@ async function doRegistro(){
   var e=document.getElementById('rg-email').value.trim();
   var u=document.getElementById('rg-user').value.trim().toLowerCase().replace(/\s+/g,'_');
   var p=document.getElementById('rg-pwd').value;
-  if(!n||!e||!u||!p) return showAlert('alert-auth','Completa todos los campos.','err');
-  if(p.length<6) return showAlert('alert-auth','La contraseña debe tener al menos 6 caracteres.','err');
+  if(!n||!e||!u||!p) return showAlert('alert-auth',t('msg_complete_fields'),'err');
+  if(p.length<6) return showAlert('alert-auth',t('msg_min_pwd'),'err');
   var btn=document.getElementById('btn-reg');
   btn.disabled=true;btn.textContent='Creando cuenta…';
 
@@ -1457,7 +1536,7 @@ async function doRegistro(){
   });
   btn.disabled=false;btn.textContent='Crear cuenta';
   if(error) return showAlert('alert-auth', error.message,'err');
-  showAlert('alert-auth','🎉 ¡Cuenta creada! Ya tienes 3 días de prueba gratis — inicia sesión con tu correo.','ok');
+  showAlert('alert-auth','🎉 '+t('msg_account_created'),'ok');
   setAuthTab('login');
 }
 
@@ -1480,7 +1559,7 @@ async function doLogout(){
     entrarApp();
   } else if(perfil && !perfil.apps.includes('inventario')){
     await supabase.auth.signOut();
-    showAlert('alert-auth','⚠️ Tu cuenta no tiene suscripción activa para Inventario.','warn');
+    showAlert('alert-auth','⚠️ '+t('msg_no_subscription'),'warn');
   }
 })();
 
@@ -1504,14 +1583,14 @@ function volverALogin(){document.getElementById('blq-recuperar').style.display='
 // RECUPERAR CONTRASEÑA — Supabase envía el correo con el link
 async function doSolicitarRecuperacion(){
   var email=document.getElementById('rec-email').value.trim();
-  if(!email) return showAlert('alert-auth','Ingresa tu correo electrónico.','err');
+  if(!email) return showAlert('alert-auth',t('msg_enter_email'),'err');
   var btn=document.getElementById('btn-recuperar');
   btn.disabled=true;btn.textContent='Enviando…';
   var { error } = await supabase.auth.resetPasswordForEmail(email, {
     redirectTo: window.location.origin + window.location.pathname
   });
   btn.disabled=false;btn.textContent='Enviar instrucciones';
-  showAlert('alert-auth','📧 Si ese correo está registrado, recibirás las instrucciones en unos minutos.','ok');
+  showAlert('alert-auth','📧 '+t('msg_recovery_sent'),'ok');
 }
 
 // Cuando el usuario vuelve del link de recuperación, Supabase ya deja
@@ -1519,14 +1598,14 @@ async function doSolicitarRecuperacion(){
 async function doNuevaPassword(){
   var pwd=document.getElementById('reset-pwd').value;
   var pwd2=document.getElementById('reset-pwd2').value;
-  if(!pwd||pwd.length<6) return showAlert('alert-auth','La contraseña debe tener al menos 6 caracteres.','err');
-  if(pwd!==pwd2) return showAlert('alert-auth','Las contraseñas no coinciden.','err');
+  if(!pwd||pwd.length<6) return showAlert('alert-auth',t('msg_min_pwd'),'err');
+  if(pwd!==pwd2) return showAlert('alert-auth',t('msg_pwd_mismatch'),'err');
   var btn=document.getElementById('btn-reset');
   btn.disabled=true;btn.textContent='Guardando…';
   var { error } = await supabase.auth.updateUser({ password: pwd });
   btn.disabled=false;btn.textContent='Guardar nueva contraseña';
   if(error) return showAlert('alert-auth', error.message,'err');
-  showAlert('alert-auth','✅ Contraseña actualizada. Ya puedes iniciar sesión.','ok');
+  showAlert('alert-auth','✅ '+t('msg_pwd_updated'),'ok');
   setTimeout(volverALogin,2000);
 }
 
@@ -1573,7 +1652,7 @@ async function doEliminarCuenta(){
   cerrarModalEliminar();
   document.getElementById('screen-app').classList.remove('visible');
   document.getElementById('screen-login').classList.add('visible');
-  showAlert('alert-auth','Acceso a Inventario eliminado. Tus datos se conservan.','ok');
+  showAlert('alert-auth',t('msg_del_access'),'ok');
 }
 
 /* ══════════════════════════════════════════════════════
@@ -1589,7 +1668,7 @@ async function cargarDatosIniciales(){
   sel.innerHTML="<option value=''>-- Selecciona un insumo --</option>";
   lista.forEach(function(p){var o=document.createElement('option');o.value=p.nombre;o.textContent=p.nombre+' (Stock: '+fmtN(p.stock)+' '+p.unidad+')';sel.appendChild(o)});
   if(cur) sel.value=cur;
-  document.querySelectorAll('.prod-mp-sel').forEach(function(s){var cv=s.value;s.innerHTML='<option value="">-- Elegir insumo --</option>'+lista.map(function(p){return '<option value="'+esc(p.nombre)+'">'+esc(p.nombre)+' ('+fmtN(p.stock)+' '+esc(p.unidad)+')</option>'}).join('');if(cv)s.value=cv});
+  document.querySelectorAll('.prod-mp-sel').forEach(function(s){var cv=s.value;s.innerHTML='<option value="">'+t('choose_option')+'</option>'+lista.map(function(p){return '<option value="'+esc(p.nombre)+'">'+esc(p.nombre)+' ('+fmtN(p.stock)+' '+esc(p.unidad)+')</option>'}).join('');if(cv)s.value=cv});
 
   var { data: pfs } = await supabase.rpc('prod_obtener_pf');
   pfProductos = pfs || [];
@@ -1628,19 +1707,19 @@ async function cargarAlertas(){
   lista.forEach(function(a){
     var estadoHtml, estadoColor;
     if(a.stock <= a.puntoReorden){
-      estadoHtml = '<span class="badge badge-neg">🔴 Bajo el punto de reorden</span>';
+      estadoHtml = '<span class="badge badge-neg">🔴 '+t('badge_below_reorder')+'</span>';
     } else if(a.diasRestantes!==null && a.diasRestantes<=7){
-      estadoHtml = '<span class="badge" style="background:var(--amber2);color:var(--amber)">🟡 Se agota pronto</span>';
+      estadoHtml = '<span class="badge" style="background:var(--amber2);color:var(--amber)">🟡 '+t('badge_running_out')+'</span>';
     } else {
-      estadoHtml = '<span class="badge badge-ok">🟢 OK</span>';
+      estadoHtml = '<span class="badge badge-ok">🟢 '+t('badge_ok')+'</span>';
     }
     var tr = document.createElement('tr');
     tr.innerHTML =
       '<td><strong>'+esc(a.producto)+'</strong></td>'+
       '<td class="r">'+fmtN(a.stock)+' '+esc(a.unidad)+'</td>'+
       '<td class="r"><input type="number" min="0" step="0.001" value="'+a.puntoReorden+'" style="width:90px;text-align:right;padding:6px 8px" onchange="guardarPuntoReorden(\''+esc(a.producto)+'\', this.value)"></td>'+
-      '<td class="r">'+(a.consumoDiario>0 ? fmtN(a.consumoDiario)+' '+esc(a.unidad)+'/día' : '—')+'</td>'+
-      '<td class="r">'+(a.diasRestantes!==null ? a.diasRestantes+' días' : '—')+'</td>'+
+      '<td class="r">'+(a.consumoDiario>0 ? fmtN(a.consumoDiario)+' '+esc(a.unidad)+t('per_day') : '—')+'</td>'+
+      '<td class="r">'+(a.diasRestantes!==null ? a.diasRestantes+' '+t('days_word') : '—')+'</td>'+
       '<td>'+estadoHtml+'</td>';
     tbody.appendChild(tr);
   });
@@ -1680,16 +1759,16 @@ async function mpRegistrar(){
   var cant=parseFloat(document.getElementById('mp-cantidad').value)||0;
   var vtotal=parseFloat(document.getElementById('mp-vtotal').value)||0;
   var unidad=document.getElementById('mp-unidad').value||'und';
-  if(!nombre) return showAlert('alert-mp','Ingresa el nombre del insumo.','err');
-  if(cant<=0) return showAlert('alert-mp','Cantidad inválida.','err');
-  if(vtotal<=0) return showAlert('alert-mp','Valor total inválido.','err');
+  if(!nombre) return showAlert('alert-mp',t('msg_enter_supply_name'),'err');
+  if(cant<=0) return showAlert('alert-mp',t('msg_invalid_qty'),'err');
+  if(vtotal<=0) return showAlert('alert-mp',t('msg_invalid_total'),'err');
   var btn=document.getElementById('btn-mp-reg');btn.disabled=true;btn.textContent='Registrando…';
 
   var { data: res, error } = await supabase.rpc('mp_registrar_entrada', {
     p_producto: nombre, p_cantidad: cant, p_unidad: unidad, p_valor_total: vtotal
   });
   btn.disabled=false;btn.textContent='📥 Registrar Entrada';
-  if(error) return showAlert('alert-mp','Error: '+error.message,'err');
+  if(error) return showAlert('alert-mp',t('msg_error_prefix')+error.message,'err');
 
   if(res.success){
     showAlert('alert-mp',res.mensaje+' — Stock: '+fmtN(res.nuevoStock)+' '+res.unidad+' — CPP: '+fmt(res.nuevoCPP),'ok');
@@ -1712,7 +1791,7 @@ async function mpConsultar(){
   var movs=estado.movimientos||[];
   document.getElementById('mp-mov-cnt').textContent=movs.length+' movimiento'+(movs.length!==1?'s':'');
   var tbody=document.getElementById('mp-tbody');tbody.innerHTML='';
-  if(!movs.length){tbody.innerHTML='<tr><td colspan="10" style="text-align:center;padding:20px;color:var(--ink3)">Sin movimientos</td></tr>';return}
+  if(!movs.length){tbody.innerHTML='<tr><td colspan="10" style="text-align:center;padding:20px;color:var(--ink3)">'+t('mp_no_movs')+'</td></tr>';return}
   movs.forEach(function(m){
     var es=m.tipo==='COMPRA';
     var tr=document.createElement('tr');tr.style.background=es?'#F0FDF4':'#FFF7F5';
@@ -1731,7 +1810,7 @@ function mpEliminarMovimiento(id, producto){
     '¿Eliminar este movimiento de "'+producto+'"? Esto recalcula el stock y el costo promedio de todos los movimientos posteriores.',
     async function(){
       var { data: res, error } = await supabase.rpc('mp_eliminar_movimiento', { p_id: id });
-      if(error){ showAlert('alert-mp','Error: '+error.message,'err'); return; }
+      if(error){ showAlert('alert-mp',t('msg_error_prefix')+error.message,'err'); return; }
       if(res.success){ showAlert('alert-mp',res.mensaje,'ok'); mpConsultar(); cargarDatosIniciales(); }
       else showAlert('alert-mp',res.mensaje,'err');
     }
@@ -1774,20 +1853,20 @@ function prodAddMp(){
   cntMp++;var id='pmp-'+cntMp;
   var div=document.createElement('div');div.id=id;div.className='mp-row';
   var opts=mpProductos.map(function(p){return '<option value="'+esc(p.nombre)+'">'+esc(p.nombre)+' — '+fmtN(p.stock)+' '+esc(p.unidad)+'</option>'}).join('');
-  div.innerHTML='<div><select class="prod-mp-sel" onchange="prodMpSel(\''+id+'\')"><option value="">-- Elegir --</option>'+opts+'</select><div class="hint" id="pmp-hs-'+id+'"></div></div><input type="number" placeholder="0.000" min="0.001" step="0.001" inputmode="decimal" id="pmp-cant-'+id+'" oninput="prodResetCalc()"><div style="font-size:11px;color:var(--indigo);font-weight:500" id="pmp-ct-'+id+'">—</div><button class="btn-rm" onclick="rmEl(\''+id+'\')">×</button>';
+  div.innerHTML='<div><select class="prod-mp-sel" onchange="prodMpSel(\''+id+'\')"><option value="">'+t('choose_option')+'</option>'+opts+'</select><div class="hint" id="pmp-hs-'+id+'"></div></div><input type="number" placeholder="0.000" min="0.001" step="0.001" inputmode="decimal" id="pmp-cant-'+id+'" oninput="prodResetCalc()"><div style="font-size:11px;color:var(--indigo);font-weight:500" id="pmp-ct-'+id+'">—</div><button class="btn-rm" onclick="rmEl(\''+id+'\')">×</button>';
   document.getElementById('prod-list-mp').appendChild(div);prodResetCalc();
 }
 function prodMpSel(id){
   var sel=document.querySelector('#'+id+' select');
   var p=mpProductos.find(function(x){return x.nombre===sel.value});
   var u=p?(p.unidad||'und'):'und';
-  document.getElementById('pmp-hs-'+id).textContent=p?'Disponible: '+fmtN(p.stock)+' '+u:'';
+  document.getElementById('pmp-hs-'+id).textContent=p?t('available_label')+' '+fmtN(p.stock)+' '+u:'';
   document.getElementById('pmp-ct-'+id).textContent=p?fmt(p.cpp)+'/'+u:'—';
   prodResetCalc();
 }
 function prodAddCf(){
   cntCf++;var id='cf-'+cntCf;var div=document.createElement('div');div.id=id;div.className='cf-row';
-  div.innerHTML='<div class="cf-grid"><div class="form-g"><label style="color:#92400E">Concepto</label><input type="text" id="cfnom-'+id+'" placeholder="Arriendo, Electricidad…" oninput="prodResetCalc()"></div><div class="form-g"><label style="color:#92400E">Costo mensual ($)</label><input type="number" id="cfmes-'+id+'" min="0" step="1000" inputmode="numeric" oninput="calcCfPrev(\''+id+'\')"><div class="hint">¿Cuánto pagas al mes?</div></div><div class="form-g"><label style="color:#92400E">Horas uso/mes</label><input type="number" id="cfhmes-'+id+'" min="0.1" step="0.5" inputmode="decimal" oninput="calcCfPrev(\''+id+'\')"></div><div class="form-g"><label style="color:#92400E">Horas este lote</label><input type="number" id="cfhlote-'+id+'" min="0.1" step="0.5" inputmode="decimal" oninput="calcCfPrev(\''+id+'\')"></div><button class="btn-rm" onclick="rmEl(\''+id+'\')">×</button></div><div class="cf-res" id="cfres-'+id+'"></div>';
+  div.innerHTML='<div class="cf-grid"><div class="form-g"><label style="color:#92400E">'+t('concept')+'</label><input type="text" id="cfnom-'+id+'" placeholder="Arriendo, Electricidad…" oninput="prodResetCalc()"></div><div class="form-g"><label style="color:#92400E">'+t('monthly_cost')+'</label><input type="number" id="cfmes-'+id+'" min="0" step="1000" inputmode="numeric" oninput="calcCfPrev(\''+id+'\')"><div class="hint">'+t('monthly_cost_hint')+'</div></div><div class="form-g"><label style="color:#92400E">'+t('hours_month_use')+'</label><input type="number" id="cfhmes-'+id+'" min="0.1" step="0.5" inputmode="decimal" oninput="calcCfPrev(\''+id+'\')"></div><div class="form-g"><label style="color:#92400E">'+t('hours_this_batch')+'</label><input type="number" id="cfhlote-'+id+'" min="0.1" step="0.5" inputmode="decimal" oninput="calcCfPrev(\''+id+'\')"></div><button class="btn-rm" onclick="rmEl(\''+id+'\')">×</button></div><div class="cf-res" id="cfres-'+id+'"></div>';
   document.getElementById('prod-list-cf').appendChild(div);prodResetCalc();
 }
 function calcCfPrev(id){
@@ -1796,13 +1875,13 @@ function calcCfPrev(id){
   var hl=parseFloat(document.getElementById('cfhlote-'+id).value)||0;
   var u=parseFloat(document.getElementById('pf-unidades').value)||0;
   var res=document.getElementById('cfres-'+id);
-  if(mes>0&&hm>0&&hl>0){var tar=mes/hm,cl=tar*hl,cu=u>0?cl/u:0;res.style.display='block';res.innerHTML='Tarifa/h: <strong>'+fmt(tar)+'</strong> → Lote: <strong>'+fmt(cl)+'</strong>'+(u>0?' → Por und: <strong>'+fmt(cu)+'</strong>':'')}
+  if(mes>0&&hm>0&&hl>0){var tar=mes/hm,cl=tar*hl,cu=u>0?cl/u:0;res.style.display='block';res.innerHTML=t('rate_hour')+' <strong>'+fmt(tar)+'</strong> → '+t('batch_label')+' <strong>'+fmt(cl)+'</strong>'+(u>0?' → '+t('per_unit_label')+' <strong>'+fmt(cu)+'</strong>':'')}
   else{res.style.display='none'}
   prodResetCalc();
 }
 function prodAddMo(){
   cntMo++;var id='mo-'+cntMo;var div=document.createElement('div');div.id=id;div.className='mo-row';
-  div.innerHTML='<div class="mo-grid"><div class="form-g"><label style="color:#4C1D95">Nombre / Cargo</label><input type="text" id="monom-'+id+'" oninput="prodResetCalc()"></div><div class="form-g"><label style="color:#4C1D95">Salario mensual ($)</label><input type="number" id="sames-'+id+'" min="0" step="1000" inputmode="numeric" oninput="calcMoPrev(\''+id+'\')"><div class="hint">Salario + prestaciones</div></div><div class="form-g"><label style="color:#4C1D95">Horas laborales/mes</label><input type="number" id="hmes-'+id+'"  min="1" inputmode="numeric" oninput="calcMoPrev(\''+id+'\')"><div class="hint">Estándar: 192 h/mes</div></div><div class="form-g"><label style="color:#4C1D95">Horas en este lote</label><input type="number" id="hlote-'+id+'" min="0.1" step="0.5" inputmode="decimal" oninput="calcMoPrev(\''+id+'\')"></div><button class="btn-rm" onclick="rmEl(\''+id+'\')">×</button></div><div class="mo-res" id="mores-'+id+'"></div>';
+  div.innerHTML='<div class="mo-grid"><div class="form-g"><label style="color:#4C1D95">'+t('name_role')+'</label><input type="text" id="monom-'+id+'" oninput="prodResetCalc()"></div><div class="form-g"><label style="color:#4C1D95">'+t('monthly_salary')+'</label><input type="number" id="sames-'+id+'" min="0" step="1000" inputmode="numeric" oninput="calcMoPrev(\''+id+'\')"><div class="hint">'+t('monthly_salary_hint')+'</div></div><div class="form-g"><label style="color:#4C1D95">'+t('work_hours_month')+'</label><input type="number" id="hmes-'+id+'"  min="1" inputmode="numeric" oninput="calcMoPrev(\''+id+'\')"><div class="hint">'+t('work_hours_hint')+'</div></div><div class="form-g"><label style="color:#4C1D95">'+t('hours_this_batch')+'</label><input type="number" id="hlote-'+id+'" min="0.1" step="0.5" inputmode="decimal" oninput="calcMoPrev(\''+id+'\')"></div><button class="btn-rm" onclick="rmEl(\''+id+'\')">×</button></div><div class="mo-res" id="mores-'+id+'"></div>';
   document.getElementById('prod-list-mo').appendChild(div);prodResetCalc();
 }
 function calcMoPrev(id){
@@ -1811,7 +1890,7 @@ function calcMoPrev(id){
   var hl=parseFloat(document.getElementById('hlote-'+id).value)||0;
   var u=parseFloat(document.getElementById('pf-unidades').value)||0;
   var res=document.getElementById('mores-'+id);
-  if(sal>0&&hm>0&&hl>0){var tar=sal/hm,cl=tar*hl,cu=u>0?cl/u:0;res.style.display='block';res.innerHTML='Tarifa/h: <strong>'+fmt(tar)+'</strong> → Lote: <strong>'+fmt(cl)+'</strong>'+(u>0?' → Por und: <strong>'+fmt(cu)+'</strong>':'')}
+  if(sal>0&&hm>0&&hl>0){var tar=sal/hm,cl=tar*hl,cu=u>0?cl/u:0;res.style.display='block';res.innerHTML=t('rate_hour')+' <strong>'+fmt(tar)+'</strong> → '+t('batch_label')+' <strong>'+fmt(cl)+'</strong>'+(u>0?' → '+t('per_unit_label')+' <strong>'+fmt(cu)+'</strong>':'')}
   else{res.style.display='none'}
   prodResetCalc();
 }
@@ -1824,15 +1903,15 @@ function leerMO(){return Array.from(document.querySelectorAll('.mo-row')).map(fu
 async function prodCalcular(){
   var pf=document.getElementById('pf-nombre').value.trim();
   var u=parseFloat(document.getElementById('pf-unidades').value);
-  if(!pf) return showAlert('alert-prod','Ingresa el nombre del producto final.','err');
-  if(!u||u<=0) return showAlert('alert-prod','Ingresa las unidades a producir.','err');
+  if(!pf) return showAlert('alert-prod',t('msg_enter_final_product'),'err');
+  if(!u||u<=0) return showAlert('alert-prod',t('msg_enter_units'),'err');
   hideAlert('alert-prod');
 
   var { data: res, error } = await supabase.rpc('prod_calcular', {
     p_producto_final: pf, p_unidades: u,
     p_ingredientes: leerIngredientes(), p_costos_fijos: leerCF(), p_mano_obra: leerMO()
   });
-  if(error) return showAlert('alert-prod','Error: '+error.message,'err');
+  if(error) return showAlert('alert-prod',t('msg_error_prefix')+error.message,'err');
   if(!res.success){ showAlert('alert-prod',res.mensaje,'err'); return; }
   ultimoCalcProd=res; prodMostrarPreview(res);
   document.getElementById('btn-prod-reg').disabled=false;
@@ -1860,7 +1939,7 @@ function prodMostrarPreview(r){
 }
 
 async function prodRegistrar(){
-  if(!ultimoCalcProd) return showAlert('alert-prod','Primero calcula el costo.','warn');
+  if(!ultimoCalcProd) return showAlert('alert-prod',t('msg_calc_first'),'warn');
   var pf=document.getElementById('pf-nombre').value.trim();
   var u=parseFloat(document.getElementById('pf-unidades').value);
   var btn=document.getElementById('btn-prod-reg');btn.disabled=true;btn.textContent='Registrando…';
@@ -1870,7 +1949,7 @@ async function prodRegistrar(){
     p_ingredientes: leerIngredientes(), p_costos_fijos: leerCF(), p_mano_obra: leerMO()
   });
   btn.textContent='✅ Registrar';
-  if(error){ showAlert('alert-prod','Error: '+error.message,'err'); btn.disabled=false; return; }
+  if(error){ showAlert('alert-prod',t('msg_error_prefix')+error.message,'err'); btn.disabled=false; return; }
   if(res.success){
     showAlert('alert-prod',res.mensaje+' — Stock PF: '+res.stockNuevoPF+' und','ok');
     prodLimpiar(); cargarDatosIniciales(); cargarHistorialProducciones();
@@ -1912,7 +1991,7 @@ function prodEliminarRegistro(id, producto){
     '¿Eliminar '+id+' ('+producto+')? Esto restaura la materia prima consumida y descuenta el producto terminado que había generado.',
     async function(){
       var { data: res, error } = await supabase.rpc('prod_eliminar', { p_id_prod: id });
-      if(error){ showAlert('alert-prod','Error: '+error.message,'err'); return; }
+      if(error){ showAlert('alert-prod',t('msg_error_prefix')+error.message,'err'); return; }
       if(res.success){
         showAlert('alert-prod',res.mensaje,'ok');
         cargarHistorialProducciones(); cargarDatosIniciales();
@@ -1927,7 +2006,7 @@ async function cargarPFVentas(){
   lista = lista || [];
   pfProductos=lista;
   var sel=document.getElementById('v-producto');var cur=sel.value;
-  sel.innerHTML='<option value="">-- Selecciona producto --</option>';
+  sel.innerHTML='<option value="">'+t('sales_select_product')+'</option>';
   lista.forEach(function(p){var o=document.createElement('option');o.value=p.nombre;o.textContent=p.nombre+' (Stock: '+p.stock+' und)';sel.appendChild(o)});
   if(cur) sel.value=cur;
 }
@@ -1967,13 +2046,13 @@ function vPrevisualizar(){
   var cant=parseFloat(document.getElementById('v-cantidad').value)||0;
   var p=pfProductos.find(function(x){return x.nombre===nombre});
   hideAlert('alert-ventas');
-  if(!nombre)      return showAlert('alert-ventas','Selecciona un producto.','err');
-  if(cant<=0)      return showAlert('alert-ventas','Cantidad inválida.','err');
-  if(!p)           return showAlert('alert-ventas','Producto no encontrado.','err');
-  if(cant>p.stock) return showAlert('alert-ventas','Stock insuficiente. Disponible: '+p.stock+' und.','err');
+  if(!nombre)      return showAlert('alert-ventas',t('msg_select_product'),'err');
+  if(cant<=0)      return showAlert('alert-ventas',t('msg_invalid_qty'),'err');
+  if(!p)           return showAlert('alert-ventas',t('msg_product_not_found'),'err');
+  if(cant>p.stock) return showAlert('alert-ventas',t('msg_insufficient_stock')+p.stock+' und.','err');
   var pu=0;
-  if(vModo==='auto'){var mg=parseFloat(document.getElementById('v-margen').value)||0;if(mg<=0) return showAlert('alert-ventas','Margen inválido.','err');pu=p.cpp*(1+mg/100)}
-  else{pu=parseFloat(document.getElementById('v-precio-manual').value)||0;if(pu<=0) return showAlert('alert-ventas','Precio inválido.','err')}
+  if(vModo==='auto'){var mg=parseFloat(document.getElementById('v-margen').value)||0;if(mg<=0) return showAlert('alert-ventas',t('msg_invalid_margin'),'err');pu=p.cpp*(1+mg/100)}
+  else{pu=parseFloat(document.getElementById('v-precio-manual').value)||0;if(pu<=0) return showAlert('alert-ventas',t('msg_invalid_price'),'err')}
   var ct=cant*p.cpp,it=cant*pu,ut=it-ct,mr=ct>0?(ut/ct*100):0,esPos=ut>=0;
   document.getElementById('v-prev-costo').textContent=fmt(ct);
   document.getElementById('v-prev-ingreso').textContent=fmt(it);
@@ -1984,7 +2063,7 @@ function vPrevisualizar(){
   vPrevOK=true;document.getElementById('btn-vender').disabled=false;
 }
 async function vConfirmar(){
-  if(!vPrevOK) return showAlert('alert-ventas','Primero previsualiza la venta.','warn');
+  if(!vPrevOK) return showAlert('alert-ventas',t('msg_preview_first'),'warn');
   var nombre=document.getElementById('v-producto').value;
   var cant=parseFloat(document.getElementById('v-cantidad').value);
   var notas=document.getElementById('v-notas').value.trim();
@@ -1998,7 +2077,7 @@ async function vConfirmar(){
     p_producto: nombre, p_cantidad: cant, p_precio_unit: pu, p_margen: mg, p_notas: notas
   });
   btn.textContent='✅ Confirmar';
-  if(error){ showAlert('alert-ventas','Error: '+error.message,'err'); btn.disabled=false; return; }
+  if(error){ showAlert('alert-ventas',t('msg_error_prefix')+error.message,'err'); btn.disabled=false; return; }
   if(res.success){
     showAlert('alert-ventas',res.mensaje+' — Stock restante: '+res.stockRestante+' und','ok');
     vLimpiarForm(); cargarPFVentas();
@@ -2018,7 +2097,7 @@ async function cargarStockPF(){
   grid.style.display='grid';empty.style.display='none';
   lista.forEach(function(p){
     var card=document.createElement('div');card.className='stock-card';
-    card.innerHTML='<div style="font-size:14px;font-weight:600;margin-bottom:12px;padding-bottom:8px;border-bottom:1.5px solid var(--border)">🕯️ '+esc(p.nombre)+'</div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><div><div style="font-size:10px;font-weight:600;text-transform:uppercase;color:var(--ink3);margin-bottom:4px">Stock disponible</div><div class="stock-num">'+p.stock+'</div><div style="font-size:11px;color:var(--ink3)">unidades para vender</div></div><div class="stock-ico" style="background:'+(p.stock>0?'var(--green3)':'var(--red2)')+'">'+( p.stock>0?'✅':'⚠️')+'</div></div><div style="background:var(--bg3);border-radius:var(--r);padding:8px 10px"><div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px"><span style="color:var(--ink3)">CPP</span><span>'+fmt(p.cpp)+'</span></div><div style="display:flex;justify-content:space-between;font-size:11px"><span style="color:var(--ink3)">Valor en inventario</span><span style="color:var(--indigo)">'+fmt(p.stock*p.cpp)+'</span></div></div>';
+    card.innerHTML='<div style="font-size:14px;font-weight:600;margin-bottom:12px;padding-bottom:8px;border-bottom:1.5px solid var(--border)">🕯️ '+esc(p.nombre)+'</div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><div><div style="font-size:10px;font-weight:600;text-transform:uppercase;color:var(--ink3);margin-bottom:4px">'+t('stock_available')+'</div><div class="stock-num">'+p.stock+'</div><div style="font-size:11px;color:var(--ink3)">'+t('units_to_sell')+'</div></div><div class="stock-ico" style="background:'+(p.stock>0?'var(--green3)':'var(--red2)')+'">'+( p.stock>0?'✅':'⚠️')+'</div></div><div style="background:var(--bg3);border-radius:var(--r);padding:8px 10px"><div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px"><span style="color:var(--ink3)">CPP</span><span>'+fmt(p.cpp)+'</span></div><div style="display:flex;justify-content:space-between;font-size:11px"><span style="color:var(--ink3)">'+t('inv_value')+'</span><span style="color:var(--indigo)">'+fmt(p.stock*p.cpp)+'</span></div></div>';
     grid.appendChild(card);
   });
 }
@@ -2027,12 +2106,12 @@ async function cargarHistorialVentas(){
   ventas = ventas || [];
   todasVentas=ventas;
   var fprod=document.getElementById('filtro-prod');var vp=fprod.value;
-  fprod.innerHTML='<option value="">Todos</option>';
+  fprod.innerHTML='<option value="">'+t('all')+'</option>';
   var prods=[];ventas.forEach(function(v){if(prods.indexOf(v.producto)===-1)prods.push(v.producto)});
   prods.sort().forEach(function(p){var o=document.createElement('option');o.value=p;o.textContent=p;fprod.appendChild(o)});
   if(vp) fprod.value=vp;
   var fa=document.getElementById('filtro-anio');var va=fa.value;
-  fa.innerHTML='<option value="">Todo el año</option>';
+  fa.innerHTML='<option value="">'+t('all_year')+'</option>';
   var anios=[];ventas.forEach(function(v){var a=((v.fecha||'').split(' ')[0].split('/')[2]||'').trim();if(a&&!anios.includes(a))anios.push(a)});
   anios.sort().reverse().forEach(function(a){var o=document.createElement('option');o.value=a;o.textContent=a;fa.appendChild(o)});
   if(va) fa.value=va;
@@ -2078,7 +2157,7 @@ function ventasEliminarRegistro(id, producto){
     '¿Eliminar esta venta de "'+producto+'"? Esto recalcula el stock del producto.',
     async function(){
       var { data: res, error } = await supabase.rpc('ventas_eliminar', { p_id: id });
-      if(error){ showAlert('alert-ventas','Error: '+error.message,'err'); return; }
+      if(error){ showAlert('alert-ventas',t('msg_error_prefix')+error.message,'err'); return; }
       if(res.success){ showAlert('alert-ventas',res.mensaje,'ok'); cargarHistorialVentas(); cargarPFVentas(); }
       else showAlert('alert-ventas',res.mensaje,'err');
     }
