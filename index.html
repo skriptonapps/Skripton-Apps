@@ -980,7 +980,7 @@ async function doRegistro(){
     email: email,
     password: password,
     options: {
-      data: { nombre: nombre, usuario: usuario, app: appSeleccionada },
+      data: { nombre: nombre, usuario: usuario, app: appSeleccionada, lang: LANG },
       emailRedirectTo: APP_PAGES[appSeleccionada] || APP_PAGES.inventario
     }
   });
@@ -1031,7 +1031,7 @@ async function doAgregarApp(){
   // Enviar correo con el link de acceso (enlace mágico) a la app solicitada
   await supabase.auth.signInWithOtp({
     email: email,
-    options: { emailRedirectTo: APP_PAGES[app] || APP_PAGES.inventario }
+    options: { emailRedirectTo: APP_PAGES[app] || APP_PAGES.inventario, data: { lang: LANG } }
   });
 
   btn.disabled=false; btn.textContent='Agregar app a mi cuenta →';
