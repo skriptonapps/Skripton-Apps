@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#B45309">
+<title>Sistema de Turnos — Skripto Apps</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  var SUPABASE_URL = 'https://tpynubemonzmtlcjioff.supabase.co';
+  var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRweW51YmVtb256bXRsY2ppb2ZmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY4OTU0MTgsImV4cCI6MjEwMjQ3MTQxOH0.R80Zc-4bM8Qo1W9EaRAXhBD2q_JFF1h7VpQIwLWZPH0';
+  if (typeof window.supabase !== 'undefined' && !window._skriptoClient) {
+    window._skriptoClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  }
+  var supabase = window._skriptoClient;
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F7F6F2;--bg2:#FFFFFF;--bg3:#EEECEA;
+  --ink:#1C1B18;--ink2:#5C5A55;--ink3:#9C9A94;
+  --amber:#B45309;--amber2:#D97706;--amber3:#FEF3C7;--amber4:#78350F;
+  --green:#0F9E6E;--green2:#1D9E75;--green3:#E1F5EE;
+  --red:#993C1D;--red2:#FAECE7;--red3:#D85A30;
+  --blue:#1a56db;--blue3:#e8f0fe;
+  --border:#E2E0DA;--border2:#C8C6C0;
+  --r:10px;--r2:16px;
+  --shadow:0 1px 3px rgba(0,0,0,.07),0 4px 12px rgba(0,0,0,.05);
+  --font-serif:'DM Serif Display',serif;
+  --font-sans:'Plus Jakarta Sans',sans-serif;
+  --font-mono:'DM Mono',monospace;
+}
+body{font-family:var(--font-sans);background:var(--bg);color:var(--ink);font-size:14px;line-height:1.6;min-height:100vh}
+h1,h2,h3{font-family:var(--font-serif);font-weight:400;line-height:1.2}
+input,select,textarea{font-family:var(--font-sans);font-size:14px;border:1.5px solid var(--border);border-radius:var(--r);padding:10px 12px;background:var(--bg2);color:var(--ink);outline:none;width:100%;transition:border .15s,box-shadow .15s}
+input:focus,select:focus,textarea:focus{border-color:var(--amber2);box-shadow:0 0 0 3px rgba(217,119,6,.1)}
+button{font-family:var(--font-sans);cursor:pointer;border:none;border-radius:var(--r)}
+
+.screen{display:none;min-height:100vh}
+.screen.visible{display:flex}
+
+#screen-login{align-items:center;justify-content:center;background:var(--bg);flex-direction:column;padding:16px}
+.login-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r2);padding:32px 28px;width:100%;max-width:420px;box-shadow:var(--shadow)}
+.login-logo{text-align:center;margin-bottom:24px}
+.login-logo h1{font-size:28px;color:var(--ink);letter-spacing:-.5px}
+.login-logo span{font-size:12px;color:var(--ink3);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.1em}
+.tab-auth{display:flex;gap:0;background:var(--bg3);border-radius:var(--r);padding:3px;margin-bottom:20px}
+.tab-auth button{flex:1;padding:9px 6px;background:none;border-radius:7px;font-size:12px;color:var(--ink2);transition:all .15s;font-weight:500}
+.tab-auth button.active{background:var(--bg2);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.form-g{margin-bottom:14px}
+.form-g label{display:block;font-size:11px;font-weight:600;color:var(--ink2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.form-g .hint{font-size:11px;color:var(--ink3);margin-top:3px}
+.btn-main{width:100%;padding:13px;background:var(--amber2);color:#fff;font-size:15px;font-weight:600;border-radius:var(--r);margin-top:6px;transition:background .15s}
+.btn-main:hover{background:var(--amber)}
+.btn-main:disabled{background:var(--ink3);cursor:not-allowed}
+.alert{padding:10px 14px;border-radius:var(--r);font-size:13px;margin-bottom:14px;display:none;border-left:3px solid}
+.alert.ok{background:var(--green3);color:var(--green);border-color:var(--green2)}
+.alert.err{background:var(--red2);color:var(--red);border-color:var(--red3)}
+.alert.warn{background:var(--amber3);color:var(--amber4);border-color:var(--amber2)}
+.link-btn{background:none;border:none;color:var(--ink3);font-size:12px;cursor:pointer;text-decoration:underline;padding:0;font-family:var(--font-sans)}
+
+#screen-app{flex-direction:column}
+.topbar{height:52px;background:var(--bg2);border-bottom:1.5px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:10px;position:fixed;top:0;left:0;right:0;z-index:200}
+.topbar-brand{font-family:var(--font-serif);font-size:18px;color:var(--ink);letter-spacing:-.3px;margin-right:auto}
+.topbar-brand span{color:var(--amber2)}
+.topbar-user{font-size:11px;color:var(--ink2);font-family:var(--font-mono);max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.btn-logout{padding:6px 12px;background:var(--bg3);color:var(--ink2);font-size:12px;border-radius:6px;border:1.5px solid var(--border);transition:all .15s}
+.btn-logout:hover{background:var(--red2);color:var(--red);border-color:var(--red3)}
+.btn-del-account{padding:6px 10px;background:none;color:var(--ink3);font-size:11px;border-radius:6px;border:1px solid transparent;transition:all .15s}
+.btn-del-account:hover{color:var(--red);border-color:var(--red3);background:var(--red2)}
+@media(max-width:680px){.btn-del-account{display:none}}
+.btn-menu-toggle{display:none;padding:6px 10px;background:var(--bg3);color:var(--ink2);font-size:18px;border-radius:6px;border:1.5px solid var(--border);line-height:1}
+
+.app-body{display:flex;padding-top:52px;min-height:100vh}
+.sidebar{width:220px;background:var(--bg2);border-right:1.5px solid var(--border);position:fixed;top:52px;bottom:0;left:0;display:flex;flex-direction:column;overflow-y:auto;z-index:100;transition:transform .25s}
+.sidebar-section{padding:16px 12px 8px}
+.sidebar-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--ink3);padding:0 8px;margin-bottom:6px}
+.nav-item{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;background:none;border-radius:var(--r);font-size:13px;font-weight:500;color:var(--ink2);transition:all .15s;text-align:left;position:relative}
+.nav-item:hover{background:var(--bg3);color:var(--ink)}
+.nav-item.active{background:var(--amber3);color:var(--amber4);font-weight:600}
+.nav-item.active::before{content:'';position:absolute;left:0;top:20%;bottom:20%;width:3px;background:var(--amber2);border-radius:0 2px 2px 0}
+.nav-item-icon{font-size:16px;width:20px;text-align:center;flex-shrink:0}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:99}
+.sidebar-overlay.visible{display:block}
+.main-content{flex:1;margin-left:220px;padding:24px;min-width:0}
+
+.card{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r2);padding:16px;margin-bottom:14px}
+.card-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--ink3);margin-bottom:14px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.kpi{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r2);padding:14px 16px}
+.kpi-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--ink3);margin-bottom:6px}
+.kpi-value{font-family:var(--font-serif);font-size:22px;color:var(--ink)}
+.kpi-sub{font-size:11px;color:var(--ink3);margin-top:3px}
+.panel-header{margin-bottom:20px;padding-bottom:16px;border-bottom:1.5px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.panel-title{font-family:var(--font-serif);font-size:24px;color:var(--ink);margin-bottom:2px}
+.panel-sub{font-size:12px;color:var(--ink3)}
+
+.btn-primary{padding:12px 20px;background:var(--amber2);color:#fff;font-size:14px;font-weight:600;border-radius:var(--r);transition:background .15s}
+.btn-primary:hover{background:var(--amber)}
+.btn-outline{padding:10px 16px;background:var(--bg2);color:var(--amber2);border:1.5px solid var(--amber2);font-size:13px;font-weight:500;border-radius:var(--r);transition:all .15s}
+.btn-outline:hover{background:var(--amber3)}
+.btn-sm{padding:6px 12px;font-size:12px;font-weight:500;border-radius:6px}
+.btn-add{width:100%;padding:11px;border:2px dashed var(--border2);background:var(--bg);color:var(--ink2);font-size:13px;border-radius:var(--r);transition:all .15s}
+.btn-add:hover{border-color:var(--amber2);color:var(--amber2);background:var(--amber3)}
+.btn-rm{background:none;border:none;color:var(--ink3);font-size:18px;line-height:1;padding:4px 8px;border-radius:4px;transition:all .15s;min-width:32px;min-height:32px;display:flex;align-items:center;justify-content:center}
+.btn-rm:hover{color:var(--red);background:var(--red2)}
+.icon-btn{padding:6px 10px;background:var(--bg3);border:1.5px solid var(--border);color:var(--ink2);font-size:13px;border-radius:6px;transition:all .15s;cursor:pointer}
+.icon-btn:hover{background:var(--amber3);color:var(--amber4);border-color:var(--amber2)}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap}
+
+.table-wrap{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r2);overflow:hidden}
+.table-head{padding:12px 16px;border-bottom:1.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.table-head h3{font-size:13px;font-weight:600;color:var(--ink)}
+.table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:12px;min-width:480px}
+thead th{background:var(--bg3);padding:9px 10px;text-align:left;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);border-bottom:1.5px solid var(--border)}
+thead th.r{text-align:right}
+tbody td{padding:9px 10px;border-bottom:1px solid var(--bg3);color:var(--ink2);vertical-align:middle}
+tbody td.r{text-align:right}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:var(--bg)}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:600;white-space:nowrap}
+.badge-fijo{background:var(--red2);color:var(--red)}
+.badge-variable{background:var(--amber3);color:var(--amber4)}
+.badge-blue{background:var(--blue3);color:var(--blue)}
+
+.filter-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.filter-row select,.filter-row input{width:auto;flex:1;min-width:100px}
+
+.grafico-wrap{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+.grafico-item{display:flex;align-items:center;gap:8px;font-size:11px}
+.grafico-label{width:100px;color:var(--ink2);text-align:right;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.grafico-bar-wrap{flex:1;height:16px;background:var(--bg3);border-radius:4px;overflow:hidden}
+.grafico-bar{height:100%;border-radius:4px;transition:width .5s}
+.grafico-val{width:100px;color:var(--ink);font-weight:500;flex-shrink:0;font-size:11px}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;display:none;align-items:flex-end;justify-content:center}
+.modal-overlay.visible{display:flex}
+.modal-overlay.center{align-items:center}
+.modal-box{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r2) var(--r2) 0 0;padding:24px 20px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto}
+.modal-overlay.center .modal-box{border-radius:var(--r2);max-width:440px}
+.modal-box h3{font-family:var(--font-serif);font-size:20px;margin-bottom:6px}
+.modal-box p{font-size:13px;color:var(--ink2);margin-bottom:16px;line-height:1.6}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:16px}
+.btn-cancel{padding:11px 18px;background:var(--bg3);color:var(--ink2);font-size:13px;border-radius:var(--r);border:1.5px solid var(--border);flex:1}
+.btn-danger{padding:11px 18px;background:var(--red);color:#fff;font-size:13px;font-weight:600;border-radius:var(--r);flex:1}
+.btn-confirm{padding:11px 18px;background:var(--amber2);color:#fff;font-size:13px;font-weight:600;border-radius:var(--r);flex:1}
+
+.empty-state{text-align:center;padding:40px 20px;color:var(--ink3)}
+.empty-icon{font-size:36px;margin-bottom:10px}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:#fff;border-radius:var(--r2);padding:12px 20px;font-size:13px;font-weight:500;box-shadow:0 8px 32px rgba(0,0,0,.25);z-index:500;opacity:0;transition:all .3s;white-space:nowrap;display:flex;align-items:center;gap:10px}
+.toast.visible{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.ok{background:var(--green)}
+.toast.err{background:var(--red)}
+
+.sidebar-footer{margin-top:auto;padding:12px;border-top:1.5px solid var(--border)}
+.btn-pdf-side{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;background:var(--amber3);border:1.5px solid rgba(180,83,9,.3);border-radius:var(--r);font-size:13px;font-weight:600;color:var(--amber4);transition:all .2s}
+.btn-pdf-side:hover{background:var(--amber2);color:#fff;border-color:var(--amber2)}
+
+@media(max-width:900px){.grid-4{grid-template-columns:1fr 1fr}}
+@media(max-width:680px){
+  .btn-menu-toggle{display:flex;align-items:center;justify-content:center}
+  .topbar-user{display:none}
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0);box-shadow:4px 0 20px rgba(0,0,0,.15)}
+  .main-content{margin-left:0;padding:16px}
+  .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
+  .btn-row{flex-direction:column}
+  .panel-header{flex-direction:column;align-items:flex-start}
+  .modal-actions{flex-direction:column}
+  .modal-actions .btn-cancel,.modal-actions .btn-danger,.modal-actions .btn-confirm{width:100%;text-align:center;flex:none}
+  .modal-box{border-radius:16px 16px 0 0;padding:20px 16px;padding-bottom:calc(20px + env(safe-area-inset-bottom))}
+  input,select,textarea{font-size:16px !important}
+  table{min-width:420px}
+}
+* { -webkit-tap-highlight-color: transparent; }
+.topbar{padding-top:env(safe-area-inset-top);height:calc(52px + env(safe-area-inset-top))}
+.app-body{padding-top:calc(52px + env(safe-area-inset-top))}
+.sidebar{top:calc(52px + env(safe-area-inset-top));padding-bottom:env(safe-area-inset-bottom)}
+</style>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+</head>
+<body>
+
+<!-- ════════ LOGIN ════════ -->
+<div id="screen-login" class="screen visible">
+  <div class="login-card">
+    <div class="login-logo">
+      <h1>Turnos</h1>
+      <span>Ingresos y gastos para conductores</span>
+    </div>
+
+    <div id="alert-auth" class="alert"></div>
+
+    <div id="blq-login">
+      <div class="form-g"><label>Correo electrónico</label>
+        <input type="email" id="in-user" placeholder="tu@correo.com" autocomplete="username">
+      </div>
+      <div class="form-g"><label>Contraseña</label>
+        <input type="password" id="in-pwd" placeholder="••••••••" autocomplete="current-password"
+          onkeydown="if(event.key==='Enter')doLogin()">
+        <div style="text-align:right;margin-top:6px">
+          <button class="link-btn" onclick="mostrarRecuperacion()">¿Olvidaste tu contraseña?</button>
+        </div>
+      </div>
+      <button class="btn-main" id="btn-login" onclick="doLogin()">Entrar</button>
+    </div>
+
+    <div id="blq-registro" style="display:none">
+      <div class="form-g"><label>Nombre (opcional)</label>
+        <input type="text" id="rg-nombre" placeholder="Tu nombre"></div>
+      <div class="form-g"><label>Correo electrónico</label>
+        <input type="email" id="rg-email" placeholder="tu@correo.com">
+        <div class="hint">Con este correo inicias sesión</div>
+      </div>
+      <div class="form-g"><label>Usuario (nombre visible)</label>
+        <input type="text" id="rg-user" placeholder="tuusuario (sin espacios)"></div>
+      <div class="form-g"><label>Contraseña</label>
+        <input type="password" id="rg-pwd" placeholder="Mínimo 6 caracteres"
+          onkeydown="if(event.key==='Enter')doRegistro()"></div>
+      <button class="btn-main" id="btn-reg" onclick="doRegistro()">Crear cuenta</button>
+    </div>
+
+    <div id="blq-recuperar" style="display:none">
+      <div style="text-align:center;margin-bottom:20px">
+        <div style="font-size:28px;margin-bottom:6px">🔑</div>
+        <div style="font-size:15px;font-weight:600">Recuperar contraseña</div>
+        <div style="font-size:12px;color:var(--ink3);margin-top:4px">Te enviaremos un enlace a tu correo</div>
+      </div>
+      <div class="form-g"><label>Tu correo electrónico</label>
+        <input type="email" id="rec-email" placeholder="tu@correo.com"
+          onkeydown="if(event.key==='Enter')doRecuperar()"></div>
+      <button class="btn-main" id="btn-recuperar" onclick="doRecuperar()">Enviar instrucciones</button>
+      <div style="text-align:center;margin-top:12px">
+        <button class="link-btn" onclick="volverLogin()">Volver al inicio de sesión</button>
+      </div>
+    </div>
+
+    <div id="blq-reset" style="display:none">
+      <div style="text-align:center;margin-bottom:20px">
+        <div style="font-size:28px;margin-bottom:6px">🔐</div>
+        <div style="font-size:15px;font-weight:600">Nueva contraseña</div>
+      </div>
+      <div class="form-g"><label>Nueva contraseña</label>
+        <input type="password" id="reset-pwd" placeholder="Mínimo 6 caracteres"></div>
+      <div class="form-g"><label>Confirmar contraseña</label>
+        <input type="password" id="reset-pwd2" placeholder="Repite la contraseña"
+          onkeydown="if(event.key==='Enter')doNuevaPwd()"></div>
+      <button class="btn-main" id="btn-reset" onclick="doNuevaPwd()">Guardar contraseña</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ APP ════════ -->
+<div id="screen-app" class="screen">
+  <div class="topbar">
+    <button class="btn-menu-toggle" onclick="toggleSidebar()">☰</button>
+    <div class="topbar-brand">Turnos</div>
+    <span class="topbar-user" id="tb-user"></span>
+    <button class="btn-del-account" onclick="mostrarModalEliminar()">Eliminar cuenta</button>
+    <button class="btn-logout" onclick="doLogout()">Salir</button>
+  </div>
+
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <div class="app-body">
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-label">Sistema</div>
+        <button class="nav-item active" id="nav-dashboard" onclick="cambiarMod('dashboard')">
+          <span class="nav-item-icon">📊</span>Control
+        </button>
+        <button class="nav-item" id="nav-viaje" onclick="cambiarMod('viaje')">
+          <span class="nav-item-icon">🚗</span>Registrar Viaje
+        </button>
+        <button class="nav-item" id="nav-historial" onclick="cambiarMod('historial')">
+          <span class="nav-item-icon">🗂️</span>Historial de Viajes
+        </button>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">Finanzas</div>
+        <button class="nav-item" id="nav-gastos" onclick="cambiarMod('gastos')">
+          <span class="nav-item-icon">💸</span>Gastos
+        </button>
+        <button class="nav-item" id="nav-comparar" onclick="cambiarMod('comparar')">
+          <span class="nav-item-icon">⚖️</span>Comparar Plataformas
+        </button>
+      </div>
+      <div class="sidebar-footer">
+        <button class="btn-pdf-side" onclick="generarReportePDF()">
+          <span>📄</span><span>Reporte PDF</span>
+        </button>
+      </div>
+    </nav>
+
+    <div class="main-content">
+
+      <!-- ════ DASHBOARD ════ -->
+      <div id="mod-dashboard" class="modulo">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Control</div>
+            <div class="panel-sub" id="dash-periodo-label">Cargando datos…</div>
+          </div>
+        </div>
+        <div id="alert-dash" class="alert"></div>
+        <div class="grid-4" style="margin-bottom:16px">
+          <div class="kpi"><div class="kpi-label">Ingresos (mes)</div>
+            <div class="kpi-value" id="kpi-ing" style="color:var(--green)">$0</div>
+            <div class="kpi-sub" id="kpi-ing-sub">0 viajes</div></div>
+          <div class="kpi"><div class="kpi-label">Gastos (mes)</div>
+            <div class="kpi-value" id="kpi-gas" style="color:var(--red)">$0</div></div>
+          <div class="kpi"><div class="kpi-label">Utilidad Neta</div>
+            <div class="kpi-value" id="kpi-util">$0</div>
+            <div class="kpi-sub" id="kpi-margen-sub"></div></div>
+          <div class="kpi"><div class="kpi-label">Promedio por viaje</div>
+            <div class="kpi-value" id="kpi-prom" style="color:var(--amber2)">$0</div></div>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title" style="color:var(--amber4)">⚖️ Ingresos por plataforma (mes)</div>
+            <div id="graf-plataformas-dash"><div class="empty-state" style="padding:20px 10px"><div style="font-size:12px;color:var(--ink3)">Sin datos este mes</div></div></div>
+          </div>
+          <div class="card">
+            <div class="card-title" style="color:var(--red)">💸 Gastos por categoría (mes)</div>
+            <div id="graf-gastos-dash"><div class="empty-state" style="padding:20px 10px"><div style="font-size:12px;color:var(--ink3)">Sin datos este mes</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════ REGISTRAR VIAJE ════ -->
+      <div id="mod-viaje" class="modulo" style="display:none">
+        <div class="panel-header">
+          <div><div class="panel-title">Registrar Viaje</div>
+            <div class="panel-sub">Anota cada carrera apenas la termines</div></div>
+        </div>
+        <div id="alert-viaje" class="alert"></div>
+        <div class="card">
+          <div class="card-title">Datos del viaje</div>
+          <div class="form-g">
+            <label>Plataforma</label>
+            <input type="text" id="v-plataforma" list="lista-plataformas" placeholder="Uber, InDrive, Didi…">
+            <datalist id="lista-plataformas"></datalist>
+          </div>
+          <div class="grid-2">
+            <div class="form-g">
+              <label>Monto recibido</label>
+              <input type="number" id="v-monto" min="0" step="500" inputmode="numeric" placeholder="$0">
+            </div>
+            <div class="form-g">
+              <label>Fecha y hora</label>
+              <input type="datetime-local" id="v-fecha">
+            </div>
+          </div>
+          <div class="form-g">
+            <label>Notas (opcional)</label>
+            <input type="text" id="v-notas" placeholder="Ej: turno de la noche…">
+          </div>
+        </div>
+        <button class="btn-primary" style="width:100%" id="btn-guardar-viaje" onclick="registrarViaje()">💾 Guardar Viaje</button>
+      </div>
+
+      <!-- ════ HISTORIAL DE VIAJES ════ -->
+      <div id="mod-historial" class="modulo" style="display:none">
+        <div class="panel-header">
+          <div><div class="panel-title">Historial de Viajes</div>
+            <div class="panel-sub">Todos tus viajes registrados</div></div>
+        </div>
+        <div id="alert-historial" class="alert"></div>
+        <div class="filter-row" style="margin-bottom:14px">
+          <select id="f-plataforma" onchange="filtrarViajes()"><option value="">Todas las plataformas</option></select>
+          <select id="f-viaje-mes" onchange="filtrarViajes()">
+            <option value="">Todos los meses</option>
+            <option value="01">Enero</option><option value="02">Febrero</option>
+            <option value="03">Marzo</option><option value="04">Abril</option>
+            <option value="05">Mayo</option><option value="06">Junio</option>
+            <option value="07">Julio</option><option value="08">Agosto</option>
+            <option value="09">Septiembre</option><option value="10">Octubre</option>
+            <option value="11">Noviembre</option><option value="12">Diciembre</option>
+          </select>
+          <select id="f-viaje-anio" onchange="filtrarViajes()"><option value="">Todos</option></select>
+        </div>
+        <div class="table-wrap">
+          <div class="table-head"><h3 id="viajes-count">Viajes</h3></div>
+          <div class="table-scroll">
+            <table>
+              <thead><tr>
+                <th>Fecha</th><th>Plataforma</th><th class="r">Monto</th><th>Notas</th><th></th>
+              </tr></thead>
+              <tbody id="viajes-tbody"></tbody>
+            </table>
+          </div>
+          <div class="empty-state" id="viajes-empty" style="display:none">
+            <div class="empty-icon">🚗</div>
+            <div>No hay viajes registrados</div>
+            <p style="font-size:12px;margin-top:6px">Registra tu primer viaje desde "Registrar Viaje"</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════ GASTOS ════ -->
+      <div id="mod-gastos" class="modulo" style="display:none">
+        <div class="panel-header">
+          <div><div class="panel-title">Gastos</div>
+            <div class="panel-sub">Gasolina, mantenimiento, seguro, cuota del vehículo…</div></div>
+          <button class="btn-primary btn-sm" onclick="abrirModalNuevoGasto()">+ Registrar gasto</button>
+        </div>
+        <div id="alert-gastos" class="alert"></div>
+        <div class="filter-row" style="margin-bottom:14px">
+          <select id="f-gas-tipo" onchange="cargarGastos()">
+            <option value="">Todos los tipos</option>
+            <option value="fijo">Fijos</option>
+            <option value="variable">Variables</option>
+          </select>
+          <select id="f-gas-mes" onchange="cargarGastos()">
+            <option value="">Todos los meses</option>
+            <option value="01">Enero</option><option value="02">Febrero</option>
+            <option value="03">Marzo</option><option value="04">Abril</option>
+            <option value="05">Mayo</option><option value="06">Junio</option>
+            <option value="07">Julio</option><option value="08">Agosto</option>
+            <option value="09">Septiembre</option><option value="10">Octubre</option>
+            <option value="11">Noviembre</option><option value="12">Diciembre</option>
+          </select>
+          <select id="f-gas-anio" onchange="cargarGastos()"><option value="">Todos</option></select>
+        </div>
+        <div class="table-wrap">
+          <div class="table-head"><h3 id="gas-count">Gastos</h3>
+            <div style="font-size:12px;font-weight:600;color:var(--red)" id="gas-total-header"></div>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead><tr>
+                <th>Fecha</th><th>Tipo</th><th>Categoría</th><th class="r">Monto</th><th>Notas</th><th></th>
+              </tr></thead>
+              <tbody id="gas-tbody"></tbody>
+            </table>
+          </div>
+          <div class="empty-state" id="gas-empty" style="display:none">
+            <div class="empty-icon">💸</div><div>Sin gastos registrados</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════ COMPARAR PLATAFORMAS ════ -->
+      <div id="mod-comparar" class="modulo" style="display:none">
+        <div class="panel-header">
+          <div><div class="panel-title">Comparar Plataformas</div>
+            <div class="panel-sub">¿Cuál te está rindiendo más?</div></div>
+        </div>
+        <div id="alert-comparar" class="alert"></div>
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-title">Período de análisis</div>
+          <div class="grid-2" style="align-items:end">
+            <div class="form-g" style="margin-bottom:0">
+              <label>Desde</label>
+              <div style="display:flex;gap:6px">
+                <select id="cmp-desde-mes" style="flex:1.3"></select>
+                <select id="cmp-desde-anio" style="flex:1"></select>
+              </div>
+            </div>
+            <div class="form-g" style="margin-bottom:0">
+              <label>Hasta</label>
+              <div style="display:flex;gap:6px">
+                <select id="cmp-hasta-mes" style="flex:1.3"></select>
+                <select id="cmp-hasta-anio" style="flex:1"></select>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+            <button class="btn-outline btn-sm" onclick="setComparPeriodo('mes')">Este mes</button>
+            <button class="btn-outline btn-sm" onclick="setComparPeriodo('trim')">Trimestre</button>
+            <button class="btn-outline btn-sm" onclick="setComparPeriodo('anio')">Este año</button>
+            <button class="btn-primary btn-sm" onclick="cargarComparacion()">Actualizar</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <div class="table-head"><h3>Rendimiento por plataforma</h3></div>
+          <div class="table-scroll">
+            <table>
+              <thead><tr>
+                <th>Plataforma</th><th class="r">Viajes</th><th class="r">Total ingresos</th><th class="r">Promedio por viaje</th>
+              </tr></thead>
+              <tbody id="cmp-tbody"></tbody>
+            </table>
+          </div>
+          <div class="empty-state" id="cmp-empty" style="display:none">
+            <div class="empty-icon">⚖️</div><div>Sin viajes en este período</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Modal editar/nuevo viaje -->
+<div class="modal-overlay" id="modal-editar-viaje">
+  <div class="modal-box" style="max-width:440px">
+    <h3>Editar viaje</h3>
+    <input type="hidden" id="vedit-id">
+    <div id="vedit-error" style="display:none;color:var(--red);font-size:12px;margin-bottom:10px"></div>
+    <div class="form-g"><label>Plataforma</label>
+      <input type="text" id="vedit-plataforma" list="lista-plataformas"></div>
+    <div class="form-g"><label>Monto</label>
+      <input type="number" id="vedit-monto" min="0" step="500"></div>
+    <div class="form-g"><label>Fecha y hora</label>
+      <input type="datetime-local" id="vedit-fecha"></div>
+    <div class="form-g"><label>Notas</label>
+      <input type="text" id="vedit-notas"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="cerrarModal('modal-editar-viaje')">Cancelar</button>
+      <button class="btn-confirm" onclick="guardarEdicionViaje()">Guardar cambios</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Gasto -->
+<div class="modal-overlay" id="modal-gasto">
+  <div class="modal-box">
+    <h3 id="mgas-title">Registrar gasto</h3>
+    <div id="alert-mgas" class="alert"></div>
+    <input type="hidden" id="mgas-id">
+    <div class="grid-2">
+      <div class="form-g"><label>Tipo</label>
+        <select id="mgas-tipo">
+          <option value="variable">Variable (gasolina, lavado…)</option>
+          <option value="fijo">Fijo (seguro, cuota…)</option>
+        </select></div>
+      <div class="form-g"><label>Fecha</label>
+        <input type="date" id="mgas-fecha"></div>
+    </div>
+    <div class="form-g"><label>Categoría</label>
+      <input type="text" id="mgas-cat" placeholder="Gasolina, Mantenimiento, Seguro…" list="gas-cats">
+      <datalist id="gas-cats"><option value="Gasolina"><option value="Mantenimiento"><option value="Lavado"><option value="Seguro"><option value="Cuota del vehículo"><option value="Parqueadero"><option value="Peajes"><option value="Otro"></datalist>
+    </div>
+    <div class="form-g"><label>Monto</label>
+      <input type="number" id="mgas-monto" min="0" step="500" inputmode="numeric" placeholder="$0"></div>
+    <div class="form-g"><label>Notas</label>
+      <input type="text" id="mgas-notas" placeholder="Detalle adicional…"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="cerrarModal('modal-gasto')">Cancelar</button>
+      <button class="btn-confirm" onclick="guardarGasto()">Guardar gasto</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal confirmar -->
+<div class="modal-overlay center" id="modal-confirmar">
+  <div class="modal-box">
+    <h3 id="mconf-title">¿Confirmar acción?</h3>
+    <p id="mconf-msg">Esta acción no se puede deshacer.</p>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="cerrarModal('modal-confirmar')">Cancelar</button>
+      <button class="btn-danger" id="mconf-btn" onclick="">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal eliminar cuenta -->
+<div class="modal-overlay center" id="modal-eliminar-cuenta">
+  <div class="modal-box">
+    <h3>Eliminar mi cuenta</h3>
+    <p>Esta acción cerrará tu sesión y eliminará tu acceso.<br><br>
+    <strong>Tus datos se conservan por 30 días.</strong><br><br>
+    Confirma con tu contraseña actual:</p>
+    <div class="form-g">
+      <input type="password" id="del-pwd" placeholder="Tu contraseña actual"
+        onkeydown="if(event.key==='Enter')doEliminarCuenta()">
+    </div>
+    <div id="del-error" style="display:none;color:var(--red);font-size:12px;margin-bottom:4px"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="cerrarModal('modal-eliminar-cuenta')">Cancelar</button>
+      <button class="btn-danger" id="btn-del-confirm" onclick="doEliminarCuenta()">Sí, eliminar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var SESSION = null;
+var _viajes = [];
+var _gastos = [];
+
+function fmt(v){ return new Intl.NumberFormat('es-CO',{style:'currency',currency:'COP',minimumFractionDigits:0}).format(v||0); }
+function esc(s){ return (s||'').toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function showAlert(id,msg,tipo){ var a=document.getElementById(id); if(!a)return; a.textContent=msg; a.className='alert '+tipo; a.style.display='block'; setTimeout(function(){a.style.display='none';},7000); }
+function hideAlert(id){ var a=document.getElementById(id); if(a) a.style.display='none'; }
+function toast(msg,tipo){ var el=document.getElementById('toast'); el.textContent=msg; el.className='toast visible '+(tipo||'ok'); setTimeout(function(){el.className='toast';},4000); }
+
+function fechaHoyLocal(){
+  var d=new Date();
+  var pad=function(n){return String(n).padStart(2,'0');};
+  return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'T'+pad(d.getHours())+':'+pad(d.getMinutes());
+}
+function fechaHoyCorta(){
+  var d=new Date(); var pad=function(n){return String(n).padStart(2,'0');};
+  return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+}
+function mesAnioHoy(){ var d=new Date(); return d.getFullYear()+'/'+String(d.getMonth()+1).padStart(2,'0'); }
+
+/* ══ SIDEBAR ══ */
+function toggleSidebar(){
+  var sb=document.getElementById('sidebar'), ov=document.getElementById('sidebar-overlay');
+  if(sb.classList.contains('open')){ sb.classList.remove('open'); ov.classList.remove('visible'); }
+  else { sb.classList.add('open'); ov.classList.add('visible'); }
+}
+function closeSidebar(){ document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebar-overlay').classList.remove('visible'); }
+
+var MODS=['dashboard','viaje','historial','gastos','comparar'];
+function cambiarMod(mod){
+  closeSidebar();
+  MODS.forEach(function(m){
+    document.getElementById('nav-'+m).classList.toggle('active',m===mod);
+    document.getElementById('mod-'+m).style.display=m===mod?'block':'none';
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(mod==='dashboard')  cargarDashboard();
+  if(mod==='viaje')      initViaje();
+  if(mod==='historial')  cargarHistorialViajes();
+  if(mod==='gastos')     cargarGastos();
+  if(mod==='comparar')   initComparar();
+}
+
+/* ══ AUTH ══ */
+function setAuthTab(tab){
+  document.querySelectorAll('.tab-auth button').forEach(function(b,i){
+    b.classList.toggle('active',(i===0&&tab==='login')||(i===1&&tab==='registro'));
+  });
+  document.getElementById('blq-login').style.display     = tab==='login'?'block':'none';
+  document.getElementById('blq-registro').style.display  = tab==='registro'?'block':'none';
+  document.getElementById('blq-recuperar').style.display = 'none';
+  document.getElementById('blq-reset').style.display     = 'none';
+  hideAlert('alert-auth');
+}
+
+async function doLogin(){
+  var email=document.getElementById('in-user').value.trim();
+  var p=document.getElementById('in-pwd').value;
+  if(!email||!p) return showAlert('alert-auth','Ingresa correo y contraseña.','err');
+  var btn=document.getElementById('btn-login');
+  btn.disabled=true;btn.textContent='Entrando…';
+  try {
+    var { data, error } = await supabase.auth.signInWithPassword({ email:email, password:p });
+    if(error){ return showAlert('alert-auth','Correo o contraseña incorrectos.','err'); }
+    var { data: perfil } = await supabase.from('perfiles').select('*').eq('id', data.user.id).single();
+    if(!perfil || perfil.estado!=='activo' || !perfil.apps.includes('turnos')){
+      await supabase.auth.signOut();
+      var tipo = (perfil && (perfil.estado==='pendiente'||perfil.estado==='inactivo')) ? 'warn':'err';
+      var msg = perfil && perfil.estado==='pendiente'
+        ? '⏳ Tu cuenta está pendiente de activación.'
+        : '🔒 Sin suscripción activa para Turnos.';
+      return showAlert('alert-auth', msg, tipo);
+    }
+    SESSION={usuario:perfil.usuario,nombre:perfil.nombre};
+    entrarApp();
+  } catch(e) {
+    showAlert('alert-auth','Error inesperado: '+e.message,'err');
+  } finally {
+    btn.disabled=false;btn.textContent='Entrar';
+  }
+}
+
+async function doRegistro(){
+  var n=document.getElementById('rg-nombre').value.trim();
+  var e=document.getElementById('rg-email').value.trim();
+  var u=document.getElementById('rg-user').value.trim().toLowerCase().replace(/\s+/g,'_');
+  var p=document.getElementById('rg-pwd').value;
+  if(!e||!u||!p) return showAlert('alert-auth','Completa correo, usuario y contraseña.','err');
+  if(p.length<6) return showAlert('alert-auth','La contraseña debe tener al menos 6 caracteres.','err');
+  var btn=document.getElementById('btn-reg'); btn.disabled=true; btn.textContent='Creando cuenta…';
+  try {
+    var { data, error } = await supabase.auth.signUp({
+      email: e, password: p,
+      options: { data: { nombre: n||u, usuario: u, app: 'turnos' } }
+    });
+    if(error) return showAlert('alert-auth', error.message,'err');
+    showAlert('alert-auth','🎉 ¡Cuenta creada! Revisa tu correo para confirmar y entrar directo con tus 3 días de prueba gratis.','ok');
+    setAuthTab('login');
+  } catch(err) {
+    showAlert('alert-auth','Error inesperado: '+err.message,'err');
+  } finally {
+    btn.disabled=false; btn.textContent='Crear cuenta';
+  }
+}
+
+async function doLogout(){
+  await supabase.auth.signOut();
+  SESSION=null;
+  document.getElementById('screen-app').classList.remove('visible');
+  document.getElementById('screen-login').classList.add('visible');
+  setAuthTab('login');
+}
+
+function mostrarRecuperacion(){
+  ['blq-login','blq-registro'].forEach(function(id){document.getElementById(id).style.display='none';});
+  document.getElementById('blq-recuperar').style.display='block';
+  document.querySelectorAll('.tab-auth button').forEach(function(b){b.classList.remove('active');});
+}
+function volverLogin(){ document.getElementById('blq-recuperar').style.display='none'; document.getElementById('blq-reset').style.display='none'; setAuthTab('login'); }
+
+async function doRecuperar(){
+  var email=document.getElementById('rec-email').value.trim();
+  if(!email) return showAlert('alert-auth','Ingresa tu correo.','err');
+  var btn=document.getElementById('btn-recuperar'); btn.disabled=true; btn.textContent='Enviando…';
+  try {
+    await supabase.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + window.location.pathname });
+    showAlert('alert-auth','📧 Si ese correo está registrado, recibirás las instrucciones en unos minutos.','ok');
+  } catch(e) {
+    showAlert('alert-auth','Error: '+e.message,'err');
+  } finally {
+    btn.disabled=false; btn.textContent='Enviar instrucciones';
+  }
+}
+
+async function doNuevaPwd(){
+  var pwd=document.getElementById('reset-pwd').value, pwd2=document.getElementById('reset-pwd2').value;
+  if(!pwd||pwd.length<6) return showAlert('alert-auth','Mínimo 6 caracteres.','err');
+  if(pwd!==pwd2) return showAlert('alert-auth','Las contraseñas no coinciden.','err');
+  var btn=document.getElementById('btn-reset'); btn.disabled=true; btn.textContent='Guardando…';
+  try {
+    var { error } = await supabase.auth.updateUser({ password: pwd });
+    if(error) return showAlert('alert-auth', error.message,'err');
+    showAlert('alert-auth','✅ Contraseña actualizada. Ya puedes iniciar sesión.','ok');
+    setTimeout(volverLogin,2000);
+  } catch(e) {
+    showAlert('alert-auth','Error: '+e.message,'err');
+  } finally {
+    btn.disabled=false; btn.textContent='Guardar contraseña';
+  }
+}
+
+supabase.auth.onAuthStateChange(function(event){
+  if(event==='PASSWORD_RECOVERY'){
+    ['blq-login','blq-registro','blq-recuperar'].forEach(function(id){document.getElementById(id).style.display='none';});
+    document.getElementById('blq-reset').style.display='block';
+    document.querySelectorAll('.tab-auth button').forEach(function(b){b.classList.remove('active');});
+  }
+});
+
+(async function(){
+  var { data:{ session } } = await supabase.auth.getSession();
+  if(!session) return;
+  var { data: perfil } = await supabase.from('perfiles').select('*').eq('id', session.user.id).single();
+  if(perfil && perfil.estado==='activo' && perfil.apps.includes('turnos')){
+    SESSION={usuario:perfil.usuario,nombre:perfil.nombre};
+    entrarApp();
+  } else if(perfil && !perfil.apps.includes('turnos')){
+    await supabase.auth.signOut();
+    showAlert('alert-auth','⚠️ Sin acceso a Turnos. Contacta al administrador.','warn');
+  }
+})();
+
+function entrarApp(){
+  document.getElementById('screen-login').classList.remove('visible');
+  document.getElementById('screen-app').classList.add('visible');
+  document.getElementById('tb-user').textContent=SESSION.nombre||SESSION.usuario;
+  cargarDashboard();
+}
+
+/* ══ MODALES ══ */
+function abrirModal(id){ document.getElementById(id).classList.add('visible'); }
+function cerrarModal(id){ document.getElementById(id).classList.remove('visible'); }
+document.addEventListener('keydown',function(e){ if(e.key==='Escape') document.querySelectorAll('.modal-overlay.visible').forEach(function(m){m.classList.remove('visible');}); });
+function confirmar(titulo,msg,fn){
+  document.getElementById('mconf-title').textContent=titulo;
+  document.getElementById('mconf-msg').textContent=msg;
+  document.getElementById('mconf-btn').onclick=function(){ cerrarModal('modal-confirmar'); fn(); };
+  abrirModal('modal-confirmar');
+}
+
+/* ══ DASHBOARD ══ */
+async function cargarDashboard(){
+  var ma=mesAnioHoy();
+  document.getElementById('dash-periodo-label').textContent='Cargando…';
+  var { data: r } = await supabase.rpc('tur_resumen', { p_desde: ma, p_hasta: ma });
+  if(!r) return;
+
+  document.getElementById('dash-periodo-label').textContent='Mes actual · '+(new Date()).toLocaleDateString('es-CO',{month:'long',year:'numeric'});
+  document.getElementById('kpi-ing').textContent=fmt(r.totalIngresos);
+  document.getElementById('kpi-ing-sub').textContent=r.numViajes+' viaje'+(r.numViajes!==1?'s':'');
+  document.getElementById('kpi-gas').textContent=fmt(r.totalGastos);
+  var u=r.utilidadNeta; var ku=document.getElementById('kpi-util');
+  ku.textContent=fmt(u); ku.style.color=u>=0?'var(--green)':'var(--red)';
+  document.getElementById('kpi-margen-sub').textContent='Margen: '+r.margen.toFixed(1)+'%';
+  document.getElementById('kpi-prom').textContent=fmt(r.promedioViaje);
+
+  renderGrafico('graf-plataformas-dash', r.porPlataforma.map(function(p){return{label:p.plataforma,val:p.total};}), r.porPlataforma.map(function(p){return p.total;}), 'var(--amber2)');
+  renderGrafico('graf-gastos-dash', r.porCategoriaGasto.map(function(g){return{label:g.categoria,val:g.total};}), r.porCategoriaGasto.map(function(g){return g.total;}), 'var(--red)');
+}
+
+function renderGrafico(id,data,vals,color){
+  var el=document.getElementById(id);
+  if(!data||!data.length){el.innerHTML='<div class="empty-state" style="padding:16px 10px"><div style="font-size:12px;color:var(--ink3)">Sin datos</div></div>';return;}
+  var max=Math.max.apply(null,vals)||1;
+  var html='<div class="grafico-wrap">';
+  data.slice(0,8).forEach(function(d){
+    var pct=Math.round(d.val/max*100);
+    html+='<div class="grafico-item">'+
+      '<div class="grafico-label" title="'+esc(d.label)+'">'+esc(d.label)+'</div>'+
+      '<div class="grafico-bar-wrap"><div class="grafico-bar" style="width:'+pct+'%;background:'+color+'"></div></div>'+
+      '<div class="grafico-val">'+fmt(d.val)+'</div></div>';
+  });
+  html+='</div>';
+  el.innerHTML=html;
+}
+
+/* ══ REGISTRAR VIAJE ══ */
+async function initViaje(){
+  document.getElementById('v-fecha').value=fechaHoyLocal();
+  document.getElementById('v-plataforma').value='';
+  document.getElementById('v-monto').value='';
+  document.getElementById('v-notas').value='';
+  var { data: plats } = await supabase.rpc('tur_plataformas_usadas');
+  var dl=document.getElementById('lista-plataformas'); dl.innerHTML='';
+  (plats||[]).forEach(function(p){ var o=document.createElement('option'); o.value=p; dl.appendChild(o); });
+}
+
+async function registrarViaje(){
+  var plataforma=document.getElementById('v-plataforma').value.trim();
+  var monto=parseFloat(document.getElementById('v-monto').value)||0;
+  var fecha=document.getElementById('v-fecha').value;
+  var notas=document.getElementById('v-notas').value.trim();
+  if(!plataforma) return showAlert('alert-viaje','Escribe o selecciona la plataforma.','err');
+  if(monto<=0) return showAlert('alert-viaje','El monto debe ser mayor a 0.','err');
+
+  var btn=document.getElementById('btn-guardar-viaje');
+  btn.disabled=true; btn.textContent='Guardando…';
+  try{
+    var { data: res, error } = await supabase.rpc('tur_registrar_viaje', {
+      p_plataforma: plataforma, p_monto: monto, p_fecha: fecha, p_notas: notas
+    });
+    if(error){ showAlert('alert-viaje','Error: '+error.message,'err'); return; }
+    if(res.success){
+      toast(res.mensaje,'ok');
+      initViaje();
+    } else showAlert('alert-viaje',res.mensaje,'err');
+  } finally {
+    btn.disabled=false; btn.textContent='💾 Guardar Viaje';
+  }
+}
+
+/* ══ HISTORIAL DE VIAJES ══ */
+async function cargarHistorialViajes(){
+  var { data: lista } = await supabase.rpc('tur_listar_viajes');
+  _viajes = lista||[];
+
+  var fp=document.getElementById('f-plataforma'); var vp=fp.value;
+  var plats=[]; _viajes.forEach(function(v){ if(!plats.includes(v.plataforma)) plats.push(v.plataforma); });
+  fp.innerHTML='<option value="">Todas las plataformas</option>';
+  plats.sort().forEach(function(p){ var o=document.createElement('option'); o.value=p; o.textContent=p; fp.appendChild(o); });
+  if(vp) fp.value=vp;
+
+  var fa=document.getElementById('f-viaje-anio'); var va=fa.value;
+  var anios=[]; _viajes.forEach(function(v){ var p=(v.fechaSolo||'').split('/'); if(p.length>=3 && !anios.includes(p[2])) anios.push(p[2]); });
+  fa.innerHTML='<option value="">Todos</option>';
+  anios.sort().reverse().forEach(function(a){ var o=document.createElement('option'); o.value=a; o.textContent=a; fa.appendChild(o); });
+  if(va) fa.value=va;
+
+  filtrarViajes();
+}
+
+function filtrarViajes(){
+  var plat=document.getElementById('f-plataforma').value;
+  var mes=document.getElementById('f-viaje-mes').value;
+  var anio=document.getElementById('f-viaje-anio').value;
+
+  var filtrados=_viajes.filter(function(v){
+    var p=(v.fechaSolo||'').split('/');
+    return (!plat||v.plataforma===plat) && (!mes||p[1]===mes) && (!anio||p[2]===anio);
+  });
+
+  var tbody=document.getElementById('viajes-tbody');
+  var empty=document.getElementById('viajes-empty');
+  tbody.innerHTML='';
+  document.getElementById('viajes-count').textContent=filtrados.length+' viaje'+(filtrados.length!==1?'s':'');
+  if(!filtrados.length){ empty.style.display='block'; return; }
+  empty.style.display='none';
+
+  filtrados.forEach(function(v){
+    var tr=document.createElement('tr');
+    tr.innerHTML='<td>'+esc(v.fechaSolo)+'</td>'+
+      '<td><span class="badge badge-blue">'+esc(v.plataforma)+'</span></td>'+
+      '<td class="r"><strong style="color:var(--green)">'+fmt(v.monto)+'</strong></td>'+
+      '<td style="font-size:11px;color:var(--ink3)">'+esc(v.notas||'—')+'</td>'+
+      '<td><div style="display:flex;gap:4px">'+
+        '<button class="icon-btn btn-sm" onclick="editarViaje(\''+v.id+'\')">✏️</button>'+
+        '<button class="btn-rm" title="Eliminar" onclick="eliminarViaje(\''+v.id+'\')" style="font-size:15px">🗑</button>'+
+      '</div></td>';
+    tbody.appendChild(tr);
+  });
+}
+
+function editarViaje(id){
+  var v=_viajes.find(function(x){return x.id===id;});
+  if(!v) return;
+  document.getElementById('vedit-id').value=v.id;
+  document.getElementById('vedit-plataforma').value=v.plataforma;
+  document.getElementById('vedit-monto').value=v.monto;
+  var p=(v.fechaSolo||'').split('/');
+  document.getElementById('vedit-fecha').value = p.length>=3 ? (p[2]+'-'+p[1]+'-'+p[0]+'T12:00') : fechaHoyLocal();
+  document.getElementById('vedit-notas').value=v.notas||'';
+  document.getElementById('vedit-error').style.display='none';
+  abrirModal('modal-editar-viaje');
+}
+async function guardarEdicionViaje(){
+  var id=document.getElementById('vedit-id').value;
+  var plataforma=document.getElementById('vedit-plataforma').value.trim();
+  var monto=parseFloat(document.getElementById('vedit-monto').value)||0;
+  var fecha=document.getElementById('vedit-fecha').value;
+  var notas=document.getElementById('vedit-notas').value.trim();
+  var errEl=document.getElementById('vedit-error');
+  if(!plataforma||monto<=0){ errEl.textContent='Completa plataforma y monto válido.'; errEl.style.display='block'; return; }
+  var { data: res, error } = await supabase.rpc('tur_editar_viaje', { p_id:id, p_plataforma:plataforma, p_monto:monto, p_fecha:fecha, p_notas:notas });
+  if(error){ errEl.textContent='Error: '+error.message; errEl.style.display='block'; return; }
+  if(res.success){ cerrarModal('modal-editar-viaje'); toast(res.mensaje,'ok'); cargarHistorialViajes(); cargarDashboard(); }
+  else { errEl.textContent=res.mensaje; errEl.style.display='block'; }
+}
+function eliminarViaje(id){
+  confirmar('Eliminar viaje','¿Eliminar este viaje? Esta acción no se puede deshacer.', async function(){
+    var { data: res, error } = await supabase.rpc('tur_eliminar_viaje', { p_id:id });
+    if(error){ toast('Error: '+error.message,'err'); return; }
+    if(res.success){ toast(res.mensaje,'ok'); cargarHistorialViajes(); cargarDashboard(); }
+  });
+}
+
+/* ══ GASTOS ══ */
+async function cargarGastos(){
+  var { data: lista } = await supabase.rpc('tur_listar_gastos');
+  _gastos = lista||[];
+
+  var fa=document.getElementById('f-gas-anio'); var va=fa.value;
+  var anios=[]; _gastos.forEach(function(g){ var p=(g.fechaSolo||'').split('/'); if(p.length>=3 && !anios.includes(p[2])) anios.push(p[2]); });
+  fa.innerHTML='<option value="">Todos</option>';
+  anios.sort().reverse().forEach(function(a){ var o=document.createElement('option'); o.value=a; o.textContent=a; fa.appendChild(o); });
+  if(va) fa.value=va;
+
+  var tipo=document.getElementById('f-gas-tipo').value;
+  var mes=document.getElementById('f-gas-mes').value;
+  var anio=document.getElementById('f-gas-anio').value;
+  var filtrados=_gastos.filter(function(g){
+    var p=(g.fechaSolo||'').split('/');
+    return (!tipo||g.tipo===tipo) && (!mes||p[1]===mes) && (!anio||p[2]===anio);
+  });
+  renderGastos(filtrados);
+}
+
+function renderGastos(lista){
+  var tbody=document.getElementById('gas-tbody');
+  var empty=document.getElementById('gas-empty');
+  tbody.innerHTML='';
+  document.getElementById('gas-count').textContent=lista.length+' gasto'+(lista.length!==1?'s':'');
+  var totalG=lista.reduce(function(s,g){return s+g.monto;},0);
+  document.getElementById('gas-total-header').textContent=lista.length?'Total: '+fmt(totalG):'';
+  if(!lista.length){ empty.style.display='block'; return; }
+  empty.style.display='none';
+  lista.forEach(function(g){
+    var tr=document.createElement('tr');
+    tr.innerHTML='<td>'+esc(g.fechaSolo)+'</td>'+
+      '<td><span class="badge '+(g.tipo==='fijo'?'badge-fijo':'badge-variable')+'">'+(g.tipo==='fijo'?'Fijo':'Variable')+'</span></td>'+
+      '<td>'+esc(g.categoria)+'</td>'+
+      '<td class="r"><strong style="color:var(--red)">'+fmt(g.monto)+'</strong></td>'+
+      '<td style="font-size:11px;color:var(--ink3)">'+esc(g.notas||'—')+'</td>'+
+      '<td><div style="display:flex;gap:4px">'+
+        '<button class="icon-btn btn-sm" onclick="editarGasto(\''+g.id+'\')">✏️</button>'+
+        '<button class="btn-rm" title="Eliminar" onclick="eliminarGastoConfirm(\''+g.id+'\')" style="font-size:15px">🗑</button>'+
+      '</div></td>';
+    tbody.appendChild(tr);
+  });
+}
+
+function abrirModalNuevoGasto(){
+  document.getElementById('mgas-title').textContent='Registrar gasto';
+  document.getElementById('mgas-id').value='';
+  document.getElementById('mgas-tipo').value='variable';
+  document.getElementById('mgas-fecha').value=fechaHoyCorta();
+  ['mgas-cat','mgas-monto','mgas-notas'].forEach(function(id){document.getElementById(id).value='';});
+  hideAlert('alert-mgas');
+  abrirModal('modal-gasto');
+}
+function editarGasto(id){
+  var g=_gastos.find(function(x){return x.id===id;});
+  if(!g) return;
+  document.getElementById('mgas-title').textContent='Editar gasto';
+  document.getElementById('mgas-id').value=g.id;
+  document.getElementById('mgas-tipo').value=g.tipo;
+  var p=(g.fechaSolo||'').split('/');
+  document.getElementById('mgas-fecha').value = p.length>=3 ? (p[2]+'-'+p[1]+'-'+p[0]) : fechaHoyCorta();
+  document.getElementById('mgas-cat').value=g.categoria;
+  document.getElementById('mgas-monto').value=g.monto;
+  document.getElementById('mgas-notas').value=g.notas||'';
+  hideAlert('alert-mgas');
+  abrirModal('modal-gasto');
+}
+async function guardarGasto(){
+  var id=document.getElementById('mgas-id').value;
+  var tipo=document.getElementById('mgas-tipo').value;
+  var categoria=document.getElementById('mgas-cat').value.trim();
+  var monto=parseFloat(document.getElementById('mgas-monto').value)||0;
+  var fecha=document.getElementById('mgas-fecha').value;
+  var notas=document.getElementById('mgas-notas').value.trim();
+  if(!categoria) return showAlert('alert-mgas','La categoría es obligatoria.','err');
+  if(monto<=0) return showAlert('alert-mgas','El monto debe ser mayor a 0.','err');
+
+  var fn = id ? 'tur_editar_gasto' : 'tur_registrar_gasto';
+  var params = id
+    ? { p_id:id, p_tipo:tipo, p_categoria:categoria, p_monto:monto, p_fecha:fecha, p_notas:notas }
+    : { p_tipo:tipo, p_categoria:categoria, p_monto:monto, p_fecha:fecha, p_notas:notas };
+
+  var { data: res, error } = await supabase.rpc(fn, params);
+  if(error){ showAlert('alert-mgas','Error: '+error.message,'err'); return; }
+  if(res.success){ toast(res.mensaje,'ok'); cerrarModal('modal-gasto'); cargarGastos(); cargarDashboard(); }
+  else showAlert('alert-mgas',res.mensaje,'err');
+}
+function eliminarGastoConfirm(id){
+  confirmar('Eliminar gasto','¿Eliminar este gasto? Esta acción no se puede deshacer.', async function(){
+    var { data: res, error } = await supabase.rpc('tur_eliminar_gasto', { p_id:id });
+    if(error){ toast('Error: '+error.message,'err'); return; }
+    if(res.success){ toast(res.mensaje,'ok'); cargarGastos(); cargarDashboard(); }
+  });
+}
+
+/* ══ COMPARAR PLATAFORMAS ══ */
+function _pobMesSelectC(sel){
+  var meses=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  var cur=sel.value; sel.innerHTML='';
+  meses.forEach(function(m,i){ var o=document.createElement('option'); o.value=String(i+1).padStart(2,'0'); o.textContent=m; sel.appendChild(o); });
+  if(cur) sel.value=cur;
+}
+function _pobAnioSelectC(sel){
+  var cur=sel.value; var anioActual=(new Date()).getFullYear(); sel.innerHTML='';
+  for(var y=anioActual-3;y<=anioActual+1;y++){ var o=document.createElement('option'); o.value=String(y); o.textContent=String(y); sel.appendChild(o); }
+  if(cur) sel.value=cur; else sel.value=String(anioActual);
+}
+function initComparar(){
+  ['cmp-desde-mes','cmp-hasta-mes'].forEach(function(id){ _pobMesSelectC(document.getElementById(id)); });
+  ['cmp-desde-anio','cmp-hasta-anio'].forEach(function(id){ _pobAnioSelectC(document.getElementById(id)); });
+  setComparPeriodo('mes');
+}
+function setComparPeriodo(p){
+  var hoy=new Date(); var y=hoy.getFullYear(), m=String(hoy.getMonth()+1).padStart(2,'0');
+  if(p==='mes'){
+    document.getElementById('cmp-desde-anio').value=y; document.getElementById('cmp-desde-mes').value=m;
+    document.getElementById('cmp-hasta-anio').value=y; document.getElementById('cmp-hasta-mes').value=m;
+  } else if(p==='trim'){
+    var trim=Math.floor(hoy.getMonth()/3);
+    document.getElementById('cmp-desde-anio').value=y; document.getElementById('cmp-desde-mes').value=String(trim*3+1).padStart(2,'0');
+    document.getElementById('cmp-hasta-anio').value=y; document.getElementById('cmp-hasta-mes').value=String(trim*3+3).padStart(2,'0');
+  } else if(p==='anio'){
+    document.getElementById('cmp-desde-anio').value=y; document.getElementById('cmp-desde-mes').value='01';
+    document.getElementById('cmp-hasta-anio').value=y; document.getElementById('cmp-hasta-mes').value='12';
+  }
+  cargarComparacion();
+}
+async function cargarComparacion(){
+  var desde=document.getElementById('cmp-desde-anio').value+'/'+document.getElementById('cmp-desde-mes').value;
+  var hasta=document.getElementById('cmp-hasta-anio').value+'/'+document.getElementById('cmp-hasta-mes').value;
+  var { data: r } = await supabase.rpc('tur_resumen', { p_desde: desde, p_hasta: hasta });
+  var tbody=document.getElementById('cmp-tbody');
+  var empty=document.getElementById('cmp-empty');
+  tbody.innerHTML='';
+  if(!r || !r.porPlataforma || !r.porPlataforma.length){ empty.style.display='block'; return; }
+  empty.style.display='none';
+  r.porPlataforma.forEach(function(p){
+    var tr=document.createElement('tr');
+    tr.innerHTML='<td><span class="badge badge-blue">'+esc(p.plataforma)+'</span></td>'+
+      '<td class="r">'+p.viajes+'</td>'+
+      '<td class="r"><strong style="color:var(--green)">'+fmt(p.total)+'</strong></td>'+
+      '<td class="r">'+fmt(p.promedio)+'</td>';
+    tbody.appendChild(tr);
+  });
+}
+
+/* ══ ELIMINAR CUENTA ══ */
+function mostrarModalEliminar(){
+  document.getElementById('del-pwd').value='';
+  document.getElementById('del-error').style.display='none';
+  abrirModal('modal-eliminar-cuenta');
+}
+async function doEliminarCuenta(){
+  var pwd=document.getElementById('del-pwd').value;
+  if(!pwd){ document.getElementById('del-error').textContent='Ingresa tu contraseña.'; document.getElementById('del-error').style.display='block'; return; }
+  var btn=document.getElementById('btn-del-confirm');
+  btn.disabled=true; btn.textContent='Eliminando…';
+  var { data:{ user } } = await supabase.auth.getUser();
+  var { data: perfil } = await supabase.from('perfiles').select('apps').eq('id', user.id).single();
+  var nuevasApps = (perfil.apps||[]).filter(function(a){ return a!=='turnos'; });
+  var { error } = await supabase.from('perfiles').update({ apps: nuevasApps }).eq('id', user.id);
+  btn.disabled=false; btn.textContent='Sí, eliminar';
+  if(error){ document.getElementById('del-error').textContent='Error: '+error.message; document.getElementById('del-error').style.display='block'; return; }
+  await supabase.auth.signOut();
+  cerrarModal('modal-eliminar-cuenta');
+  document.getElementById('screen-app').classList.remove('visible');
+  document.getElementById('screen-login').classList.add('visible');
+  showAlert('alert-auth','Acceso a Turnos eliminado. Tus datos se conservan.','ok');
+}
+
+/* ══ REPORTE PDF ══ */
+async function generarReportePDF(){
+  toast('Generando PDF…','ok');
+  var ma=mesAnioHoy();
+  var { data: r } = await supabase.rpc('tur_resumen', { p_desde:'', p_hasta:'' });
+  if(!r){ toast('Sin datos para generar el reporte','warn'); return; }
+
+  var doc=new window.jspdf.jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+  var W=doc.internal.pageSize.getWidth(), H=doc.internal.pageSize.getHeight();
+  var MX=15, y=0;
+  var AMBAR=[180,83,9], AMBAR_L=[254,243,199];
+  var VERDE=[15,158,110], ROJO=[153,60,29];
+  var GRIS1=[28,27,24], GRIS2=[92,90,85], GRIS3=[156,154,148], BORDE=[226,224,218];
+  var nombreUsuario = SESSION ? (SESSION.nombre||SESSION.usuario) : 'Usuario';
+  var fechaGen = new Date().toLocaleDateString('es-CO',{day:'2-digit',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
+
+  doc.setFillColor.apply(doc,AMBAR); doc.rect(0,0,W,28,'F');
+  doc.setFont('helvetica','bold'); doc.setFontSize(18); doc.setTextColor(255,255,255);
+  doc.text('REPORTE DE TURNOS',MX,14);
+  doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(255,235,205);
+  doc.text(nombreUsuario+' · '+fechaGen,MX,21);
+  y=34;
+
+  var kW=(W-MX*2-9)/4, kH=26, pos=r.utilidadNeta>=0;
+  function kpiCard(x,yy,w,h2,lbl,val,cv){
+    doc.setFillColor(255,255,255); doc.roundedRect(x,yy,w,h2,2,2,'F');
+    doc.setDrawColor.apply(doc,BORDE); doc.setLineWidth(0.2); doc.roundedRect(x,yy,w,h2,2,2,'S');
+    doc.setFont('helvetica','bold'); doc.setFontSize(6.5); doc.setTextColor.apply(doc,GRIS3);
+    doc.text(lbl.toUpperCase(),x+w/2,yy+7,{align:'center'});
+    doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor.apply(doc,cv);
+    doc.text(val,x+w/2,yy+16,{align:'center'});
+  }
+  kpiCard(MX,y,kW,kH,'Total Ingresos',fmt(r.totalIngresos),VERDE);
+  kpiCard(MX+kW+3,y,kW,kH,'Total Gastos',fmt(r.totalGastos),ROJO);
+  kpiCard(MX+(kW+3)*2,y,kW,kH,'Utilidad Neta',fmt(r.utilidadNeta),pos?VERDE:ROJO);
+  kpiCard(MX+(kW+3)*3,y,kW,kH,'Viajes',String(r.numViajes),GRIS1);
+  y+=kH+10;
+
+  if(r.porPlataforma && r.porPlataforma.length){
+    doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor.apply(doc,AMBAR);
+    doc.text('Rendimiento por plataforma',MX,y); y+=6;
+    var bPlat=r.porPlataforma.map(function(p){return[p.plataforma,String(p.viajes),fmt(p.promedio),fmt(p.total)];});
+    doc.autoTable({startY:y,head:[['Plataforma','Viajes','Promedio','Total']],body:bPlat,theme:'plain',
+      styles:{fontSize:8.5,cellPadding:3,textColor:GRIS2,lineColor:BORDE,lineWidth:0.3},
+      headStyles:{fillColor:AMBAR_L,textColor:AMBAR,fontStyle:'bold',fontSize:7.5},
+      columnStyles:{1:{halign:'center',cellWidth:25},2:{halign:'right',cellWidth:35},3:{halign:'right',cellWidth:35,fontStyle:'bold'}},
+      margin:{left:MX,right:MX}});
+    y=doc.lastAutoTable.finalY+8;
+  }
+
+  if(r.porCategoriaGasto && r.porCategoriaGasto.length){
+    doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor.apply(doc,ROJO);
+    doc.text('Gastos por categoría',MX,y); y+=6;
+    var bGas=r.porCategoriaGasto.map(function(g){return[g.categoria,g.tipo==='fijo'?'Fijo':'Variable',fmt(g.total)];});
+    doc.autoTable({startY:y,head:[['Categoría','Tipo','Total']],body:bGas,theme:'plain',
+      styles:{fontSize:8.5,cellPadding:3,textColor:GRIS2,lineColor:BORDE,lineWidth:0.3},
+      headStyles:{fillColor:[250,236,231],textColor:ROJO,fontStyle:'bold',fontSize:7.5},
+      columnStyles:{2:{halign:'right',cellWidth:35,fontStyle:'bold'}},
+      margin:{left:MX,right:MX}});
+  }
+
+  doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(150,150,150);
+  doc.text('Generado con Skripto Apps',W/2,H-8,{align:'center'});
+
+  doc.save('Reporte_Turnos_'+nombreUsuario.replace(/\s+/g,'_')+'.pdf');
+  toast('📄 Reporte descargado','ok');
+}
+</script>
+</body>
+</html>
