@@ -51,6 +51,11 @@ var I18N = {
     fin_f5:'Control de gastos y rentabilidad', fin_f6:'Exportación en PDF por factura o reporte general',
     cli_name:'Clientes', cli_desc:'CRM simple para gestionar tus clientes, pedidos y seguimientos.',
     cli_f1:'Base de datos de clientes', cli_f2:'Historial de pedidos por cliente', cli_f3:'Recordatorios de seguimiento',
+    tur_name:'Turnos', tur_sub_short:'Ingresos, gastos y comparación de plataformas',
+    tur_desc:'Control de ingresos y gastos para conductores de plataformas como Uber, InDrive o Didi. Sabe exactamente cuánto te está rindiendo cada plataforma.',
+    tur_f1:'Registro rápido de cada viaje por plataforma', tur_f2:'Gastos fijos y variables (gasolina, mantenimiento, seguro)',
+    tur_f3:'Comparación de rendimiento entre plataformas', tur_f4:'Utilidad neta real, no solo lo que facturas',
+    tur_f5:'Reporte en PDF de tu turno o del mes completo'
     como_badge:'Proceso', como_title:'¿Cómo funciona?', como_sub:'Tu cuenta queda activa al instante. El pago solo lo necesitas si decides seguir después de la prueba gratis.',
     step1_num:'Paso 01', step1_title:'Regístrate', step1_desc:'Crea tu cuenta con el nombre de tu negocio, usuario y contraseña.',
     step2_num:'Paso 02', step2_title:'Usa 3 días gratis', step2_desc:'Tu cuenta queda activa de inmediato. No necesitas pagar nada todavía.',
@@ -113,6 +118,11 @@ var I18N = {
     fin_f5:'Expense and profitability control', fin_f6:'PDF export per invoice or general report',
     cli_name:'Clients', cli_desc:'Simple CRM to manage your clients, orders and follow-ups.',
     cli_f1:'Client database', cli_f2:'Order history per client', cli_f3:'Follow-up reminders',
+    tur_name:'Shifts', tur_sub_short:'Income, expenses and platform comparison',
+    tur_desc:'Income and expense tracking for drivers on platforms like Uber, InDrive or Didi. Know exactly which platform is paying off for you.',
+    tur_f1:'Quick trip logging per platform', tur_f2:'Fixed and variable expenses (gas, maintenance, insurance)',
+    tur_f3:'Platform performance comparison', tur_f4:'Real net profit, not just what you bill',
+    tur_f5:'PDF report of your shift or full month'
     como_badge:'Process', como_title:'How does it work?', como_sub:'Your account is active instantly. Payment is only needed if you decide to continue after the free trial.',
     step1_num:'Step 01', step1_title:'Sign up', step1_desc:'Create your account with your business name, username and password.',
     step2_num:'Step 02', step2_title:'Use 3 free days', step2_desc:'Your account is active right away. You don\'t need to pay anything yet.',
@@ -172,8 +182,10 @@ function aplicarIdioma(){
 
   var precioInv = LANG==='en' ? '$7 USD' : '$20.000 COP';
   var precioFin = LANG==='en' ? '$17 USD' : '$50.000 COP';
+  var precioTur = LANG==='en' ? '$5 USD' : '$10.000 COP';
   document.querySelectorAll('.price-inv').forEach(function(el){ el.textContent = precioInv; });
   document.querySelectorAll('.price-fin').forEach(function(el){ el.textContent = precioFin; });
+  document.querySelectorAll('.price-tur').forEach(function(el){ el.textContent = precioTur; });
 }
 </script>
 <style>
@@ -265,6 +277,11 @@ section{padding:96px 40px}
 .app-card.blue-card::before{background:linear-gradient(135deg,rgba(26,86,219,.04) 0%,transparent 60%)}
 .app-card.purple-card:hover{border-color:rgba(124,58,237,.4)}
 .app-card.purple-card::before{background:linear-gradient(135deg,rgba(124,58,237,.04) 0%,transparent 60%)}
+.app-card.amber-card:hover{border-color:rgba(180,83,9,.4)}
+.app-card.amber-card::before{background:linear-gradient(135deg,rgba(180,83,9,.04) 0%,transparent 60%)}
+.app-card-icon.amber{background:#FEF3C7;border-color:rgba(180,83,9,.2)}
+.app-feature.amber-check::before{color:#B45309}
+.app-price-trial.amber-trial{color:#92400E;background:#FEF3C7;border-color:rgba(180,83,9,.25)}
 .app-card-icon{width:56px;height:56px;background:var(--green3);border:1.5px solid rgba(15,158,110,.2);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:20px;transition:transform .3s}
 .app-card:hover .app-card-icon{transform:rotate(-8deg) scale(1.1)}
 .app-card-icon.blue{background:var(--blue3);border-color:rgba(26,86,219,.2)}
@@ -318,6 +335,10 @@ section{padding:96px 40px}
 .app-selector-item.available.blue-sel:hover{border-color:var(--blue);background:var(--blue4)}
 .app-selector-item.available.purple-sel{background:var(--purple3);border-color:rgba(124,58,237,.3)}
 .app-selector-item.available.purple-sel:hover{border-color:var(--purple);background:var(--purple4)}
+.app-selector-item.available.amber-sel{background:#FEF3C7;border-color:rgba(180,83,9,.3)}
+.app-selector-item.available.amber-sel:hover{border-color:#B45309;background:#FDE68A}
+.app-selector-sub.amber-c{color:#92400E}
+.app-selector-tag.avail-amber{color:#92400E;background:rgba(180,83,9,.12)}
 .app-selector-item.soon{background:var(--bg3);border-color:var(--border);opacity:.45;cursor:not-allowed}
 .app-selector-left{display:flex;align-items:center;gap:12px}
 .app-selector-emoji{font-size:22px;transition:transform .3s}
@@ -417,6 +438,8 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
 .btn-modal-primary.blue:hover{background:var(--blue2)}
 .btn-modal-primary.purple{background:var(--purple);box-shadow:0 3px 12px rgba(124,58,237,.25)}
 .btn-modal-primary.purple:hover{background:var(--purple2)}
+.btn-modal-primary.amber{background:#B45309;box-shadow:0 3px 12px rgba(180,83,9,.25)}
+.btn-modal-primary.amber:hover{background:#92400E}
 .btn-modal-primary:disabled{background:var(--ink3);cursor:not-allowed;transform:none;box-shadow:none}
 .modal-alert{padding:10px 14px;border-radius:var(--r);font-size:13px;margin-bottom:14px;display:none;border-left:3px solid}
 .modal-alert.ok{background:var(--green3);color:var(--green2);border-color:var(--green)}
@@ -431,8 +454,10 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
 .app-pick-btn.active-blue:hover{border-color:var(--blue);background:var(--blue3)}
 .app-pick-btn.active-purple{border-color:var(--purple);background:var(--purple3);box-shadow:0 0 0 3px rgba(124,58,237,.1)}
 .app-pick-btn.active-purple:hover{border-color:var(--purple);background:var(--purple3)}
+.app-pick-btn.active-amber{border-color:#B45309;background:#FEF3C7;box-shadow:0 0 0 3px rgba(180,83,9,.1)}
+.app-pick-btn.active-amber:hover{border-color:#B45309;background:#FEF3C7}
 .app-pick-emoji{font-size:22px;flex-shrink:0;transition:transform .2s}
-.app-pick-btn:hover .app-pick-emoji,.app-pick-btn.active .app-pick-emoji,.app-pick-btn.active-blue .app-pick-emoji,.app-pick-btn.active-purple .app-pick-emoji{transform:scale(1.15)}
+.app-pick-btn:hover .app-pick-emoji,.app-pick-btn.active .app-pick-emoji,.app-pick-btn.active-blue .app-pick-emoji,.app-pick-btn.active-purple .app-pick-emoji,.app-pick-btn.active-amber .app-pick-emoji{transform:scale(1.15)}
 .app-pick-info{flex:1}
 .app-pick-name{font-size:13px;font-weight:600;color:var(--ink)}
 .app-pick-sub{font-size:11px;color:var(--ink3);margin-top:1px}
@@ -440,6 +465,7 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
 .app-pick-btn.active .app-pick-check{background:var(--green);border-color:var(--green);color:#fff}
 .app-pick-btn.active-blue .app-pick-check{background:var(--blue);border-color:var(--blue);color:#fff}
 .app-pick-btn.active-purple .app-pick-check{background:var(--purple);border-color:var(--purple);color:#fff}
+.app-pick-btn.active-amber .app-pick-check{background:#B45309;border-color:#B45309;color:#fff}
 
 /* ── RESPONSIVE ── */
 @media(max-width:900px){
@@ -585,6 +611,23 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
           <div class="app-price-num"><span class="price-fin">$50.000 COP</span><span style="font-size:13px;color:var(--ink3);font-family:var(--font-sans);font-weight:400" data-i18n="per_month">/mes</span></div>
         </div>
       </div>
+      <div class="app-card amber-card reveal" style="transition-delay:.15s">
+        <div class="app-badge-new" style="background:#FEF3C7;color:#92400E;border-color:rgba(180,83,9,.25)" data-i18n="available_word">Disponible</div>
+        <div class="app-card-icon amber">🚗</div>
+        <div class="app-card-name" data-i18n="tur_name">Turnos</div>
+        <div class="app-card-desc" data-i18n="tur_desc">Control de ingresos y gastos para conductores de plataformas como Uber, InDrive o Didi. Sabe exactamente cuánto te está rindiendo cada plataforma.</div>
+        <div class="app-card-features">
+          <div class="app-feature amber-check" data-i18n="tur_f1">Registro rápido de cada viaje por plataforma</div>
+          <div class="app-feature amber-check" data-i18n="tur_f2">Gastos fijos y variables (gasolina, mantenimiento, seguro)</div>
+          <div class="app-feature amber-check" data-i18n="tur_f3">Comparación de rendimiento entre plataformas</div>
+          <div class="app-feature amber-check" data-i18n="tur_f4">Utilidad neta real, no solo lo que facturas</div>
+          <div class="app-feature amber-check" data-i18n="tur_f5">Reporte en PDF de tu turno o del mes completo</div>
+        </div>
+        <div class="app-card-footer">
+          <span class="app-price-trial amber-trial">🎁 <span data-i18n="trial_first">3 días gratis primero</span></span>
+          <div class="app-price-num"><span class="price-tur">$10.000 COP</span><span style="font-size:13px;color:var(--ink3);font-family:var(--font-sans);font-weight:400" data-i18n="per_month">/mes</span></div>
+        </div>
+      </div>
       <div class="app-card app-card-soon reveal" style="transition-delay:.2s">
         <div class="app-badge-soon" data-i18n="soon_word">Próximamente</div>
         <div class="app-card-icon" style="background:var(--bg4);border-color:var(--border)">👥</div>
@@ -679,6 +722,16 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
                 </div>
               </div>
               <span class="app-selector-tag avail-blue" data-i18n="register_arrow">Registrarme →</span>
+            </a>
+            <a href="#" class="app-selector-item available amber-sel" onclick="abrirModal('turnos');return false">
+              <div class="app-selector-left">
+                <span class="app-selector-emoji">🚗</span>
+                <div>
+                  <div class="app-selector-name" data-i18n="tur_name">Turnos</div>
+                  <div class="app-selector-sub amber-c">🎁 <span data-i18n="trial_first">3 días gratis</span> · <span data-i18n="then_word">luego</span> <span class="price-tur">$10.000 COP</span><span data-i18n="per_month">/mes</span></div>
+                </div>
+              </div>
+              <span class="app-selector-tag avail-amber" data-i18n="register_arrow">Registrarme →</span>
             </a>
             <div class="app-selector-item soon">
               <div class="app-selector-left">
@@ -838,6 +891,14 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
           </div>
           <span class="app-pick-check" id="check-finanzas"></span>
         </button>
+        <button class="app-pick-btn" id="pick-turnos" onclick="seleccionarApp('turnos')">
+          <span class="app-pick-emoji">🚗</span>
+          <div class="app-pick-info">
+            <div class="app-pick-name" data-i18n="tur_name">Turnos</div>
+            <div class="app-pick-sub" data-i18n="tur_sub_short">Ingresos, gastos y comparación de plataformas</div>
+          </div>
+          <span class="app-pick-check" id="check-turnos"></span>
+        </button>
       </div>
     </div>
     <hr class="modal-divider">
@@ -912,12 +973,14 @@ var flujoActual = 'nuevo';
 // Reemplaza estas 2 líneas con tus URLs reales de GitHub Pages.
 var APP_PAGES = {
   inventario: 'https://skriptonapps.github.io/Skripton-Apps/app.html',
-  finanzas:   'https://skriptonapps.github.io/Skripton-Apps/finanzas.html'
+  finanzas:   'https://skriptonapps.github.io/Skripton-Apps/finanzas.html',
+  turnos:     'https://skriptonapps.github.io/Skripton-Apps/turnos.html'
 };
 
 var APP_INFO = {
-  inventario:  { activeClass: 'active',      btnClass: '',      icon: '📦' },
-  finanzas:    { activeClass: 'active-blue',  btnClass: ' blue', icon: '📊' }
+  inventario:  { activeClass: 'active',       btnClass: '',       icon: '📦' },
+  finanzas:    { activeClass: 'active-blue',   btnClass: ' blue',  icon: '📊' },
+  turnos:      { activeClass: 'active-amber',  btnClass: ' amber', icon: '🚗' }
 };
 
 function seleccionarApp(app){
@@ -1031,7 +1094,7 @@ async function doAgregarApp(){
   // Enviar correo con el link de acceso (enlace mágico) a la app solicitada
   await supabase.auth.signInWithOtp({
     email: email,
-    options: { emailRedirectTo: APP_PAGES[app] || APP_PAGES.inventario, data: { lang: LANG } }
+    options: { emailRedirectTo: APP_PAGES[app] || APP_PAGES.inventario, data: { lang: LANG, app: app } }
   });
 
   btn.disabled=false; btn.textContent='Agregar app a mi cuenta →';
