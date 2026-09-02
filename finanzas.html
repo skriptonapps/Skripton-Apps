@@ -407,6 +407,23 @@ button{font-family:var(--font-sans);cursor:pointer;border:none;border-radius:var
 /* ════════ APP LAYOUT ════════ */
 #screen-app{flex-direction:column}
 .topbar{height:var(--topbar-h);background:var(--bg2);border-bottom:1.5px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:10px;position:fixed;top:0;left:0;right:0;z-index:200}
+.user-menu{position:relative;margin-left:auto}
+.user-menu-trigger{display:flex;align-items:center;gap:9px;padding:6px 10px 6px 6px;background:none;border:1.5px solid transparent;border-radius:24px;cursor:pointer;transition:all .15s;font-family:var(--font-sans)}
+.user-menu-trigger:hover{background:var(--bg3);border-color:var(--border)}
+.user-avatar{width:30px;height:30px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;font-family:var(--font-serif)}
+.user-menu-name{font-size:12.5px;font-weight:600;color:var(--ink);max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.user-menu-chevron{font-size:9px;color:var(--ink3);transition:transform .2s;flex-shrink:0}
+.user-menu.open .user-menu-chevron{transform:rotate(180deg)}
+.user-menu-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;box-shadow:0 10px 32px rgba(0,0,0,.12);min-width:200px;padding:6px;display:none;z-index:250}
+.user-menu.open .user-menu-dropdown{display:block}
+.user-menu-header{padding:10px 12px;border-bottom:1px solid var(--bg3);margin-bottom:6px}
+.user-menu-header-name{font-size:13px;font-weight:600;color:var(--ink)}
+.user-menu-header-sub{font-size:11px;color:var(--ink3);margin-top:1px}
+.user-menu-item{display:flex;align-items:center;gap:10px;width:100%;padding:9px 12px;background:none;border:none;border-radius:9px;font-size:13px;color:var(--ink2);text-align:left;cursor:pointer;transition:background .15s;font-family:var(--font-sans)}
+.user-menu-item:hover{background:var(--bg3)}
+.user-menu-item.danger{color:var(--red)}
+.user-menu-item.danger:hover{background:var(--red2)}
+.user-menu-item-icon{width:16px;text-align:center;flex-shrink:0;font-size:13px}
 .topbar-brand{font-family:var(--font-serif);font-size:18px;color:var(--ink);letter-spacing:-.3px;margin-right:auto}
 .topbar-brand span{color:var(--blue)}
 .topbar-user{font-size:11px;color:var(--ink2);font-family:var(--font-mono);max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -731,9 +748,25 @@ body {
   <div class="topbar">
     <button class="btn-menu-toggle" onclick="toggleSidebar()">☰</button>
     <div class="topbar-brand">factu<span>ración</span></div>
-   <span class="topbar-user" id="tb-user"></span>
-    <button class="btn-del-account" data-i18n="del_account" onclick="mostrarModalEliminar()">Eliminar cuenta</button>
-    <button class="btn-logout" data-i18n="logout" onclick="doLogout()">Salir</button>
+    <div class="user-menu" id="user-menu">
+      <button class="user-menu-trigger" onclick="toggleUserMenu()">
+        <span class="user-avatar" id="user-avatar">?</span>
+        <span class="user-menu-name" id="tb-user"></span>
+        <span class="user-menu-chevron">▾</span>
+      </button>
+      <div class="user-menu-dropdown">
+        <div class="user-menu-header">
+          <div class="user-menu-header-name" id="user-menu-header-name"></div>
+          <div class="user-menu-header-sub" id="user-menu-header-sub">Cuenta de Facturación</div>
+        </div>
+        <button class="user-menu-item" data-i18n="del_account" onclick="closeUserMenu();mostrarModalEliminar()">
+          <span class="user-menu-item-icon">🗑</span> Eliminar cuenta
+        </button>
+        <button class="user-menu-item danger" data-i18n="logout" onclick="doLogout()">
+          <span class="user-menu-item-icon">↪</span> Salir
+        </button>
+      </div>
+    </div>
   </div>
 
   <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
@@ -978,6 +1011,7 @@ body {
               <span data-i18n="th_service">Servicio</span><span data-i18n="th_qty_short">Cant.</span><span data-i18n="th_unit_price">Precio unit.</span><span data-i18n="th_subtotal2">Subtotal</span><span></span>
             </div>
             <div id="nf-items"></div>
+            <datalist id="dl-servicios-nf"></datalist>
             <button class="btn-add" onclick="agregarItemNF()">+ <span data-i18n="add_item">Agregar ítem</span></button>
           </div>
 
@@ -1644,9 +1678,19 @@ supabase.auth.onAuthStateChange(function(event){
 function entrarApp(){
   document.getElementById('screen-login').classList.remove('visible');
   document.getElementById('screen-app').classList.add('visible');
-  document.getElementById('tb-user').textContent=SESSION.nombre||SESSION.usuario;
+  var nombreMostrar = SESSION.nombre||SESSION.usuario;
+  document.getElementById('tb-user').textContent=nombreMostrar;
+  document.getElementById('user-avatar').textContent=nombreMostrar.trim().charAt(0).toUpperCase();
+  document.getElementById('user-menu-header-name').textContent=nombreMostrar;
   cargarDashboard();
 }
+
+function toggleUserMenu(){ document.getElementById('user-menu').classList.toggle('open'); }
+function closeUserMenu(){ document.getElementById('user-menu').classList.remove('open'); }
+document.addEventListener('click',function(e){
+  var menu=document.getElementById('user-menu');
+  if(menu && menu.classList.contains('open') && !menu.contains(e.target)) menu.classList.remove('open');
+});
 
 /* ─────────────────────────────────────────────────
    MODALES GENÉRICOS (sin cambios)
@@ -1963,19 +2007,20 @@ function limpiarClienteNF(){
 
 var _nfItemCnt=0;
 
+function _pobDatalistServiciosNF(){
+  var dl=document.getElementById('dl-servicios-nf');
+  if(!dl) return;
+  dl.innerHTML = _servicios.map(function(s){ return '<option value="'+esc(s.nombre)+'">'; }).join('');
+}
+
 function agregarItemNF(){
   _nfItemCnt++;
   var id='nfitem-'+_nfItemCnt;
   var div=document.createElement('div');
   div.id=id; div.className='item-row';
-  var opts=_servicios.map(function(s){
-    return '<option value="'+esc(s.id)+'" data-precio="'+s.precio+'" data-nombre="'+esc(s.nombre)+'" data-desc="'+esc(s.descripcion||'')+'">'+esc(s.nombre)+' — '+fmt(s.precio)+'</option>';
-  }).join('');
+  _pobDatalistServiciosNF();
   div.innerHTML=
-    '<div><select class="nf-svc-sel" onchange="onSvcSel(\''+id+'\')" style="width:100%">'+
-      '<option value="">'+t('write_manually')+'</option>'+opts+
-    '</select>'+
-    '<input type="text" class="nf-item-nombre" placeholder="'+t('service_name_ph')+'" style="margin-top:6px;display:none" oninput="recalcularNF()"></div>'+
+    '<div><input type="text" class="nf-item-nombre" list="dl-servicios-nf" placeholder="'+t('service_name_ph')+'" style="width:100%" oninput="onNombreServicioInput(\''+id+'\')"></div>'+
     '<input type="number" class="nf-item-cant" value="1" min="0.001" step="0.001" inputmode="decimal" oninput="recalcularNF()" style="width:100%">'+
     '<input type="number" class="nf-item-precio" min="0" step="1000" inputmode="numeric" placeholder="$0" oninput="recalcularNF()" style="width:100%">'+
     '<div class="item-subtotal" id="nf-sub-'+id+'">$0</div>'+
@@ -1989,33 +2034,32 @@ function agregarItemNFConServicio(svc){
   var id='nfitem-'+_nfItemCnt;
   var div=document.createElement('div');
   div.id=id; div.className='item-row';
-  var opts=_servicios.map(function(s){
-    var sel=s.id===svc.id?'selected':'';
-    return '<option value="'+esc(s.id)+'" data-precio="'+s.precio+'" data-nombre="'+esc(s.nombre)+'" data-desc="'+esc(s.descripcion||'')+'" '+sel+'>'+esc(s.nombre)+' — '+fmt(s.precio)+'</option>';
-  }).join('');
+  div.dataset.servicioId=svc.id;
+  div.dataset.servicioDesc=svc.descripcion||'';
+  _pobDatalistServiciosNF();
   div.innerHTML=
-    '<div><select class="nf-svc-sel" onchange="onSvcSel(\''+id+'\')" style="width:100%">'+
-      '<option value="">'+t('write_manually')+'</option>'+opts+
-    '</select>'+
-    '<input type="text" class="nf-item-nombre" placeholder="'+t('service_name_ph')+'" style="margin-top:6px;display:none" oninput="recalcularNF()"></div>'+
+    '<div><input type="text" class="nf-item-nombre" list="dl-servicios-nf" value="'+esc(svc.nombre)+'" placeholder="'+t('service_name_ph')+'" style="width:100%" oninput="onNombreServicioInput(\''+id+'\')"></div>'+
     '<input type="number" class="nf-item-cant" value="1" min="0.001" step="0.001" inputmode="decimal" oninput="recalcularNF()" style="width:100%">'+
     '<input type="number" class="nf-item-precio" value="'+svc.precio+'" min="0" step="1000" inputmode="numeric" oninput="recalcularNF()" style="width:100%">'+
     '<div class="item-subtotal" id="nf-sub-'+id+'">'+ fmt(svc.precio)+'</div>'+
     '<button class="btn-rm" onclick="rmItemNF(\''+id+'\')">×</button>';
   document.getElementById('nf-items').appendChild(div);
+  recalcularNF();
 }
 
-function onSvcSel(rowId){
-  var sel=document.querySelector('#'+rowId+' .nf-svc-sel');
-  var nombreInput=document.querySelector('#'+rowId+' .nf-item-nombre');
-  var precioInput=document.querySelector('#'+rowId+' .nf-item-precio');
-  if(sel.value){
-    var opt=sel.options[sel.selectedIndex];
-    precioInput.value=opt.dataset.precio||'';
-    nombreInput.style.display='none';
+function onNombreServicioInput(rowId){
+  var row=document.getElementById(rowId);
+  var nombreInput=row.querySelector('.nf-item-nombre');
+  var precioInput=row.querySelector('.nf-item-precio');
+  var texto=nombreInput.value.trim().toLowerCase();
+  var match=_servicios.find(function(s){ return s.nombre.trim().toLowerCase()===texto; });
+  if(match){
+    precioInput.value=match.precio;
+    row.dataset.servicioId=match.id;
+    row.dataset.servicioDesc=match.descripcion||'';
   } else {
-    nombreInput.style.display='block';
-    precioInput.value='';
+    delete row.dataset.servicioId;
+    delete row.dataset.servicioDesc;
   }
   recalcularNF();
 }
@@ -2046,16 +2090,12 @@ function recalcularNF(){
 function leerItemsNF(){
   var items=[];
   document.querySelectorAll('.item-row').forEach(function(row){
-    var sel=row.querySelector('.nf-svc-sel');
     var nombreInput=row.querySelector('.nf-item-nombre');
     var nombre='', servicioId='', descripcion='';
-    if(sel&&sel.value){
-      servicioId=sel.value;
-      var opt=sel.options[sel.selectedIndex];
-      nombre=opt.dataset.nombre||opt.text.split(' — ')[0];
-      descripcion=opt.dataset.desc||'';
-    } else if(nombreInput){
-      nombre=nombreInput.value.trim();
+    if(nombreInput) nombre=nombreInput.value.trim();
+    if(row.dataset.servicioId){
+      servicioId=row.dataset.servicioId;
+      descripcion=row.dataset.servicioDesc||'';
     }
     var cant=parseFloat(row.querySelector('.nf-item-cant').value)||0;
     var precio=parseFloat(row.querySelector('.nf-item-precio').value)||0;
