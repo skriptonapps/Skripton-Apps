@@ -27,167 +27,6 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
   }
   var supabase = window._skriptoClient;
 </script>
-<script>
-/* ══════════════════════════════════════════════════════
-   SISTEMA DE IDIOMA (ES / EN)
-══════════════════════════════════════════════════════ */
-var I18N = {
-  es: {
-    nav_apps:'Aplicaciones', nav_how:'Cómo funciona', nav_pricing:'Precios', nav_faq:'FAQ', nav_start:'Comenzar →',
-    hero_badge:'3 días gratis · sin tarjeta',
-    hero_title_1:'Herramientas que', hero_title_em:'simplifican', hero_title_2:'tu negocio',
-    hero_sub:'Aplicaciones web diseñadas para todo tipo de negocio. Regístrate y empieza a usarlas de inmediato con 3 días de prueba gratis, sin complicaciones y sin instalaciones.',
-    hero_cta_primary:'Comenzar gratis', hero_cta_secondary:'¿Cómo funciona?',
-    stat_web:'Web, sin instalar', stat_trial:'Días de prueba gratis', stat_apps:'Apps disponibles',
-    apps_badge:'Aplicaciones', apps_title:'Nuestras herramientas', apps_sub:'Cada app resuelve un problema real de tu negocio. Pruébala gratis 3 días, luego paga solo lo que usas.',
-    available_word:'Disponible', soon_word:'Próximamente', soon_price:'Pronto', per_month:'/mes', trial_first:'3 días gratis primero',
-    inv_name:'Inventario', inv_desc:'Sistema completo de gestión de costos, producción y ventas. Calcula tu costo real por producto y controla cada movimiento.',
-    inv_f1:'Gestión de materia prima con costo promedio ponderado', inv_f2:'Registro de producción con desglose de costos',
-    inv_f3:'Control de ventas y cálculo de utilidades', inv_f4:'Historial completo de movimientos y reporte en PDF',
-    inv_f5:'Funciona desde el celular sin instalar nada',
-    fin_name:'Facturación', fin_desc:'Sistema de facturación de servicios para negocios. Genera y gestiona tus facturas desde cualquier dispositivo sin instalar nada.',
-    fin_f1:'Base de datos de clientes y servicios asignados', fin_f2:'Catálogo de servicios con precios y categorías',
-    fin_f3:'Generación de facturas individuales o masivas', fin_f4:'Facturas fijas que se renuevan automáticamente',
-    fin_f5:'Control de gastos y rentabilidad', fin_f6:'Exportación en PDF por factura o reporte general',
-    cli_name:'Clientes', cli_desc:'CRM simple para gestionar tus clientes, pedidos y seguimientos.',
-    cli_f1:'Base de datos de clientes', cli_f2:'Historial de pedidos por cliente', cli_f3:'Recordatorios de seguimiento',
-    tur_name:'Turnos', tur_sub_short:'Ingresos, gastos y comparación de plataformas',
-    tur_desc:'Control de ingresos y gastos para conductores de plataformas como Uber, InDrive o Didi. Sabe exactamente cuánto te está rindiendo cada plataforma.',
-    tur_f1:'Registro rápido de cada viaje por plataforma', tur_f2:'Gastos fijos y variables (gasolina, mantenimiento, seguro)',
-    tur_f3:'Comparación de rendimiento entre plataformas', tur_f4:'Utilidad neta real, no solo lo que facturas',
-    tur_f5:'Reporte en PDF de tu turno o del mes completo',
-    como_badge:'Proceso', como_title:'¿Cómo funciona?', como_sub:'Tu cuenta queda activa al instante. El pago solo lo necesitas si decides seguir después de la prueba gratis.',
-    step1_num:'Paso 01', step1_title:'Regístrate', step1_desc:'Crea tu cuenta con el nombre de tu negocio, usuario y contraseña.',
-    step2_num:'Paso 02', step2_title:'Usa 3 días gratis', step2_desc:'Tu cuenta queda activa de inmediato. No necesitas pagar nada todavía.',
-    step3_num:'Paso 03', step3_title:'Realiza el pago', step3_desc:'Antes de que termine la prueba, transfiere por Nequi o Bancolombia si quieres continuar.',
-    step4_num:'Paso 04', step4_title:'Sigue sin interrupciones', step4_desc:'Envíanos el comprobante y tu acceso continúa activo sin pausas.',
-    pricing_badge:'Precios', pricing_title:'Simple y transparente', pricing_sub:'Un solo precio por app, sin sorpresas. Empieza gratis, cancela cuando quieras.',
-    plan_label:'Plan mensual por app', plan_f1:'3 días de prueba gratis, sin tarjeta', plan_f2:'Acceso completo a la app',
-    plan_f3:'Datos siempre respaldados', plan_f4:'Soporte por WhatsApp', plan_f5:'Sin instalaciones', plan_f6:'Cancela cuando quieras',
-    which_app:'¿Qué app quieres activar gratis?', register_arrow:'Registrarme →', in_dev:'En desarrollo',
-    then_word:'luego',
-    payment_badge:'Métodos de pago', payment_title:'¿Cómo pagar?', payment_sub:'Transferencia directa, sin plataformas intermediarias.',
-    payment_intro:'No necesitas pagar para empezar.', payment_intro2:'Tu cuenta se activa gratis por 3 días apenas te registras. Solo paga si decides seguir usando la app después de la prueba.',
-    pay1_title:'Regístrate primero', pay1_desc:'Crea tu cuenta gratis en la app que quieres usar.',
-    pay2_title:'Transfiere', pay2_desc:'Por Nequi o Bancolombia a los datos de abajo (solo si quieres continuar tras la prueba).',
-    pay3_title:'Envía el comprobante', pay3_desc:'Mándanos la captura por WhatsApp con tu usuario.',
-    number_lbl:'Número', savings_account:'Cuenta de ahorros', copy_number:'Copiar número', copied_word:'¡Copiado! ✓',
-    whatsapp_title:'Envía tu comprobante aquí', whatsapp_desc:'Escríbenos con tu usuario y la captura del pago',
-    faq_badge:'FAQ', faq_title:'Preguntas frecuentes',
-    faq_q1:'¿En cuánto tiempo activan mi cuenta?', faq_a1:'¡Al instante! Apenas te registras, tu cuenta queda activa con 3 días de prueba gratis, sin necesidad de pago. Si luego decides continuar, activamos tu suscripción en menos de 24 horas después de recibir tu comprobante.',
-    faq_q2:'¿Necesito pagar para empezar a usar la app?', faq_a2:'No. Al registrarte tienes 3 días de prueba completamente gratis, sin tarjeta y sin compromisos. Solo debes pagar si quieres seguir usando la app una vez termine ese período.',
-    faq_q3:'¿Puedo tener varias apps al mismo tiempo?', faq_a3:'Sí. Cada app tiene su propia suscripción. Si ya tienes cuenta, usa la opción "Ya tengo cuenta" para agregar la nueva app con el mismo correo y contraseña.',
-    faq_q4:'¿Qué pasa si no renuevo o no pago tras la prueba?', faq_a4:'Tu cuenta se inactiva automáticamente al terminar la prueba o la suscripción, pero tus datos no se borran. Cuando actives tu pago, todo estará exactamente igual.',
-    faq_q5:'¿Necesito instalar algo?', faq_a5:'No. Todas las aplicaciones son 100% web. Solo necesitas un navegador y conexión a internet.',
-    faq_q6:'¿Hay soporte si tengo problemas?', faq_a6:'Sí. Puedes escribirnos por WhatsApp y te respondemos en el menor tiempo posible.',
-    footer_tagline:'Soluciones digitales para todo tipo de negocio.', footer_nav:'Navegación', footer_contact:'Contacto',
-    footer_email:'Correo electrónico', footer_copy:'© 2025 Skripto Apps · Todos los derechos reservados', footer_made:'Hecho con', footer_for:'para tu negocio',
-    modal_title:'Crear cuenta', modal_sub:'Selecciona la app y completa el registro ·', modal_trial:'3 días gratis',
-    tab_new:'Soy nuevo', tab_existing:'Ya tengo cuenta', which_app_use:'¿Qué app quieres usar?',
-    inv_sub_short:'Costos, producción y ventas', fin_sub_short:'Facturas, gastos y rentabilidad',
-    business_name:'Nombre de tu negocio', email_label:'Correo electrónico', email_hint:'Aquí recibirás el correo con el link para entrar a tu app',
-    username_label:'Usuario', password_label:'Contraseña', min_chars:'Mínimo 6 caracteres', create_free:'Crear cuenta gratis →',
-    existing_info:'Ingresa tu correo y contraseña para agregar esta app a tu cuenta existente.',
-    your_email:'Tu correo electrónico', your_password:'Tu contraseña', add_app_btn:'Agregar app a mi cuenta →',
-    modal_footer:'Tu cuenta queda activa de inmediato', modal_footer2:'con 3 días de prueba gratis, sin necesidad de pago.',
-    inapp_warning:'Para registrarte correctamente, abre este link en tu navegador (Chrome/Safari).',
-    inapp_hint:'Toca los', inapp_hint2:'o', inapp_hint3:'arriba a la derecha y elige "Abrir en el navegador".',
-    msg_enter_business:'Ingresa el nombre de tu negocio.', msg_enter_email:'Ingresa tu correo electrónico.',
-    msg_choose_username:'Elige un nombre de usuario.', msg_min_pwd:'La contraseña debe tener al menos 6 caracteres.',
-    msg_sending:'Enviando…', msg_already_registered:'Ya existe una cuenta con ese correo. Usa "Ya tengo cuenta" para agregar esta app.',
-    msg_error:'Error: ', msg_account_created:'¡Cuenta creada! Revisa tu correo (', msg_account_created2:') y haz clic en el link para activar tu acceso — quedarás directo dentro de la app con 3 días de prueba gratis.',
-    msg_enter_pwd:'Ingresa tu contraseña.', msg_verifying:'Verificando…', msg_wrong_credentials:'Correo o contraseña incorrectos.',
-    msg_already_active:'Ya tienes acceso activo a esa app con esta cuenta.', msg_request_registered:'Solicitud registrada. Realiza el pago y avísanos para activarla.'
-  },
-  en: {
-    nav_apps:'Apps', nav_how:'How it works', nav_pricing:'Pricing', nav_faq:'FAQ', nav_start:'Start →',
-    hero_badge:'3 days free · no card needed',
-    hero_title_1:'Tools that', hero_title_em:'simplify', hero_title_2:'your business',
-    hero_sub:'Web applications designed for any type of business. Sign up and start using them right away with a 3-day free trial, no hassle and nothing to install.',
-    hero_cta_primary:'Start for free', hero_cta_secondary:'How does it work?',
-    stat_web:'Web, nothing to install', stat_trial:'Free trial days', stat_apps:'Apps available',
-    apps_badge:'Applications', apps_title:'Our tools', apps_sub:'Each app solves a real problem for your business. Try it free for 3 days, then pay only for what you use.',
-    available_word:'Available', soon_word:'Coming soon', soon_price:'Soon', per_month:'/month', trial_first:'3 free days first',
-    inv_name:'Inventory', inv_desc:'Complete cost, production and sales management system. Calculate your real cost per product and control every movement.',
-    inv_f1:'Raw material management with weighted average cost', inv_f2:'Production tracking with cost breakdown',
-    inv_f3:'Sales control and profit calculation', inv_f4:'Complete movement history and PDF report',
-    inv_f5:'Works from your phone, nothing to install',
-    fin_name:'Invoicing', fin_desc:'Service invoicing system for businesses. Generate and manage your invoices from any device with nothing to install.',
-    fin_f1:'Client database with assigned services', fin_f2:'Service catalog with prices and categories',
-    fin_f3:'Individual or bulk invoice generation', fin_f4:'Fixed invoices that renew automatically',
-    fin_f5:'Expense and profitability control', fin_f6:'PDF export per invoice or general report',
-    cli_name:'Clients', cli_desc:'Simple CRM to manage your clients, orders and follow-ups.',
-    cli_f1:'Client database', cli_f2:'Order history per client', cli_f3:'Follow-up reminders',
-    tur_name:'Shifts', tur_sub_short:'Income, expenses and platform comparison',
-    tur_desc:'Income and expense tracking for drivers on platforms like Uber, InDrive or Didi. Know exactly which platform is paying off for you.',
-    tur_f1:'Quick trip logging per platform', tur_f2:'Fixed and variable expenses (gas, maintenance, insurance)',
-    tur_f3:'Platform performance comparison', tur_f4:'Real net profit, not just what you bill',
-    tur_f5:'PDF report of your shift or full month',
-    como_badge:'Process', como_title:'How does it work?', como_sub:'Your account is active instantly. Payment is only needed if you decide to continue after the free trial.',
-    step1_num:'Step 01', step1_title:'Sign up', step1_desc:'Create your account with your business name, username and password.',
-    step2_num:'Step 02', step2_title:'Use 3 free days', step2_desc:'Your account is active right away. You don\'t need to pay anything yet.',
-    step3_num:'Step 03', step3_title:'Make your payment', step3_desc:'Before the trial ends, transfer via Nequi or Bancolombia if you want to continue.',
-    step4_num:'Step 04', step4_title:'Continue uninterrupted', step4_desc:'Send us the receipt and your access stays active without pauses.',
-    pricing_badge:'Pricing', pricing_title:'Simple and transparent', pricing_sub:'One single price per app, no surprises. Start free, cancel anytime.',
-    plan_label:'Monthly plan per app', plan_f1:'3-day free trial, no card required', plan_f2:'Full access to the app',
-    plan_f3:'Data always backed up', plan_f4:'WhatsApp support', plan_f5:'Nothing to install', plan_f6:'Cancel anytime',
-    which_app:'Which app do you want to activate for free?', register_arrow:'Sign up →', in_dev:'In development',
-    then_word:'then',
-    payment_badge:'Payment methods', payment_title:'How to pay?', payment_sub:'Direct transfer, no intermediary platforms.',
-    payment_intro:'You don\'t need to pay to get started.', payment_intro2:'Your account activates for free for 3 days as soon as you sign up. Only pay if you decide to keep using the app after the trial.',
-    pay1_title:'Sign up first', pay1_desc:'Create your free account on the app you want to use.',
-    pay2_title:'Transfer', pay2_desc:'Via Nequi or Bancolombia to the details below (only if you want to continue after the trial).',
-    pay3_title:'Send the receipt', pay3_desc:'Send us the screenshot via WhatsApp with your username.',
-    number_lbl:'Number', savings_account:'Savings account', copy_number:'Copy number', copied_word:'Copied! ✓',
-    whatsapp_title:'Send your receipt here', whatsapp_desc:'Message us with your username and the payment screenshot',
-    faq_badge:'FAQ', faq_title:'Frequently asked questions',
-    faq_q1:'How long does it take to activate my account?', faq_a1:'Instantly! As soon as you sign up, your account is active with a 3-day free trial, no payment needed. If you later decide to continue, we activate your subscription within 24 hours of receiving your receipt.',
-    faq_q2:'Do I need to pay to start using the app?', faq_a2:"No. When you sign up you get 3 days completely free, no card and no commitment. You only need to pay if you want to keep using the app after that period.",
-    faq_q3:'Can I have several apps at the same time?', faq_a3:'Yes. Each app has its own subscription. If you already have an account, use the "I already have an account" option to add the new app with the same email and password.',
-    faq_q4:"What happens if I don't renew or pay after the trial?", faq_a4:'Your account deactivates automatically when the trial or subscription ends, but your data is not deleted. Once you activate your payment, everything will be exactly the same.',
-    faq_q5:'Do I need to install anything?', faq_a5:'No. All applications are 100% web-based. You only need a browser and internet connection.',
-    faq_q6:'Is there support if I have issues?', faq_a6:'Yes. You can message us on WhatsApp and we will respond as quickly as possible.',
-    footer_tagline:'Digital solutions for any type of business.', footer_nav:'Navigation', footer_contact:'Contact',
-    footer_email:'Email', footer_copy:'© 2025 Skripto Apps · All rights reserved', footer_made:'Made with', footer_for:'for your business',
-    modal_title:'Create account', modal_sub:'Select the app and complete registration ·', modal_trial:'3 free days',
-    tab_new:"I'm new", tab_existing:'I have an account', which_app_use:'Which app do you want to use?',
-    inv_sub_short:'Costs, production and sales', fin_sub_short:'Invoices, expenses and profitability',
-    business_name:'Your business name', email_label:'Email address', email_hint:"You'll receive the email with the link to enter your app here",
-    username_label:'Username', password_label:'Password', min_chars:'Minimum 6 characters', create_free:'Create free account →',
-    existing_info:'Enter your email and password to add this app to your existing account.',
-    your_email:'Your email address', your_password:'Your password', add_app_btn:'Add app to my account →',
-    modal_footer:'Your account is active immediately', modal_footer2:'with a 3-day free trial, no payment required.',
-    inapp_warning:'To sign up correctly, open this link in your browser (Chrome/Safari).',
-    inapp_hint:'Tap the', inapp_hint2:'or', inapp_hint3:'at the top right and choose "Open in browser".',
-    msg_enter_business:'Enter your business name.', msg_enter_email:'Enter your email address.',
-    msg_choose_username:'Choose a username.', msg_min_pwd:'Password must be at least 6 characters.',
-    msg_sending:'Sending…', msg_already_registered:'An account with that email already exists. Use "I have an account" to add this app.',
-    msg_error:'Error: ', msg_account_created:'Account created! Check your email (', msg_account_created2:') and click the link to activate your access — you\'ll be taken straight into the app with your 3-day free trial.',
-    msg_enter_pwd:'Enter your password.', msg_verifying:'Verifying…', msg_wrong_credentials:'Incorrect email or password.',
-    msg_already_active:'You already have active access to that app with this account.', msg_request_registered:'Request registered. Make the payment and let us know to activate it.'
-  }
-};
-var LANG = localStorage.getItem('skripto_lang') || 'es';
-function t(k){ return (I18N[LANG] && I18N[LANG][k]) || (I18N.es[k]) || k; }
-function setLang(l){
-  LANG = l;
-  try{ localStorage.setItem('skripto_lang', l); }catch(e){}
-  aplicarIdioma();
-}
-function aplicarIdioma(){
-  document.querySelectorAll('[data-i18n]').forEach(function(el){ el.textContent = t(el.getAttribute('data-i18n')); });
-  document.querySelectorAll('[data-i18n-ph]').forEach(function(el){ el.placeholder = t(el.getAttribute('data-i18n-ph')); });
-  document.querySelectorAll('.lang-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.lang===LANG); });
-  document.documentElement.lang = LANG;
-
-  var precioInv = LANG==='en' ? '$7 USD' : '$20.000 COP';
-  var precioFin = LANG==='en' ? '$17 USD' : '$50.000 COP';
-  var precioTur = LANG==='en' ? '$5 USD' : '$10.000 COP';
-  document.querySelectorAll('.price-inv').forEach(function(el){ el.textContent = precioInv; });
-  document.querySelectorAll('.price-fin').forEach(function(el){ el.textContent = precioFin; });
-  document.querySelectorAll('.price-tur').forEach(function(el){ el.textContent = precioTur; });
-}
-</script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -234,10 +73,6 @@ nav.scrolled{box-shadow:var(--shadow)}
 .nav-links a:hover::after{transform:scaleX(1)}
 .nav-cta{padding:9px 20px;background:var(--green);color:#fff;border-radius:var(--r);font-size:13px;font-weight:600;text-decoration:none;transition:all .2s;box-shadow:0 2px 8px rgba(15,158,110,.25)}
 .nav-cta:hover{background:var(--green2);box-shadow:0 4px 16px rgba(15,158,110,.35);transform:translateY(-1px)}
-.lang-switch{display:flex;gap:0;background:var(--bg3);border-radius:20px;padding:3px}
-.lang-switch .lang-btn{padding:6px 12px;background:none;border:none;border-radius:16px;font-size:11px;font-weight:600;color:var(--ink2);transition:all .15s;cursor:pointer;font-family:var(--font-sans)}
-.lang-switch .lang-btn.active{background:var(--green);color:#fff}
-@media(max-width:768px){.lang-switch{margin-right:4px}}
 
 /* ── HERO ── */
 .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 20px 80px;position:relative;overflow:hidden;background:linear-gradient(180deg,#FFFFFF 0%,#F0FDF8 60%,#FFFFFF 100%)}
@@ -501,9 +336,9 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
 <body>
 <!-- Banner para navegadores in-app (Instagram / Facebook) -->
 <div id="inapp-banner" style="display:none;position:fixed;top:0;left:0;right:0;z-index:9999;background:#0F9E6E;color:#fff;padding:14px 16px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.2)">
-  ⚠️ <span data-i18n="inapp_warning">Para registrarte correctamente, abre este link en tu navegador (Chrome/Safari).</span>
+  ⚠️ <span>Para registrarte correctamente, abre este link en tu navegador (Chrome/Safari).</span>
   <br>
-  <span style="font-size:12px;opacity:.9"><span data-i18n="inapp_hint">Toca los</span> <strong>⋮</strong> <span data-i18n="inapp_hint2">o</span> <strong>···</strong> <span data-i18n="inapp_hint3">arriba a la derecha y elige "Abrir en el navegador".</span></span>
+  <span style="font-size:12px;opacity:.9"><span>Toca los</span> <strong>⋮</strong> <span>o</span> <strong>···</strong> <span>arriba a la derecha y elige "Abrir en el navegador".</span></span>
   <button onclick="document.getElementById('inapp-banner').style.display='none'" style="position:absolute;top:10px;right:14px;background:none;border:none;color:#fff;font-size:18px;cursor:pointer;line-height:1">×</button>
 </div>
 
@@ -523,18 +358,12 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
     <span class="nav-brand-text">Skripto <em>Apps</em></span>
   </a>
   <div class="nav-links">
-    <a href="#apps" data-i18n="nav_apps">Aplicaciones</a>
-    <a href="#como" data-i18n="nav_how">Cómo funciona</a>
-    <a href="#pago" data-i18n="nav_pricing">Precios</a>
-    <a href="#faq" data-i18n="nav_faq">FAQ</a>
+    <a href="#apps">Aplicaciones</a>
+    <a href="#como">Cómo funciona</a>
+    <a href="#pago">Precios</a>
+    <a href="#faq">FAQ</a>
   </div>
-  <div style="display:flex;align-items:center;gap:10px">
-    <div class="lang-switch">
-      <button class="lang-btn" data-lang="es" onclick="setLang('es')">ES</button>
-      <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
-    </div>
-    <button class="nav-cta" data-i18n="nav_start" onclick="abrirModal()">Comenzar →</button>
-  </div>
+  <button class="nav-cta" onclick="abrirModal()">Comenzar →</button>
 </nav>
 
 <!-- HERO -->
@@ -543,26 +372,26 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
   <div class="hero-glow"></div>
   <div class="hero-badge anim-fade-up">
     <span class="hero-badge-dot"></span>
-    🎁 <span data-i18n="hero_badge">3 días gratis · sin tarjeta</span>
+    🎁 <span>3 días gratis · sin tarjeta</span>
   </div>
-  <h1 class="anim-fade-up anim-delay-1"><span data-i18n="hero_title_1">Herramientas que</span><br><em data-i18n="hero_title_em">simplifican</em> <span data-i18n="hero_title_2">tu negocio</span></h1>
-  <p class="hero-sub anim-fade-up anim-delay-2" data-i18n="hero_sub">Aplicaciones web diseñadas para todo tipo de negocio. Regístrate y empieza a usarlas de inmediato con 3 días de prueba gratis, sin complicaciones y sin instalaciones.</p>
+  <h1 class="anim-fade-up anim-delay-1"><span>Herramientas que</span><br><em>simplifican</em> <span>tu negocio</span></h1>
+  <p class="hero-sub anim-fade-up anim-delay-2">Aplicaciones web diseñadas para todo tipo de negocio. Regístrate y empieza a usarlas de inmediato con 3 días de prueba gratis, sin complicaciones y sin instalaciones.</p>
   <div class="hero-actions anim-fade-up anim-delay-3">
-    <button class="btn-hero-primary" data-i18n="hero_cta_primary" onclick="abrirModal()">Comenzar gratis</button>
-    <a href="#como" class="btn-hero-secondary" data-i18n="hero_cta_secondary">¿Cómo funciona?</a>
+    <button class="btn-hero-primary" onclick="abrirModal()">Comenzar gratis</button>
+    <a href="#como" class="btn-hero-secondary">¿Cómo funciona?</a>
   </div>
   <div class="hero-stats anim-fade-up anim-delay-4">
     <div class="hero-stat">
       <span class="hero-stat-num"><span id="stat-pct">0</span>%</span>
-      <span class="hero-stat-lbl" data-i18n="stat_web">Web, sin instalar</span>
+      <span class="hero-stat-lbl">Web, sin instalar</span>
     </div>
     <div class="hero-stat">
       <span class="hero-stat-num"><span id="stat-hrs">0</span></span>
-      <span class="hero-stat-lbl" data-i18n="stat_trial">Días de prueba gratis</span>
+      <span class="hero-stat-lbl">Días de prueba gratis</span>
     </div>
     <div class="hero-stat">
       <span class="hero-stat-num"><span id="stat-apps">0</span></span>
-      <span class="hero-stat-lbl" data-i18n="stat_apps">Apps disponibles</span>
+      <span class="hero-stat-lbl">Apps disponibles</span>
     </div>
   </div>
 </section>
@@ -571,75 +400,75 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
 <section id="apps">
   <div style="max-width:1100px;margin:0 auto">
     <div class="section-header reveal" style="text-align:center;display:flex;flex-direction:column;align-items:center">
-      <div class="section-badge" data-i18n="apps_badge">Aplicaciones</div>
-      <h2 class="section-title" data-i18n="apps_title">Nuestras herramientas</h2>
-      <p class="section-sub" data-i18n="apps_sub">Cada app resuelve un problema real de tu negocio. Pruébala gratis 3 días, luego paga solo lo que usas.</p>
+      <div class="section-badge">Aplicaciones</div>
+      <h2 class="section-title">Nuestras herramientas</h2>
+      <p class="section-sub">Cada app resuelve un problema real de tu negocio. Pruébala gratis 3 días, luego paga solo lo que usas.</p>
     </div>
     <div class="apps-grid">
       <div class="app-card reveal" style="transition-delay:.05s">
-        <div class="app-badge-new" data-i18n="available_word">Disponible</div>
+        <div class="app-badge-new">Disponible</div>
         <div class="app-card-icon">📦</div>
-        <div class="app-card-name" data-i18n="inv_name">Inventario</div>
-        <div class="app-card-desc" data-i18n="inv_desc">Sistema completo de gestión de costos, producción y ventas. Calcula tu costo real por producto y controla cada movimiento.</div>
+        <div class="app-card-name">Inventario</div>
+        <div class="app-card-desc">Sistema completo de gestión de costos, producción y ventas. Calcula tu costo real por producto y controla cada movimiento.</div>
         <div class="app-card-features">
-          <div class="app-feature" data-i18n="inv_f1">Gestión de materia prima con costo promedio ponderado</div>
-          <div class="app-feature" data-i18n="inv_f2">Registro de producción con desglose de costos</div>
-          <div class="app-feature" data-i18n="inv_f3">Control de ventas y cálculo de utilidades</div>
-          <div class="app-feature" data-i18n="inv_f4">Historial completo de movimientos y reporte en PDF</div>
-          <div class="app-feature" data-i18n="inv_f5">Funciona desde el celular sin instalar nada</div>
+          <div class="app-feature">Gestión de materia prima con costo promedio ponderado</div>
+          <div class="app-feature">Registro de producción con desglose de costos</div>
+          <div class="app-feature">Control de ventas y cálculo de utilidades</div>
+          <div class="app-feature">Historial completo de movimientos y reporte en PDF</div>
+          <div class="app-feature">Funciona desde el celular sin instalar nada</div>
         </div>
         <div class="app-card-footer">
-          <span class="app-price-trial">🎁 <span data-i18n="trial_first">3 días gratis primero</span></span>
-          <div class="app-price-num"><span class="price-inv">$20.000 COP</span><span style="font-size:13px;color:var(--ink3);font-family:var(--font-sans);font-weight:400" data-i18n="per_month">/mes</span></div>
+          <span class="app-price-trial">🎁 <span>3 días gratis primero</span></span>
+          <div class="app-price-num">$20.000 COP<span style="font-size:13px;color:var(--ink3);font-family:var(--font-sans);font-weight:400">/mes</span></div>
         </div>
       </div>
       <div class="app-card blue-card reveal" style="transition-delay:.1s">
-        <div class="app-badge-new" style="background:var(--blue3);color:var(--blue);border-color:rgba(26,86,219,.25)" data-i18n="available_word">Disponible</div>
+        <div class="app-badge-new" style="background:var(--blue3);color:var(--blue);border-color:rgba(26,86,219,.25)">Disponible</div>
         <div class="app-card-icon blue">📊</div>
-        <div class="app-card-name" data-i18n="fin_name">Facturación</div>
-        <div class="app-card-desc" data-i18n="fin_desc">Sistema de facturación de servicios para negocios. Genera y gestiona tus facturas desde cualquier dispositivo sin instalar nada.</div>
+        <div class="app-card-name">Facturación</div>
+        <div class="app-card-desc">Sistema de facturación de servicios para negocios. Genera y gestiona tus facturas desde cualquier dispositivo sin instalar nada.</div>
         <div class="app-card-features">
-          <div class="app-feature blue-check" data-i18n="fin_f1">Base de datos de clientes y servicios asignados</div>
-          <div class="app-feature blue-check" data-i18n="fin_f2">Catálogo de servicios con precios y categorías</div>
-          <div class="app-feature blue-check" data-i18n="fin_f3">Generación de facturas individuales o masivas</div>
-          <div class="app-feature blue-check" data-i18n="fin_f4">Facturas fijas que se renuevan automáticamente</div>
-          <div class="app-feature blue-check" data-i18n="fin_f5">Control de gastos y rentabilidad</div>
-          <div class="app-feature blue-check" data-i18n="fin_f6">Exportación en PDF por factura o reporte general</div>
+          <div class="app-feature blue-check">Base de datos de clientes y servicios asignados</div>
+          <div class="app-feature blue-check">Catálogo de servicios con precios y categorías</div>
+          <div class="app-feature blue-check">Generación de facturas individuales o masivas</div>
+          <div class="app-feature blue-check">Facturas fijas que se renuevan automáticamente</div>
+          <div class="app-feature blue-check">Control de gastos y rentabilidad</div>
+          <div class="app-feature blue-check">Exportación en PDF por factura o reporte general</div>
         </div>
         <div class="app-card-footer">
-          <span class="app-price-trial blue-trial">🎁 <span data-i18n="trial_first">3 días gratis primero</span></span>
-          <div class="app-price-num"><span class="price-fin">$50.000 COP</span><span style="font-size:13px;color:var(--ink3);font-family:var(--font-sans);font-weight:400" data-i18n="per_month">/mes</span></div>
+          <span class="app-price-trial blue-trial">🎁 <span>3 días gratis primero</span></span>
+          <div class="app-price-num">$50.000 COP<span style="font-size:13px;color:var(--ink3);font-family:var(--font-sans);font-weight:400">/mes</span></div>
         </div>
       </div>
       <div class="app-card amber-card reveal" style="transition-delay:.15s">
-        <div class="app-badge-new" style="background:#FEF3C7;color:#92400E;border-color:rgba(180,83,9,.25)" data-i18n="available_word">Disponible</div>
+        <div class="app-badge-new" style="background:#FEF3C7;color:#92400E;border-color:rgba(180,83,9,.25)">Disponible</div>
         <div class="app-card-icon amber">🚗</div>
-        <div class="app-card-name" data-i18n="tur_name">Turnos</div>
-        <div class="app-card-desc" data-i18n="tur_desc">Control de ingresos y gastos para conductores de plataformas como Uber, InDrive o Didi. Sabe exactamente cuánto te está rindiendo cada plataforma.</div>
+        <div class="app-card-name">Turnos</div>
+        <div class="app-card-desc">Control de ingresos y gastos para conductores de plataformas como Uber, InDrive o Didi. Sabe exactamente cuánto te está rindiendo cada plataforma.</div>
         <div class="app-card-features">
-          <div class="app-feature amber-check" data-i18n="tur_f1">Registro rápido de cada viaje por plataforma</div>
-          <div class="app-feature amber-check" data-i18n="tur_f2">Gastos fijos y variables (gasolina, mantenimiento, seguro)</div>
-          <div class="app-feature amber-check" data-i18n="tur_f3">Comparación de rendimiento entre plataformas</div>
-          <div class="app-feature amber-check" data-i18n="tur_f4">Utilidad neta real, no solo lo que facturas</div>
-          <div class="app-feature amber-check" data-i18n="tur_f5">Reporte en PDF de tu turno o del mes completo</div>
+          <div class="app-feature amber-check">Registro rápido de cada viaje por plataforma</div>
+          <div class="app-feature amber-check">Gastos fijos y variables (gasolina, mantenimiento, seguro)</div>
+          <div class="app-feature amber-check">Comparación de rendimiento entre plataformas</div>
+          <div class="app-feature amber-check">Utilidad neta real, no solo lo que facturas</div>
+          <div class="app-feature amber-check">Reporte en PDF de tu turno o del mes completo</div>
         </div>
         <div class="app-card-footer">
-          <span class="app-price-trial amber-trial">🎁 <span data-i18n="trial_first">3 días gratis primero</span></span>
-          <div class="app-price-num"><span class="price-tur">$10.000 COP</span><span style="font-size:13px;color:var(--ink3);font-family:var(--font-sans);font-weight:400" data-i18n="per_month">/mes</span></div>
+          <span class="app-price-trial amber-trial">🎁 <span>3 días gratis primero</span></span>
+          <div class="app-price-num">$10.000 COP<span style="font-size:13px;color:var(--ink3);font-family:var(--font-sans);font-weight:400">/mes</span></div>
         </div>
       </div>
       <div class="app-card app-card-soon reveal" style="transition-delay:.2s">
-        <div class="app-badge-soon" data-i18n="soon_word">Próximamente</div>
+        <div class="app-badge-soon">Próximamente</div>
         <div class="app-card-icon" style="background:var(--bg4);border-color:var(--border)">👥</div>
-        <div class="app-card-name" data-i18n="cli_name">Clientes</div>
-        <div class="app-card-desc" data-i18n="cli_desc">CRM simple para gestionar tus clientes, pedidos y seguimientos.</div>
+        <div class="app-card-name">Clientes</div>
+        <div class="app-card-desc">CRM simple para gestionar tus clientes, pedidos y seguimientos.</div>
         <div class="app-card-features">
-          <div class="app-feature" data-i18n="cli_f1">Base de datos de clientes</div>
-          <div class="app-feature" data-i18n="cli_f2">Historial de pedidos por cliente</div>
-          <div class="app-feature" data-i18n="cli_f3">Recordatorios de seguimiento</div>
+          <div class="app-feature">Base de datos de clientes</div>
+          <div class="app-feature">Historial de pedidos por cliente</div>
+          <div class="app-feature">Recordatorios de seguimiento</div>
         </div>
         <div class="app-card-footer">
-          <div class="app-price-num" style="font-size:22px;color:var(--ink3)" data-i18n="soon_price">Pronto</div>
+          <div class="app-price-num" style="font-size:22px;color:var(--ink3)">Pronto</div>
         </div>
       </div>
     </div>
@@ -650,34 +479,34 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
 <section id="como">
   <div style="max-width:1000px;margin:0 auto">
     <div class="section-header reveal" style="text-align:center;display:flex;flex-direction:column;align-items:center">
-      <div class="section-badge" data-i18n="como_badge">Proceso</div>
-      <h2 class="section-title" data-i18n="como_title">¿Cómo funciona?</h2>
-      <p class="section-sub" data-i18n="como_sub">Tu cuenta queda activa al instante. El pago solo lo necesitas si decides seguir después de la prueba gratis.</p>
+      <div class="section-badge">Proceso</div>
+      <h2 class="section-title">¿Cómo funciona?</h2>
+      <p class="section-sub">Tu cuenta queda activa al instante. El pago solo lo necesitas si decides seguir después de la prueba gratis.</p>
     </div>
     <div class="steps-grid">
       <div class="step reveal" style="transition-delay:.05s">
         <div class="step-circle"><span>📝</span></div>
-        <div class="step-num" data-i18n="step1_num">Paso 01</div>
-        <div class="step-title" data-i18n="step1_title">Regístrate</div>
-        <div class="step-desc" data-i18n="step1_desc">Crea tu cuenta con el nombre de tu negocio, usuario y contraseña.</div>
+        <div class="step-num">Paso 01</div>
+        <div class="step-title">Regístrate</div>
+        <div class="step-desc">Crea tu cuenta con el nombre de tu negocio, usuario y contraseña.</div>
       </div>
       <div class="step reveal" style="transition-delay:.1s">
         <div class="step-circle"><span>🎁</span></div>
-        <div class="step-num" data-i18n="step2_num">Paso 02</div>
-        <div class="step-title" data-i18n="step2_title">Usa 3 días gratis</div>
-        <div class="step-desc" data-i18n="step2_desc">Tu cuenta queda activa de inmediato. No necesitas pagar nada todavía.</div>
+        <div class="step-num">Paso 02</div>
+        <div class="step-title">Usa 3 días gratis</div>
+        <div class="step-desc">Tu cuenta queda activa de inmediato. No necesitas pagar nada todavía.</div>
       </div>
       <div class="step reveal" style="transition-delay:.15s">
         <div class="step-circle"><span>💳</span></div>
-        <div class="step-num" data-i18n="step3_num">Paso 03</div>
-        <div class="step-title" data-i18n="step3_title">Realiza el pago</div>
-        <div class="step-desc" data-i18n="step3_desc">Antes de que termine la prueba, transfiere por Nequi o Bancolombia si quieres continuar.</div>
+        <div class="step-num">Paso 03</div>
+        <div class="step-title">Realiza el pago</div>
+        <div class="step-desc">Antes de que termine la prueba, transfiere por Nequi o Bancolombia si quieres continuar.</div>
       </div>
       <div class="step reveal" style="transition-delay:.2s">
         <div class="step-circle"><span>🚀</span></div>
-        <div class="step-num" data-i18n="step4_num">Paso 04</div>
-        <div class="step-title" data-i18n="step4_title">Sigue sin interrupciones</div>
-        <div class="step-desc" data-i18n="step4_desc">Envíanos el comprobante y tu acceso continúa activo sin pausas.</div>
+        <div class="step-num">Paso 04</div>
+        <div class="step-title">Sigue sin interrupciones</div>
+        <div class="step-desc">Envíanos el comprobante y tu acceso continúa activo sin pausas.</div>
       </div>
     </div>
   </div>
@@ -687,104 +516,104 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
 <section id="pago">
   <div class="pago-layout">
     <div class="reveal">
-      <div class="section-badge" data-i18n="pricing_badge">Precios</div>
-      <h2 class="section-title" data-i18n="pricing_title">Simple y transparente</h2>
-      <p class="section-sub" style="margin-bottom:28px" data-i18n="pricing_sub">Un solo precio por app, sin sorpresas. Empieza gratis, cancela cuando quieras.</p>
+      <div class="section-badge">Precios</div>
+      <h2 class="section-title">Simple y transparente</h2>
+      <p class="section-sub" style="margin-bottom:28px">Un solo precio por app, sin sorpresas. Empieza gratis, cancela cuando quieras.</p>
       <div class="plan-card">
-        <div style="font-size:11px;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px" data-i18n="plan_label">Plan mensual por app</div>
+        <div style="font-size:11px;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Plan mensual por app</div>
         <div class="plan-features">
-          <div class="plan-feature highlight"><div class="plan-feature-check">✓</div>🎁 <span data-i18n="plan_f1">3 días de prueba gratis, sin tarjeta</span></div>
-          <div class="plan-feature"><div class="plan-feature-check">✓</div><span data-i18n="plan_f2">Acceso completo a la app</span></div>
-          <div class="plan-feature"><div class="plan-feature-check">✓</div><span data-i18n="plan_f3">Datos siempre respaldados</span></div>
-          <div class="plan-feature"><div class="plan-feature-check">✓</div><span data-i18n="plan_f4">Soporte por WhatsApp</span></div>
-          <div class="plan-feature"><div class="plan-feature-check">✓</div><span data-i18n="plan_f5">Sin instalaciones</span></div>
-          <div class="plan-feature"><div class="plan-feature-check">✓</div><span data-i18n="plan_f6">Cancela cuando quieras</span></div>
+          <div class="plan-feature highlight"><div class="plan-feature-check">✓</div>🎁 <span>3 días de prueba gratis, sin tarjeta</span></div>
+          <div class="plan-feature"><div class="plan-feature-check">✓</div><span>Acceso completo a la app</span></div>
+          <div class="plan-feature"><div class="plan-feature-check">✓</div><span>Datos siempre respaldados</span></div>
+          <div class="plan-feature"><div class="plan-feature-check">✓</div><span>Soporte por WhatsApp</span></div>
+          <div class="plan-feature"><div class="plan-feature-check">✓</div><span>Sin instalaciones</span></div>
+          <div class="plan-feature"><div class="plan-feature-check">✓</div><span>Cancela cuando quieras</span></div>
         </div>
         <div class="plan-divider">
-          <div class="plan-divider-label" data-i18n="which_app">¿Qué app quieres activar gratis?</div>
+          <div class="plan-divider-label">¿Qué app quieres activar gratis?</div>
           <div class="app-selector">
             <a href="#" class="app-selector-item available" onclick="abrirModal('inventario');return false">
               <div class="app-selector-left">
                 <span class="app-selector-emoji">📦</span>
                 <div>
-                  <div class="app-selector-name" data-i18n="inv_name">Inventario</div>
-                  <div class="app-selector-sub green">🎁 <span data-i18n="trial_first">3 días gratis</span> · <span data-i18n="then_word">luego</span> <span class="price-inv">$20.000 COP</span><span data-i18n="per_month">/mes</span></div>
+                  <div class="app-selector-name">Inventario</div>
+                  <div class="app-selector-sub green">🎁 <span>3 días gratis</span> · <span>luego</span> $20.000 COP<span>/mes</span></div>
                 </div>
               </div>
-              <span class="app-selector-tag avail-green" data-i18n="register_arrow">Registrarme →</span>
+              <span class="app-selector-tag avail-green">Registrarme →</span>
             </a>
             <a href="#" class="app-selector-item available blue-sel" onclick="abrirModal('finanzas');return false">
               <div class="app-selector-left">
                 <span class="app-selector-emoji">📊</span>
                 <div>
-                  <div class="app-selector-name" data-i18n="fin_name">Facturación</div>
-                  <div class="app-selector-sub blue-c">🎁 <span data-i18n="trial_first">3 días gratis</span> · <span data-i18n="then_word">luego</span> <span class="price-fin">$50.000 COP</span><span data-i18n="per_month">/mes</span></div>
+                  <div class="app-selector-name">Facturación</div>
+                  <div class="app-selector-sub blue-c">🎁 <span>3 días gratis</span> · <span>luego</span> $50.000 COP<span>/mes</span></div>
                 </div>
               </div>
-              <span class="app-selector-tag avail-blue" data-i18n="register_arrow">Registrarme →</span>
+              <span class="app-selector-tag avail-blue">Registrarme →</span>
             </a>
             <a href="#" class="app-selector-item available amber-sel" onclick="abrirModal('turnos');return false">
               <div class="app-selector-left">
                 <span class="app-selector-emoji">🚗</span>
                 <div>
-                  <div class="app-selector-name" data-i18n="tur_name">Turnos</div>
-                  <div class="app-selector-sub amber-c">🎁 <span data-i18n="trial_first">3 días gratis</span> · <span data-i18n="then_word">luego</span> <span class="price-tur">$10.000 COP</span><span data-i18n="per_month">/mes</span></div>
+                  <div class="app-selector-name">Turnos</div>
+                  <div class="app-selector-sub amber-c">🎁 <span>3 días gratis</span> · <span>luego</span> $10.000 COP<span>/mes</span></div>
                 </div>
               </div>
-              <span class="app-selector-tag avail-amber" data-i18n="register_arrow">Registrarme →</span>
+              <span class="app-selector-tag avail-amber">Registrarme →</span>
             </a>
             <div class="app-selector-item soon">
               <div class="app-selector-left">
                 <span class="app-selector-emoji">👥</span>
                 <div>
-                  <div class="app-selector-name" data-i18n="cli_name">Clientes</div>
-                  <div class="app-selector-sub muted" data-i18n="in_dev">En desarrollo</div>
+                  <div class="app-selector-name">Clientes</div>
+                  <div class="app-selector-sub muted">En desarrollo</div>
                 </div>
               </div>
-              <span class="app-selector-tag soon-tag" data-i18n="soon_price">Pronto</span>
+              <span class="app-selector-tag soon-tag">Pronto</span>
             </div>
           </div>
         </div>
       </div>
     </div>
     <div class="reveal" style="transition-delay:.1s">
-      <div class="section-badge" data-i18n="payment_badge">Métodos de pago</div>
-      <h2 class="section-title" style="font-size:32px;margin-bottom:8px" data-i18n="payment_title">¿Cómo pagar?</h2>
-      <p class="section-sub" style="margin-bottom:20px;font-size:14px" data-i18n="payment_sub">Transferencia directa, sin plataformas intermediarias.</p>
+      <div class="section-badge">Métodos de pago</div>
+      <h2 class="section-title" style="font-size:32px;margin-bottom:8px">¿Cómo pagar?</h2>
+      <p class="section-sub" style="margin-bottom:20px;font-size:14px">Transferencia directa, sin plataformas intermediarias.</p>
       <div class="pago-intro-box">
-        🎁 <strong data-i18n="payment_intro">No necesitas pagar para empezar.</strong> <span data-i18n="payment_intro2">Tu cuenta se activa gratis por 3 días apenas te registras. Solo paga si decides seguir usando la app después de la prueba.</span>
+        🎁 <strong>No necesitas pagar para empezar.</strong> <span>Tu cuenta se activa gratis por 3 días apenas te registras. Solo paga si decides seguir usando la app después de la prueba.</span>
       </div>
       <div class="pago-steps">
         <div class="pago-step">
           <div class="pago-step-num">1</div>
-          <div><div class="pago-step-title" data-i18n="pay1_title">Regístrate primero</div><div class="pago-step-desc" data-i18n="pay1_desc">Crea tu cuenta gratis en la app que quieres usar.</div></div>
+          <div><div class="pago-step-title">Regístrate primero</div><div class="pago-step-desc">Crea tu cuenta gratis en la app que quieres usar.</div></div>
         </div>
         <div class="pago-step">
           <div class="pago-step-num">2</div>
-          <div><div class="pago-step-title" data-i18n="pay2_title">Transfiere</div><div class="pago-step-desc" data-i18n="pay2_desc">Por Nequi o Bancolombia a los datos de abajo (solo si quieres continuar tras la prueba).</div></div>
+          <div><div class="pago-step-title">Transfiere</div><div class="pago-step-desc">Por Nequi o Bancolombia a los datos de abajo (solo si quieres continuar tras la prueba).</div></div>
         </div>
         <div class="pago-step">
           <div class="pago-step-num">3</div>
-          <div><div class="pago-step-title" data-i18n="pay3_title">Envía el comprobante</div><div class="pago-step-desc" data-i18n="pay3_desc">Mándanos la captura por WhatsApp con tu usuario.</div></div>
+          <div><div class="pago-step-title">Envía el comprobante</div><div class="pago-step-desc">Mándanos la captura por WhatsApp con tu usuario.</div></div>
         </div>
       </div>
       <div class="metodos-grid">
         <div class="metodo-card">
           <div class="metodo-header"><div class="metodo-icon">📱</div><div class="metodo-name">Nequi</div></div>
-          <div class="metodo-label" data-i18n="number_lbl">Número</div>
+          <div class="metodo-label">Número</div>
           <div class="metodo-value">313 282 4580</div>
-          <button class="btn-copy" data-i18n="copy_number" onclick="copiar(this,'3132824580')">Copiar número</button>
+          <button class="btn-copy" onclick="copiar(this,'3132824580')">Copiar número</button>
         </div>
         <div class="metodo-card">
           <div class="metodo-header"><div class="metodo-icon">🏦</div><div class="metodo-name">Bancolombia</div></div>
-          <div class="metodo-label" data-i18n="savings_account">Cuenta de ahorros</div>
+          <div class="metodo-label">Cuenta de ahorros</div>
           <div class="metodo-value">580 5558 9095</div>
-          <button class="btn-copy" data-i18n="copy_number" onclick="copiar(this,'58055589095')">Copiar número</button>
+          <button class="btn-copy" onclick="copiar(this,'58055589095')">Copiar número</button>
         </div>
       </div>
       <div class="whatsapp-box">
         <div class="whatsapp-icon">💬</div>
-        <div style="flex:1"><div class="whatsapp-title" data-i18n="whatsapp_title">Envía tu comprobante aquí</div><div class="whatsapp-desc" data-i18n="whatsapp_desc">Escríbenos con tu usuario y la captura del pago</div></div>
+        <div style="flex:1"><div class="whatsapp-title">Envía tu comprobante aquí</div><div class="whatsapp-desc">Escríbenos con tu usuario y la captura del pago</div></div>
         <a href="https://wa.me/573132824580?text=Hola%2C%20realic%C3%A9%20el%20pago.%20Mi%20usuario%20es%3A%20" target="_blank" class="btn-whatsapp">WhatsApp →</a>
       </div>
     </div>
@@ -795,33 +624,33 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
 <section id="faq">
   <div style="max-width:680px;margin:0 auto">
     <div class="section-header reveal" style="text-align:center;display:flex;flex-direction:column;align-items:center">
-      <div class="section-badge" data-i18n="faq_badge">FAQ</div>
-      <h2 class="section-title" data-i18n="faq_title">Preguntas frecuentes</h2>
+      <div class="section-badge">FAQ</div>
+      <h2 class="section-title">Preguntas frecuentes</h2>
     </div>
     <div class="faq-list">
       <div class="faq-item reveal">
-        <button class="faq-q" onclick="toggleFaq(this)"><span data-i18n="faq_q1">¿En cuánto tiempo activan mi cuenta?</span><div class="faq-chevron">▾</div></button>
-        <div class="faq-a"><div class="faq-a-inner" data-i18n="faq_a1">¡Al instante! Apenas te registras, tu cuenta queda activa con 3 días de prueba gratis, sin necesidad de pago. Si luego decides continuar, activamos tu suscripción en menos de 24 horas después de recibir tu comprobante.</div></div>
+        <button class="faq-q" onclick="toggleFaq(this)"><span>¿En cuánto tiempo activan mi cuenta?</span><div class="faq-chevron">▾</div></button>
+        <div class="faq-a"><div class="faq-a-inner">¡Al instante! Apenas te registras, tu cuenta queda activa con 3 días de prueba gratis, sin necesidad de pago. Si luego decides continuar, activamos tu suscripción en menos de 24 horas después de recibir tu comprobante.</div></div>
       </div>
       <div class="faq-item reveal" style="transition-delay:.05s">
-        <button class="faq-q" onclick="toggleFaq(this)"><span data-i18n="faq_q2">¿Necesito pagar para empezar a usar la app?</span><div class="faq-chevron">▾</div></button>
-        <div class="faq-a"><div class="faq-a-inner" data-i18n="faq_a2">No. Al registrarte tienes 3 días de prueba completamente gratis, sin tarjeta y sin compromisos. Solo debes pagar si quieres seguir usando la app una vez termine ese período.</div></div>
+        <button class="faq-q" onclick="toggleFaq(this)"><span>¿Necesito pagar para empezar a usar la app?</span><div class="faq-chevron">▾</div></button>
+        <div class="faq-a"><div class="faq-a-inner">No. Al registrarte tienes 3 días de prueba completamente gratis, sin tarjeta y sin compromisos. Solo debes pagar si quieres seguir usando la app una vez termine ese período.</div></div>
       </div>
       <div class="faq-item reveal" style="transition-delay:.1s">
-        <button class="faq-q" onclick="toggleFaq(this)"><span data-i18n="faq_q3">¿Puedo tener varias apps al mismo tiempo?</span><div class="faq-chevron">▾</div></button>
-        <div class="faq-a"><div class="faq-a-inner" data-i18n="faq_a3">Sí. Cada app tiene su propia suscripción. Si ya tienes cuenta, usa la opción "Ya tengo cuenta" para agregar la nueva app con el mismo correo y contraseña.</div></div>
+        <button class="faq-q" onclick="toggleFaq(this)"><span>¿Puedo tener varias apps al mismo tiempo?</span><div class="faq-chevron">▾</div></button>
+        <div class="faq-a"><div class="faq-a-inner">Sí. Cada app tiene su propia suscripción. Si ya tienes cuenta, usa la opción "Ya tengo cuenta" para agregar la nueva app con el mismo correo y contraseña.</div></div>
       </div>
       <div class="faq-item reveal" style="transition-delay:.15s">
-        <button class="faq-q" onclick="toggleFaq(this)"><span data-i18n="faq_q4">¿Qué pasa si no renuevo o no pago tras la prueba?</span><div class="faq-chevron">▾</div></button>
-        <div class="faq-a"><div class="faq-a-inner" data-i18n="faq_a4">Tu cuenta se inactiva automáticamente al terminar la prueba o la suscripción, pero tus datos no se borran. Cuando actives tu pago, todo estará exactamente igual.</div></div>
+        <button class="faq-q" onclick="toggleFaq(this)"><span>¿Qué pasa si no renuevo o no pago tras la prueba?</span><div class="faq-chevron">▾</div></button>
+        <div class="faq-a"><div class="faq-a-inner">Tu cuenta se inactiva automáticamente al terminar la prueba o la suscripción, pero tus datos no se borran. Cuando actives tu pago, todo estará exactamente igual.</div></div>
       </div>
       <div class="faq-item reveal" style="transition-delay:.2s">
-        <button class="faq-q" onclick="toggleFaq(this)"><span data-i18n="faq_q5">¿Necesito instalar algo?</span><div class="faq-chevron">▾</div></button>
-        <div class="faq-a"><div class="faq-a-inner" data-i18n="faq_a5">No. Todas las aplicaciones son 100% web. Solo necesitas un navegador y conexión a internet.</div></div>
+        <button class="faq-q" onclick="toggleFaq(this)"><span>¿Necesito instalar algo?</span><div class="faq-chevron">▾</div></button>
+        <div class="faq-a"><div class="faq-a-inner">No. Todas las aplicaciones son 100% web. Solo necesitas un navegador y conexión a internet.</div></div>
       </div>
       <div class="faq-item reveal" style="transition-delay:.25s">
-        <button class="faq-q" onclick="toggleFaq(this)"><span data-i18n="faq_q6">¿Hay soporte si tengo problemas?</span><div class="faq-chevron">▾</div></button>
-        <div class="faq-a"><div class="faq-a-inner" data-i18n="faq_a6">Sí. Puedes escribirnos por WhatsApp y te respondemos en el menor tiempo posible.</div></div>
+        <button class="faq-q" onclick="toggleFaq(this)"><span>¿Hay soporte si tengo problemas?</span><div class="faq-chevron">▾</div></button>
+        <div class="faq-a"><div class="faq-a-inner">Sí. Puedes escribirnos por WhatsApp y te respondemos en el menor tiempo posible.</div></div>
       </div>
     </div>
   </div>
@@ -834,28 +663,28 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
       <div class="footer-logo-row">
         <div class="footer-brand-name">Skripto <em>Apps</em></div>
       </div>
-      <div class="footer-tagline" data-i18n="footer_tagline">Soluciones digitales para todo tipo de negocio.</div>
+      <div class="footer-tagline">Soluciones digitales para todo tipo de negocio.</div>
     </div>
     <div>
-      <div class="footer-col-title" data-i18n="footer_nav">Navegación</div>
+      <div class="footer-col-title">Navegación</div>
       <div class="footer-links-list">
-        <a href="#apps" data-i18n="nav_apps">Aplicaciones</a>
-        <a href="#como" data-i18n="nav_how">Cómo funciona</a>
-        <a href="#pago" data-i18n="nav_pricing">Precios</a>
-        <a href="#faq" data-i18n="faq_title">Preguntas frecuentes</a>
+        <a href="#apps">Aplicaciones</a>
+        <a href="#como">Cómo funciona</a>
+        <a href="#pago">Precios</a>
+        <a href="#faq">Preguntas frecuentes</a>
       </div>
     </div>
     <div>
-      <div class="footer-col-title" data-i18n="footer_contact">Contacto</div>
+      <div class="footer-col-title">Contacto</div>
       <div class="footer-links-list">
         <a href="https://wa.me/573132824580" target="_blank">WhatsApp</a>
-        <a href="mailto:skriptoApps@gmail.com" data-i18n="footer_email">Correo electrónico</a>
+        <a href="mailto:skriptoApps@gmail.com">Correo electrónico</a>
       </div>
     </div>
   </div>
   <div class="footer-bottom">
-    <div class="footer-copy" data-i18n="footer_copy">© 2025 Skripto Apps · Todos los derechos reservados</div>
-    <div class="footer-made"><span data-i18n="footer_made">Hecho con</span> <span>♥</span> <span data-i18n="footer_for">para tu negocio</span></div>
+    <div class="footer-copy">© 2025 Skripto Apps · Todos los derechos reservados</div>
+    <div class="footer-made"><span>Hecho con</span> <span>♥</span> <span>para tu negocio</span></div>
   </div>
 </footer>
 
@@ -865,37 +694,37 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
     <button class="modal-close" onclick="cerrarModal()">×</button>
     <div class="modal-header">
       <span class="modal-icon" id="modal-icon-display">🚀</span>
-      <div class="modal-title" data-i18n="modal_title">Crear cuenta</div>
-      <div class="modal-subtitle"><span data-i18n="modal_sub">Selecciona la app y completa el registro ·</span> 🎁 <span data-i18n="modal_trial">3 días gratis</span></div>
+      <div class="modal-title">Crear cuenta</div>
+      <div class="modal-subtitle"><span>Selecciona la app y completa el registro ·</span> 🎁 <span>3 días gratis</span></div>
     </div>
     <div class="step-toggle">
-      <button class="step-toggle-btn active" id="stab-nuevo" data-i18n="tab_new" onclick="cambiarFlujo('nuevo')">Soy nuevo</button>
-      <button class="step-toggle-btn" id="stab-existente" data-i18n="tab_existing" onclick="cambiarFlujo('existente')">Ya tengo cuenta</button>
+      <button class="step-toggle-btn active" id="stab-nuevo" onclick="cambiarFlujo('nuevo')">Soy nuevo</button>
+      <button class="step-toggle-btn" id="stab-existente" onclick="cambiarFlujo('existente')">Ya tengo cuenta</button>
     </div>
     <div class="form-g">
-      <label data-i18n="which_app_use">¿Qué app quieres usar?</label>
+      <label>¿Qué app quieres usar?</label>
       <div class="app-picker">
         <button class="app-pick-btn active" id="pick-inventario" onclick="seleccionarApp('inventario')">
           <span class="app-pick-emoji">📦</span>
           <div class="app-pick-info">
-            <div class="app-pick-name" data-i18n="inv_name">Inventario</div>
-            <div class="app-pick-sub" data-i18n="inv_sub_short">Costos, producción y ventas</div>
+            <div class="app-pick-name">Inventario</div>
+            <div class="app-pick-sub">Costos, producción y ventas</div>
           </div>
           <span class="app-pick-check" id="check-inventario">✓</span>
         </button>
         <button class="app-pick-btn" id="pick-finanzas" onclick="seleccionarApp('finanzas')">
           <span class="app-pick-emoji">📊</span>
           <div class="app-pick-info">
-            <div class="app-pick-name" data-i18n="fin_name">Facturación</div>
-            <div class="app-pick-sub" data-i18n="fin_sub_short">Facturas, gastos y rentabilidad</div>
+            <div class="app-pick-name">Facturación</div>
+            <div class="app-pick-sub">Facturas, gastos y rentabilidad</div>
           </div>
           <span class="app-pick-check" id="check-finanzas"></span>
         </button>
         <button class="app-pick-btn" id="pick-turnos" onclick="seleccionarApp('turnos')">
           <span class="app-pick-emoji">🚗</span>
           <div class="app-pick-info">
-            <div class="app-pick-name" data-i18n="tur_name">Turnos</div>
-            <div class="app-pick-sub" data-i18n="tur_sub_short">Ingresos, gastos y comparación de plataformas</div>
+            <div class="app-pick-name">Turnos</div>
+            <div class="app-pick-sub">Ingresos, gastos y comparación de plataformas</div>
           </div>
           <span class="app-pick-check" id="check-turnos"></span>
         </button>
@@ -906,48 +735,47 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
     <!-- FLUJO NUEVO -->
     <div class="modal-step active" id="step-nuevo">
       <div class="form-g">
-        <label data-i18n="business_name">Nombre de tu negocio</label>
+        <label>Nombre de tu negocio</label>
         <input type="text" id="reg-nombre">
       </div>
       <div class="form-g">
-        <label data-i18n="email_label">Correo electrónico</label>
+        <label>Correo electrónico</label>
         <input type="email" id="reg-email" placeholder="tu@correo.com">
-        <div class="input-hint" data-i18n="email_hint">Aquí recibirás el correo con el link para entrar a tu app</div>
+        <div class="input-hint">Aquí recibirás el correo con el link para entrar a tu app</div>
       </div>
       <div class="form-g">
-        <label data-i18n="username_label">Usuario</label>
+        <label>Usuario</label>
         <input type="text" id="reg-usuario" placeholder="minegocio (sin espacios)"
           oninput="this.value=this.value.toLowerCase().replace(/\s+/g,'_')">
       </div>
       <div class="form-g">
-        <label data-i18n="password_label">Contraseña</label>
-        <input type="password" id="reg-password" placeholder="Mínimo 6 caracteres" data-i18n-ph="min_chars"
+        <label>Contraseña</label>
+        <input type="password" id="reg-password" placeholder="Mínimo 6 caracteres"
           onkeydown="if(event.key==='Enter')doRegistro()">
       </div>
-      <button class="btn-modal-primary" id="btn-reg-main" data-i18n="create_free" onclick="doRegistro()">Crear cuenta gratis →</button>
+      <button class="btn-modal-primary" id="btn-reg-main" onclick="doRegistro()">Crear cuenta gratis →</button>
     </div>
     <!-- FLUJO EXISTENTE -->
     <div class="modal-step" id="step-existente">
-      <div class="modal-info-box" data-i18n="existing_info">
+      <div class="modal-info-box">
         Ingresa tu correo y contraseña para agregar esta app a tu cuenta existente.
       </div>
       <div class="form-g">
-        <label data-i18n="your_email">Tu correo electrónico</label>
+        <label>Tu correo electrónico</label>
         <input type="email" id="exist-usuario" placeholder="tu@correo.com">
       </div>
       <div class="form-g">
-        <label data-i18n="your_password">Tu contraseña</label>
+        <label>Tu contraseña</label>
         <input type="password" id="exist-password" placeholder="••••••••"
           onkeydown="if(event.key==='Enter')doAgregarApp()">
       </div>
-      <button class="btn-modal-primary" id="btn-agregar-app" data-i18n="add_app_btn" onclick="doAgregarApp()">Agregar app a mi cuenta →</button>
+      <button class="btn-modal-primary" id="btn-agregar-app" onclick="doAgregarApp()">Agregar app a mi cuenta →</button>
     </div>
-    <div class="modal-footer-txt">🎁 <strong data-i18n="modal_footer">Tu cuenta queda activa de inmediato</strong> <span data-i18n="modal_footer2">con 3 días de prueba gratis, sin necesidad de pago.</span></div>
+    <div class="modal-footer-txt">🎁 <strong>Tu cuenta queda activa de inmediato</strong> <span>con 3 días de prueba gratis, sin necesidad de pago.</span></div>
   </div>
 </div>
 
 <script>
-aplicarIdioma();
 
 // ── FAQ ──────────────────────────────────────────────────────
 function toggleFaq(btn){
@@ -1043,7 +871,7 @@ async function doRegistro(){
     email: email,
     password: password,
     options: {
-      data: { nombre: nombre, usuario: usuario, app: appSeleccionada, lang: LANG },
+      data: { nombre: nombre, usuario: usuario, app: appSeleccionada },
       emailRedirectTo: APP_PAGES[appSeleccionada] || APP_PAGES.inventario
     }
   });
@@ -1094,7 +922,7 @@ async function doAgregarApp(){
   // Enviar correo con el link de acceso (enlace mágico) a la app solicitada
   await supabase.auth.signInWithOtp({
     email: email,
-    options: { emailRedirectTo: APP_PAGES[app] || APP_PAGES.inventario, data: { lang: LANG, app: app } }
+    options: { emailRedirectTo: APP_PAGES[app] || APP_PAGES.inventario, data: { app: app } }
   });
 
   btn.disabled=false; btn.textContent='Agregar app a mi cuenta →';
