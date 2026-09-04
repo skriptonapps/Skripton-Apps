@@ -115,6 +115,10 @@ section{padding:96px 40px}
 .app-card.amber-card:hover{border-color:rgba(180,83,9,.4)}
 .app-card.amber-card::before{background:linear-gradient(135deg,rgba(180,83,9,.04) 0%,transparent 60%)}
 .app-card-icon.amber{background:#FEF3C7;border-color:rgba(180,83,9,.2)}
+.app-card.indigo-card:hover{border-color:rgba(79,70,229,.4)}
+.app-card.indigo-card::before{background:linear-gradient(135deg,rgba(79,70,229,.05) 0%,transparent 60%)}
+.app-card-icon.indigo{background:#EEF2FF;border-color:rgba(79,70,229,.25)}
+.app-badge-combo{position:absolute;top:18px;right:18px;background:#EEF2FF;border:1px solid rgba(79,70,229,.35);border-radius:20px;padding:3px 11px;font-size:10px;font-weight:700;color:#4338CA;text-transform:uppercase;letter-spacing:.08em}
 .app-feature.amber-check::before{color:#B45309}
 .app-price-trial.amber-trial{color:#92400E;background:#FEF3C7;border-color:rgba(180,83,9,.25)}
 .app-card-icon{width:56px;height:56px;background:var(--green3);border:1.5px solid rgba(15,158,110,.2);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:20px;transition:transform .3s}
@@ -128,6 +132,7 @@ section{padding:96px 40px}
 .app-feature::before{content:'✓';color:var(--green);font-weight:700;font-size:12px;flex-shrink:0;margin-top:1px}
 .app-feature.blue-check::before{color:var(--blue)}
 .app-feature.purple-check::before{color:var(--purple)}
+.app-feature.indigo-check::before{color:#4F46E5}
 .app-card-footer{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding-top:16px;border-top:1px solid var(--border)}
 .app-price-num{font-family:var(--font-serif);font-size:28px;color:var(--ink)}
 .app-price-trial{font-size:11.5px;font-weight:700;color:var(--green2);background:var(--green3);border:1px solid rgba(15,158,110,.25);border-radius:20px;padding:3px 10px;display:inline-flex;align-items:center;gap:5px}
@@ -174,6 +179,10 @@ section{padding:96px 40px}
 .app-selector-item.available.amber-sel:hover{border-color:#B45309;background:#FDE68A}
 .app-selector-sub.amber-c{color:#92400E}
 .app-selector-tag.avail-amber{color:#92400E;background:rgba(180,83,9,.12)}
+.app-selector-item.available.indigo-sel{background:#EEF2FF;border-color:rgba(79,70,229,.3)}
+.app-selector-item.available.indigo-sel:hover{border-color:#4F46E5;background:#E0E7FF}
+.app-selector-sub.indigo-c{color:#4338CA}
+.app-selector-tag.avail-indigo{color:#4338CA;background:rgba(79,70,229,.12)}
 .app-selector-item.soon{background:var(--bg3);border-color:var(--border);opacity:.45;cursor:not-allowed}
 .app-selector-left{display:flex;align-items:center;gap:12px}
 .app-selector-emoji{font-size:22px;transition:transform .3s}
@@ -275,6 +284,8 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
 .btn-modal-primary.purple:hover{background:var(--purple2)}
 .btn-modal-primary.amber{background:#B45309;box-shadow:0 3px 12px rgba(180,83,9,.25)}
 .btn-modal-primary.amber:hover{background:#92400E}
+.btn-modal-primary.indigo{background:#4F46E5;box-shadow:0 3px 12px rgba(79,70,229,.25)}
+.btn-modal-primary.indigo:hover{background:#4338CA}
 .btn-modal-primary:disabled{background:var(--ink3);cursor:not-allowed;transform:none;box-shadow:none}
 .modal-alert{padding:10px 14px;border-radius:var(--r);font-size:13px;margin-bottom:14px;display:none;border-left:3px solid}
 .modal-alert.ok{background:var(--green3);color:var(--green2);border-color:var(--green)}
@@ -291,8 +302,10 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
 .app-pick-btn.active-purple:hover{border-color:var(--purple);background:var(--purple3)}
 .app-pick-btn.active-amber{border-color:#B45309;background:#FEF3C7;box-shadow:0 0 0 3px rgba(180,83,9,.1)}
 .app-pick-btn.active-amber:hover{border-color:#B45309;background:#FEF3C7}
+.app-pick-btn.active-indigo{border-color:#4F46E5;background:#EEF2FF;box-shadow:0 0 0 3px rgba(79,70,229,.1)}
+.app-pick-btn.active-indigo:hover{border-color:#4F46E5;background:#EEF2FF}
 .app-pick-emoji{font-size:22px;flex-shrink:0;transition:transform .2s}
-.app-pick-btn:hover .app-pick-emoji,.app-pick-btn.active .app-pick-emoji,.app-pick-btn.active-blue .app-pick-emoji,.app-pick-btn.active-purple .app-pick-emoji,.app-pick-btn.active-amber .app-pick-emoji{transform:scale(1.15)}
+.app-pick-btn:hover .app-pick-emoji,.app-pick-btn.active .app-pick-emoji,.app-pick-btn.active-blue .app-pick-emoji,.app-pick-btn.active-purple .app-pick-emoji,.app-pick-btn.active-amber .app-pick-emoji,.app-pick-btn.active-indigo .app-pick-emoji{transform:scale(1.15)}
 .app-pick-info{flex:1}
 .app-pick-name{font-size:13px;font-weight:600;color:var(--ink)}
 .app-pick-sub{font-size:11px;color:var(--ink3);margin-top:1px}
@@ -301,6 +314,7 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
 .app-pick-btn.active-blue .app-pick-check{background:var(--blue);border-color:var(--blue);color:#fff}
 .app-pick-btn.active-purple .app-pick-check{background:var(--purple);border-color:var(--purple);color:#fff}
 .app-pick-btn.active-amber .app-pick-check{background:#B45309;border-color:#B45309;color:#fff}
+.app-pick-btn.active-indigo .app-pick-check{background:#4F46E5;border-color:#4F46E5;color:#fff}
 
 /* ── RESPONSIVE ── */
 @media(max-width:900px){
@@ -457,18 +471,20 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
           <div class="app-price-num">$10.000 COP<span style="font-size:13px;color:var(--ink3);font-family:var(--font-sans);font-weight:400">/mes</span></div>
         </div>
       </div>
-      <div class="app-card app-card-soon reveal" style="transition-delay:.2s">
-        <div class="app-badge-soon">Próximamente</div>
-        <div class="app-card-icon" style="background:var(--bg4);border-color:var(--border)">👥</div>
-        <div class="app-card-name">Clientes</div>
-        <div class="app-card-desc">CRM simple para gestionar tus clientes, pedidos y seguimientos.</div>
+      <div class="app-card indigo-card reveal" style="transition-delay:.2s">
+        <div class="app-badge-combo">🔥 Combo</div>
+        <div class="app-card-icon indigo">🚀</div>
+        <div class="app-card-name">FactuControl</div>
+        <div class="app-card-desc">Inventario y Facturación juntas en una sola app. Registra tu producción y ese producto queda listo para facturar al instante — con el precio que tú definas.</div>
         <div class="app-card-features">
-          <div class="app-feature">Base de datos de clientes</div>
-          <div class="app-feature">Historial de pedidos por cliente</div>
-          <div class="app-feature">Recordatorios de seguimiento</div>
+          <div class="app-feature indigo-check">Todo lo de Inventario: costos, producción y ventas</div>
+          <div class="app-feature indigo-check">Todo lo de Facturación: clientes, facturas y rentabilidad</div>
+          <div class="app-feature indigo-check">Tu producción se publica sola como servicio a facturar</div>
+          <div class="app-feature indigo-check">Un solo login, un solo panel para tu negocio completo</div>
         </div>
         <div class="app-card-footer">
-          <div class="app-price-num" style="font-size:22px;color:var(--ink3)">Pronto</div>
+          <span class="app-price-trial" style="color:#4338CA;background:#EEF2FF;border-color:rgba(79,70,229,.3)">🎁 3 días gratis primero</span>
+          <div class="app-price-num">$60.000 COP<span style="font-size:13px;color:var(--ink3);font-family:var(--font-sans);font-weight:400">/mes</span></div>
         </div>
       </div>
     </div>
@@ -562,16 +578,16 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
               </div>
               <span class="app-selector-tag avail-amber">Registrarme →</span>
             </a>
-            <div class="app-selector-item soon">
+            <a href="#" class="app-selector-item available indigo-sel" onclick="abrirModal('factucontrol');return false">
               <div class="app-selector-left">
-                <span class="app-selector-emoji">👥</span>
+                <span class="app-selector-emoji">🚀</span>
                 <div>
-                  <div class="app-selector-name">Clientes</div>
-                  <div class="app-selector-sub muted">En desarrollo</div>
+                  <div class="app-selector-name">FactuControl</div>
+                  <div class="app-selector-sub indigo-c">🎁 <span>3 días gratis</span> · <span>luego</span> $60.000 COP<span>/mes</span></div>
                 </div>
               </div>
-              <span class="app-selector-tag soon-tag">Pronto</span>
-            </div>
+              <span class="app-selector-tag avail-indigo">Registrarme →</span>
+            </a>
           </div>
         </div>
       </div>
@@ -728,6 +744,14 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
           </div>
           <span class="app-pick-check" id="check-turnos"></span>
         </button>
+        <button class="app-pick-btn" id="pick-factucontrol" onclick="seleccionarApp('factucontrol')">
+          <span class="app-pick-emoji">🚀</span>
+          <div class="app-pick-info">
+            <div class="app-pick-name">FactuControl</div>
+            <div class="app-pick-sub">Inventario + Facturación en una sola app</div>
+          </div>
+          <span class="app-pick-check" id="check-factucontrol"></span>
+        </button>
       </div>
     </div>
     <hr class="modal-divider">
@@ -800,15 +824,17 @@ var flujoActual = 'nuevo';
 // URLs de cada app: a dónde se manda a la persona tras confirmar el correo.
 // Reemplaza estas 2 líneas con tus URLs reales de GitHub Pages.
 var APP_PAGES = {
-  inventario: 'https://skriptonapps.github.io/Skripton-Apps/app.html',
-  finanzas:   'https://skriptonapps.github.io/Skripton-Apps/finanzas.html',
-  turnos:     'https://skriptonapps.github.io/Skripton-Apps/turnos.html'
+  inventario:   'https://skriptonapps.github.io/Skripton-Apps/app.html',
+  finanzas:     'https://skriptonapps.github.io/Skripton-Apps/finanzas.html',
+  turnos:       'https://skriptonapps.github.io/Skripton-Apps/turnos.html',
+  factucontrol: 'https://skriptonapps.github.io/Skripton-Apps/factucontrol.html'
 };
 
 var APP_INFO = {
-  inventario:  { activeClass: 'active',       btnClass: '',       icon: '📦' },
-  finanzas:    { activeClass: 'active-blue',   btnClass: ' blue',  icon: '📊' },
-  turnos:      { activeClass: 'active-amber',  btnClass: ' amber', icon: '🚗' }
+  inventario:   { activeClass: 'active',        btnClass: '',        icon: '📦' },
+  finanzas:     { activeClass: 'active-blue',    btnClass: ' blue',   icon: '📊' },
+  turnos:       { activeClass: 'active-amber',   btnClass: ' amber',  icon: '🚗' },
+  factucontrol: { activeClass: 'active-indigo',  btnClass: ' indigo', icon: '🚀' }
 };
 
 function seleccionarApp(app){
@@ -965,7 +991,7 @@ var statsObs=new IntersectionObserver(function(entries){
     if(e.isIntersecting){
       animarContador(document.getElementById('stat-pct'),0,100,1800);
       animarContador(document.getElementById('stat-hrs'),0,3,900);
-      animarContador(document.getElementById('stat-apps'),0,2,900);
+      animarContador(document.getElementById('stat-apps'),0,4,900);
       statsObs.disconnect();
     }
   });
