@@ -1303,6 +1303,9 @@ body {
         <button class="nav-item" id="nav-prod" onclick="cambiarMod('prod')">
           <span class="nav-item-icon" style="background:var(--indigo2)">🏭</span><span data-i18n="nav_prod">Producción</span>
         </button>
+        <button class="nav-item" id="nav-movimientos" onclick="cambiarMod('movimientos')">
+          <span class="nav-item-icon" style="background:var(--green3)">🔁</span><span>Movimientos de Producto</span>
+        </button>
         <button class="nav-item" id="nav-alertas" onclick="cambiarMod('alertas')" style="position:relative">
           <span class="nav-item-icon" style="background:#FAECE7">🔔</span><span data-i18n="nav_alerts">Alertas de stock</span>
           <span id="alertas-badge" style="display:none;background:var(--red);color:#fff;font-size:10px;font-weight:700;border-radius:20px;padding:1px 7px;min-width:16px;text-align:center">0</span>
@@ -2132,6 +2135,40 @@ body {
         </div>
       </div>
 
+      <div id="mod-movimientos" class="modulo" style="display:none">
+        <div class="panel-header">
+          <div class="panel-header-left">
+            <div class="panel-title">Movimientos de Producto</div>
+            <div class="panel-sub">Entradas por producción y salidas por facturación, en un solo lugar</div>
+          </div>
+        </div>
+        <div id="alert-movimientos" class="alert"></div>
+        <div class="filter-row" style="margin-bottom:14px">
+          <select id="mov-filtro-tipo" onchange="filtrarMovimientos()">
+            <option value="">Todos los movimientos</option>
+            <option value="entrada">Solo entradas (Producción)</option>
+            <option value="salida">Solo salidas (Facturación)</option>
+          </select>
+          <select id="mov-filtro-producto" onchange="filtrarMovimientos()"><option value="">Todos los productos</option></select>
+        </div>
+        <div class="table-wrap">
+          <div class="table-head"><h3 id="mov-count">Movimientos</h3></div>
+          <div class="table-scroll">
+            <table>
+              <thead><tr>
+                <th>Fecha</th><th>Tipo</th><th>Producto</th><th class="r">Cant.</th><th>Detalle</th>
+              </tr></thead>
+              <tbody id="mov-tbody"></tbody>
+            </table>
+          </div>
+          <div class="empty-state" id="mov-empty" style="display:none">
+            <div class="empty-icon">🔁</div>
+            <div>Aún no hay movimientos de productos terminados</div>
+            <p style="font-size:12px;margin-top:6px">Aparecerán aquí apenas registres una producción o factures algo</p>
+          </div>
+        </div>
+      </div>
+
       <div id="mod-alertas" class="modulo" style="display:none">
         <div class="panel-header">
           <div class="panel-header-left">
@@ -2494,7 +2531,7 @@ function closeSidebar(){
   document.getElementById('sidebar-overlay').classList.remove('visible');
 }
 
-var MODS=['dashboard','facturas','nueva-factura','clientes','servicios','gastos','rentabilidad','config','mp','prod','ventas','alertas'];
+var MODS=['dashboard','facturas','nueva-factura','clientes','servicios','gastos','rentabilidad','config','mp','prod','ventas','alertas','movimientos'];
 function cambiarMod(mod){
   closeSidebar();
   MODS.forEach(function(m){
@@ -2516,6 +2553,7 @@ function cambiarMod(mod){
   if(mod==='ventas')        cargarPFVentas();
   if(mod==='alertas')       cargarAlertas();
   if(mod==='prod')          cargarHistorialProducciones();
+  if(mod==='movimientos')   cargarMovimientos();
 }
 // alias por compatibilidad con onclick heredados de Inventario
 function cambiarModulo(mod){ cambiarMod(mod); }
@@ -2939,6 +2977,11 @@ async function buscarClienteNF(){
   var q=document.getElementById('nf-cli-q').value.trim();
   if(!q){document.getElementById('nf-cli-results').style.display='none';return;}
   var { data: lista } = await supabase.rpc('fac_cliente_buscar', { p_q: q });
+  lista = lista || [];
+  lista.forEach(function(c){
+    var idx=_clientes.findIndex(function(x){return x.id===c.id;});
+    if(idx>=0) _clientes[idx]=c; else _clientes.push(c);
+  });
   var res=document.getElementById('nf-cli-results');
   if(!lista||!lista.length){res.innerHTML='<div style="padding:10px 14px;font-size:13px;color:var(--ink3)">'+t('no_results')+'</div>';res.style.display='block';return;}
   res.innerHTML=lista.map(function(c){
@@ -2955,7 +2998,7 @@ async function buscarClienteNF(){
   res.style.display='block';
 }
 
-function seleccionarClienteNF(id,nombre,nitcc,tel,ciudad){
+async function seleccionarClienteNF(id,nombre,nitcc,tel,ciudad){
   _nfClienteId=id;
   document.getElementById('nf-cli-q').value='';
   document.getElementById('nf-cli-results').style.display='none';
@@ -2963,6 +3006,8 @@ function seleccionarClienteNF(id,nombre,nitcc,tel,ciudad){
   document.getElementById('nf-cli-nombre').textContent=nombre;
   var info=[nitcc?'NIT: '+nitcc:'',tel,ciudad].filter(Boolean).join(' · ');
   document.getElementById('nf-cli-info').textContent=info;
+
+  await cargarCantidadesServicio();
 
   var cli=_clientes.find(function(c){return c.id===id;});
   if(cli){
@@ -4630,6 +4675,58 @@ function prodLimpiar(){
   cntMp=0;cntCf=0;cntMo=0;ultimoCalcProd=null;
   document.getElementById('btn-prod-reg').disabled=true;
   document.getElementById('prod-preview').style.display='none';
+}
+
+var _movimientos = [];
+function _fechaAOrden(f){
+  var partes=(f||'').split(' ');
+  var dmy=(partes[0]||'').split('/');
+  var hm=(partes[1]||'00:00').split(':');
+  if(dmy.length<3) return 0;
+  return new Date(dmy[2], dmy[1]-1, dmy[0], hm[0]||0, hm[1]||0).getTime();
+}
+async function cargarMovimientos(){
+  var [{data:prods},{data:ventas}] = await Promise.all([
+    supabase.rpc('prod_listar'),
+    supabase.rpc('ventas_historial')
+  ]);
+  prods=prods||[]; ventas=ventas||[];
+  var entradas=prods.map(function(p){
+    return { fecha:p.fecha, tipo:'entrada', producto:p.productoFinal, cantidad:p.unidades, detalle:'Producción #'+p.id+' · Costo: '+fmt(p.costoTotalLote) };
+  });
+  var salidas=ventas.map(function(v){
+    return { fecha:v.fecha, tipo:'salida', producto:v.producto, cantidad:v.cantidad, detalle:(v.notas||'Venta') };
+  });
+  _movimientos=entradas.concat(salidas).sort(function(a,b){ return _fechaAOrden(b.fecha)-_fechaAOrden(a.fecha); });
+
+  var fp=document.getElementById('mov-filtro-producto'); var vp=fp.value;
+  var prodsUnicos=[]; _movimientos.forEach(function(m){ if(prodsUnicos.indexOf(m.producto)===-1) prodsUnicos.push(m.producto); });
+  fp.innerHTML='<option value="">Todos los productos</option>';
+  prodsUnicos.sort().forEach(function(p){ var o=document.createElement('option'); o.value=p; o.textContent=p; fp.appendChild(o); });
+  if(vp) fp.value=vp;
+
+  filtrarMovimientos();
+}
+function filtrarMovimientos(){
+  var tipo=document.getElementById('mov-filtro-tipo').value;
+  var prod=document.getElementById('mov-filtro-producto').value;
+  var filtrados=_movimientos.filter(function(m){ return (!tipo||m.tipo===tipo) && (!prod||m.producto===prod); });
+  var tbody=document.getElementById('mov-tbody');
+  var empty=document.getElementById('mov-empty');
+  tbody.innerHTML='';
+  document.getElementById('mov-count').textContent=filtrados.length+' movimiento'+(filtrados.length!==1?'s':'');
+  if(!filtrados.length){ empty.style.display='block'; return; }
+  empty.style.display='none';
+  filtrados.forEach(function(m){
+    var esEntrada=m.tipo==='entrada';
+    var tr=document.createElement('tr');
+    tr.innerHTML='<td>'+esc(m.fecha)+'</td>'+
+      '<td><span class="badge" style="background:'+(esEntrada?'var(--green3)':'var(--red2)')+';color:'+(esEntrada?'var(--green4)':'var(--red)')+'">'+(esEntrada?'📥 Entrada':'📤 Salida')+'</span></td>'+
+      '<td><strong>'+esc(m.producto)+'</strong></td>'+
+      '<td class="r" style="color:'+(esEntrada?'var(--green)':'var(--red)')+';font-weight:600">'+(esEntrada?'+':'-')+m.cantidad+'</td>'+
+      '<td style="font-size:11px;color:var(--ink3)">'+esc(m.detalle)+'</td>';
+    tbody.appendChild(tr);
+  });
 }
 
 async function cargarHistorialProducciones(){
