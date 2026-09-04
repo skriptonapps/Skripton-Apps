@@ -885,13 +885,13 @@ async function doRegistro(){
   var email   =document.getElementById('reg-email').value.trim();
   var usuario =document.getElementById('reg-usuario').value.trim();
   var password=document.getElementById('reg-password').value;
-  if(!nombre)  return mostrarAlerta(t('msg_enter_business'),'err');
-  if(!email)   return mostrarAlerta(t('msg_enter_email'),'err');
-  if(!usuario) return mostrarAlerta(t('msg_choose_username'),'err');
-  if(!password||password.length<6) return mostrarAlerta(t('msg_min_pwd'),'err');
+  if(!nombre)  return mostrarAlerta('Ingresa el nombre de tu negocio.','err');
+  if(!email)   return mostrarAlerta('Ingresa tu correo electrónico.','err');
+  if(!usuario) return mostrarAlerta('Elige un nombre de usuario.','err');
+  if(!password||password.length<6) return mostrarAlerta('La contraseña debe tener al menos 6 caracteres.','err');
 
   var btn=document.getElementById('btn-reg-main');
-  btn.disabled=true; btn.textContent=t('msg_sending');
+  btn.disabled=true; btn.textContent='Enviando…';
 
   var { data, error } = await supabase.auth.signUp({
     email: email,
@@ -906,11 +906,11 @@ async function doRegistro(){
 
   if(error){
     if(error.message && error.message.toLowerCase().includes('already registered'))
-      return mostrarAlerta(t('msg_already_registered'),'err');
-    return mostrarAlerta(t('msg_error')+error.message,'err');
+      return mostrarAlerta('Ya existe una cuenta con ese correo. Usa "Ya tengo cuenta" para agregar esta app.','err');
+    return mostrarAlerta('Error: '+error.message,'err');
   }
 
-  mostrarAlerta('🎉 '+t('msg_account_created')+email+t('msg_account_created2'),'ok');
+  mostrarAlerta('🎉 '+'¡Cuenta creada! Revisa tu correo ('+email+') y haz clic en el link para activar tu acceso — quedarás directo dentro de la app con 3 días de prueba gratis.','ok');
   ['reg-nombre','reg-usuario','reg-password'].forEach(function(id){document.getElementById(id).value=''});
 }
 
@@ -918,16 +918,16 @@ async function doRegistro(){
 async function doAgregarApp(){
   var email   =document.getElementById('exist-usuario').value.trim();
   var password=document.getElementById('exist-password').value;
-  if(!email)    return mostrarAlerta(t('msg_enter_email'),'err');
-  if(!password) return mostrarAlerta(t('msg_enter_pwd'),'err');
+  if(!email)    return mostrarAlerta('Ingresa tu correo electrónico.','err');
+  if(!password) return mostrarAlerta('Ingresa tu contraseña.','err');
 
   var btn=document.getElementById('btn-agregar-app');
-  btn.disabled=true; btn.textContent=t('msg_verifying');
+  btn.disabled=true; btn.textContent='Verificando…';
 
   var { data, error } = await supabase.auth.signInWithPassword({ email:email, password:password });
   if(error){
     btn.disabled=false; btn.textContent='Agregar app a mi cuenta →';
-    return mostrarAlerta(t('msg_wrong_credentials'),'err');
+    return mostrarAlerta('Correo o contraseña incorrectos.','err');
   }
 
   var { data: perfil } = await supabase.from('perfiles').select('*').eq('id', data.user.id).single();
@@ -936,7 +936,7 @@ async function doAgregarApp(){
   if(perfil.apps.includes(app)){
     await supabase.auth.signOut();
     btn.disabled=false; btn.textContent='Agregar app a mi cuenta →';
-    return mostrarAlerta(t('msg_already_active'),'warn');
+    return mostrarAlerta('Ya tienes acceso activo a esa app con esta cuenta.','warn');
   }
 
   var pendientes = perfil.apps_pendientes || [];
@@ -952,7 +952,7 @@ async function doAgregarApp(){
   });
 
   btn.disabled=false; btn.textContent='Agregar app a mi cuenta →';
-  mostrarAlerta('📧 '+t('msg_request_registered'),'ok');
+  mostrarAlerta('📧 '+'Solicitud registrada. Realiza el pago y avísanos para activarla.','ok');
   document.getElementById('exist-usuario').value='';
   document.getElementById('exist-password').value='';
 }
