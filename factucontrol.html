@@ -2883,7 +2883,17 @@ function filtrarFacturas(){
 async function cambiarEstadoFac(id,estado){
   var { data: res, error } = await supabase.rpc('fac_factura_cambiar_estado', { p_id:id, p_estado:estado });
   if(error){ toast(t('msg_error_prefix')+error.message,'err'); return; }
-  if(res.success){ toast(res.mensaje,'ok'); cargarFacturas(); cargarDashboard(); }
+  if(res.success){
+    toast(res.mensaje,'ok');
+    if(estado==='anulada'){
+      var { data: resRev } = await supabase.rpc('fc_anular_ventas_de_factura', { p_factura_id: String(id) });
+      if(resRev && resRev.success && resRev.revertidas>0){
+        toast('↩️ Stock restaurado ('+resRev.revertidas+' movimiento'+(resRev.revertidas!==1?'s':'')+').','ok');
+        cargarDatosIniciales();
+      }
+    }
+    cargarFacturas(); cargarDashboard();
+  }
   else toast(res.mensaje,'err');
 }
 
@@ -3148,7 +3158,7 @@ function leerItemsNF(){
   return items;
 }
 
-async function descontarStockFacturado(items, clienteNombre){
+async function descontarStockFacturado(items, clienteNombre, facturaId){
   for (var i=0;i<items.length;i++){
     var it=items[i];
     var pf=pfProductos.find(function(p){ return p.nombre.trim().toLowerCase()===it.nombre.trim().toLowerCase(); });
@@ -3157,11 +3167,15 @@ async function descontarStockFacturado(items, clienteNombre){
       toast('⚠️ Stock insuficiente de "'+it.nombre+'" ('+pf.stock+' disponible) — no se descontó automáticamente.','warn');
       continue;
     }
-    var { error: errV } = await supabase.rpc('ventas_registrar', {
+    var { data: resV, error: errV } = await supabase.rpc('ventas_registrar', {
       p_producto: it.nombre, p_cantidad: it.cantidad, p_precio_unit: it.precio, p_margen: 0,
       p_notas: 'Facturado a '+(clienteNombre||'cliente')
     });
-    if(errV){ console.error(errV); toast('⚠️ No se pudo descontar el stock de "'+it.nombre+'".','warn'); }
+    if(errV){ console.error(errV); toast('⚠️ No se pudo descontar el stock de "'+it.nombre+'".','warn'); continue; }
+    var ventaId = resV && (resV.id || resV.ventaId || (resV.venta&&resV.venta.id));
+    if(ventaId && facturaId){
+      await supabase.rpc('fc_guardar_link_venta', { p_factura_id: String(facturaId), p_venta_id: ventaId });
+    }
   }
   cargarDatosIniciales();
 }
@@ -3187,7 +3201,7 @@ async function crearFactura(){
     if(res.success){
       toast(res.mensaje,'ok');
       var nombreClienteFactura=document.getElementById('nf-cli-nombre').textContent;
-      await descontarStockFacturado(items, nombreClienteFactura);
+      await descontarStockFacturado(items, nombreClienteFactura, res.factura.id);
       limpiarNF();
       confirmar('Factura creada','¿Descargar el PDF de la factura '+res.factura.id+'?',function(){ pdfFactura(res.factura.id); });
     } else showAlert('alert-nf',res.mensaje,'err');
@@ -3283,7 +3297,7 @@ async function facturarTodos(){
       });
       creadas++;
       if(error || !res.success) errores.push(c.nombre+': '+(error?error.message:res.mensaje));
-      else await descontarStockFacturado(items, c.nombre);
+      else await descontarStockFacturado(items, c.nombre, res.factura&&res.factura.id);
     } catch(e){ creadas++; errores.push(c.nombre+': '+e.message); }
   }
 
