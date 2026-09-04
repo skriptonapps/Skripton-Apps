@@ -2433,6 +2433,14 @@ aplicarIdioma();
 
 var _clientes     = [];
 var _servicios    = [];
+var _cantidadesServicio = {}; // { "clienteId:servicioId": cantidad }
+async function cargarCantidadesServicio(){
+  var { data } = await supabase.rpc('fc_obtener_todas_cantidades');
+  _cantidadesServicio = data || {};
+}
+function obtenerCantidadCliSvc(clienteId, servicioId){
+  return _cantidadesServicio[clienteId+':'+servicioId] || 1;
+}
 var _facturas     = [];
 var _gastos       = [];
 var _nfItems      = [];
@@ -2911,6 +2919,7 @@ function onNFTipoChange(){
 }
 
 async function initNF(){
+  if(!Object.keys(_cantidadesServicio).length) await cargarCantidadesServicio();
   document.getElementById('nf-fecha').value=fechaHoy();
   document.getElementById('nf-vencimiento').value='';
   document.getElementById('nf-iva').value='19';
@@ -2965,9 +2974,8 @@ function seleccionarClienteNF(id,nombre,nitcc,tel,ciudad){
     if(cli.serviciosContratados&&cli.serviciosContratados.length){
       document.getElementById('nf-items').innerHTML='';
       _nfItemCnt=0;
-      cli.serviciosContratados.forEach(function(sc){
-        var scId=(typeof sc==='object')?sc.id:sc;
-        var scCant=(typeof sc==='object'&&sc.cantidad)?sc.cantidad:1;
+      cli.serviciosContratados.forEach(function(scId){
+        var scCant=obtenerCantidadCliSvc(cli.id, scId);
         var svc=_servicios.find(function(s){return s.id===scId;});
         if(svc) agregarItemNFConServicio(svc, scCant);
       });
@@ -3153,6 +3161,7 @@ async function cargarVistaPreviaTodos(){
   wrap.innerHTML='<div style="font-size:12px;color:var(--ink3);padding:12px 0">'+t('loading_word')+'</div>';
   var { data: lista } = await supabase.rpc('fac_cliente_listar');
   _clientes=lista||[];
+  await cargarCantidadesServicio();
   var aptos=lista.filter(function(c){return c.serviciosContratados&&c.serviciosContratados.length>0;});
   var omitidos=lista.filter(function(c){return !c.serviciosContratados||!c.serviciosContratados.length;});
   if(!aptos.length){
@@ -3164,9 +3173,8 @@ async function cargarVistaPreviaTodos(){
   aptos.forEach(function(c){
     var ivaPct=c.ivaDefault||0;
     var subtotal=0;
-    var svcNames=(c.serviciosContratados||[]).map(function(sc){
-      var scId=(typeof sc==='object')?sc.id:sc;
-      var scCant=(typeof sc==='object'&&sc.cantidad)?sc.cantidad:1;
+    var svcNames=(c.serviciosContratados||[]).map(function(scId){
+      var scCant=obtenerCantidadCliSvc(c.id, scId);
       var svc=_servicios.find(function(s){return s.id===scId;});
       if(svc) subtotal+=svc.precio*scCant;
       return svc?(svc.nombre+(scCant!==1?' ×'+scCant:'')):'?';
@@ -3204,9 +3212,8 @@ async function facturarTodos(){
 
   for(var i=0;i<aptos.length;i++){
     var c=aptos[i];
-    var items=(c.serviciosContratados||[]).map(function(sc){
-      var scId=(typeof sc==='object')?sc.id:sc;
-      var scCant=(typeof sc==='object'&&sc.cantidad)?sc.cantidad:1;
+    var items=(c.serviciosContratados||[]).map(function(scId){
+      var scCant=obtenerCantidadCliSvc(c.id, scId);
       var svc=_servicios.find(function(s){return s.id===scId;});
       return svc?{servicioId:svc.id,nombre:svc.nombre,descripcion:svc.descripcion||'',cantidad:scCant,precio:svc.precio}:null;
     }).filter(Boolean);
@@ -3235,6 +3242,7 @@ async function facturarTodos(){
 async function cargarClientes(){
   var { data: lista } = await supabase.rpc('fac_cliente_listar');
   _clientes=lista||[];
+  await cargarCantidadesServicio();
   renderClientes(_clientes);
 }
 
@@ -3281,11 +3289,9 @@ function renderClientes(lista){
   });
 }
 
-function _cantidadGuardada(seleccionados, id){
-  if(!seleccionados) return 1;
-  var found=seleccionados.find(function(x){ return (typeof x==='object') ? x.id===id : x===id; });
-  if(!found) return 1;
-  return (typeof found==='object' && found.cantidad) ? found.cantidad : 1;
+function _cantidadGuardada(seleccionados, id, clienteId){
+  if(clienteId) return obtenerCantidadCliSvc(clienteId, id);
+  return 1;
 }
 function _estaSeleccionado(seleccionados, id){
   if(!seleccionados) return false;
@@ -3294,7 +3300,7 @@ function _estaSeleccionado(seleccionados, id){
 function toggleSvcCheckItem(label){
   label.classList.toggle('checked', label.querySelector('.mcli-svc-cb').checked);
 }
-function _renderServiciosEnModal(seleccionados){
+function _renderServiciosEnModal(seleccionados, clienteId){
   var lista=document.getElementById('mcli-servicios-lista');
   if(!_servicios||!_servicios.length){
     lista.innerHTML='<div style="font-size:12px;color:var(--ink3);text-align:center;padding:12px 0">'+t('no_services_catalog')+'<br><span style="font-size:11px">'+t('add_from_services')+' <strong>'+t('nav_services')+'</strong> '+t('first_word')+'</span></div>';
@@ -3311,7 +3317,7 @@ function _renderServiciosEnModal(seleccionados){
     html+='<span class="svc-check-cat-head">'+esc(cat)+'</span>';
     cats[cat].forEach(function(s){
       var marcado=_estaSeleccionado(seleccionados, s.id);
-      var cant=_cantidadGuardada(seleccionados, s.id);
+      var cant=_cantidadGuardada(seleccionados, s.id, clienteId);
       html+='<label class="svc-check-item'+(marcado?' checked':'')+'">'+
         '<input type="checkbox" class="mcli-svc-cb" value="'+esc(s.id)+'" '+(marcado?'checked':'')+' onchange="toggleSvcCheckItem(this.closest(\'.svc-check-item\'))">'+
         '<span class="svc-check-label">'+esc(s.nombre)+'</span>'+
@@ -3353,16 +3359,18 @@ async function editarCliente(id){
   hideAlert('alert-mcli');
   var seleccionados=c.serviciosContratados||[];
   if(!_servicios.length){ var { data: s } = await supabase.rpc('fac_servicio_listar'); _servicios=s||[]; }
-  _renderServiciosEnModal(seleccionados);
+  _renderServiciosEnModal(seleccionados, c.id);
   abrirModal('modal-cliente');
 }
 
 async function guardarCliente(){
   var svcsSeleccionados=[];
+  var cantidadesPayload=[];
   document.querySelectorAll('.mcli-svc-cb:checked').forEach(function(cb){
+    svcsSeleccionados.push(cb.value);
     var qtyInput=document.querySelector('.mcli-svc-qty[data-svc-id="'+cb.value+'"]');
     var cant=qtyInput?(parseFloat(qtyInput.value)||1):1;
-    svcsSeleccionados.push({id:cb.value, cantidad:cant});
+    cantidadesPayload.push({id:cb.value, cantidad:cant});
   });
   var nombre=document.getElementById('mcli-nombre').value.trim();
   if(!nombre) return showAlert('alert-mcli',t('msg_name_required'),'err');
@@ -3381,7 +3389,14 @@ async function guardarCliente(){
     p_servicios_contratados: svcsSeleccionados
   });
   if(error){ showAlert('alert-mcli',t('msg_error_prefix')+error.message,'err'); return; }
-  if(res.success){ toast(res.mensaje,'ok'); cerrarModal('modal-cliente'); cargarClientes(); }
+  if(res.success){
+    var clienteId = document.getElementById('mcli-id').value || res.id || (res.cliente&&res.cliente.id) || (res.data&&res.data.id);
+    if(clienteId){
+      await supabase.rpc('fc_guardar_cantidades', { p_cliente_id: clienteId, p_cantidades: cantidadesPayload });
+      await cargarCantidadesServicio();
+    }
+    toast(res.mensaje,'ok'); cerrarModal('modal-cliente'); cargarClientes();
+  }
   else showAlert('alert-mcli',res.mensaje,'err');
 }
 
