@@ -362,7 +362,7 @@ var I18N = { es: {
     nav_new_invoice:'Nueva Factura',
     nav_catalogs:'Catálogos',
     nav_clients:'Clientes',
-    nav_services:'Servicios',
+    nav_services:'Productos',
     nav_finances:'Finanzas',
     nav_expenses:'Gastos',
     nav_profitability:'Rentabilidad',
@@ -442,9 +442,9 @@ var I18N = { es: {
     th_city:'Ciudad',
     no_clients:'No hay clientes registrados',
     add_first_client:'Agrega tu primer cliente con el botón de arriba',
-    svc_catalog_title:'Catálogo de Servicios',
-    svc_catalog_sub:'Define los servicios que ofreces y su precio estándar',
-    new_service:'Nuevo servicio',
+    svc_catalog_title:'Catálogo de Productos',
+    svc_catalog_sub:'Se llenan solos desde Producción, o agrega los tuyos manualmente',
+    new_service:'Nuevo producto',
     th_service2:'Servicio',
     th_desc:'Descripción',
     th_category:'Categoría',
@@ -513,8 +513,8 @@ var I18N = { es: {
     loading_services:'Cargando servicios…',
     mark_services_hint:'Marca los servicios que este cliente tiene activos o contratados',
     save_client:'Guardar cliente',
-    new_service_title:'Nuevo servicio',
-    service_name_req:'Nombre del servicio *',
+    new_service_title:'Nuevo producto',
+    service_name_req:'Nombre del producto *',
     ph_service_examples:'Ej: Diseño web, Consultoría, Asesoría…',
     description_word:'Descripción',
     ph_service_desc:'Descripción opcional del servicio…',
@@ -639,13 +639,13 @@ var I18N = { es: {
     correctly_word:'correctamente',
     downloading_x_of_y:'Descargando {a} de {b}…',
     modal_edit_client:'Editar cliente',
-    modal_edit_service:'Editar servicio',
+    modal_edit_service:'Editar producto',
     write_manually:'Escribir manualmente…',
     current_month_label:'Mes actual',
     config_saved:'Configuración guardada.',
     renew_fixed_title:'Renovar facturas fijas',
     renew_fixed_msg:'Se generará una factura del mes actual para cada cliente con tipo "Fija". Los que ya tengan factura este mes serán omitidos. ¿Continuar?',
-    service_name_ph:'Nombre del servicio',
+    service_name_ph:'Nombre del producto o servicio',
     pdf_invoice_of_sale:'Factura de Venta',
     pdf_invoice_datetime:'Fecha y hora Factura',
     pdf_generation:'Generación',
@@ -1301,14 +1301,6 @@ body {
         <button class="nav-item" id="nav-prod" onclick="cambiarMod('prod')">
           <span class="nav-item-icon" style="background:var(--indigo2)">🏭</span><span data-i18n="nav_prod">Producción</span>
         </button>
-        <button class="nav-item" id="nav-ventas" onclick="cambiarMod('ventas')">
-          <span class="nav-item-icon" style="background:#FEF3C7">💰</span><span data-i18n="nav_sales">Ventas</span>
-        </button>
-        <div class="nav-subtabs" id="sub-ventas">
-          <button class="nav-sub active" id="sub-v-registrar" onclick="ventasTab('registrar')">🛒 <span data-i18n="nav_register">Registrar</span></button>
-          <button class="nav-sub" id="sub-v-stock" onclick="ventasTab('stock')">📦 <span data-i18n="nav_stock">Stock</span></button>
-          <button class="nav-sub" id="sub-v-historial" onclick="ventasTab('historial')">🗂️ <span data-i18n="nav_history">Historial</span></button>
-        </div>
         <button class="nav-item" id="nav-alertas" onclick="cambiarMod('alertas')" style="position:relative">
           <span class="nav-item-icon" style="background:#FAECE7">🔔</span><span data-i18n="nav_alerts">Alertas de stock</span>
           <span id="alertas-badge" style="display:none;background:var(--red);color:#fff;font-size:10px;font-weight:700;border-radius:20px;padding:1px 7px;min-width:16px;text-align:center">0</span>
@@ -3086,6 +3078,24 @@ function leerItemsNF(){
   return items;
 }
 
+async function descontarStockFacturado(items, clienteNombre){
+  for (var i=0;i<items.length;i++){
+    var it=items[i];
+    var pf=pfProductos.find(function(p){ return p.nombre.trim().toLowerCase()===it.nombre.trim().toLowerCase(); });
+    if(!pf) continue; // no es un producto de Inventario (es un servicio libre) — no se toca stock
+    if(pf.stock < it.cantidad){
+      toast('⚠️ Stock insuficiente de "'+it.nombre+'" ('+pf.stock+' disponible) — no se descontó automáticamente.','warn');
+      continue;
+    }
+    var { error: errV } = await supabase.rpc('ventas_registrar', {
+      p_producto: it.nombre, p_cantidad: it.cantidad, p_precio_unit: it.precio, p_margen: 0,
+      p_notas: 'Facturado a '+(clienteNombre||'cliente')
+    });
+    if(errV){ console.error(errV); toast('⚠️ No se pudo descontar el stock de "'+it.nombre+'".','warn'); }
+  }
+  cargarDatosIniciales();
+}
+
 async function crearFactura(){
   if(!_nfClienteId) return showAlert('alert-nf',t('msg_select_client_first'),'err');
   var items=leerItemsNF();
@@ -3106,6 +3116,8 @@ async function crearFactura(){
     if(error){ showAlert('alert-nf',t('msg_error_prefix')+error.message,'err'); return; }
     if(res.success){
       toast(res.mensaje,'ok');
+      var nombreClienteFactura=document.getElementById('nf-cli-nombre').textContent;
+      await descontarStockFacturado(items, nombreClienteFactura);
       limpiarNF();
       confirmar('Factura creada','¿Descargar el PDF de la factura '+res.factura.id+'?',function(){ pdfFactura(res.factura.id); });
     } else showAlert('alert-nf',res.mensaje,'err');
@@ -3198,6 +3210,7 @@ async function facturarTodos(){
       });
       creadas++;
       if(error || !res.success) errores.push(c.nombre+': '+(error?error.message:res.mensaje));
+      else await descontarStockFacturado(items, c.nombre);
     } catch(e){ creadas++; errores.push(c.nombre+': '+e.message); }
   }
 
