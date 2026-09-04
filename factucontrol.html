@@ -1293,13 +1293,12 @@ body {
       </div>
       <div class="sidebar-section">
         <div class="sidebar-label">Inventario</div>
-        <button class="nav-item" id="nav-mp" onclick="cambiarMod('mp')">
-          <span class="nav-item-icon" style="background:var(--green3)">📋</span><span data-i18n="nav_mp">Materia Prima</span>
+        <button class="nav-item" id="nav-mp-entrada" onclick="cambiarMod('mp-entrada')">
+          <span class="nav-item-icon" style="background:var(--green3)">📥</span><span data-i18n="nav_entry">Entrada</span>
         </button>
-        <div class="nav-subtabs" id="sub-mp">
-          <button class="nav-sub active" id="sub-mp-entrada" onclick="mpTab('entrada')">📥 <span data-i18n="nav_entry">Entrada</span></button>
-          <button class="nav-sub" id="sub-mp-consultar" onclick="mpTab('consultar')">🔍 <span data-i18n="nav_check_stock">Consultar stock</span></button>
-        </div>
+        <button class="nav-item" id="nav-mp-consultar" onclick="cambiarMod('mp-consultar')">
+          <span class="nav-item-icon" style="background:var(--green3)">🔍</span><span data-i18n="nav_check_stock">Consultar stock</span>
+        </button>
         <button class="nav-item" id="nav-prod" onclick="cambiarMod('prod')">
           <span class="nav-item-icon" style="background:var(--indigo2)">🏭</span><span data-i18n="nav_prod">Producción</span>
         </button>
@@ -1502,8 +1501,15 @@ body {
               <input type="date" id="nf-vencimiento">
             </div>
           </div>
-<!-- IVA y tipo se toman del cliente; se guardan en campos ocultos -->
-          <input type="hidden" id="nf-iva" value="19">
+          <div class="form-g">
+            <label>IVA de esta factura</label>
+            <select id="nf-iva" onchange="recalcularNF()">
+              <option value="0">Sin IVA (0%)</option>
+              <option value="5">5%</option>
+              <option value="19" selected>19%</option>
+            </select>
+          </div>
+<!-- tipo se toma del cliente; se guarda en campo oculto -->
           <input type="hidden" id="nf-tipo" value="fija">
         </div>
 
@@ -1806,105 +1812,110 @@ body {
 
 
       <!-- ═══ MÓDULOS DE INVENTARIO ═══ -->
-      <div id="mod-mp" class="modulo" style="display:none">
+      <div id="mod-mp-entrada" class="modulo" style="display:none">
         <div class="panel-header">
           <div class="panel-header-left">
-            <div class="panel-title" id="mp-panel-title" data-i18n="mp_entry_title">Entrada de insumo</div>
-            <div class="panel-sub" id="mp-panel-sub" data-i18n="mp_entry_sub">Registra una compra de materia prima</div>
+            <div class="panel-title" data-i18n="mp_entry_title">Entrada de insumo</div>
+            <div class="panel-sub" data-i18n="mp_entry_sub">Registra una compra de materia prima</div>
           </div>
         </div>
 
         <div id="alert-mp" class="alert"></div>
 
-        <div id="mpanel-entrada" class="panel active">
-          <div class="card">
-            <div class="card-title" data-i18n="mp_card_title">Registrar compra de insumo</div>
+        <div class="card">
+          <div class="card-title" data-i18n="mp_card_title">Registrar compra de insumo</div>
+          <div class="form-g">
+            <label data-i18n="mp_ins_name">Nombre del insumo</label>
+            <input type="text" id="mp-nombre" list="mp-lista" oninput="onMpNombreInput()" data-i18n-ph="ph_supply_name">
+            <datalist id="mp-lista"></datalist>
+          </div>
+          <div class="grid-2">
             <div class="form-g">
-              <label data-i18n="mp_ins_name">Nombre del insumo</label>
-              <input type="text" id="mp-nombre" list="mp-lista" oninput="onMpNombreInput()" data-i18n-ph="ph_supply_name">
-              <datalist id="mp-lista"></datalist>
-            </div>
-            <div class="grid-2">
-              <div class="form-g">
-                <label data-i18n="mp_qty_bought">Cantidad comprada</label>
-                <input type="number" id="mp-cantidad" min="0.001" step="0.001" placeholder="0.000" oninput="mpCalc()" inputmode="decimal">
-              </div>
-              <div class="form-g">
-                <label data-i18n="mp_unit">Unidad de medida</label>
-                <select id="mp-unidad">
-                  <option value="und" data-i18n="unit_und">Unidad (und)</option>
-                  <option value="kg" data-i18n="unit_kg">Kilogramo (kg)</option>
-                  <option value="g" data-i18n="unit_g">Gramo (g)</option>
-                  <option value="l" data-i18n="unit_l">Litro (l)</option>
-                  <option value="ml" data-i18n="unit_ml">Mililitro (ml)</option>
-                  <option value="m" data-i18n="unit_m">Metro (m)</option>
-                </select>
-              </div>
+              <label data-i18n="mp_qty_bought">Cantidad comprada</label>
+              <input type="number" id="mp-cantidad" min="0.001" step="0.001" placeholder="0.000" oninput="mpCalc()" inputmode="decimal">
             </div>
             <div class="form-g">
-              <label data-i18n="mp_total_val">Valor total factura</label>
-              <input type="number" id="mp-vtotal" min="0" step="0.01" placeholder="$0.00" oninput="mpCalc()" inputmode="decimal">
+              <label data-i18n="mp_unit">Unidad de medida</label>
+              <select id="mp-unidad">
+                <option value="und" data-i18n="unit_und">Unidad (und)</option>
+                <option value="kg" data-i18n="unit_kg">Kilogramo (kg)</option>
+                <option value="g" data-i18n="unit_g">Gramo (g)</option>
+                <option value="l" data-i18n="unit_l">Litro (l)</option>
+                <option value="ml" data-i18n="unit_ml">Mililitro (ml)</option>
+                <option value="m" data-i18n="unit_m">Metro (m)</option>
+              </select>
             </div>
           </div>
-
-          <div class="calc-box" id="mp-calc">
-            <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px" data-i18n="mp_calc_unit_val">Valor unitario calculado</div>
-            <div class="calc-formula">
-              <div class="calc-chip" id="calc-total">$0</div>
-              <div class="calc-op">÷</div>
-              <div class="calc-chip" id="calc-cant">0</div>
-              <div class="calc-op">=</div>
-              <div class="calc-result" id="calc-unit">$0/und</div>
-            </div>
+          <div class="form-g">
+            <label data-i18n="mp_total_val">Valor total factura</label>
+            <input type="number" id="mp-vtotal" min="0" step="0.01" placeholder="$0.00" oninput="mpCalc()" inputmode="decimal">
           </div>
-
-          <div class="cpp-preview" id="mp-cpp-preview">
-            <div style="font-size:12px;font-weight:600;margin-bottom:8px" id="mp-cpp-nombre"></div>
-            <div class="cpp-row">
-              <div class="cpp-item"><label data-i18n="mp_curr_stock">Stock actual</label><span id="mp-cpp-stock"></span></div>
-              <div class="cpp-item"><label data-i18n="mp_curr_cpp">CPP actual</label><span id="mp-cpp-val"></span></div>
-              <div class="cpp-item"><label data-i18n="mp_unit_label">Unidad</label><span id="mp-cpp-uni"></span></div>
-            </div>
-          </div>
-
-          <button class="btn-primary" id="btn-mp-reg" onclick="mpRegistrar()">📥 <span data-i18n="mp_register_entry">Registrar Entrada</span></button>
         </div>
 
-        <div id="mpanel-consultar" class="panel">
-          <div class="sel-box">
-            <label style="font-size:12px;font-weight:500;white-space:nowrap" data-i18n="mp_select_insumo">Insumo:</label>
-            <select id="mp-sel-consulta" onchange="mpConsultar()">
-              <option value="" data-i18n="mp_select_placeholder">-- Selecciona un insumo --</option>
-            </select>
+        <div class="calc-box" id="mp-calc">
+          <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px" data-i18n="mp_calc_unit_val">Valor unitario calculado</div>
+          <div class="calc-formula">
+            <div class="calc-chip" id="calc-total">$0</div>
+            <div class="calc-op">÷</div>
+            <div class="calc-chip" id="calc-cant">0</div>
+            <div class="calc-op">=</div>
+            <div class="calc-result" id="calc-unit">$0/und</div>
           </div>
+        </div>
 
-          <div id="mp-resultado" style="display:none">
-            <div class="grid-3" style="margin-bottom:14px">
-              <div class="kpi"><div class="kpi-label" data-i18n="mp_cost">COSTO</div><div class="kpi-value" id="mp-kpi-cpp" style="color:var(--green)">$0</div></div>
-              <div class="kpi"><div class="kpi-label" data-i18n="mp_stock">Stock</div><div class="kpi-value" id="mp-kpi-stock">0</div><div class="kpi-sub" id="mp-kpi-uni"></div></div>
-              <div class="kpi"><div class="kpi-label" data-i18n="mp_inv_value">Valor inventario</div><div class="kpi-value" id="mp-kpi-valor" style="color:var(--indigo)">$0</div></div>
-            </div>
-            <div class="table-wrap">
-              <div class="table-head"><h3 data-i18n="mp_history">Historial de movimientos</h3><span id="mp-mov-cnt" style="font-size:11px;color:var(--ink3)"></span></div>
-              <div class="table-scroll">
-                <table>
-                  <thead><tr>
-                    <th data-i18n="th_num">#</th><th data-i18n="th_date">Fecha</th><th data-i18n="th_type">Tipo</th>
-                    <th class="r" data-i18n="th_qty">Cant.</th><th data-i18n="th_unit_col">Und</th>
-                    <th class="r" data-i18n="th_unit_val">V. Unit.</th><th class="r" data-i18n="th_total_val">V. Total</th>
-                    <th class="r" data-i18n="mp_stock">Stock</th><th class="r">CPP</th><th></th>
-                  </tr></thead>
-                  <tbody id="mp-tbody"></tbody>
-                </table>
-              </div>
-            </div>
+        <div class="cpp-preview" id="mp-cpp-preview">
+          <div style="font-size:12px;font-weight:600;margin-bottom:8px" id="mp-cpp-nombre"></div>
+          <div class="cpp-row">
+            <div class="cpp-item"><label data-i18n="mp_curr_stock">Stock actual</label><span id="mp-cpp-stock"></span></div>
+            <div class="cpp-item"><label data-i18n="mp_curr_cpp">CPP actual</label><span id="mp-cpp-val"></span></div>
+            <div class="cpp-item"><label data-i18n="mp_unit_label">Unidad</label><span id="mp-cpp-uni"></span></div>
           </div>
+        </div>
 
-          <div id="mp-sin-sel" class="empty-state">
-            <div class="empty-icon">🔍</div>
-            <div style="font-weight:500" data-i18n="mp_select_empty_title">Selecciona un insumo para ver su detalle</div>
-            <p style="font-size:12px;margin-top:6px" data-i18n="mp_select_empty_sub">Stock actual, costo promedio y todos los movimientos</p>
+        <button class="btn-primary" id="btn-mp-reg" onclick="mpRegistrar()">📥 <span data-i18n="mp_register_entry">Registrar Entrada</span></button>
+      </div>
+
+      <div id="mod-mp-consultar" class="modulo" style="display:none">
+        <div class="panel-header">
+          <div class="panel-header-left">
+            <div class="panel-title" data-i18n="mp_check_title">Consultar stock</div>
+            <div class="panel-sub" data-i18n="mp_check_sub">Revisa el estado actual de tus insumos</div>
           </div>
+        </div>
+
+        <div class="sel-box">
+          <label style="font-size:12px;font-weight:500;white-space:nowrap" data-i18n="mp_select_insumo">Insumo:</label>
+          <select id="mp-sel-consulta" onchange="mpConsultar()">
+            <option value="" data-i18n="mp_select_placeholder">-- Selecciona un insumo --</option>
+          </select>
+        </div>
+
+        <div id="mp-resultado" style="display:none">
+          <div class="grid-3" style="margin-bottom:14px">
+            <div class="kpi"><div class="kpi-label" data-i18n="mp_cost">COSTO</div><div class="kpi-value" id="mp-kpi-cpp" style="color:var(--green)">$0</div></div>
+            <div class="kpi"><div class="kpi-label" data-i18n="mp_stock">Stock</div><div class="kpi-value" id="mp-kpi-stock">0</div><div class="kpi-sub" id="mp-kpi-uni"></div></div>
+            <div class="kpi"><div class="kpi-label" data-i18n="mp_inv_value">Valor inventario</div><div class="kpi-value" id="mp-kpi-valor" style="color:var(--indigo)">$0</div></div>
+          </div>
+          <div class="table-wrap">
+            <div class="table-head"><h3 data-i18n="mp_history">Historial de movimientos</h3><span id="mp-mov-cnt" style="font-size:11px;color:var(--ink3)"></span></div>
+            <div class="table-scroll">
+              <table>
+                <thead><tr>
+                  <th data-i18n="th_num">#</th><th data-i18n="th_date">Fecha</th><th data-i18n="th_type">Tipo</th>
+                  <th class="r" data-i18n="th_qty">Cant.</th><th data-i18n="th_unit_col">Und</th>
+                  <th class="r" data-i18n="th_unit_val">V. Unit.</th><th class="r" data-i18n="th_total_val">V. Total</th>
+                  <th class="r" data-i18n="mp_stock">Stock</th><th class="r">CPP</th><th></th>
+                </tr></thead>
+                <tbody id="mp-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div id="mp-sin-sel" class="empty-state">
+          <div class="empty-icon">🔍</div>
+          <div style="font-weight:500" data-i18n="mp_select_empty_title">Selecciona un insumo para ver su detalle</div>
+          <p style="font-size:12px;margin-top:6px" data-i18n="mp_select_empty_sub">Stock actual, costo promedio y todos los movimientos</p>
         </div>
       </div>
 
@@ -2143,6 +2154,7 @@ body {
           </div>
         </div>
         <div id="alert-movimientos" class="alert"></div>
+        <div id="mov-kpis-stock" class="grid-4" style="margin-bottom:16px"></div>
         <div class="filter-row" style="margin-bottom:14px">
           <select id="mov-filtro-tipo" onchange="filtrarMovimientos()">
             <option value="">Todos los movimientos</option>
@@ -2531,7 +2543,7 @@ function closeSidebar(){
   document.getElementById('sidebar-overlay').classList.remove('visible');
 }
 
-var MODS=['dashboard','facturas','nueva-factura','clientes','servicios','gastos','rentabilidad','config','mp','prod','ventas','alertas','movimientos'];
+var MODS=['dashboard','facturas','nueva-factura','clientes','servicios','gastos','rentabilidad','config','mp-entrada','mp-consultar','prod','ventas','alertas','movimientos'];
 function cambiarMod(mod){
   closeSidebar();
   MODS.forEach(function(m){
@@ -3363,11 +3375,15 @@ function _renderServiciosEnModal(seleccionados, clienteId){
     cats[cat].forEach(function(s){
       var marcado=_estaSeleccionado(seleccionados, s.id);
       var cant=_cantidadGuardada(seleccionados, s.id, clienteId);
+      var pf=pfProductos.find(function(p){ return p.nombre.trim().toLowerCase()===s.nombre.trim().toLowerCase(); });
+      var infoDer = pf
+        ? '<span class="svc-check-precio" style="color:'+(pf.stock>0?'var(--green)':'var(--red)')+'">Stock: '+fmtN(pf.stock)+' und</span>'
+        : '<span class="svc-check-precio">'+fmt(s.precio)+'/'+esc(s.unidad||'und')+'</span>';
       html+='<label class="svc-check-item'+(marcado?' checked':'')+'">'+
         '<input type="checkbox" class="mcli-svc-cb" value="'+esc(s.id)+'" '+(marcado?'checked':'')+' onchange="toggleSvcCheckItem(this.closest(\'.svc-check-item\'))">'+
         '<span class="svc-check-label">'+esc(s.nombre)+'</span>'+
         '<input type="number" class="svc-check-qty mcli-svc-qty" data-svc-id="'+esc(s.id)+'" value="'+cant+'" min="1" step="1" onclick="event.stopPropagation()">'+
-        '<span class="svc-check-precio">'+fmt(s.precio)+'/'+esc(s.unidad||'und')+'</span>'+
+        infoDer+
       '</label>';
     });
   });
@@ -4686,11 +4702,23 @@ function _fechaAOrden(f){
   return new Date(dmy[2], dmy[1]-1, dmy[0], hm[0]||0, hm[1]||0).getTime();
 }
 async function cargarMovimientos(){
-  var [{data:prods},{data:ventas}] = await Promise.all([
+  var [{data:prods},{data:ventas},{data:pfs}] = await Promise.all([
     supabase.rpc('prod_listar'),
-    supabase.rpc('ventas_historial')
+    supabase.rpc('ventas_historial'),
+    supabase.rpc('prod_obtener_pf')
   ]);
-  prods=prods||[]; ventas=ventas||[];
+  prods=prods||[]; ventas=ventas||[]; pfs=pfs||[];
+
+  var kpisWrap=document.getElementById('mov-kpis-stock');
+  if(!pfs.length){
+    kpisWrap.innerHTML='<div class="empty-state" style="grid-column:1/-1;padding:16px"><div style="font-size:12px;color:var(--ink3)">Aún no tienes productos terminados</div></div>';
+  } else {
+    kpisWrap.innerHTML=pfs.map(function(p){
+      return '<div class="kpi"><div class="kpi-label">'+esc(p.nombre)+'</div>'+
+        '<div class="kpi-value" style="color:'+(p.stock>0?'var(--green)':'var(--red)')+'">'+fmtN(p.stock)+'</div>'+
+        '<div class="kpi-sub">und disponibles</div></div>';
+    }).join('');
+  }
   var entradas=prods.map(function(p){
     return { fecha:p.fecha, tipo:'entrada', producto:p.productoFinal, cantidad:p.unidades, detalle:'Producción #'+p.id+' · Costo: '+fmt(p.costoTotalLote) };
   });
