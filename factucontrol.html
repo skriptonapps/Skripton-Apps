@@ -963,6 +963,8 @@ tbody tr:hover{background:var(--bg)}
 
 /* Checkboxes de servicios en modal cliente */
 .svc-check-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;transition:background .15s;cursor:pointer;user-select:none}
+.svc-check-qty{width:52px;padding:5px 6px;font-size:12px;text-align:center;border:1.5px solid var(--border2);border-radius:6px;display:none;flex-shrink:0}
+.svc-check-item.checked .svc-check-qty{display:inline-block}
 .svc-check-item:hover{background:var(--bg2)}
 .svc-check-item input[type=checkbox]{width:16px;height:16px;flex-shrink:0;accent-color:var(--primary);cursor:pointer}
 .svc-check-label{font-size:13px;color:var(--ink);flex:1}
@@ -2963,9 +2965,11 @@ function seleccionarClienteNF(id,nombre,nitcc,tel,ciudad){
     if(cli.serviciosContratados&&cli.serviciosContratados.length){
       document.getElementById('nf-items').innerHTML='';
       _nfItemCnt=0;
-      cli.serviciosContratados.forEach(function(sid){
-        var svc=_servicios.find(function(s){return s.id===sid;});
-        if(svc) agregarItemNFConServicio(svc);
+      cli.serviciosContratados.forEach(function(sc){
+        var scId=(typeof sc==='object')?sc.id:sc;
+        var scCant=(typeof sc==='object'&&sc.cantidad)?sc.cantidad:1;
+        var svc=_servicios.find(function(s){return s.id===scId;});
+        if(svc) agregarItemNFConServicio(svc, scCant);
       });
       recalcularNF();
     }
@@ -3003,7 +3007,8 @@ function agregarItemNF(){
   recalcularNF();
 }
 
-function agregarItemNFConServicio(svc){
+function agregarItemNFConServicio(svc, cantidadInicial){
+  cantidadInicial = cantidadInicial || 1;
   _nfItemCnt++;
   var id='nfitem-'+_nfItemCnt;
   var div=document.createElement('div');
@@ -3013,9 +3018,9 @@ function agregarItemNFConServicio(svc){
   _pobDatalistServiciosNF();
   div.innerHTML=
     '<div><input type="text" class="nf-item-nombre" list="dl-servicios-nf" value="'+esc(svc.nombre)+'" placeholder="'+t('service_name_ph')+'" style="width:100%" oninput="onNombreServicioInput(\''+id+'\')"></div>'+
-    '<input type="number" class="nf-item-cant" value="1" min="0.001" step="0.001" inputmode="decimal" oninput="recalcularNF()" style="width:100%">'+
+    '<input type="number" class="nf-item-cant" value="'+cantidadInicial+'" min="0.001" step="0.001" inputmode="decimal" oninput="recalcularNF()" style="width:100%">'+
     '<input type="number" class="nf-item-precio" value="'+svc.precio+'" min="0" step="1000" inputmode="numeric" oninput="recalcularNF()" style="width:100%">'+
-    '<div class="item-subtotal" id="nf-sub-'+id+'">'+ fmt(svc.precio)+'</div>'+
+    '<div class="item-subtotal" id="nf-sub-'+id+'">'+ fmt(svc.precio*cantidadInicial)+'</div>'+
     '<button class="btn-rm" onclick="rmItemNF(\''+id+'\')">×</button>';
   document.getElementById('nf-items').appendChild(div);
   recalcularNF();
@@ -3159,10 +3164,12 @@ async function cargarVistaPreviaTodos(){
   aptos.forEach(function(c){
     var ivaPct=c.ivaDefault||0;
     var subtotal=0;
-    var svcNames=(c.serviciosContratados||[]).map(function(sid){
-      var svc=_servicios.find(function(s){return s.id===sid;});
-      if(svc) subtotal+=svc.precio;
-      return svc?svc.nombre:'?';
+    var svcNames=(c.serviciosContratados||[]).map(function(sc){
+      var scId=(typeof sc==='object')?sc.id:sc;
+      var scCant=(typeof sc==='object'&&sc.cantidad)?sc.cantidad:1;
+      var svc=_servicios.find(function(s){return s.id===scId;});
+      if(svc) subtotal+=svc.precio*scCant;
+      return svc?(svc.nombre+(scCant!==1?' ×'+scCant:'')):'?';
     });
     var ivaVal=Math.round(subtotal*ivaPct/100);
     var total=subtotal+ivaVal;
@@ -3197,9 +3204,11 @@ async function facturarTodos(){
 
   for(var i=0;i<aptos.length;i++){
     var c=aptos[i];
-    var items=(c.serviciosContratados||[]).map(function(sid){
-      var svc=_servicios.find(function(s){return s.id===sid;});
-      return svc?{servicioId:svc.id,nombre:svc.nombre,descripcion:svc.descripcion||'',cantidad:1,precio:svc.precio}:null;
+    var items=(c.serviciosContratados||[]).map(function(sc){
+      var scId=(typeof sc==='object')?sc.id:sc;
+      var scCant=(typeof sc==='object'&&sc.cantidad)?sc.cantidad:1;
+      var svc=_servicios.find(function(s){return s.id===scId;});
+      return svc?{servicioId:svc.id,nombre:svc.nombre,descripcion:svc.descripcion||'',cantidad:scCant,precio:svc.precio}:null;
     }).filter(Boolean);
     if(!items.length){ creadas++; continue; }
     try{
@@ -3272,6 +3281,19 @@ function renderClientes(lista){
   });
 }
 
+function _cantidadGuardada(seleccionados, id){
+  if(!seleccionados) return 1;
+  var found=seleccionados.find(function(x){ return (typeof x==='object') ? x.id===id : x===id; });
+  if(!found) return 1;
+  return (typeof found==='object' && found.cantidad) ? found.cantidad : 1;
+}
+function _estaSeleccionado(seleccionados, id){
+  if(!seleccionados) return false;
+  return seleccionados.some(function(x){ return (typeof x==='object') ? x.id===id : x===id; });
+}
+function toggleSvcCheckItem(label){
+  label.classList.toggle('checked', label.querySelector('.mcli-svc-cb').checked);
+}
 function _renderServiciosEnModal(seleccionados){
   var lista=document.getElementById('mcli-servicios-lista');
   if(!_servicios||!_servicios.length){
@@ -3288,10 +3310,12 @@ function _renderServiciosEnModal(seleccionados){
   Object.keys(cats).sort().forEach(function(cat){
     html+='<span class="svc-check-cat-head">'+esc(cat)+'</span>';
     cats[cat].forEach(function(s){
-      var checked=seleccionados&&seleccionados.includes(s.id)?'checked':'';
-      html+='<label class="svc-check-item">'+
-        '<input type="checkbox" class="mcli-svc-cb" value="'+esc(s.id)+'" '+checked+'>'+
+      var marcado=_estaSeleccionado(seleccionados, s.id);
+      var cant=_cantidadGuardada(seleccionados, s.id);
+      html+='<label class="svc-check-item'+(marcado?' checked':'')+'">'+
+        '<input type="checkbox" class="mcli-svc-cb" value="'+esc(s.id)+'" '+(marcado?'checked':'')+' onchange="toggleSvcCheckItem(this.closest(\'.svc-check-item\'))">'+
         '<span class="svc-check-label">'+esc(s.nombre)+'</span>'+
+        '<input type="number" class="svc-check-qty mcli-svc-qty" data-svc-id="'+esc(s.id)+'" value="'+cant+'" min="1" step="1" onclick="event.stopPropagation()">'+
         '<span class="svc-check-precio">'+fmt(s.precio)+'/'+esc(s.unidad||'und')+'</span>'+
       '</label>';
     });
@@ -3336,7 +3360,9 @@ async function editarCliente(id){
 async function guardarCliente(){
   var svcsSeleccionados=[];
   document.querySelectorAll('.mcli-svc-cb:checked').forEach(function(cb){
-    svcsSeleccionados.push(cb.value);
+    var qtyInput=document.querySelector('.mcli-svc-qty[data-svc-id="'+cb.value+'"]');
+    var cant=qtyInput?(parseFloat(qtyInput.value)||1):1;
+    svcsSeleccionados.push({id:cb.value, cantidad:cant});
   });
   var nombre=document.getElementById('mcli-nombre').value.trim();
   if(!nombre) return showAlert('alert-mcli',t('msg_name_required'),'err');
