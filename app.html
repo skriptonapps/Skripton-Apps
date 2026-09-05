@@ -38,14 +38,8 @@ h1,h2,h3{font-family:var(--font-serif);font-weight:400;line-height:1.2}
 input,select,textarea{font-family:var(--font-sans);font-size:14px;border:1.5px solid var(--border);border-radius:var(--r);padding:10px 12px;background:var(--bg2);color:var(--ink);outline:none;width:100%;transition:border .15s,box-shadow .15s}
 input:focus,select:focus,textarea:focus{border-color:var(--green2);box-shadow:0 0 0 3px rgba(29,158,117,.1)}
 button{font-family:var(--font-sans);cursor:pointer;border:none;border-radius:var(--r)}
-
-/* ══ PANTALLAS ══ */
 .screen{display:none;min-height:100vh}
 .screen.visible{display:flex}
-
-/* ══════════════════════════════════════
-   LOGIN
-══════════════════════════════════════ */
 #screen-login{align-items:center;justify-content:center;background:var(--bg);flex-direction:column;padding:16px}
 .login-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r2);padding:32px 28px;width:100%;max-width:420px;box-shadow:var(--shadow)}
 .login-logo{text-align:center;margin-bottom:24px}
@@ -69,149 +63,43 @@ button{font-family:var(--font-sans);cursor:pointer;border:none;border-radius:var
 .lang-switch .lang-btn{padding:6px 12px;background:none;border-radius:16px;font-size:11px;font-weight:600;color:var(--ink2);transition:all .15s}
 .lang-switch .lang-btn.active{background:var(--green);color:#fff}
 .topbar .lang-switch{position:static;box-shadow:none;background:var(--bg3);margin-right:8px}
-
-/* ══════════════════════════════════════
-   APP — layout raíz
-══════════════════════════════════════ */
 #screen-app{flex-direction:column}
-
-/* ── Topbar ── */
-.topbar{
-  height:var(--topbar-h);
-  background:var(--bg2);
-  border-bottom:1.5px solid var(--border);
-  display:flex;align-items:center;
-  padding:0 16px;gap:10px;
-  position:fixed;top:0;left:0;right:0;
-  z-index:200;
-}
-.topbar-brand{
-  font-family:var(--font-serif);font-size:18px;
-  color:var(--ink);letter-spacing:-.3px;
-  margin-right:auto;
-}
+.topbar{height:var(--topbar-h);background:var(--bg2);border-bottom:1.5px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:10px;position:fixed;top:0;left:0;right:0;z-index:200}
+.topbar-brand{font-family:var(--font-serif);font-size:18px;color:var(--ink);letter-spacing:-.3px;margin-right:auto}
 .topbar-brand span{color:var(--green2)}
 .topbar-user{font-size:11px;color:var(--ink2);font-family:var(--font-mono);max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .btn-logout{padding:6px 12px;background:var(--bg3);color:var(--ink2);font-size:12px;border-radius:6px;border:1.5px solid var(--border);transition:all .15s}
 .btn-logout:hover{background:var(--red2);color:var(--red);border-color:#D85A30}
 .btn-del-account{padding:6px 10px;background:none;color:var(--ink3);font-size:11px;border-radius:6px;border:1px solid transparent;transition:all .15s}
 .btn-del-account:hover{color:var(--red);border-color:#D85A30;background:var(--red2)}
-
-/* ── Botón hamburguesa (solo móvil) ── */
-.btn-menu-toggle{
-  display:none;
-  padding:6px 10px;background:var(--bg3);
-  color:var(--ink2);font-size:18px;
-  border-radius:6px;border:1.5px solid var(--border);
-  line-height:1;transition:all .15s;
-}
-
-/* ── Body layout = sidebar + contenido ── */
-.app-body{
-  display:flex;
-  padding-top:var(--topbar-h);
-  min-height:100vh;
-}
-
-/* ══════════════════════════════════════
-   SIDEBAR
-══════════════════════════════════════ */
-.sidebar{
-  width:var(--sidebar-w);
-  background:var(--bg2);
-  border-right:1.5px solid var(--border);
-  position:fixed;
-  top:var(--topbar-h);
-  bottom:0;
-  left:0;
-  display:flex;flex-direction:column;
-  overflow-y:auto;
-  z-index:100;
-  transition:transform .25s;
-}
-
+.btn-menu-toggle{display:none;padding:6px 10px;background:var(--bg3);color:var(--ink2);font-size:18px;border-radius:6px;border:1.5px solid var(--border);line-height:1;transition:all .15s}
+.app-body{display:flex;padding-top:var(--topbar-h);min-height:100vh}
+.sidebar{width:var(--sidebar-w);background:var(--bg2);border-right:1.5px solid var(--border);position:fixed;top:var(--topbar-h);bottom:0;left:0;display:flex;flex-direction:column;overflow-y:auto;z-index:100;transition:transform .25s}
 .sidebar-section{padding:20px 12px 8px}
-.sidebar-label{
-  font-size:9px;font-weight:700;
-  text-transform:uppercase;letter-spacing:.1em;
-  color:var(--ink3);padding:0 8px;
-  margin-bottom:6px;
-}
-.nav-item{
-  display:flex;align-items:center;gap:10px;
-  width:100%;padding:10px 12px;
-  background:none;border-radius:var(--r);
-  font-size:13px;font-weight:500;color:var(--ink2);
-  transition:all .15s;text-align:left;
-  -webkit-tap-highlight-color:transparent;
-  position:relative;
-}
+.sidebar-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--ink3);padding:0 8px;margin-bottom:6px}
+.nav-item{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;background:none;border-radius:var(--r);font-size:13px;font-weight:500;color:var(--ink2);transition:all .15s;text-align:left;-webkit-tap-highlight-color:transparent;position:relative}
 .nav-item:hover{background:var(--bg3);color:var(--ink)}
-.nav-item.active{
-  background:var(--green3);
-  color:var(--green4);
-  font-weight:600;
-}
-.nav-item.active::before{
-  content:'';
-  position:absolute;left:0;top:20%;bottom:20%;
-  width:3px;background:var(--green2);
-  border-radius:0 2px 2px 0;
-}
+.nav-item.active{background:var(--green3);color:var(--green4);font-weight:600}
+.nav-item.active::before{content:'';position:absolute;left:0;top:20%;bottom:20%;width:3px;background:var(--green2);border-radius:0 2px 2px 0}
 .nav-item-icon{font-size:16px;width:20px;text-align:center;flex-shrink:0}
 .nav-item-text{flex:1}
-
-/* Sub-tabs dentro del sidebar */
-.nav-subtabs{
-  margin-left:20px;
-  padding-left:12px;
-  border-left:1.5px solid var(--border);
-  display:none;
-  flex-direction:column;
-  gap:2px;
-  margin-top:2px;
-  margin-bottom:4px;
-}
+.nav-subtabs{margin-left:20px;padding-left:12px;border-left:1.5px solid var(--border);display:none;flex-direction:column;gap:2px;margin-top:2px;margin-bottom:4px}
 .nav-subtabs.visible{display:flex}
-.nav-sub{
-  display:flex;align-items:center;gap:8px;
-  width:100%;padding:7px 10px;
-  background:none;border-radius:8px;
-  font-size:12px;font-weight:500;color:var(--ink3);
-  transition:all .15s;text-align:left;
-}
+.nav-sub{display:flex;align-items:center;gap:8px;width:100%;padding:7px 10px;background:none;border-radius:8px;font-size:12px;font-weight:500;color:var(--ink3);transition:all .15s;text-align:left}
 .nav-sub:hover{color:var(--ink2);background:var(--bg3)}
 .nav-sub.active{color:var(--green4);font-weight:600}
-
-/* Overlay móvil */
-.sidebar-overlay{
-  display:none;position:fixed;inset:0;
-  background:rgba(0,0,0,.4);z-index:99;
-}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:99}
 .sidebar-overlay.visible{display:block}
-
-/* ── Área de contenido ── */
-.main-content{
-  flex:1;
-  margin-left:var(--sidebar-w);
-  padding:24px;
-  min-width:0;
-}
-
-/* ══════════════════════════════════════
-   COMPONENTES COMUNES
-══════════════════════════════════════ */
+.main-content{flex:1;margin-left:var(--sidebar-w);padding:24px;min-width:0}
 .card{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r2);padding:16px;margin-bottom:14px}
 .card-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--ink3);margin-bottom:14px}
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
 .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-
 .kpi{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r2);padding:14px 16px}
 .kpi-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--ink3);margin-bottom:6px}
 .kpi-value{font-family:var(--font-serif);font-size:22px;color:var(--ink)}
 .kpi-sub{font-size:11px;color:var(--ink3);margin-top:3px}
-
 .btn-primary{padding:13px 20px;background:var(--green);color:#fff;font-size:14px;font-weight:600;border-radius:var(--r);transition:background .15s;width:100%;-webkit-tap-highlight-color:transparent}
 .btn-primary:hover{background:var(--green4)}
 .btn-primary:disabled{background:var(--ink3);cursor:not-allowed}
@@ -227,7 +115,6 @@ button{font-family:var(--font-sans);cursor:pointer;border:none;border-radius:var
 .btn-rm:hover{color:var(--red);background:var(--red2)}
 .icon-btn{padding:6px 10px;background:var(--bg3);border:1.5px solid var(--border);color:var(--ink2);font-size:13px;border-radius:6px;transition:all .15s;cursor:pointer}
 .icon-btn:hover{background:var(--green3);color:var(--green4);border-color:var(--green2)}
-
 .table-wrap{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r2);overflow:hidden}
 .table-head{padding:12px 16px;border-bottom:1.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
 .table-head h3{font-size:13px;font-weight:600;color:var(--ink)}
@@ -244,39 +131,13 @@ tbody tr:hover{background:var(--bg)}
 .badge-salida{background:var(--red2);color:var(--red)}
 .badge-ok{background:var(--green3);color:var(--green4)}
 .badge-neg{background:var(--red2);color:var(--red)}
-
-/* Panel header — título del contenido activo */
-.panel-header{
-  margin-bottom:20px;
-  padding-bottom:16px;
-  border-bottom:1.5px solid var(--border);
-  display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
-}
-.panel-header-left{}
-.panel-title{
-  font-family:var(--font-serif);
-  font-size:24px;color:var(--ink);margin-bottom:2px;
-}
+.panel-header{margin-bottom:20px;padding-bottom:16px;border-bottom:1.5px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.panel-title{font-family:var(--font-serif);font-size:24px;color:var(--ink);margin-bottom:2px}
 .panel-sub{font-size:12px;color:var(--ink3)}
-
-/* Sub-tabs dentro del panel (Entrada / Consultar, etc) */
-.panel-tabs{
-  display:flex;gap:4px;
-  background:var(--bg3);
-  border-radius:var(--r);
-  padding:3px;
-  margin-bottom:18px;
-  width:fit-content;
-}
-.panel-tab{
-  padding:8px 16px;background:none;border-radius:7px;
-  font-size:12px;font-weight:500;color:var(--ink2);
-  transition:all .15s;white-space:nowrap;
-}
+.panel-tabs{display:flex;gap:4px;background:var(--bg3);border-radius:var(--r);padding:3px;margin-bottom:18px;width:fit-content}
+.panel-tab{padding:8px 16px;background:none;border-radius:7px;font-size:12px;font-weight:500;color:var(--ink2);transition:all .15s;white-space:nowrap}
 .panel-tab.active{background:var(--bg2);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
 .panel{display:none}.panel.active{display:block}
-
-/* ── MP específico ── */
 .cpp-preview{background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--r);padding:12px 14px;display:none;margin-bottom:14px}
 .cpp-row{display:flex;gap:16px;flex-wrap:wrap}
 .cpp-item label{font-size:10px;font-weight:600;text-transform:uppercase;color:var(--ink3);display:block}
@@ -286,8 +147,6 @@ tbody tr:hover{background:var(--bg)}
 .calc-chip{background:var(--bg2);border:1.5px solid var(--green2);border-radius:6px;padding:3px 8px;font-weight:600;color:var(--green4);font-size:12px}
 .calc-op{font-size:16px;color:var(--green2)}
 .calc-result{background:var(--green);color:#fff;border-radius:6px;padding:4px 10px;font-weight:600;font-size:12px}
-
-/* ── Producción ── */
 .mp-headers{display:grid;grid-template-columns:2.2fr 1.1fr 1fr auto;gap:8px;padding:0 8px;margin-bottom:4px}
 .mp-headers span{font-size:10px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em}
 .mp-row{display:grid;grid-template-columns:2.2fr 1.1fr 1fr auto;gap:8px;align-items:center;background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--r);padding:10px 12px;margin-bottom:6px}
@@ -310,8 +169,6 @@ tbody tr:hover{background:var(--bg)}
 .total-box .tl{font-size:11px;text-transform:uppercase;color:rgba(255,255,255,.75);letter-spacing:.05em}
 .total-box .tv{font-family:var(--font-serif);font-size:24px;color:#fff}
 .total-box .tu{font-size:11px;color:rgba(255,255,255,.7);margin-top:2px}
-
-/* ── Ventas ── */
 .util-preview{border-radius:var(--r);padding:12px 14px;display:none;margin-bottom:14px;border:1.5px solid}
 .util-preview.pos{background:var(--green3);border-color:var(--green2)}
 .util-preview.neg{background:var(--red2);border-color:#D85A30}
@@ -320,23 +177,15 @@ tbody tr:hover{background:var(--bg)}
 .ptoggle{flex:1;padding:10px 6px;border:1.5px solid var(--border);border-radius:var(--r);font-size:13px;font-weight:500;text-align:center;background:var(--bg2);color:var(--ink2);transition:all .15s;cursor:pointer}
 .ptoggle.active.auto{border-color:var(--green2);background:var(--green3);color:var(--green4)}
 .ptoggle.active.manual{border-color:#3B82F6;background:#EFF6FF;color:#1E40AF}
-
-/* Stock cards */
 .stock-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r2);padding:16px}
 .stock-num{font-family:var(--font-serif);font-size:32px;color:var(--green)}
 .stock-ico{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
-
-/* Consulta MP */
 .sel-box{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r);padding:12px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .empty-state{text-align:center;padding:40px 20px;color:var(--ink3)}
 .empty-icon{font-size:36px;margin-bottom:10px}
-
-/* Filtros historial */
 .filter-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .filter-row select,.filter-row input{width:auto;flex:1;min-width:80px}
 .resumen-periodo{background:var(--bg3);border-radius:var(--r);padding:12px 14px;margin-bottom:12px;display:none}
-
-/* Modal */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;display:none;align-items:flex-end;justify-content:center}
 .modal-overlay.visible{display:flex}
 .modal-box{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r2) var(--r2) 0 0;padding:24px 20px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto}
@@ -346,10 +195,6 @@ tbody tr:hover{background:var(--bg)}
 .btn-cancel{padding:11px 18px;background:var(--bg3);color:var(--ink2);font-size:13px;border-radius:var(--r);border:1.5px solid var(--border);flex:1}
 .btn-danger{padding:11px 18px;background:var(--red);color:#fff;font-size:13px;font-weight:600;border-radius:var(--r);flex:1}
 .btn-danger:hover{background:#7A2E14}
-
-/* ══════════════════════════════════════
-   RESPONSIVE — TABLET
-══════════════════════════════════════ */
 @media(max-width:900px){
   :root{--sidebar-w:200px}
   .grid-4{grid-template-columns:1fr 1fr}
@@ -360,23 +205,14 @@ tbody tr:hover{background:var(--bg)}
   .btn-row{flex-direction:column}
   .btn-row .btn-outline,.btn-row .btn-indigo{width:100%}
 }
-
-/* ══════════════════════════════════════
-   RESPONSIVE — MÓVIL (sidebar colapsable)
-══════════════════════════════════════ */
 @media(max-width:680px){
   :root{--sidebar-w:240px}
   .btn-menu-toggle{display:flex;align-items:center;justify-content:center}
   .btn-del-account{display:none}
   .topbar-user{display:none}
-
-  /* Sidebar fuera de pantalla por defecto */
   .sidebar{transform:translateX(-100%)}
   .sidebar.open{transform:translateX(0);box-shadow:4px 0 20px rgba(0,0,0,.15)}
-
-  /* Contenido ocupa todo el ancho */
   .main-content{margin-left:0;padding:16px}
-
   .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
   .cf-grid{grid-template-columns:1fr}
   .cf-grid>button{grid-column:1;width:auto}
@@ -404,154 +240,95 @@ tbody tr:hover{background:var(--bg)}
   .sel-box{flex-direction:column;align-items:stretch}
   input,select,textarea{font-size:16px !important}
 }
-
 @supports(padding-bottom:env(safe-area-inset-bottom)){
   #screen-app{padding-bottom:env(safe-area-inset-bottom)}
 }
 @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important}}
-/* ── Modal selector período reporte ── */
-.modal-reporte-overlay{
-  position:fixed;inset:0;
-  background:rgba(0,0,0,.5);
-  backdrop-filter:blur(4px);
-  z-index:400;
-  display:none;align-items:center;justify-content:center;
-  padding:20px;
-}
+.modal-reporte-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);z-index:400;display:none;align-items:center;justify-content:center;padding:20px}
 .modal-reporte-overlay.visible{display:flex}
-.modal-reporte-box{
-  background:var(--bg2);
-  border:1.5px solid var(--border);
-  border-radius:var(--r2);
-  padding:28px 24px;
-  width:100%;max-width:380px;
-  box-shadow:0 12px 40px rgba(0,0,0,.15);
-}
-.modal-reporte-title{
-  font-family:var(--font-serif);
-  font-size:20px;color:var(--ink);
-  margin-bottom:4px;
-}
-.modal-reporte-sub{
-  font-size:12px;color:var(--ink3);
-  margin-bottom:20px;
-}
-.periodo-grid{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:8px;margin-bottom:20px;
-}
-.periodo-btn{
-  padding:12px 8px;
-  border:1.5px solid var(--border2);
-  border-radius:var(--r);
-  background:var(--bg2);
-  font-size:12px;font-weight:500;
-  color:var(--ink2);
-  text-align:center;
-  cursor:pointer;
-  transition:all .15s;
-  font-family:var(--font-sans);
-}
+.modal-reporte-box{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r2);padding:28px 24px;width:100%;max-width:380px;box-shadow:0 12px 40px rgba(0,0,0,.15)}
+.modal-reporte-title{font-family:var(--font-serif);font-size:20px;color:var(--ink);margin-bottom:4px}
+.modal-reporte-sub{font-size:12px;color:var(--ink3);margin-bottom:20px}
+.periodo-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px}
+.periodo-btn{padding:12px 8px;border:1.5px solid var(--border2);border-radius:var(--r);background:var(--bg2);font-size:12px;font-weight:500;color:var(--ink2);text-align:center;cursor:pointer;transition:all .15s;font-family:var(--font-sans)}
 .periodo-btn:hover{border-color:var(--green2);color:var(--green4);background:var(--green3)}
-.periodo-btn.active{
-  border-color:var(--green2);
-  background:var(--green3);
-  color:var(--green4);
-  font-weight:600;
-}
-.periodo-custom{
-  display:none;
-  margin-bottom:16px;
-}
+.periodo-btn.active{border-color:var(--green2);background:var(--green3);color:var(--green4);font-weight:600}
+.periodo-custom{display:none;margin-bottom:16px}
 .periodo-custom.visible{display:block}
-.periodo-custom-row{
-  display:grid;grid-template-columns:1fr 1fr;gap:10px;
-}
-.btn-generar{
-  width:100%;padding:13px;
-  background:var(--green);color:#fff;
-  border:none;border-radius:var(--r2);
-  font-size:14px;font-weight:600;
-  cursor:pointer;font-family:var(--font-sans);
-  transition:all .2s;
-  box-shadow:0 3px 12px rgba(15,158,110,.25);
-}
+.periodo-custom-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn-generar{width:100%;padding:13px;background:var(--green);color:#fff;border:none;border-radius:var(--r2);font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font-sans);transition:all .2s;box-shadow:0 3px 12px rgba(15,158,110,.25)}
 .btn-generar:hover{background:var(--green4);box-shadow:0 6px 20px rgba(15,158,110,.35)}
 .btn-generar:disabled{background:var(--ink3);cursor:not-allowed;box-shadow:none}
-.btn-cancelar-rep{
-  width:100%;padding:10px;
-  background:none;color:var(--ink3);
-  border:none;border-radius:var(--r);
-  font-size:13px;cursor:pointer;
-  font-family:var(--font-sans);
-  margin-top:8px;
-  transition:color .15s;
-}
+.btn-cancelar-rep{width:100%;padding:10px;background:none;color:var(--ink3);border:none;border-radius:var(--r);font-size:13px;cursor:pointer;font-family:var(--font-sans);margin-top:8px;transition:color .15s}
 .btn-cancelar-rep:hover{color:var(--ink)}
-
-/* ── Botón PDF en sidebar ── */
-.sidebar-footer{
-  margin-top:auto;
-  padding:12px;
-  border-top:1.5px solid var(--border);
-}
-.btn-pdf{
-  display:flex;align-items:center;gap:10px;
-  width:100%;padding:10px 12px;
-  background:var(--green3);
-  border:1.5px solid rgba(29,158,117,.3);
-  border-radius:var(--r);
-  font-size:13px;font-weight:600;
-  color:var(--green4);
-  transition:all .2s;
-  -webkit-tap-highlight-color:transparent;
-}
+.sidebar-footer{margin-top:auto;padding:12px;border-top:1.5px solid var(--border)}
+.btn-pdf{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;background:var(--green3);border:1.5px solid rgba(29,158,117,.3);border-radius:var(--r);font-size:13px;font-weight:600;color:var(--green4);transition:all .2s;-webkit-tap-highlight-color:transparent}
 .btn-pdf:hover{background:var(--green);color:#fff;border-color:var(--green)}
 .btn-pdf:disabled{background:var(--bg3);color:var(--ink3);border-color:var(--border);cursor:not-allowed}
 .btn-pdf-icon{font-size:16px;flex-shrink:0}
-
-/* Toast de descarga */
-.download-toast{
-  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
-  background:var(--ink);color:#fff;
-  border-radius:var(--r2);padding:12px 20px;
-  font-size:13px;font-weight:500;
-  box-shadow:0 8px 32px rgba(0,0,0,.25);
-  z-index:400;opacity:0;
-  transition:all .3s;
-  display:flex;align-items:center;gap:10px;
-  white-space:nowrap;
-}
+.download-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:#fff;border-radius:var(--r2);padding:12px 20px;font-size:13px;font-weight:500;box-shadow:0 8px 32px rgba(0,0,0,.25);z-index:400;opacity:0;transition:all .3s;display:flex;align-items:center;gap:10px;white-space:nowrap}
 .download-toast.visible{opacity:1;transform:translateX(-50%) translateY(0)}
 .download-toast.ok{background:var(--green4)}
 .download-toast.err{background:var(--red)}
-/* ══ FIXES iOS ══ */
 * { -webkit-tap-highlight-color: transparent; }
-input, select, textarea {
-  -webkit-appearance: none;
-  border-radius: var(--r);
+input, select, textarea { -webkit-appearance: none; border-radius: var(--r); }
+body { -webkit-overflow-scrolling: touch; }
+@media (max-width: 680px) { input, select, textarea { font-size: 16px !important; } }
+.topbar { padding-top: env(safe-area-inset-top); height: calc(var(--topbar-h) + env(safe-area-inset-top)); }
+.app-body { padding-top: calc(var(--topbar-h) + env(safe-area-inset-top)); }
+.sidebar { top: calc(var(--topbar-h) + env(safe-area-inset-top)); padding-bottom: env(safe-area-inset-bottom); }
+.login-wrap{display:flex;width:100%;max-width:860px;background:var(--bg2);border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(15,110,86,.12),0 4px 16px rgba(0,0,0,.06);min-height:600px}
+.login-brand-panel{flex:0 0 40%;background:var(--green);position:relative;overflow:hidden;padding:40px 32px;display:flex;flex-direction:column;justify-content:space-between;color:#fff}
+.login-brand-panel::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.07)}
+.login-brand-panel::after{content:'';position:absolute;bottom:-90px;left:-50px;width:260px;height:260px;border-radius:50%;background:rgba(255,255,255,.05)}
+.login-brand-top{position:relative;z-index:1}
+.login-brand-mark{width:46px;height:46px;border-radius:14px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:24px}
+.login-brand-title{font-family:var(--font-serif);font-size:30px;line-height:1.15;margin-bottom:10px}
+.login-brand-sub{font-size:13px;color:rgba(255,255,255,.8);line-height:1.6;max-width:230px}
+.login-brand-badge{position:relative;z-index:1;display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.15);border-radius:20px;padding:8px 14px;font-size:12px;font-weight:600;width:fit-content}
+.login-form-panel{flex:1;padding:40px 36px;display:flex;flex-direction:column;justify-content:center;position:relative}
+.login-form-panel .login-card{width:100%;max-width:340px;margin:0 auto;background:none;border:none;padding:0;box-shadow:none}
+.login-form-title{font-family:var(--font-serif);font-size:24px;color:var(--ink);margin-bottom:4px}
+.login-form-sub{font-size:13px;color:var(--ink3);margin-bottom:22px}
+.input-icon-wrap{position:relative}
+.input-icon-wrap input{padding-left:38px}
+.input-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:15px;opacity:.55;pointer-events:none}
+@media(max-width:768px){
+  .login-wrap{flex-direction:column;max-width:420px;min-height:0;border-radius:20px}
+  .login-brand-panel{flex:none;padding:28px 24px 24px;min-height:0}
+  .login-brand-title{font-size:24px}
+  .login-brand-sub{display:none}
+  .login-brand-panel::after{display:none}
+  .login-form-panel{padding:28px 24px}
 }
-body {
-  -webkit-overflow-scrolling: touch;
-}
-/* Evitar zoom en inputs en iOS */
-@media (max-width: 680px) {
-  input, select, textarea {
-    font-size: 16px !important;
-  }
-}
-/* Safe area para iPhone con notch */
-.topbar {
-  padding-top: env(safe-area-inset-top);
-  height: calc(var(--topbar-h) + env(safe-area-inset-top));
-}
-.app-body {
-  padding-top: calc(var(--topbar-h) + env(safe-area-inset-top));
-}
-.sidebar {
-  top: calc(var(--topbar-h) + env(safe-area-inset-top));
-  padding-bottom: env(safe-area-inset-bottom);
-}
+.user-menu{position:relative;margin-left:auto}
+.user-menu-trigger{display:flex;align-items:center;gap:9px;padding:6px 10px 6px 6px;background:none;border:1.5px solid transparent;border-radius:24px;cursor:pointer;transition:all .15s;font-family:var(--font-sans)}
+.user-menu-trigger:hover{background:var(--bg3);border-color:var(--border)}
+.user-avatar{width:30px;height:30px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;font-family:var(--font-serif)}
+.user-menu-name{font-size:12.5px;font-weight:600;color:var(--ink);max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.user-menu-chevron{font-size:9px;color:var(--ink3);transition:transform .2s;flex-shrink:0}
+.user-menu.open .user-menu-chevron{transform:rotate(180deg)}
+.user-menu-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;box-shadow:0 10px 32px rgba(0,0,0,.12);min-width:200px;padding:6px;display:none;z-index:250}
+.user-menu.open .user-menu-dropdown{display:block}
+.user-menu-header{padding:10px 12px;border-bottom:1px solid var(--bg3);margin-bottom:6px}
+.user-menu-header-name{font-size:13px;font-weight:600;color:var(--ink)}
+.user-menu-item{display:flex;align-items:center;gap:10px;width:100%;padding:9px 12px;background:none;border:none;border-radius:9px;font-size:13px;color:var(--ink2);text-align:left;cursor:pointer;transition:background .15s;font-family:var(--font-sans)}
+.user-menu-item:hover{background:var(--bg3)}
+.user-menu-item.danger{color:var(--red)}
+.user-menu-item.danger:hover{background:var(--red2)}
+.user-menu-item-icon{width:16px;text-align:center;flex-shrink:0;font-size:13px}
+.sidebar-section:not(:first-child){border-top:1px solid var(--bg3);margin-top:2px}
+.nav-item{border-radius:12px}
+.nav-item-icon{width:30px;height:30px;border-radius:9px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;transition:background .15s}
+.nav-item.active .nav-item-icon{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.kpi-icon-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px}
+.kpi-icon-badge{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-size:17px}
+.dash-greeting{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--ink3);margin-bottom:4px}
+.dash-title{font-family:var(--font-serif);font-size:26px;color:var(--ink)}
+.activity-item{display:flex;align-items:center;justify-content:space-between;padding-bottom:10px;margin-bottom:10px;border-bottom:1px solid var(--bg3)}
+.activity-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.activity-left{display:flex;align-items:center;gap:10px}
+.activity-icon{width:30px;height:30px;border-radius:8px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
@@ -565,11 +342,8 @@ body {
   var supabase = window._skriptoClient;
 </script>
 <script>
-/* ══════════════════════════════════════════════════════
-   SISTEMA DE IDIOMA (ES / EN)
-══════════════════════════════════════════════════════ */
-var I18N = {
-  es: {
+var LANG = 'es'; // Idioma fijo en español
+var I18N = { es: {
     app_title:'Inventario', app_sub:'Sistema de gestión de costos',
     email:'Correo electrónico', password:'Contraseña', forgot:'¿Olvidaste tu contraseña?', enter:'Entrar',
     business_name:'Nombre del emprendimiento', with_this_email:'Con este correo inicias sesión',
@@ -582,6 +356,7 @@ var I18N = {
     nav_modules:'Módulos', nav_mp:'Materia Prima', nav_prod:'Producción', nav_sales:'Ventas',
     nav_entry:'Entrada', nav_check_stock:'Consultar stock', nav_register:'Registrar', nav_stock:'Stock', nav_history:'Historial',
     nav_monitoring:'Monitoreo', nav_alerts:'Alertas de stock', nav_download_report:'Descargar Reporte',
+    nav_control:'Control',
     mp_entry_title:'Entrada de insumo', mp_entry_sub:'Registra una compra de materia prima',
     mp_check_title:'Consultar stock', mp_check_sub:'Revisa el estado actual de tus insumos',
     mp_card_title:'Registrar compra de insumo', mp_ins_name:'Nombre del insumo', mp_qty_bought:'Cantidad comprada',
@@ -682,266 +457,170 @@ var I18N = {
     pdf_year_label:'Año ', pdf_all_history:'Todo el historial',
     preparing_data:'Preparando datos…', generating_pdf:'Generando PDF…', report_downloaded:'Reporte descargado',
     error_loading_data:'Error cargando datos', to_word_lower:'a'
-  },
-  en: {
-    app_title:'Inventory', app_sub:'Cost management system',
-    email:'Email address', password:'Password', forgot:'Forgot your password?', enter:'Sign in',
-    business_name:'Business name', with_this_email:'You sign in with this email',
-    username:'Username (display name)', min_chars:'Minimum 6 characters', create_account:'Create account',
-    recover_title:'Recover password', recover_sub:"We'll send a link to your email",
-    your_email:'Your email address', send_instructions:'Send instructions', back_to_login:'Back to sign in',
-    new_pwd_title:'Create your new password', new_pwd:'New password', confirm_pwd:'Confirm password',
-    repeat_pwd:'Repeat the password', save_new_pwd:'Save new password',
-    del_account:'Delete account', logout:'Log out',
-    nav_modules:'Modules', nav_mp:'Raw Materials', nav_prod:'Production', nav_sales:'Sales',
-    nav_entry:'Entry', nav_check_stock:'Check stock', nav_register:'Register', nav_stock:'Stock', nav_history:'History',
-    nav_monitoring:'Monitoring', nav_alerts:'Stock alerts', nav_download_report:'Download Report',
-    mp_entry_title:'Supply entry', mp_entry_sub:'Record a raw material purchase',
-    mp_check_title:'Check stock', mp_check_sub:'Review the current status of your supplies',
-    mp_card_title:'Record supply purchase', mp_ins_name:'Supply name', mp_qty_bought:'Quantity bought',
-    mp_unit:'Unit of measure', mp_total_val:'Total invoice value', mp_register_entry:'Register Entry',
-    mp_select_insumo:'Supply:', mp_select_placeholder:'-- Select a supply --',
-    mp_cost:'COST', mp_stock:'Stock', mp_inv_value:'Inventory value',
-    mp_history:'Movement history', mp_no_movs:'No movements',
-    mp_select_empty_title:'Select a supply to see its detail', mp_select_empty_sub:'Current stock, average cost and all movements',
-    prod_title:'Production', prod_sub:'Record a production batch and calculate costs',
-    prod_final_product:'Final Product', prod_units:'Units to Produce', prod_units_hint:'Fixed costs and labor are prorated across these units',
-    prod_raw_materials:'Raw Materials', prod_add_mp:'Add Raw Material',
-    prod_fixed_costs:'Fixed Costs', prod_add_cf:'Add Fixed Cost',
-    prod_labor:'Labor', prod_add_mo:'Add Labor',
-    prod_calc:'Calculate', prod_register:'Register',
-    prod_history:'Production history', prod_no_history:"You haven't recorded any production yet",
-    sales_reg_title:'Register sale', sales_reg_sub:'Record a new finished product sale',
-    sales_stock_title:'Product stock', sales_stock_sub:'Check the inventory of finished products',
-    sales_hist_title:'Sales history', sales_hist_sub:'All your recorded sales with filters',
-    sales_product:'Product to sell', sales_final_product:'Final Product', sales_select_product:'-- Select product --',
-    sales_qty:'Quantity to Sell', sales_notes:'Notes (optional)',
-    sales_price:'Sale Price', sales_margin:'By margin %', sales_manual:'Manual price',
-    sales_margin_pct:'Profit Margin (%)', sales_calc_price:'Calculated Sale Price',
-    sales_manual_price:'Unit Sale Price', sales_preview:'Preview', sales_confirm:'Confirm',
-    sales_no_stock:'No finished products in inventory', sales_no_stock_sub:'Record a production to see stock here',
-    sales_no_history:'No sales recorded yet',
-    sales_registered:'Recorded sales', all_months:'All months', all:'All',
-    alerts_title:'Stock alerts', alerts_sub:'Configure when to notify you, and check your days-remaining prediction',
-    alerts_monitored:'Monitored supplies', alerts_now:'Currently in alert', alerts_urgent:'Running out in ≤ 7 days',
-    alerts_hint:'Reorder point: the minimum quantity you want before we notify you. Days remaining: calculated only from your actual consumption over the last 30 days — the more you move the supply, the more accurate the prediction.',
-    alerts_all_insumos:'All supplies', alerts_none:"You haven't registered any supplies yet", alerts_none_sub:'Register raw materials first to see their alerts here',
-    th_insumo:'Supply', th_stock_now:'Current stock', th_reorder:'Reorder point', th_daily:'Avg. daily consumption', th_days_left:'Est. days left', th_status:'Status',
-    cancel:'Cancel', save_changes:'Save changes', confirm_action:'Confirm action?', delete:'Yes, delete',
-    del_account_title:'Delete my account', del_account_p1:'This action will close your session and remove your access.',
-    del_account_p2:'Your data is kept for 30 days.', del_account_confirm:'Confirm with your current password:',
-    current_pwd:'Your current password',
-    mp_calc_unit_val:'Calculated unit value', mp_curr_stock:'Current stock', mp_curr_cpp:'Current avg. cost', mp_unit_label:'Unit',
-    unit_und:'Unit (und)', unit_kg:'Kilogram (kg)', unit_g:'Gram (g)', unit_l:'Liter (l)', unit_ml:'Milliliter (ml)', unit_m:'Meter (m)',
-    th_num:'#', th_date:'Date', th_type:'Type', th_qty:'Qty.', th_unit_col:'Unit', th_unit_val:'Unit Val.', th_total_val:'Total Val.',
-    prod_th_id:'ID', prod_th_date:'Date', prod_th_final:'Final Product', prod_th_units:'Units', prod_th_lot_cost:'Batch Cost', prod_th_unit_cost:'Cost/unit',
-    prod_cost_breakdown:'Cost Breakdown', prod_raw_mat_short:'Raw Materials', prod_fixed_short:'Fixed Costs', prod_labor_short:'Labor',
-    prod_lot_total:'Total Batch Cost', prod_formula_cf:'Monthly cost ÷ hours/month × hours for this batch', prod_formula_mo:'Monthly salary ÷ hours/month × hours in this batch', formula_label:'Formula:',
-    sales_util_preview:'Total cost', sales_income:'Total income', sales_real_margin:'Real margin', sales_gross_profit:'Gross Profit',
-    sales_filter_prod:'Product', th_sale_id:'ID', th_sale_date:'Date', th_sale_prod:'Product', th_unit_cost:'Unit Cost', th_price:'Price', th_income:'Income', th_margin:'Margin', th_profit:'Profit', th_notes:'Notes',
-    ph_supply_name:'E.g: Flour, Sugar…', ph_final_product:'Name of the product to manufacture', ph_concept:'Rent, Electricity…',
-    ph_monthly_cost:'How much do you pay monthly?', ph_role_name:'E.g: Baker', ph_monthly_salary:'Salary + benefits',
-    ph_client_order:'Client, order…', ph_manual_price:'$0.00',
-    modal_del_movement:'Delete movement', modal_del_sale:'Delete sale', modal_del_prod:'Delete production',
-    edit_purchase:'Edit purchase', edit_sale:'Edit sale', supply_label:'Supply:', product_label:'Product:',
-    qty_bought:'Quantity purchased', total_invoice_val:'Total invoice value', qty_sold:'Quantity sold', unit_sale_price:'Unit sale price', notes:'Notes',
-    mo1:'January',mo2:'February',mo3:'March',mo4:'April',mo5:'May',mo6:'June',mo7:'July',mo8:'August',mo9:'September',mo10:'October',mo11:'November',mo12:'December',
-    auto_margin:'By margin %', manual_price:'Manual price', preview:'Preview', confirm:'Confirm',
-    sales_no_stock_title:'No finished products in inventory', sales_registered_title:'Recorded sales',
-    th_income_col:'Income', th_cost_col:'Costs', th_profit_col:'Profit', th_margin_col:'Margin',
-    reorder_bold:'Reorder point:', reorder_rest:'the minimum quantity you want before we notify you.',
-    days_left_bold:'Days remaining:', days_left_rest:'calculated only from your actual consumption over the last 30 days — the more you move the supply, the more accurate the prediction.',
-    choose_option:'-- Choose --', available_label:'Available:', rate_hour:'Rate/h:', batch_label:'Batch:', per_unit_label:'Per unit:',
-    concept:'Concept', monthly_cost:'Monthly cost ($)', monthly_cost_hint:'How much do you pay monthly?',
-    hours_month_use:'Hours used/month', hours_this_batch:'Hours for this batch',
-    name_role:'Name / Role', monthly_salary:'Monthly salary ($)', monthly_salary_hint:'Salary + benefits',
-    work_hours_month:'Work hours/month', work_hours_hint:'Standard: 192 h/month',
-    stock_available:'Available stock', units_to_sell:'units to sell', inv_value:'Inventory value', all_year:'Whole year',
-    badge_below_reorder:'Below reorder point', badge_running_out:'Running out soon', badge_ok:'OK', per_day:'/day', days_word:'days',
-    msg_del_access:'Access to Inventory removed. Your data is kept.', msg_complete_fields:'Fill in all fields.',
-    msg_wrong_credentials:'Incorrect email or password.', msg_unexpected_error:'Unexpected error: ',
-    msg_enter_email_pwd:'Enter email and password.', msg_enter_email:'Enter your email address.',
-    msg_min_pwd:'Password must be at least 6 characters.', msg_pwd_mismatch:'Passwords do not match.',
-    msg_no_subscription:'Your account has no active subscription for Inventory.', msg_pwd_updated:'Password updated. You can now sign in.',
-    msg_account_created:'Account created! You now have 3 free trial days — sign in with your email.',
-    msg_recovery_sent:'If that email is registered, you will receive instructions shortly.',
-    msg_invalid_qty:'Invalid quantity.', msg_error_prefix:'Error: ', msg_enter_supply_name:'Enter the supply name.',
-    msg_invalid_total:'Invalid total value.', msg_enter_final_product:'Enter the final product name.',
-    msg_enter_units:'Enter the units to produce.', msg_calc_first:'Calculate the cost first.',
-    msg_invalid_margin:'Invalid margin.', msg_invalid_price:'Invalid price.', msg_preview_first:'Preview the sale first.',
-    msg_product_not_found:'Product not found.', msg_select_product:'Select a product.', msg_insufficient_stock:'Insufficient stock. Available: ',
-    stock_word:'Stock:', movement:'Movement', purchase_word:'Purchase', exit_word:'Exit',
-    edit_tt:'Edit', delete_tt:'Delete', from_prod_tt:'Comes from a production — edit it from the Production module',
-    confirm_del_mov_msg:'Delete this movement of "{p}"? This recalculates the stock and average cost of all later movements.',
-    confirm_del_prod_msg:'Delete {id} ({p})? This restores the raw materials consumed and removes the finished product it had generated.',
-    confirm_del_sale_msg:'Delete this sale of "{p}"? This recalculates the product stock.',
-    subtotal_mp:'Subtotal RM', subtotal_cf:'Subtotal FC', subtotal_mo:'Subtotal Labor', cost_per_unit:'Cost per unit:',
-    gen_report_title:'Generate Report', gen_report_sub:'Choose the period you want to include in the report',
-    period_all:'Entire history', period_year:'This year', period_month:'This month', period_custom:'Custom range',
-    from_word:'From', to_word:'To', gen_download_pdf:'Generate and download PDF →',
-    stock_avail_colon:'Available stock:', unit_cost_cpp:'Unit cost (avg.):',
-    pdf_brand:'inventory', pdf_subtitle:'Inventory and Sales Report - Skripto Apps', pdf_generated:'Generated:',
-    pdf_period:'PERIOD:', pdf_period_summary:'Period Summary', pdf_total_income:'Total Income',
-    pdf_total_costs:'Total Costs', pdf_net_profit:'Net Profit', pdf_margin:'Margin', pdf_sales_suffix:'sales',
-    pdf_positive:'Positive', pdf_negative:'Negative', pdf_over_costs:'over costs', pdf_no_sales_word:'no sales',
-    pdf_mp_stock_title:'Raw Material Stock (current status)', pdf_th_insumo:'Supply / Material',
-    pdf_th_stock_disp:'Available stock', pdf_th_cpp:'Avg. Cost', pdf_th_val_inv:'Inventory value',
-    pdf_total_word:'TOTAL', pdf_no_mp:'No raw material records.',
-    pdf_pf_stock_title:'Finished Product Stock (current status)', pdf_th_pf:'Finished Product',
-    pdf_no_pf:'No products in stock.', pdf_sales_period:'Sales for the Period - ', pdf_units_margin:' units · margin ',
-    pdf_th_id:'ID', pdf_th_date:'Date', pdf_th_prod:'Product', pdf_th_qty:'Qty.', pdf_th_price:'Price',
-    pdf_th_income:'Income', pdf_th_cost:'Cost', pdf_th_profit:'Profit',
-    pdf_no_sales_for:'No sales recorded for: ', pdf_try_other:'Try selecting "Entire history" or a different period.',
-    pdf_footer_brand:'Skripto Apps - Inventory System - ', pdf_page:'Page', pdf_page_of:'of',
-    pdf_year_label:'Year ', pdf_all_history:'Entire history',
-    preparing_data:'Preparing data…', generating_pdf:'Generating PDF…', report_downloaded:'Report downloaded',
-    error_loading_data:'Error loading data', to_word_lower:'to'
-  }
-};
-var LANG = localStorage.getItem('skripto_lang') || 'es';
-function t(k){ return (I18N[LANG] && I18N[LANG][k]) || (I18N.es[k]) || k; }
-function setLang(l){
-  LANG = l;
-  try{ localStorage.setItem('skripto_lang', l); }catch(e){}
-  aplicarIdioma();
-}
+} };
+function t(k){ return (I18N.es[k]) || k; }
 function aplicarIdioma(){
   document.querySelectorAll('[data-i18n]').forEach(function(el){ el.textContent = t(el.getAttribute('data-i18n')); });
   document.querySelectorAll('[data-i18n-ph]').forEach(function(el){ el.placeholder = t(el.getAttribute('data-i18n-ph')); });
-  document.querySelectorAll('.lang-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.lang===LANG); });
-  document.documentElement.lang = LANG;
+  document.documentElement.lang = 'es';
 }
 </script>
 </head>
-
 <body>
 
-<!-- ══════════════════════════════
-     PANTALLA LOGIN
-══════════════════════════════ -->
 <div id="screen-login" class="screen visible">
-  <div class="lang-switch">
-    <button class="lang-btn" data-lang="es" onclick="setLang('es')">ES</button>
-    <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
-  </div>
-  <div class="login-card">
-    <div class="login-logo">
-      <h1>Inven<span style="color:var(--green2)">tario</span></h1>
-      <span data-i18n="app_sub">Sistema de gestión de costos</span>
-    </div>
-
-    <div id="alert-auth" class="alert"></div>
-
-    <!-- LOGIN -->
-    <div id="blq-login">
-      <div class="form-g">
-        <label data-i18n="email">Correo electrónico</label>
-        <input type="email" id="in-user" placeholder="tu@correo.com" autocomplete="username">
+  <div class="login-wrap">
+    <div class="login-brand-panel">
+      <div class="login-brand-top">
+        <div class="login-brand-mark">📦</div>
+        <div class="login-brand-title">Inven<em style="font-style:normal;opacity:.85">tario</em></div>
+        <div class="login-brand-sub">Sistema de gestión de costos</div>
       </div>
-      <div class="form-g">
-        <label data-i18n="password">Contraseña</label>
-        <input type="password" id="in-pwd" placeholder="••••••••" autocomplete="current-password"
-          onkeydown="if(event.key==='Enter')doLogin()">
-        <div style="text-align:right;margin-top:6px">
-          <button class="link-btn" data-i18n="forgot" onclick="mostrarRecuperacion()">¿Olvidaste tu contraseña?</button>
+      <div class="login-brand-badge">🎁 <span>3 días gratis, sin tarjeta</span></div>
+    </div>
+    <div class="login-form-panel">
+      <div class="login-card">
+        <div id="alert-auth" class="alert"></div>
+
+        <div class="tab-auth">
+          <button class="active" id="tab-btn-login" onclick="setAuthTab('login')">Entrar</button>
+          <button id="tab-btn-registro" onclick="setAuthTab('registro')">Crear cuenta</button>
+        </div>
+
+        <div id="blq-login">
+          <div class="login-form-title">Bienvenido de vuelta</div>
+          <div class="login-form-sub">Entra a tu cuenta para continuar</div>
+          <div class="form-g">
+            <label>Correo electrónico</label>
+            <div class="input-icon-wrap">
+              <span class="input-icon">✉️</span>
+              <input type="email" id="in-user" placeholder="tu@correo.com" autocomplete="username">
+            </div>
+          </div>
+          <div class="form-g">
+            <label>Contraseña</label>
+            <div class="input-icon-wrap">
+              <span class="input-icon">🔒</span>
+              <input type="password" id="in-pwd" placeholder="••••••••" autocomplete="current-password"
+                onkeydown="if(event.key==='Enter')doLogin()">
+            </div>
+            <div style="text-align:right;margin-top:6px">
+              <button class="link-btn" onclick="mostrarRecuperacion()">¿Olvidaste tu contraseña?</button>
+            </div>
+          </div>
+          <button class="btn-main" id="btn-login" onclick="doLogin()">Entrar</button>
+        </div>
+
+        <div id="blq-registro" style="display:none">
+          <div class="login-form-title">Crea tu cuenta</div>
+          <div class="login-form-sub">Empieza gratis en menos de un minuto</div>
+          <div class="form-g">
+            <label>Nombre del emprendimiento</label>
+            <input type="text" id="rg-nombre" placeholder="Mi Negocio S.A.S.">
+          </div>
+          <div class="form-g">
+            <label>Correo electrónico</label>
+            <div class="input-icon-wrap">
+              <span class="input-icon">✉️</span>
+              <input type="email" id="rg-email" placeholder="tu@correo.com">
+            </div>
+            <div style="font-size:11px;color:var(--ink3);margin-top:3px">Con este correo inicias sesión</div>
+          </div>
+          <div class="form-g">
+            <label>Usuario (nombre visible)</label>
+            <input type="text" id="rg-user" placeholder="minegocio (sin espacios)">
+          </div>
+          <div class="form-g">
+            <label>Contraseña</label>
+            <div class="input-icon-wrap">
+              <span class="input-icon">🔒</span>
+              <input type="password" id="rg-pwd" placeholder="Mínimo 6 caracteres"
+                onkeydown="if(event.key==='Enter')doRegistro()">
+            </div>
+          </div>
+          <button class="btn-main" id="btn-reg" onclick="doRegistro()">Crear cuenta</button>
+        </div>
+
+        <div id="blq-recuperar" style="display:none">
+          <div style="text-align:center;margin-bottom:20px">
+            <div style="font-size:28px;margin-bottom:6px">🔑</div>
+            <div style="font-size:15px;font-weight:600">Recuperar contraseña</div>
+            <div style="font-size:12px;color:var(--ink3);margin-top:4px">Te enviaremos un enlace a tu correo</div>
+          </div>
+          <div class="form-g">
+            <label>Tu correo electrónico</label>
+            <input type="email" id="rec-email" placeholder="tu@correo.com"
+              onkeydown="if(event.key==='Enter')doSolicitarRecuperacion()">
+          </div>
+          <button class="btn-main" id="btn-recuperar" onclick="doSolicitarRecuperacion()">Enviar instrucciones</button>
+          <div style="text-align:center;margin-top:12px">
+            <button class="link-btn" onclick="volverALogin()">Volver al inicio de sesión</button>
+          </div>
+        </div>
+
+        <div id="blq-reset" style="display:none">
+          <div style="text-align:center;margin-bottom:20px">
+            <div style="font-size:28px;margin-bottom:6px">🔐</div>
+            <div style="font-size:15px;font-weight:600">Crea tu nueva contraseña</div>
+          </div>
+          <div class="form-g">
+            <label>Nueva contraseña</label>
+            <input type="password" id="reset-pwd" placeholder="Mínimo 6 caracteres">
+          </div>
+          <div class="form-g">
+            <label>Confirmar contraseña</label>
+            <input type="password" id="reset-pwd2" placeholder="Repite la contraseña"
+              onkeydown="if(event.key==='Enter')doNuevaPassword()">
+          </div>
+          <button class="btn-main" id="btn-reset" onclick="doNuevaPassword()">Guardar nueva contraseña</button>
         </div>
       </div>
-      <button class="btn-main" id="btn-login" data-i18n="enter" onclick="doLogin()">Entrar</button>
-    </div>
-
-    <!-- REGISTRO -->
-    <div id="blq-registro" style="display:none">
-      <div class="form-g">
-        <label data-i18n="business_name">Nombre del emprendimiento</label>
-        <input type="text" id="rg-nombre" placeholder="Mi Negocio S.A.S.">
-      </div>
-      <div class="form-g">
-        <label data-i18n="email">Correo electrónico</label>
-        <input type="email" id="rg-email" placeholder="tu@correo.com">
-        <div style="font-size:11px;color:var(--ink3);margin-top:3px" data-i18n="with_this_email">Con este correo inicias sesión</div>
-      </div>
-      <div class="form-g">
-        <label data-i18n="username">Usuario (nombre visible)</label>
-        <input type="text" id="rg-user" placeholder="minegocio (sin espacios)">
-      </div>
-      <div class="form-g">
-        <label data-i18n="password">Contraseña</label>
-        <input type="password" id="rg-pwd" placeholder="Mínimo 6 caracteres"
-          onkeydown="if(event.key==='Enter')doRegistro()">
-      </div>
-      <button class="btn-main" id="btn-reg" data-i18n="create_account" onclick="doRegistro()">Crear cuenta</button>
-    </div>
-
-    <!-- RECUPERAR -->
-    <div id="blq-recuperar" style="display:none">
-      <div style="text-align:center;margin-bottom:20px">
-        <div style="font-size:28px;margin-bottom:6px">🔑</div>
-        <div style="font-size:15px;font-weight:600" data-i18n="recover_title">Recuperar contraseña</div>
-        <div style="font-size:12px;color:var(--ink3);margin-top:4px" data-i18n="recover_sub">Te enviaremos un enlace a tu correo</div>
-      </div>
-      <div class="form-g">
-        <label data-i18n="your_email">Tu correo electrónico</label>
-        <input type="email" id="rec-email" placeholder="tu@correo.com"
-          onkeydown="if(event.key==='Enter')doSolicitarRecuperacion()">
-      </div>
-      <button class="btn-main" id="btn-recuperar" data-i18n="send_instructions" onclick="doSolicitarRecuperacion()">Enviar instrucciones</button>
-      <div style="text-align:center;margin-top:12px">
-        <button class="link-btn" data-i18n="back_to_login" onclick="volverALogin()">Volver al inicio de sesión</button>
-      </div>
-    </div>
-
-    <!-- NUEVA CONTRASEÑA -->
-    <div id="blq-reset" style="display:none">
-      <div style="text-align:center;margin-bottom:20px">
-        <div style="font-size:28px;margin-bottom:6px">🔐</div>
-        <div style="font-size:15px;font-weight:600" data-i18n="new_pwd_title">Crea tu nueva contraseña</div>
-      </div>
-      <div class="form-g">
-        <label data-i18n="new_pwd">Nueva contraseña</label>
-        <input type="password" id="reset-pwd" placeholder="Mínimo 6 caracteres">
-      </div>
-      <div class="form-g">
-        <label data-i18n="confirm_pwd">Confirmar contraseña</label>
-        <input type="password" id="reset-pwd2" placeholder="Repite la contraseña"
-          onkeydown="if(event.key==='Enter')doNuevaPassword()">
-      </div>
-      <button class="btn-main" id="btn-reset" data-i18n="save_new_pwd" onclick="doNuevaPassword()">Guardar nueva contraseña</button>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════
-     PANTALLA APP
-══════════════════════════════ -->
 <div id="screen-app" class="screen">
-
-  <!-- TopBar -->
   <div class="topbar">
     <button class="btn-menu-toggle" id="btn-menu-toggle" onclick="toggleSidebar()">☰</button>
     <div class="topbar-brand">Inven<span>tario</span></div>
-    <span class="topbar-user" id="tb-user"></span>
-    <div class="lang-switch">
-      <button class="lang-btn" data-lang="es" onclick="setLang('es')">ES</button>
-      <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+    <div class="user-menu" id="user-menu">
+      <button class="user-menu-trigger" onclick="toggleUserMenu()">
+        <span class="user-avatar" id="user-avatar">?</span>
+        <span class="user-menu-name" id="tb-user"></span>
+        <span class="user-menu-chevron">▾</span>
+      </button>
+      <div class="user-menu-dropdown">
+        <div class="user-menu-header">
+          <div class="user-menu-header-name" id="user-menu-header-name"></div>
+        </div>
+        <button class="user-menu-item" onclick="closeUserMenu();mostrarModalEliminar()">
+          <span class="user-menu-item-icon">🗑</span> Eliminar cuenta
+        </button>
+        <button class="user-menu-item danger" onclick="doLogout()">
+          <span class="user-menu-item-icon">↪</span> Salir
+        </button>
+      </div>
     </div>
-    <button class="btn-del-account" data-i18n="del_account" onclick="mostrarModalEliminar()">Eliminar cuenta</button>
-    <button class="btn-logout" data-i18n="logout" onclick="doLogout()">Salir</button>
   </div>
 
-  <!-- Overlay para cerrar sidebar en móvil -->
   <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
 
   <div class="app-body">
-
-    <!-- ══ SIDEBAR ══ -->
     <nav class="sidebar" id="sidebar">
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">Sistema</div>
+        <button class="nav-item" id="nav-control" onclick="cambiarModulo('control')">
+          <span class="nav-item-icon" style="background:var(--green3)">🏠</span>
+          <span class="nav-item-text">Control</span>
+        </button>
+      </div>
 
       <div class="sidebar-section">
         <div class="sidebar-label" data-i18n="nav_modules">Módulos</div>
 
-        <!-- Materia Prima -->
         <button class="nav-item active" id="nav-mp" onclick="cambiarModulo('mp')">
-          <span class="nav-item-icon">📋</span>
+          <span class="nav-item-icon" style="background:var(--green3)">📋</span>
           <span class="nav-item-text" data-i18n="nav_mp">Materia Prima</span>
         </button>
         <div class="nav-subtabs visible" id="sub-mp">
@@ -949,15 +628,13 @@ function aplicarIdioma(){
           <button class="nav-sub" id="sub-mp-consultar" onclick="mpTab('consultar')">🔍 <span data-i18n="nav_check_stock">Consultar stock</span></button>
         </div>
 
-        <!-- Producción -->
         <button class="nav-item" id="nav-prod" onclick="cambiarModulo('prod')">
-          <span class="nav-item-icon">🏭</span>
+          <span class="nav-item-icon" style="background:var(--indigo2)">🏭</span>
           <span class="nav-item-text" data-i18n="nav_prod">Producción</span>
         </button>
 
-        <!-- Ventas -->
         <button class="nav-item" id="nav-ventas" onclick="cambiarModulo('ventas')">
-          <span class="nav-item-icon">💰</span>
+          <span class="nav-item-icon" style="background:#FEF3C7">💰</span>
           <span class="nav-item-text" data-i18n="nav_sales">Ventas</span>
         </button>
         <div class="nav-subtabs" id="sub-ventas">
@@ -970,14 +647,12 @@ function aplicarIdioma(){
       <div class="sidebar-section">
         <div class="sidebar-label" data-i18n="nav_monitoring">Monitoreo</div>
         <button class="nav-item" id="nav-alertas" onclick="cambiarModulo('alertas')" style="position:relative">
-          <span class="nav-item-icon">🔔</span>
+          <span class="nav-item-icon" style="background:#FAECE7">🔔</span>
           <span class="nav-item-text" data-i18n="nav_alerts">Alertas de stock</span>
           <span id="alertas-badge" style="display:none;background:var(--red);color:#fff;font-size:10px;font-weight:700;border-radius:20px;padding:1px 7px;min-width:16px;text-align:center">0</span>
         </button>
       </div>
 
-
-      <!-- Footer del sidebar: botón reporte -->
       <div class="sidebar-footer">
         <button class="btn-pdf" id="btn-pdf" onclick="abrirModalReporte()">
           <span class="btn-pdf-icon">📄</span>
@@ -987,11 +662,50 @@ function aplicarIdioma(){
 
     </nav>
 
-    <!-- ══ CONTENIDO ══ -->
     <div class="main-content">
 
-      <!-- ════════ MÓDULO MP ════════ -->
-      <div id="mod-mp" class="modulo">
+      <div id="mod-control" class="modulo" style="display:none">
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:20px;flex-wrap:wrap;gap:10px">
+          <div>
+            <div class="dash-greeting" id="dash-saludo">Buen día</div>
+            <div class="dash-title">Tu negocio hoy</div>
+          </div>
+        </div>
+        <div id="alert-control" class="alert"></div>
+        <div class="grid-4" style="margin-bottom:16px">
+          <div class="kpi-icon-card">
+            <div class="kpi-icon-badge" style="background:var(--green3)">💰</div>
+            <div class="kpi-label">Ventas del mes</div>
+            <div class="kpi-value" id="dc-ventas-mes">$0</div>
+          </div>
+          <div class="kpi-icon-card">
+            <div class="kpi-icon-badge" style="background:var(--green3)">📦</div>
+            <div class="kpi-label">Valor en stock</div>
+            <div class="kpi-value" id="dc-valor-stock">$0</div>
+          </div>
+          <div class="kpi-icon-card">
+            <div class="kpi-icon-badge" style="background:#FAECE7">🔔</div>
+            <div class="kpi-label">Insumos bajos</div>
+            <div class="kpi-value" id="dc-alertas">0</div>
+          </div>
+          <div class="kpi-icon-card">
+            <div class="kpi-icon-badge" style="background:var(--green3)">📊</div>
+            <div class="kpi-label">Utilidad del mes</div>
+            <div class="kpi-value" id="dc-utilidad">$0</div>
+          </div>
+        </div>
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <div class="card-title" style="margin-bottom:0">Últimas ventas</div>
+            <button class="link-btn" style="color:var(--green)" onclick="cambiarModulo('ventas');ventasTab('historial')">Ver todas →</button>
+          </div>
+          <div id="dc-actividad">
+            <div class="empty-state" style="padding:20px 10px"><div style="font-size:12px;color:var(--ink3)">Cargando…</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="mod-mp" class="modulo" style="display:none">
         <div class="panel-header">
           <div class="panel-header-left">
             <div class="panel-title" id="mp-panel-title" data-i18n="mp_entry_title">Entrada de insumo</div>
@@ -1001,7 +715,6 @@ function aplicarIdioma(){
 
         <div id="alert-mp" class="alert"></div>
 
-        <!-- MP: Entrada -->
         <div id="mpanel-entrada" class="panel active">
           <div class="card">
             <div class="card-title" data-i18n="mp_card_title">Registrar compra de insumo</div>
@@ -1056,7 +769,6 @@ function aplicarIdioma(){
           <button class="btn-primary" id="btn-mp-reg" onclick="mpRegistrar()">📥 <span data-i18n="mp_register_entry">Registrar Entrada</span></button>
         </div>
 
-        <!-- MP: Consultar -->
         <div id="mpanel-consultar" class="panel">
           <div class="sel-box">
             <label style="font-size:12px;font-weight:500;white-space:nowrap" data-i18n="mp_select_insumo">Insumo:</label>
@@ -1095,7 +807,6 @@ function aplicarIdioma(){
         </div>
       </div>
 
-      <!-- ════════ MÓDULO PRODUCCIÓN ════════ -->
       <div id="mod-prod" class="modulo" style="display:none">
         <div class="panel-header">
           <div class="panel-header-left">
@@ -1195,7 +906,6 @@ function aplicarIdioma(){
         </div>
       </div>
 
-      <!-- ════════ MÓDULO VENTAS ════════ -->
       <div id="mod-ventas" class="modulo" style="display:none">
         <div class="panel-header">
           <div class="panel-header-left">
@@ -1204,7 +914,6 @@ function aplicarIdioma(){
           </div>
         </div>
 
-        <!-- Ventas: Registrar -->
         <div id="vpanel-registrar" class="panel active">
           <div id="alert-ventas" class="alert"></div>
           <div class="card">
@@ -1228,7 +937,6 @@ function aplicarIdioma(){
               </div>
             </div>
           </div>
-
 
           <div class="card">
             <div class="card-title" data-i18n="sales_price">Precio de Venta</div>
@@ -1271,7 +979,6 @@ function aplicarIdioma(){
           </div>
         </div>
 
-        <!-- Ventas: Stock -->
         <div id="vpanel-stock" class="panel">
           <div id="v-stock-grid" class="grid-3"></div>
           <div id="v-stock-empty" class="empty-state" style="display:none">
@@ -1281,7 +988,6 @@ function aplicarIdioma(){
           </div>
         </div>
 
-        <!-- Ventas: Historial -->
         <div id="vpanel-historial" class="panel">
           <div class="table-wrap">
             <div class="table-head">
@@ -1328,7 +1034,6 @@ function aplicarIdioma(){
         </div>
       </div>
 
-      <!-- ════════ MÓDULO ALERTAS DE STOCK ════════ -->
       <div id="mod-alertas" class="modulo" style="display:none">
         <div class="panel-header">
           <div class="panel-header-left">
@@ -1369,11 +1074,10 @@ function aplicarIdioma(){
         </div>
       </div>
 
-    </div><!-- main-content -->
-  </div><!-- app-body -->
-</div><!-- screen-app -->
+    </div>
+  </div>
+</div>
 
-<!-- Modal eliminar cuenta -->
 <div class="modal-overlay" id="modal-eliminar-cuenta">
   <div class="modal-box">
     <h3 data-i18n="del_account_title">Eliminar mi cuenta</h3>
@@ -1392,7 +1096,6 @@ function aplicarIdioma(){
   </div>
 </div>
 
-<!-- Modal de confirmación genérico (eliminar movimientos, ventas, etc) -->
 <div class="modal-overlay" id="modal-confirmar-app">
   <div class="modal-box" style="max-width:400px">
     <h3 id="mconf-app-title" data-i18n="confirm_action">¿Confirmar acción?</h3>
@@ -1404,7 +1107,6 @@ function aplicarIdioma(){
   </div>
 </div>
 
-<!-- Modal editar movimiento de Materia Prima -->
 <div class="modal-overlay" id="modal-editar-mp">
   <div class="modal-box" style="max-width:420px">
     <h3 data-i18n="edit_purchase">Editar compra</h3>
@@ -1426,7 +1128,6 @@ function aplicarIdioma(){
   </div>
 </div>
 
-<!-- Modal editar venta -->
 <div class="modal-overlay" id="modal-editar-venta">
   <div class="modal-box" style="max-width:420px">
     <h3 data-i18n="edit_sale">Editar venta</h3>
@@ -1470,7 +1171,6 @@ function esc(s){return (s||'').toString().replace(/&/g,'&amp;').replace(/</g,'&l
 function showAlert(id,msg,tipo){var a=document.getElementById(id);a.textContent=msg;a.className='alert '+tipo;a.style.display='block';setTimeout(function(){a.style.display='none'},7000)}
 function hideAlert(id){document.getElementById(id).style.display='none'}
 
-/* ══ SIDEBAR (sin cambios) ══ */
 function toggleSidebar(){
   var sb=document.getElementById('sidebar');
   var ov=document.getElementById('sidebar-overlay');
@@ -1482,18 +1182,24 @@ function closeSidebar(){
   document.getElementById('sidebar').classList.remove('open');
   document.getElementById('sidebar-overlay').classList.remove('visible');
 }
+function toggleUserMenu(){ document.getElementById('user-menu').classList.toggle('open'); }
+function closeUserMenu(){ document.getElementById('user-menu').classList.remove('open'); }
+document.addEventListener('click',function(e){
+  var menu=document.getElementById('user-menu');
+  if(menu && menu.classList.contains('open') && !menu.contains(e.target)) menu.classList.remove('open');
+});
 
-/* ══ NAVEGACIÓN MÓDULOS (sin cambios) ══ */
-var moduloActual = 'mp';
+var moduloActual = 'control';
 function cambiarModulo(mod){
   closeSidebar();
   moduloActual = mod;
-  ['mp','prod','ventas','alertas'].forEach(function(m){
+  ['control','mp','prod','ventas','alertas'].forEach(function(m){
     document.getElementById('nav-'+m).classList.toggle('active',m===mod);
     document.getElementById('mod-'+m).style.display = m===mod?'block':'none';
     var sub = document.getElementById('sub-'+m);
     if(sub) sub.classList.toggle('visible',m===mod);
   });
+  if(mod==='control') cargarControl();
   if(mod==='ventas') cargarPFVentas();
   if(mod==='alertas') cargarAlertas();
   if(mod==='prod') cargarHistorialProducciones();
@@ -1525,9 +1231,6 @@ function ventasTab(tab){
   if(tab==='historial') cargarHistorialVentas();
 }
 
-/* ══════════════════════════════════════════════════════
-   AUTH — esta es la parte que cambia de raíz
-══════════════════════════════════════════════════════ */
 function setAuthTab(tab){
   document.querySelectorAll('.tab-auth button').forEach(function(b,i){
     b.classList.toggle('active',(i===0&&tab==='login')||(i===1&&tab==='registro'));
@@ -1539,7 +1242,6 @@ function setAuthTab(tab){
   hideAlert('alert-auth');
 }
 
-// LOGIN — ahora con correo electrónico
 async function doLogin(){
   var email=document.getElementById('in-user').value.trim();
   var p=document.getElementById('in-pwd').value;
@@ -1571,7 +1273,6 @@ async function doLogin(){
   }
 }
 
-// REGISTRO
 async function doRegistro(){
   var n=document.getElementById('rg-nombre').value.trim();
   var e=document.getElementById('rg-email').value.trim();
@@ -1592,7 +1293,6 @@ async function doRegistro(){
   setAuthTab('login');
 }
 
-// LOGOUT
 async function doLogout(){
   await supabase.auth.signOut();
   SESSION=null;
@@ -1601,7 +1301,6 @@ async function doLogout(){
   setAuthTab('login');
 }
 
-// Verificación de sesión automática al abrir la página
 (async function(){
   var { data:{ session } } = await supabase.auth.getSession();
   if(!session) return;
@@ -1618,8 +1317,12 @@ async function doLogout(){
 function entrarApp(){
   document.getElementById('screen-login').classList.remove('visible');
   document.getElementById('screen-app').classList.add('visible');
-  document.getElementById('tb-user').textContent=SESSION.nombre||SESSION.usuario;
+  var nombreMostrar = SESSION.nombre||SESSION.usuario;
+  document.getElementById('tb-user').textContent=nombreMostrar;
+  document.getElementById('user-avatar').textContent=nombreMostrar.trim().charAt(0).toUpperCase();
+  document.getElementById('user-menu-header-name').textContent=nombreMostrar;
   cargarDatosIniciales();
+  cambiarModulo('control');
 }
 
 function mostrarRecuperacion(){
@@ -1632,7 +1335,6 @@ function mostrarRecuperacion(){
 }
 function volverALogin(){document.getElementById('blq-recuperar').style.display='none';document.getElementById('blq-reset').style.display='none';setAuthTab('login')}
 
-// RECUPERAR CONTRASEÑA — Supabase envía el correo con el link
 async function doSolicitarRecuperacion(){
   var email=document.getElementById('rec-email').value.trim();
   if(!email) return showAlert('alert-auth',t('msg_enter_email'),'err');
@@ -1645,8 +1347,6 @@ async function doSolicitarRecuperacion(){
   showAlert('alert-auth','📧 '+t('msg_recovery_sent'),'ok');
 }
 
-// Cuando el usuario vuelve del link de recuperación, Supabase ya deja
-// una sesión especial de tipo "recovery" activa automáticamente.
 async function doNuevaPassword(){
   var pwd=document.getElementById('reset-pwd').value;
   var pwd2=document.getElementById('reset-pwd2').value;
@@ -1661,8 +1361,6 @@ async function doNuevaPassword(){
   setTimeout(volverALogin,2000);
 }
 
-// Supabase pone la app en modo "recovery" automáticamente vía la URL;
-// detectamos ese evento para mostrar el formulario de nueva contraseña.
 supabase.auth.onAuthStateChange(function(event){
   if(event==='PASSWORD_RECOVERY'){
     document.getElementById('blq-login').style.display='none';
@@ -1686,11 +1384,6 @@ function cerrarModalConfirmar(){
   document.getElementById('modal-confirmar-app').classList.remove('visible');
 }
 
-// NOTA: borrar la cuenta por completo (como hacías en Apps Script) requiere
-// una función especial de administrador (Edge Function) porque el usuario
-// no puede autoeliminarse a sí mismo desde el navegador por seguridad.
-// Por ahora, esta versión quita el acceso a Inventario y cierra la sesión;
-// construimos la eliminación completa cuando lleguemos al panel de Admin.
 async function doEliminarCuenta(){
   var pwd=document.getElementById('del-pwd').value;
   if(!pwd){document.getElementById('del-error').textContent='Ingresa tu contraseña.';document.getElementById('del-error').style.display='block';return}
@@ -1707,9 +1400,46 @@ async function doEliminarCuenta(){
   showAlert('alert-auth',t('msg_del_access'),'ok');
 }
 
-/* ══════════════════════════════════════════════════════
-   DATOS — ahora vía supabase.rpc() en vez de google.script.run
-══════════════════════════════════════════════════════ */
+async function cargarControl(){
+  var hora=(new Date()).getHours();
+  document.getElementById('dash-saludo').textContent = hora<12?'Buen día':hora<19?'Buenas tardes':'Buenas noches';
+
+  var [{data:mpProds},{data:pfProds},{data:ventas},{data:alertas}] = await Promise.all([
+    supabase.rpc('mp_obtener_productos'),
+    supabase.rpc('prod_obtener_pf'),
+    supabase.rpc('ventas_historial'),
+    supabase.rpc('mp_listar_alertas')
+  ]);
+  mpProds=mpProds||[]; pfProds=pfProds||[]; ventas=ventas||[]; alertas=alertas||[];
+
+  var valorStock = mpProds.reduce(function(s,p){return s+(p.stock*p.cpp);},0)
+                  + pfProds.reduce(function(s,p){return s+(p.stock*p.cpp);},0);
+  document.getElementById('dc-valor-stock').textContent = fmt(valorStock);
+
+  var hoy=new Date(); var mesActual=String(hoy.getMonth()+1).padStart(2,'0'); var anioActual=String(hoy.getFullYear());
+  var ventasMes = ventas.filter(function(v){
+    var p=(v.fecha||'').split(' ')[0].split('/');
+    return p.length>=3 && p[1]===mesActual && p[2]===anioActual;
+  });
+  var totalVentasMes = ventasMes.reduce(function(s,v){return s+v.ingresoTotal;},0);
+  var totalUtilMes = ventasMes.reduce(function(s,v){return s+v.utilidad;},0);
+  document.getElementById('dc-ventas-mes').textContent = fmt(totalVentasMes);
+  var elU=document.getElementById('dc-utilidad'); elU.textContent = fmt(totalUtilMes);
+  elU.style.color = totalUtilMes>=0 ? 'var(--green)' : '#993C1D';
+
+  var numAlertas = alertas.filter(function(a){return a.alerta;}).length;
+  document.getElementById('dc-alertas').textContent = numAlertas;
+
+  var cont=document.getElementById('dc-actividad');
+  if(!ventas.length){
+    cont.innerHTML='<div class="empty-state" style="padding:20px 10px"><div class="empty-icon">🛒</div><div style="font-size:12px;color:var(--ink3)">Aún no has registrado ventas</div></div>';
+  } else {
+    cont.innerHTML = ventas.slice(0,5).map(function(v){
+      return '<div class="activity-item"><div class="activity-left"><div class="activity-icon">🧁</div><div><div style="font-size:13px;color:var(--ink)">'+esc(v.producto)+'</div><div style="font-size:11px;color:var(--ink3)">'+esc(v.fecha)+'</div></div></div><div style="font-size:13px;font-weight:500;color:var(--green)">'+fmt(v.ingresoTotal)+'</div></div>';
+    }).join('');
+  }
+}
+
 async function cargarDatosIniciales(){
   var { data: lista } = await supabase.rpc('mp_obtener_productos');
   lista = lista || [];
@@ -1730,7 +1460,6 @@ async function cargarDatosIniciales(){
   actualizarBadgeAlertas();
 }
 
-/* ══ ALERTAS DE STOCK ══ */
 async function actualizarBadgeAlertas(){
   var { data: lista } = await supabase.rpc('mp_listar_alertas');
   lista = lista || [];
@@ -1789,8 +1518,8 @@ async function guardarPuntoReorden(producto, valor){
 function toastAlertaSimple(msg){
   showAlert('alert-alertas', msg, 'err');
 }
-
-/* ══ MP ══ */
+</script>
+<script>
 function onMpNombreInput(){
   var val=document.getElementById('mp-nombre').value.trim();
   var p=mpProductos.find(function(x){return x.nombre.toLowerCase()===val.toLowerCase()});
@@ -1897,7 +1626,6 @@ function toastSimpleModal(msg){
   el.textContent = msg; el.style.display='block';
 }
 
-/* ══ PRODUCCIÓN (los cálculos/armado de arrays son iguales, solo cambia la llamada) ══ */
 function prodResetCalc(){ultimoCalcProd=null;document.getElementById('btn-prod-reg').disabled=true;document.getElementById('prod-preview').style.display='none'}
 function prodUnidadesChange(){prodResetCalc();document.querySelectorAll('.cf-row').forEach(function(r){calcCfPrev(r.id)});document.querySelectorAll('.mo-row').forEach(function(r){calcMoPrev(r.id)})}
 
@@ -2051,8 +1779,8 @@ function prodEliminarRegistro(id, producto){
     }
   );
 }
-
-/* ══ VENTAS ══ */
+</script>
+<script>
 async function cargarPFVentas(){
   var { data: lista } = await supabase.rpc('prod_obtener_pf');
   lista = lista || [];
@@ -2244,7 +1972,6 @@ async function guardarEdicionVenta(){
   } else { errEl.textContent=res.mensaje; errEl.style.display='block'; }
 }
 
-/* ══ REPORTE PDF — igual que antes, solo cambia CÓMO trae los datos ══ */
 var periodoSeleccionado = 'total';
 
 function abrirModalReporte() {
@@ -2317,7 +2044,6 @@ async function ejecutarReporte() {
   }
 }
 
-// ─── Filtrar ventas por período ─────────────────────────────────────────────
 function filtrarVentasPorPeriodo(ventas, desde, hasta) {
   if (!desde && !hasta) return ventas;
   return ventas.filter(function(v) {
@@ -2330,8 +2056,8 @@ function filtrarVentasPorPeriodo(ventas, desde, hasta) {
     return ok;
   });
 }
-
-// ─── GENERADOR PDF RICO ──────────────────────────────────────────────────────
+</script>
+<script>
 function generarPDFRico(datos, filtroDesde, filtroHasta, labelPeriodo) {
   var doc = new window.jspdf.jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
   var W   = doc.internal.pageSize.getWidth();
@@ -2340,7 +2066,7 @@ function generarPDFRico(datos, filtroDesde, filtroHasta, labelPeriodo) {
   var y   = 0;
 
   var nombreUsuario = SESSION ? (SESSION.nombre||SESSION.usuario) : 'Usuario';
-  var fechaGen = new Date().toLocaleDateString(LANG==='en'?'en-US':'es-CO',{
+  var fechaGen = new Date().toLocaleDateString('es-CO',{
     day:'2-digit', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit'
   });
 
@@ -2669,7 +2395,6 @@ function generarPDFRico(datos, filtroDesde, filtroHasta, labelPeriodo) {
 function descargarReporte() { abrirModalReporte(); }
 </script>
 
-<!-- Modal selector período reporte -->
 <div class="modal-reporte-overlay" id="modal-reporte">
   <div class="modal-reporte-box">
     <div class="modal-reporte-title">📄 <span data-i18n="gen_report_title">Generar Reporte</span></div>
@@ -2702,9 +2427,7 @@ function descargarReporte() { abrirModalReporte(); }
   </div>
 </div>
 
-<!-- Toast descarga PDF -->
 <div class="download-toast" id="download-toast"></div>
-<!-- Banner instalación iOS -->
 <div id="ios-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:var(--ink);color:#fff;padding:14px 16px;padding-bottom:calc(14px + env(safe-area-inset-bottom));z-index:999;font-size:13px;text-align:center">
   📲 Para usar sin problemas en iPhone: toca <strong>Compartir</strong> → <strong>Agregar a pantalla de inicio</strong>
   <button onclick="document.getElementById('ios-banner').style.display='none'" style="background:none;border:none;color:#aaa;font-size:18px;position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer">✕</button>
