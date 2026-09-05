@@ -43,17 +43,29 @@ button{font-family:var(--font-sans);cursor:pointer;border:none;border-radius:var
 .screen{display:none;min-height:100vh}
 .screen.visible{display:flex}
 
-#screen-login{align-items:center;justify-content:center;background:var(--bg);flex-direction:column;padding:16px}
-.login-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r2);padding:32px 28px;width:100%;max-width:420px;box-shadow:var(--shadow)}
-.login-logo{text-align:center;margin-bottom:24px}
-.login-logo h1{font-size:28px;color:var(--ink);letter-spacing:-.5px}
-.login-logo span{font-size:12px;color:var(--ink3);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.1em}
-.tab-auth{display:flex;gap:0;background:var(--bg3);border-radius:var(--r);padding:3px;margin-bottom:20px}
-.tab-auth button{flex:1;padding:9px 6px;background:none;border-radius:7px;font-size:12px;color:var(--ink2);transition:all .15s;font-weight:500}
-.tab-auth button.active{background:var(--bg2);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+#screen-login{align-items:center;justify-content:center;background:var(--bg);padding:16px}
+.login-wrap{display:flex;width:100%;max-width:860px;background:var(--bg2);border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(180,83,9,.14),0 4px 16px rgba(0,0,0,.06);min-height:600px}
+.login-brand-panel{flex:0 0 40%;background:var(--amber2);position:relative;overflow:hidden;padding:40px 32px;display:flex;flex-direction:column;justify-content:space-between;color:#fff}
+.login-brand-panel::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.08)}
+.login-brand-panel::after{content:'';position:absolute;bottom:-90px;left:-50px;width:260px;height:260px;border-radius:50%;background:rgba(255,255,255,.06)}
+.login-brand-top{position:relative;z-index:1}
+.login-brand-mark{width:46px;height:46px;border-radius:14px;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:24px}
+.login-brand-title{font-family:var(--font-serif);font-size:30px;line-height:1.15;margin-bottom:10px}
+.login-brand-sub{font-size:13px;color:rgba(255,255,255,.85);line-height:1.6;max-width:230px}
+.login-brand-badge{position:relative;z-index:1;display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.18);border-radius:20px;padding:8px 14px;font-size:12px;font-weight:600;width:fit-content}
+.login-form-panel{flex:1;padding:40px 36px;display:flex;flex-direction:column;justify-content:center;position:relative}
+.login-card{width:100%;max-width:340px;margin:0 auto}
+.login-form-title{font-family:var(--font-serif);font-size:24px;color:var(--ink);margin-bottom:4px}
+.login-form-sub{font-size:13px;color:var(--ink3);margin-bottom:22px}
+.tab-auth{display:flex;gap:0;background:var(--bg3);border-radius:12px;padding:4px;margin-bottom:22px}
+.tab-auth button{flex:1;padding:10px 6px;background:none;border-radius:9px;font-size:12px;color:var(--ink2);transition:all .15s;font-weight:600}
+.tab-auth button.active{background:var(--bg2);color:var(--amber4);box-shadow:0 1px 4px rgba(0,0,0,.1)}
 .form-g{margin-bottom:14px}
 .form-g label{display:block;font-size:11px;font-weight:600;color:var(--ink2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
 .form-g .hint{font-size:11px;color:var(--ink3);margin-top:3px}
+.input-icon-wrap{position:relative}
+.input-icon-wrap input{padding-left:38px}
+.input-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:15px;opacity:.55;pointer-events:none}
 .btn-main{width:100%;padding:13px;background:var(--amber2);color:#fff;font-size:15px;font-weight:600;border-radius:var(--r);margin-top:6px;transition:background .15s}
 .btn-main:hover{background:var(--amber)}
 .btn-main:disabled{background:var(--ink3);cursor:not-allowed}
@@ -62,28 +74,48 @@ button{font-family:var(--font-sans);cursor:pointer;border:none;border-radius:var
 .alert.err{background:var(--red2);color:var(--red);border-color:var(--red3)}
 .alert.warn{background:var(--amber3);color:var(--amber4);border-color:var(--amber2)}
 .link-btn{background:none;border:none;color:var(--ink3);font-size:12px;cursor:pointer;text-decoration:underline;padding:0;font-family:var(--font-sans)}
+@media(max-width:768px){
+  .login-wrap{flex-direction:column;max-width:420px;min-height:0;border-radius:20px}
+  .login-brand-panel{flex:none;padding:28px 24px 24px;min-height:0}
+  .login-brand-title{font-size:24px}
+  .login-brand-sub{display:none}
+  .login-brand-panel::after{display:none}
+  .login-form-panel{padding:28px 24px}
+}
 
 #screen-app{flex-direction:column}
 .topbar{height:52px;background:var(--bg2);border-bottom:1.5px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:10px;position:fixed;top:0;left:0;right:0;z-index:200}
-.topbar-brand{font-family:var(--font-serif);font-size:18px;color:var(--ink);letter-spacing:-.3px;margin-right:auto}
+.topbar-brand{font-family:var(--font-serif);font-size:18px;color:var(--ink);letter-spacing:-.3px}
 .topbar-brand span{color:var(--amber2)}
-.topbar-user{font-size:11px;color:var(--ink2);font-family:var(--font-mono);max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.btn-logout{padding:6px 12px;background:var(--bg3);color:var(--ink2);font-size:12px;border-radius:6px;border:1.5px solid var(--border);transition:all .15s}
-.btn-logout:hover{background:var(--red2);color:var(--red);border-color:var(--red3)}
-.btn-del-account{padding:6px 10px;background:none;color:var(--ink3);font-size:11px;border-radius:6px;border:1px solid transparent;transition:all .15s}
-.btn-del-account:hover{color:var(--red);border-color:var(--red3);background:var(--red2)}
-@media(max-width:680px){.btn-del-account{display:none}}
 .btn-menu-toggle{display:none;padding:6px 10px;background:var(--bg3);color:var(--ink2);font-size:18px;border-radius:6px;border:1.5px solid var(--border);line-height:1}
+
+.user-menu{position:relative;margin-left:auto}
+.user-menu-trigger{display:flex;align-items:center;gap:9px;padding:6px 10px 6px 6px;background:none;border:1.5px solid transparent;border-radius:24px;cursor:pointer;transition:all .15s;font-family:var(--font-sans)}
+.user-menu-trigger:hover{background:var(--bg3);border-color:var(--border)}
+.user-avatar{width:30px;height:30px;border-radius:50%;background:var(--amber2);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;font-family:var(--font-serif)}
+.user-menu-name{font-size:12.5px;font-weight:600;color:var(--ink);max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.user-menu-chevron{font-size:9px;color:var(--ink3);transition:transform .2s;flex-shrink:0}
+.user-menu.open .user-menu-chevron{transform:rotate(180deg)}
+.user-menu-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;box-shadow:0 10px 32px rgba(0,0,0,.12);min-width:200px;padding:6px;display:none;z-index:250}
+.user-menu.open .user-menu-dropdown{display:block}
+.user-menu-header{padding:10px 12px;border-bottom:1px solid var(--bg3);margin-bottom:6px}
+.user-menu-header-name{font-size:13px;font-weight:600;color:var(--ink)}
+.user-menu-item{display:flex;align-items:center;gap:10px;width:100%;padding:9px 12px;background:none;border:none;border-radius:9px;font-size:13px;color:var(--ink2);text-align:left;cursor:pointer;transition:background .15s;font-family:var(--font-sans)}
+.user-menu-item:hover{background:var(--bg3)}
+.user-menu-item.danger{color:var(--red)}
+.user-menu-item.danger:hover{background:var(--red2)}
+.user-menu-item-icon{width:16px;text-align:center;flex-shrink:0;font-size:13px}
 
 .app-body{display:flex;padding-top:52px;min-height:100vh}
 .sidebar{width:220px;background:var(--bg2);border-right:1.5px solid var(--border);position:fixed;top:52px;bottom:0;left:0;display:flex;flex-direction:column;overflow-y:auto;z-index:100;transition:transform .25s}
-.sidebar-section{padding:16px 12px 8px}
-.sidebar-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--ink3);padding:0 8px;margin-bottom:6px}
-.nav-item{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;background:none;border-radius:var(--r);font-size:13px;font-weight:500;color:var(--ink2);transition:all .15s;text-align:left;position:relative}
+.sidebar-section{padding:18px 12px 10px}
+.sidebar-section:not(:first-child){border-top:1px solid var(--bg3);margin-top:2px}
+.sidebar-label{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--ink3);padding:0 10px;margin-bottom:10px}
+.nav-item{display:flex;align-items:center;gap:11px;width:100%;padding:8px 10px;background:none;border-radius:12px;font-size:13.5px;font-weight:500;color:var(--ink2);transition:all .15s;text-align:left;position:relative;margin-bottom:2px}
 .nav-item:hover{background:var(--bg3);color:var(--ink)}
 .nav-item.active{background:var(--amber3);color:var(--amber4);font-weight:600}
-.nav-item.active::before{content:'';position:absolute;left:0;top:20%;bottom:20%;width:3px;background:var(--amber2);border-radius:0 2px 2px 0}
-.nav-item-icon{font-size:16px;width:20px;text-align:center;flex-shrink:0}
+.nav-item-icon{width:30px;height:30px;border-radius:9px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;transition:background .15s}
+.nav-item.active .nav-item-icon{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.08)}
 .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:99}
 .sidebar-overlay.visible{display:block}
 .main-content{flex:1;margin-left:220px;padding:24px;min-width:0}
@@ -97,6 +129,10 @@ button{font-family:var(--font-sans);cursor:pointer;border:none;border-radius:var
 .kpi-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--ink3);margin-bottom:6px}
 .kpi-value{font-family:var(--font-serif);font-size:22px;color:var(--ink)}
 .kpi-sub{font-size:11px;color:var(--ink3);margin-top:3px}
+.kpi-icon-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px}
+.kpi-icon-badge{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-size:17px}
+.dash-greeting{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--ink3);margin-bottom:4px}
+.dash-title{font-family:var(--font-serif);font-size:26px;color:var(--ink)}
 .panel-header{margin-bottom:20px;padding-bottom:16px;border-bottom:1.5px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
 .panel-title{font-family:var(--font-serif);font-size:24px;color:var(--ink);margin-bottom:2px}
 .panel-sub{font-size:12px;color:var(--ink3)}
@@ -105,6 +141,7 @@ button{font-family:var(--font-sans);cursor:pointer;border:none;border-radius:var
 .btn-primary:hover{background:var(--amber)}
 .btn-outline{padding:10px 16px;background:var(--bg2);color:var(--amber2);border:1.5px solid var(--amber2);font-size:13px;font-weight:500;border-radius:var(--r);transition:all .15s}
 .btn-outline:hover{background:var(--amber3)}
+.btn-outline.active{background:var(--amber2);color:#fff}
 .btn-sm{padding:6px 12px;font-size:12px;font-weight:500;border-radius:6px}
 .btn-add{width:100%;padding:11px;border:2px dashed var(--border2);background:var(--bg);color:var(--ink2);font-size:13px;border-radius:var(--r);transition:all .15s}
 .btn-add:hover{border-color:var(--amber2);color:var(--amber2);background:var(--amber3)}
@@ -113,6 +150,10 @@ button{font-family:var(--font-sans);cursor:pointer;border:none;border-radius:var
 .icon-btn{padding:6px 10px;background:var(--bg3);border:1.5px solid var(--border);color:var(--ink2);font-size:13px;border-radius:6px;transition:all .15s;cursor:pointer}
 .icon-btn:hover{background:var(--amber3);color:var(--amber4);border-color:var(--amber2)}
 .btn-row{display:flex;gap:10px;flex-wrap:wrap}
+
+.pago-toggle{display:flex;gap:8px;margin-top:2px}
+.pago-opt{flex:1;padding:11px 8px;border:1.5px solid var(--border2);border-radius:var(--r);font-size:13px;font-weight:500;text-align:center;background:var(--bg2);color:var(--ink2);transition:all .15s;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
+.pago-opt.active{border-color:var(--amber2);background:var(--amber3);color:var(--amber4);font-weight:600}
 
 .table-wrap{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r2);overflow:hidden}
 .table-head{padding:12px 16px;border-bottom:1.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
@@ -129,6 +170,8 @@ tbody tr:hover{background:var(--bg)}
 .badge-fijo{background:var(--red2);color:var(--red)}
 .badge-variable{background:var(--amber3);color:var(--amber4)}
 .badge-blue{background:var(--blue3);color:var(--blue)}
+.badge-efectivo{background:var(--green3);color:var(--green)}
+.badge-transferencia{background:var(--blue3);color:var(--blue)}
 
 .filter-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .filter-row select,.filter-row input{width:auto;flex:1;min-width:100px}
@@ -160,14 +203,13 @@ tbody tr:hover{background:var(--bg)}
 .toast.ok{background:var(--green)}
 .toast.err{background:var(--red)}
 
-.sidebar-footer{margin-top:auto;padding:12px;border-top:1.5px solid var(--border)}
-.btn-pdf-side{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;background:var(--amber3);border:1.5px solid rgba(180,83,9,.3);border-radius:var(--r);font-size:13px;font-weight:600;color:var(--amber4);transition:all .2s}
+.sidebar-footer{margin-top:auto;padding:14px 12px;border-top:1px solid var(--bg3)}
+.btn-pdf-side{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;background:var(--amber3);border:1.5px solid rgba(180,83,9,.3);border-radius:12px;font-size:13px;font-weight:600;color:var(--amber4);transition:all .2s}
 .btn-pdf-side:hover{background:var(--amber2);color:#fff;border-color:var(--amber2)}
 
 @media(max-width:900px){.grid-4{grid-template-columns:1fr 1fr}}
 @media(max-width:680px){
   .btn-menu-toggle{display:flex;align-items:center;justify-content:center}
-  .topbar-user{display:none}
   .sidebar{transform:translateX(-100%)}
   .sidebar.open{transform:translateX(0);box-shadow:4px 0 20px rgba(0,0,0,.15)}
   .main-content{margin-left:0;padding:16px}
@@ -194,69 +236,113 @@ tbody tr:hover{background:var(--bg)}
 
 <!-- ════════ LOGIN ════════ -->
 <div id="screen-login" class="screen visible">
-  <div class="login-card">
-    <div class="login-logo">
-      <h1>Turnos</h1>
-      <span>Ingresos y gastos para conductores</span>
+  <div class="login-wrap">
+    <div class="login-brand-panel">
+      <div class="login-brand-top">
+        <div class="login-brand-mark">🚗</div>
+        <div class="login-brand-title">Servicio de <em style="font-style:normal;opacity:.85">Carro</em></div>
+        <div class="login-brand-sub">Ingresos y gastos para conductores de plataformas</div>
+      </div>
+      <div class="login-brand-badge">🎁 <span>3 días gratis, sin tarjeta</span></div>
     </div>
 
-    <div id="alert-auth" class="alert"></div>
+    <div class="login-form-panel">
+      <div class="login-card">
+        <div id="alert-auth" class="alert"></div>
 
-    <div id="blq-login">
-      <div class="form-g"><label>Correo electrónico</label>
-        <input type="email" id="in-user" placeholder="tu@correo.com" autocomplete="username">
-      </div>
-      <div class="form-g"><label>Contraseña</label>
-        <input type="password" id="in-pwd" placeholder="••••••••" autocomplete="current-password"
-          onkeydown="if(event.key==='Enter')doLogin()">
-        <div style="text-align:right;margin-top:6px">
-          <button class="link-btn" onclick="mostrarRecuperacion()">¿Olvidaste tu contraseña?</button>
+        <div class="tab-auth">
+          <button class="active" id="tab-btn-login" onclick="setAuthTab('login')">Entrar</button>
+          <button id="tab-btn-registro" onclick="setAuthTab('registro')">Crear cuenta</button>
+        </div>
+
+        <div id="blq-login">
+          <div class="login-form-title">Bienvenido de vuelta</div>
+          <div class="login-form-sub">Entra a tu cuenta para continuar</div>
+          <div class="form-g">
+            <label>Correo electrónico</label>
+            <div class="input-icon-wrap">
+              <span class="input-icon">✉️</span>
+              <input type="email" id="in-user" placeholder="tu@correo.com" autocomplete="username">
+            </div>
+          </div>
+          <div class="form-g">
+            <label>Contraseña</label>
+            <div class="input-icon-wrap">
+              <span class="input-icon">🔒</span>
+              <input type="password" id="in-pwd" placeholder="••••••••" autocomplete="current-password"
+                onkeydown="if(event.key==='Enter')doLogin()">
+            </div>
+            <div style="text-align:right;margin-top:6px">
+              <button class="link-btn" onclick="mostrarRecuperacion()">¿Olvidaste tu contraseña?</button>
+            </div>
+          </div>
+          <button class="btn-main" id="btn-login" onclick="doLogin()">Entrar</button>
+        </div>
+
+        <div id="blq-registro" style="display:none">
+          <div class="login-form-title">Crea tu cuenta</div>
+          <div class="login-form-sub">Empieza gratis en menos de un minuto</div>
+          <div class="form-g">
+            <label>Nombre (opcional)</label>
+            <input type="text" id="rg-nombre" placeholder="Tu nombre">
+          </div>
+          <div class="form-g">
+            <label>Correo electrónico</label>
+            <div class="input-icon-wrap">
+              <span class="input-icon">✉️</span>
+              <input type="email" id="rg-email" placeholder="tu@correo.com">
+            </div>
+            <div class="hint">Con este correo inicias sesión</div>
+          </div>
+          <div class="form-g">
+            <label>Usuario (nombre visible)</label>
+            <input type="text" id="rg-user" placeholder="tuusuario (sin espacios)">
+          </div>
+          <div class="form-g">
+            <label>Contraseña</label>
+            <div class="input-icon-wrap">
+              <span class="input-icon">🔒</span>
+              <input type="password" id="rg-pwd" placeholder="Mínimo 6 caracteres"
+                onkeydown="if(event.key==='Enter')doRegistro()">
+            </div>
+          </div>
+          <button class="btn-main" id="btn-reg" onclick="doRegistro()">Crear cuenta</button>
+        </div>
+
+        <div id="blq-recuperar" style="display:none">
+          <div style="text-align:center;margin-bottom:20px">
+            <div style="font-size:28px;margin-bottom:6px">🔑</div>
+            <div style="font-size:15px;font-weight:600">Recuperar contraseña</div>
+            <div style="font-size:12px;color:var(--ink3);margin-top:4px">Te enviaremos un enlace a tu correo</div>
+          </div>
+          <div class="form-g">
+            <label>Tu correo electrónico</label>
+            <input type="email" id="rec-email" placeholder="tu@correo.com"
+              onkeydown="if(event.key==='Enter')doRecuperar()">
+          </div>
+          <button class="btn-main" id="btn-recuperar" onclick="doRecuperar()">Enviar instrucciones</button>
+          <div style="text-align:center;margin-top:12px">
+            <button class="link-btn" onclick="volverLogin()">Volver al inicio de sesión</button>
+          </div>
+        </div>
+
+        <div id="blq-reset" style="display:none">
+          <div style="text-align:center;margin-bottom:20px">
+            <div style="font-size:28px;margin-bottom:6px">🔐</div>
+            <div style="font-size:15px;font-weight:600">Nueva contraseña</div>
+          </div>
+          <div class="form-g">
+            <label>Nueva contraseña</label>
+            <input type="password" id="reset-pwd" placeholder="Mínimo 6 caracteres">
+          </div>
+          <div class="form-g">
+            <label>Confirmar contraseña</label>
+            <input type="password" id="reset-pwd2" placeholder="Repite la contraseña"
+              onkeydown="if(event.key==='Enter')doNuevaPwd()">
+          </div>
+          <button class="btn-main" id="btn-reset" onclick="doNuevaPwd()">Guardar contraseña</button>
         </div>
       </div>
-      <button class="btn-main" id="btn-login" onclick="doLogin()">Entrar</button>
-    </div>
-
-    <div id="blq-registro" style="display:none">
-      <div class="form-g"><label>Nombre (opcional)</label>
-        <input type="text" id="rg-nombre" placeholder="Tu nombre"></div>
-      <div class="form-g"><label>Correo electrónico</label>
-        <input type="email" id="rg-email" placeholder="tu@correo.com">
-        <div class="hint">Con este correo inicias sesión</div>
-      </div>
-      <div class="form-g"><label>Usuario (nombre visible)</label>
-        <input type="text" id="rg-user" placeholder="tuusuario (sin espacios)"></div>
-      <div class="form-g"><label>Contraseña</label>
-        <input type="password" id="rg-pwd" placeholder="Mínimo 6 caracteres"
-          onkeydown="if(event.key==='Enter')doRegistro()"></div>
-      <button class="btn-main" id="btn-reg" onclick="doRegistro()">Crear cuenta</button>
-    </div>
-
-    <div id="blq-recuperar" style="display:none">
-      <div style="text-align:center;margin-bottom:20px">
-        <div style="font-size:28px;margin-bottom:6px">🔑</div>
-        <div style="font-size:15px;font-weight:600">Recuperar contraseña</div>
-        <div style="font-size:12px;color:var(--ink3);margin-top:4px">Te enviaremos un enlace a tu correo</div>
-      </div>
-      <div class="form-g"><label>Tu correo electrónico</label>
-        <input type="email" id="rec-email" placeholder="tu@correo.com"
-          onkeydown="if(event.key==='Enter')doRecuperar()"></div>
-      <button class="btn-main" id="btn-recuperar" onclick="doRecuperar()">Enviar instrucciones</button>
-      <div style="text-align:center;margin-top:12px">
-        <button class="link-btn" onclick="volverLogin()">Volver al inicio de sesión</button>
-      </div>
-    </div>
-
-    <div id="blq-reset" style="display:none">
-      <div style="text-align:center;margin-bottom:20px">
-        <div style="font-size:28px;margin-bottom:6px">🔐</div>
-        <div style="font-size:15px;font-weight:600">Nueva contraseña</div>
-      </div>
-      <div class="form-g"><label>Nueva contraseña</label>
-        <input type="password" id="reset-pwd" placeholder="Mínimo 6 caracteres"></div>
-      <div class="form-g"><label>Confirmar contraseña</label>
-        <input type="password" id="reset-pwd2" placeholder="Repite la contraseña"
-          onkeydown="if(event.key==='Enter')doNuevaPwd()"></div>
-      <button class="btn-main" id="btn-reset" onclick="doNuevaPwd()">Guardar contraseña</button>
     </div>
   </div>
 </div>
@@ -265,10 +351,25 @@ tbody tr:hover{background:var(--bg)}
 <div id="screen-app" class="screen">
   <div class="topbar">
     <button class="btn-menu-toggle" onclick="toggleSidebar()">☰</button>
-    <div class="topbar-brand">Turnos</div>
-    <span class="topbar-user" id="tb-user"></span>
-    <button class="btn-del-account" onclick="mostrarModalEliminar()">Eliminar cuenta</button>
-    <button class="btn-logout" onclick="doLogout()">Salir</button>
+    <div class="topbar-brand">Servicio de <span>Carro</span></div>
+    <div class="user-menu" id="user-menu">
+      <button class="user-menu-trigger" onclick="toggleUserMenu()">
+        <span class="user-avatar" id="user-avatar">?</span>
+        <span class="user-menu-name" id="tb-user"></span>
+        <span class="user-menu-chevron">▾</span>
+      </button>
+      <div class="user-menu-dropdown">
+        <div class="user-menu-header">
+          <div class="user-menu-header-name" id="user-menu-header-name"></div>
+        </div>
+        <button class="user-menu-item" onclick="closeUserMenu();mostrarModalEliminar()">
+          <span class="user-menu-item-icon">🗑</span> Eliminar cuenta
+        </button>
+        <button class="user-menu-item danger" onclick="doLogout()">
+          <span class="user-menu-item-icon">↪</span> Salir
+        </button>
+      </div>
+    </div>
   </div>
 
   <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
@@ -278,22 +379,22 @@ tbody tr:hover{background:var(--bg)}
       <div class="sidebar-section">
         <div class="sidebar-label">Sistema</div>
         <button class="nav-item active" id="nav-dashboard" onclick="cambiarMod('dashboard')">
-          <span class="nav-item-icon">📊</span>Control
+          <span class="nav-item-icon" style="background:var(--amber3)">📊</span>Control
         </button>
         <button class="nav-item" id="nav-viaje" onclick="cambiarMod('viaje')">
-          <span class="nav-item-icon">🚗</span>Registrar Viaje
+          <span class="nav-item-icon" style="background:var(--amber3)">🚗</span>Registrar Viaje
         </button>
         <button class="nav-item" id="nav-historial" onclick="cambiarMod('historial')">
-          <span class="nav-item-icon">🗂️</span>Historial de Viajes
+          <span class="nav-item-icon" style="background:var(--amber3)">🗂️</span>Historial de Viajes
         </button>
       </div>
       <div class="sidebar-section">
         <div class="sidebar-label">Finanzas</div>
         <button class="nav-item" id="nav-gastos" onclick="cambiarMod('gastos')">
-          <span class="nav-item-icon">💸</span>Gastos
+          <span class="nav-item-icon" style="background:#FAECE7">💸</span>Gastos
         </button>
         <button class="nav-item" id="nav-comparar" onclick="cambiarMod('comparar')">
-          <span class="nav-item-icon">⚖️</span>Comparar Plataformas
+          <span class="nav-item-icon" style="background:var(--blue3)">⚖️</span>Comparar Plataformas
         </button>
       </div>
       <div class="sidebar-footer">
@@ -307,24 +408,37 @@ tbody tr:hover{background:var(--bg)}
 
       <!-- ════ DASHBOARD ════ -->
       <div id="mod-dashboard" class="modulo">
-        <div class="panel-header">
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:20px;flex-wrap:wrap;gap:10px">
           <div>
-            <div class="panel-title">Control</div>
-            <div class="panel-sub" id="dash-periodo-label">Cargando datos…</div>
+            <div class="dash-greeting" id="dash-saludo">Buen día</div>
+            <div class="dash-title">Tu turno hoy</div>
+            <div class="panel-sub" id="dash-periodo-label" style="margin-top:2px">Cargando datos…</div>
           </div>
         </div>
         <div id="alert-dash" class="alert"></div>
         <div class="grid-4" style="margin-bottom:16px">
-          <div class="kpi"><div class="kpi-label">Ingresos (mes)</div>
+          <div class="kpi-icon-card">
+            <div class="kpi-icon-badge" style="background:var(--green3)">💰</div>
+            <div class="kpi-label">Ingresos (mes)</div>
             <div class="kpi-value" id="kpi-ing" style="color:var(--green)">$0</div>
-            <div class="kpi-sub" id="kpi-ing-sub">0 viajes</div></div>
-          <div class="kpi"><div class="kpi-label">Gastos (mes)</div>
-            <div class="kpi-value" id="kpi-gas" style="color:var(--red)">$0</div></div>
-          <div class="kpi"><div class="kpi-label">Utilidad Neta</div>
+            <div class="kpi-sub" id="kpi-ing-sub">0 viajes</div>
+          </div>
+          <div class="kpi-icon-card">
+            <div class="kpi-icon-badge" style="background:#FAECE7">💸</div>
+            <div class="kpi-label">Gastos (mes)</div>
+            <div class="kpi-value" id="kpi-gas" style="color:var(--red)">$0</div>
+          </div>
+          <div class="kpi-icon-card">
+            <div class="kpi-icon-badge" style="background:var(--amber3)">📊</div>
+            <div class="kpi-label">Utilidad Neta</div>
             <div class="kpi-value" id="kpi-util">$0</div>
-            <div class="kpi-sub" id="kpi-margen-sub"></div></div>
-          <div class="kpi"><div class="kpi-label">Promedio por viaje</div>
-            <div class="kpi-value" id="kpi-prom" style="color:var(--amber2)">$0</div></div>
+            <div class="kpi-sub" id="kpi-margen-sub"></div>
+          </div>
+          <div class="kpi-icon-card">
+            <div class="kpi-icon-badge" style="background:var(--amber3)">🚗</div>
+            <div class="kpi-label">Promedio por viaje</div>
+            <div class="kpi-value" id="kpi-prom" style="color:var(--amber2)">$0</div>
+          </div>
         </div>
         <div class="grid-2">
           <div class="card">
@@ -332,9 +446,13 @@ tbody tr:hover{background:var(--bg)}
             <div id="graf-plataformas-dash"><div class="empty-state" style="padding:20px 10px"><div style="font-size:12px;color:var(--ink3)">Sin datos este mes</div></div></div>
           </div>
           <div class="card">
-            <div class="card-title" style="color:var(--red)">💸 Gastos por categoría (mes)</div>
-            <div id="graf-gastos-dash"><div class="empty-state" style="padding:20px 10px"><div style="font-size:12px;color:var(--ink3)">Sin datos este mes</div></div></div>
+            <div class="card-title" style="color:var(--blue)">💳 Ingresos por método de pago (mes)</div>
+            <div id="graf-pagos-dash"><div class="empty-state" style="padding:20px 10px"><div style="font-size:12px;color:var(--ink3)">Sin datos este mes</div></div></div>
           </div>
+        </div>
+        <div class="card">
+          <div class="card-title" style="color:var(--red)">💸 Gastos por categoría (mes)</div>
+          <div id="graf-gastos-dash"><div class="empty-state" style="padding:20px 10px"><div style="font-size:12px;color:var(--ink3)">Sin datos este mes</div></div></div>
         </div>
       </div>
 
@@ -363,6 +481,14 @@ tbody tr:hover{background:var(--bg)}
             </div>
           </div>
           <div class="form-g">
+            <label>¿Cómo te pagaron?</label>
+            <div class="pago-toggle">
+              <button type="button" class="pago-opt active" id="v-pago-efectivo" onclick="setMetodoPagoViaje('efectivo')">💵 Efectivo</button>
+              <button type="button" class="pago-opt" id="v-pago-transferencia" onclick="setMetodoPagoViaje('transferencia')">🏦 Transferencia</button>
+            </div>
+            <input type="hidden" id="v-metodo-pago" value="efectivo">
+          </div>
+          <div class="form-g">
             <label>Notas (opcional)</label>
             <input type="text" id="v-notas" placeholder="Ej: turno de la noche…">
           </div>
@@ -379,6 +505,11 @@ tbody tr:hover{background:var(--bg)}
         <div id="alert-historial" class="alert"></div>
         <div class="filter-row" style="margin-bottom:14px">
           <select id="f-plataforma" onchange="filtrarViajes()"><option value="">Todas las plataformas</option></select>
+          <select id="f-metodo-pago" onchange="filtrarViajes()">
+            <option value="">Todos los pagos</option>
+            <option value="efectivo">💵 Efectivo</option>
+            <option value="transferencia">🏦 Transferencia</option>
+          </select>
           <select id="f-viaje-mes" onchange="filtrarViajes()">
             <option value="">Todos los meses</option>
             <option value="01">Enero</option><option value="02">Febrero</option>
@@ -395,7 +526,7 @@ tbody tr:hover{background:var(--bg)}
           <div class="table-scroll">
             <table>
               <thead><tr>
-                <th>Fecha</th><th>Plataforma</th><th class="r">Monto</th><th>Notas</th><th></th>
+                <th>Fecha</th><th>Plataforma</th><th>Pago</th><th class="r">Monto</th><th>Notas</th><th></th>
               </tr></thead>
               <tbody id="viajes-tbody"></tbody>
             </table>
@@ -515,6 +646,14 @@ tbody tr:hover{background:var(--bg)}
       <input type="number" id="vedit-monto" min="0" step="500"></div>
     <div class="form-g"><label>Fecha y hora</label>
       <input type="datetime-local" id="vedit-fecha"></div>
+    <div class="form-g">
+      <label>¿Cómo te pagaron?</label>
+      <div class="pago-toggle">
+        <button type="button" class="pago-opt active" id="vedit-pago-efectivo" onclick="setMetodoPagoEdit('efectivo')">💵 Efectivo</button>
+        <button type="button" class="pago-opt" id="vedit-pago-transferencia" onclick="setMetodoPagoEdit('transferencia')">🏦 Transferencia</button>
+      </div>
+      <input type="hidden" id="vedit-metodo-pago" value="efectivo">
+    </div>
     <div class="form-g"><label>Notas</label>
       <input type="text" id="vedit-notas"></div>
     <div class="modal-actions">
@@ -591,6 +730,7 @@ tbody tr:hover{background:var(--bg)}
 var SESSION = null;
 var _viajes = [];
 var _gastos = [];
+var _metodosPago = {}; // { viajeId: 'efectivo'|'transferencia' }
 
 function fmt(v){ return new Intl.NumberFormat('es-CO',{style:'currency',currency:'COP',minimumFractionDigits:0}).format(v||0); }
 function esc(s){ return (s||'').toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
@@ -609,13 +749,25 @@ function fechaHoyCorta(){
 }
 function mesAnioHoy(){ var d=new Date(); return d.getFullYear()+'/'+String(d.getMonth()+1).padStart(2,'0'); }
 
-/* ══ SIDEBAR ══ */
+async function cargarMetodosPago(){
+  var { data } = await supabase.rpc('tur_obtener_metodos_pago');
+  _metodosPago = data || {};
+}
+function metodoDe(viajeId){ return _metodosPago[viajeId] || 'efectivo'; }
+
+/* ══ SIDEBAR / USER MENU ══ */
 function toggleSidebar(){
   var sb=document.getElementById('sidebar'), ov=document.getElementById('sidebar-overlay');
   if(sb.classList.contains('open')){ sb.classList.remove('open'); ov.classList.remove('visible'); }
   else { sb.classList.add('open'); ov.classList.add('visible'); }
 }
 function closeSidebar(){ document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebar-overlay').classList.remove('visible'); }
+function toggleUserMenu(){ document.getElementById('user-menu').classList.toggle('open'); }
+function closeUserMenu(){ document.getElementById('user-menu').classList.remove('open'); }
+document.addEventListener('click',function(e){
+  var menu=document.getElementById('user-menu');
+  if(menu && menu.classList.contains('open') && !menu.contains(e.target)) menu.classList.remove('open');
+});
 
 var MODS=['dashboard','viaje','historial','gastos','comparar'];
 function cambiarMod(mod){
@@ -634,9 +786,8 @@ function cambiarMod(mod){
 
 /* ══ AUTH ══ */
 function setAuthTab(tab){
-  document.querySelectorAll('.tab-auth button').forEach(function(b,i){
-    b.classList.toggle('active',(i===0&&tab==='login')||(i===1&&tab==='registro'));
-  });
+  document.getElementById('tab-btn-login').classList.toggle('active',tab==='login');
+  document.getElementById('tab-btn-registro').classList.toggle('active',tab==='registro');
   document.getElementById('blq-login').style.display     = tab==='login'?'block':'none';
   document.getElementById('blq-registro').style.display  = tab==='registro'?'block':'none';
   document.getElementById('blq-recuperar').style.display = 'none';
@@ -659,7 +810,7 @@ async function doLogin(){
       var tipo = (perfil && (perfil.estado==='pendiente'||perfil.estado==='inactivo')) ? 'warn':'err';
       var msg = perfil && perfil.estado==='pendiente'
         ? '⏳ Tu cuenta está pendiente de activación.'
-        : '🔒 Sin suscripción activa para Turnos.';
+        : '🔒 Sin suscripción activa.';
       return showAlert('alert-auth', msg, tipo);
     }
     SESSION={usuario:perfil.usuario,nombre:perfil.nombre};
@@ -705,7 +856,8 @@ async function doLogout(){
 function mostrarRecuperacion(){
   ['blq-login','blq-registro'].forEach(function(id){document.getElementById(id).style.display='none';});
   document.getElementById('blq-recuperar').style.display='block';
-  document.querySelectorAll('.tab-auth button').forEach(function(b){b.classList.remove('active');});
+  document.getElementById('tab-btn-login').classList.remove('active');
+  document.getElementById('tab-btn-registro').classList.remove('active');
 }
 function volverLogin(){ document.getElementById('blq-recuperar').style.display='none'; document.getElementById('blq-reset').style.display='none'; setAuthTab('login'); }
 
@@ -744,7 +896,8 @@ supabase.auth.onAuthStateChange(function(event){
   if(event==='PASSWORD_RECOVERY'){
     ['blq-login','blq-registro','blq-recuperar'].forEach(function(id){document.getElementById(id).style.display='none';});
     document.getElementById('blq-reset').style.display='block';
-    document.querySelectorAll('.tab-auth button').forEach(function(b){b.classList.remove('active');});
+    document.getElementById('tab-btn-login').classList.remove('active');
+    document.getElementById('tab-btn-registro').classList.remove('active');
   }
 });
 
@@ -757,14 +910,17 @@ supabase.auth.onAuthStateChange(function(event){
     entrarApp();
   } else if(perfil && !perfil.apps.includes('turnos')){
     await supabase.auth.signOut();
-    showAlert('alert-auth','⚠️ Sin acceso a Turnos. Contacta al administrador.','warn');
+    showAlert('alert-auth','⚠️ Sin acceso a esta app. Contacta al administrador.','warn');
   }
 })();
 
 function entrarApp(){
   document.getElementById('screen-login').classList.remove('visible');
   document.getElementById('screen-app').classList.add('visible');
-  document.getElementById('tb-user').textContent=SESSION.nombre||SESSION.usuario;
+  var nombreMostrar = SESSION.nombre||SESSION.usuario;
+  document.getElementById('tb-user').textContent=nombreMostrar;
+  document.getElementById('user-avatar').textContent=nombreMostrar.trim().charAt(0).toUpperCase();
+  document.getElementById('user-menu-header-name').textContent=nombreMostrar;
   cargarDashboard();
 }
 
@@ -778,12 +934,20 @@ function confirmar(titulo,msg,fn){
   document.getElementById('mconf-btn').onclick=function(){ cerrarModal('modal-confirmar'); fn(); };
   abrirModal('modal-confirmar');
 }
-
+</script>
+<script>
 /* ══ DASHBOARD ══ */
 async function cargarDashboard(){
+  var hora=(new Date()).getHours();
+  document.getElementById('dash-saludo').textContent = hora<12?'Buen día':hora<19?'Buenas tardes':'Buenas noches';
   var ma=mesAnioHoy();
   document.getElementById('dash-periodo-label').textContent='Cargando…';
-  var { data: r } = await supabase.rpc('tur_resumen', { p_desde: ma, p_hasta: ma });
+
+  var [{data:r},{data:listaViajes}] = await Promise.all([
+    supabase.rpc('tur_resumen', { p_desde: ma, p_hasta: ma }),
+    supabase.rpc('tur_listar_viajes')
+  ]);
+  await cargarMetodosPago();
   if(!r) return;
 
   document.getElementById('dash-periodo-label').textContent='Mes actual · '+(new Date()).toLocaleDateString('es-CO',{month:'long',year:'numeric'});
@@ -797,6 +961,19 @@ async function cargarDashboard(){
 
   renderGrafico('graf-plataformas-dash', r.porPlataforma.map(function(p){return{label:p.plataforma,val:p.total};}), r.porPlataforma.map(function(p){return p.total;}), 'var(--amber2)');
   renderGrafico('graf-gastos-dash', r.porCategoriaGasto.map(function(g){return{label:g.categoria,val:g.total};}), r.porCategoriaGasto.map(function(g){return g.total;}), 'var(--red)');
+
+  var hoy=new Date(); var mesActual=String(hoy.getMonth()+1).padStart(2,'0'); var anioActual=String(hoy.getFullYear());
+  var viajesMes=(listaViajes||[]).filter(function(v){
+    var p=(v.fechaSolo||'').split('/');
+    return p.length>=3 && p[1]===mesActual && p[2]===anioActual;
+  });
+  var porPago={};
+  viajesMes.forEach(function(v){
+    var m=metodoDe(v.id); porPago[m]=(porPago[m]||0)+v.monto;
+  });
+  var etiquetas={efectivo:'💵 Efectivo',transferencia:'🏦 Transferencia'};
+  var dataPago=Object.keys(porPago).map(function(k){ return {label:etiquetas[k]||k, val:porPago[k]}; });
+  renderGrafico('graf-pagos-dash', dataPago, dataPago.map(function(d){return d.val;}), 'var(--blue)');
 }
 
 function renderGrafico(id,data,vals,color){
@@ -816,11 +993,17 @@ function renderGrafico(id,data,vals,color){
 }
 
 /* ══ REGISTRAR VIAJE ══ */
+function setMetodoPagoViaje(m){
+  document.getElementById('v-metodo-pago').value=m;
+  document.getElementById('v-pago-efectivo').classList.toggle('active',m==='efectivo');
+  document.getElementById('v-pago-transferencia').classList.toggle('active',m==='transferencia');
+}
 async function initViaje(){
   document.getElementById('v-fecha').value=fechaHoyLocal();
   document.getElementById('v-plataforma').value='';
   document.getElementById('v-monto').value='';
   document.getElementById('v-notas').value='';
+  setMetodoPagoViaje('efectivo');
   var { data: plats } = await supabase.rpc('tur_plataformas_usadas');
   var dl=document.getElementById('lista-plataformas'); dl.innerHTML='';
   (plats||[]).forEach(function(p){ var o=document.createElement('option'); o.value=p; dl.appendChild(o); });
@@ -831,6 +1014,7 @@ async function registrarViaje(){
   var monto=parseFloat(document.getElementById('v-monto').value)||0;
   var fecha=document.getElementById('v-fecha').value;
   var notas=document.getElementById('v-notas').value.trim();
+  var metodoPago=document.getElementById('v-metodo-pago').value;
   if(!plataforma) return showAlert('alert-viaje','Escribe o selecciona la plataforma.','err');
   if(monto<=0) return showAlert('alert-viaje','El monto debe ser mayor a 0.','err');
 
@@ -842,6 +1026,9 @@ async function registrarViaje(){
     });
     if(error){ showAlert('alert-viaje','Error: '+error.message,'err'); return; }
     if(res.success){
+      var { data: listaFresca } = await supabase.rpc('tur_listar_viajes');
+      var nuevo = listaFresca && listaFresca[0];
+      if(nuevo && nuevo.id) await supabase.rpc('tur_actualizar_metodo_pago', { p_id: nuevo.id, p_metodo: metodoPago });
       toast(res.mensaje,'ok');
       initViaje();
     } else showAlert('alert-viaje',res.mensaje,'err');
@@ -854,6 +1041,7 @@ async function registrarViaje(){
 async function cargarHistorialViajes(){
   var { data: lista } = await supabase.rpc('tur_listar_viajes');
   _viajes = lista||[];
+  await cargarMetodosPago();
 
   var fp=document.getElementById('f-plataforma'); var vp=fp.value;
   var plats=[]; _viajes.forEach(function(v){ if(!plats.includes(v.plataforma)) plats.push(v.plataforma); });
@@ -872,12 +1060,13 @@ async function cargarHistorialViajes(){
 
 function filtrarViajes(){
   var plat=document.getElementById('f-plataforma').value;
+  var pago=document.getElementById('f-metodo-pago').value;
   var mes=document.getElementById('f-viaje-mes').value;
   var anio=document.getElementById('f-viaje-anio').value;
 
   var filtrados=_viajes.filter(function(v){
     var p=(v.fechaSolo||'').split('/');
-    return (!plat||v.plataforma===plat) && (!mes||p[1]===mes) && (!anio||p[2]===anio);
+    return (!plat||v.plataforma===plat) && (!pago||metodoDe(v.id)===pago) && (!mes||p[1]===mes) && (!anio||p[2]===anio);
   });
 
   var tbody=document.getElementById('viajes-tbody');
@@ -888,9 +1077,12 @@ function filtrarViajes(){
   empty.style.display='none';
 
   filtrados.forEach(function(v){
+    var m=metodoDe(v.id);
+    var badgePago = m==='transferencia' ? '<span class="badge badge-transferencia">🏦 Transferencia</span>' : '<span class="badge badge-efectivo">💵 Efectivo</span>';
     var tr=document.createElement('tr');
     tr.innerHTML='<td>'+esc(v.fechaSolo)+'</td>'+
       '<td><span class="badge badge-blue">'+esc(v.plataforma)+'</span></td>'+
+      '<td>'+badgePago+'</td>'+
       '<td class="r"><strong style="color:var(--green)">'+fmt(v.monto)+'</strong></td>'+
       '<td style="font-size:11px;color:var(--ink3)">'+esc(v.notas||'—')+'</td>'+
       '<td><div style="display:flex;gap:4px">'+
@@ -901,6 +1093,11 @@ function filtrarViajes(){
   });
 }
 
+function setMetodoPagoEdit(m){
+  document.getElementById('vedit-metodo-pago').value=m;
+  document.getElementById('vedit-pago-efectivo').classList.toggle('active',m==='efectivo');
+  document.getElementById('vedit-pago-transferencia').classList.toggle('active',m==='transferencia');
+}
 function editarViaje(id){
   var v=_viajes.find(function(x){return x.id===id;});
   if(!v) return;
@@ -910,6 +1107,7 @@ function editarViaje(id){
   var p=(v.fechaSolo||'').split('/');
   document.getElementById('vedit-fecha').value = p.length>=3 ? (p[2]+'-'+p[1]+'-'+p[0]+'T12:00') : fechaHoyLocal();
   document.getElementById('vedit-notas').value=v.notas||'';
+  setMetodoPagoEdit(metodoDe(v.id));
   document.getElementById('vedit-error').style.display='none';
   abrirModal('modal-editar-viaje');
 }
@@ -919,11 +1117,15 @@ async function guardarEdicionViaje(){
   var monto=parseFloat(document.getElementById('vedit-monto').value)||0;
   var fecha=document.getElementById('vedit-fecha').value;
   var notas=document.getElementById('vedit-notas').value.trim();
+  var metodoPago=document.getElementById('vedit-metodo-pago').value;
   var errEl=document.getElementById('vedit-error');
   if(!plataforma||monto<=0){ errEl.textContent='Completa plataforma y monto válido.'; errEl.style.display='block'; return; }
   var { data: res, error } = await supabase.rpc('tur_editar_viaje', { p_id:id, p_plataforma:plataforma, p_monto:monto, p_fecha:fecha, p_notas:notas });
   if(error){ errEl.textContent='Error: '+error.message; errEl.style.display='block'; return; }
-  if(res.success){ cerrarModal('modal-editar-viaje'); toast(res.mensaje,'ok'); cargarHistorialViajes(); cargarDashboard(); }
+  if(res.success){
+    await supabase.rpc('tur_actualizar_metodo_pago', { p_id: id, p_metodo: metodoPago });
+    cerrarModal('modal-editar-viaje'); toast(res.mensaje,'ok'); cargarHistorialViajes(); cargarDashboard();
+  }
   else { errEl.textContent=res.mensaje; errEl.style.display='block'; }
 }
 function eliminarViaje(id){
@@ -933,7 +1135,8 @@ function eliminarViaje(id){
     if(res.success){ toast(res.mensaje,'ok'); cargarHistorialViajes(); cargarDashboard(); }
   });
 }
-
+</script>
+<script>
 /* ══ GASTOS ══ */
 async function cargarGastos(){
   var { data: lista } = await supabase.rpc('tur_listar_gastos');
@@ -1102,13 +1305,12 @@ async function doEliminarCuenta(){
   cerrarModal('modal-eliminar-cuenta');
   document.getElementById('screen-app').classList.remove('visible');
   document.getElementById('screen-login').classList.add('visible');
-  showAlert('alert-auth','Acceso a Turnos eliminado. Tus datos se conservan.','ok');
+  showAlert('alert-auth','Acceso eliminado. Tus datos se conservan.','ok');
 }
 
 /* ══ REPORTE PDF ══ */
 async function generarReportePDF(){
   toast('Generando PDF…','ok');
-  var ma=mesAnioHoy();
   var { data: r } = await supabase.rpc('tur_resumen', { p_desde:'', p_hasta:'' });
   if(!r){ toast('Sin datos para generar el reporte','warn'); return; }
 
@@ -1123,7 +1325,7 @@ async function generarReportePDF(){
 
   doc.setFillColor.apply(doc,AMBAR); doc.rect(0,0,W,28,'F');
   doc.setFont('helvetica','bold'); doc.setFontSize(18); doc.setTextColor(255,255,255);
-  doc.text('REPORTE DE TURNOS',MX,14);
+  doc.text('REPORTE — SERVICIO DE CARRO',MX,14);
   doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(255,235,205);
   doc.text(nombreUsuario+' · '+fechaGen,MX,21);
   y=34;
@@ -1169,7 +1371,7 @@ async function generarReportePDF(){
   doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(150,150,150);
   doc.text('Generado con Skripto Apps',W/2,H-8,{align:'center'});
 
-  doc.save('Reporte_Turnos_'+nombreUsuario.replace(/\s+/g,'_')+'.pdf');
+  doc.save('Reporte_ServicioDeCarro_'+nombreUsuario.replace(/\s+/g,'_')+'.pdf');
   toast('📄 Reporte descargado','ok');
 }
 </script>
