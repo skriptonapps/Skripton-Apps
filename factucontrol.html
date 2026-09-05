@@ -2483,9 +2483,14 @@ aplicarIdioma();
 var _clientes     = [];
 var _servicios    = [];
 var _cantidadesServicio = {}; // { "clienteId:servicioId": cantidad }
+var _linksVenta = {}; // { "clienteId:servicioId": ventaId } — solo para productos de Inventario
 async function cargarCantidadesServicio(){
-  var { data } = await supabase.rpc('fc_obtener_todas_cantidades');
-  _cantidadesServicio = data || {};
+  var [{data:cants},{data:links}] = await Promise.all([
+    supabase.rpc('fc_obtener_todas_cantidades'),
+    supabase.rpc('fc_obtener_todos_links_venta')
+  ]);
+  _cantidadesServicio = cants || {};
+  _linksVenta = links || {};
 }
 function obtenerCantidadCliSvc(clienteId, servicioId){
   return _cantidadesServicio[clienteId+':'+servicioId] || 1;
@@ -2883,17 +2888,7 @@ function filtrarFacturas(){
 async function cambiarEstadoFac(id,estado){
   var { data: res, error } = await supabase.rpc('fac_factura_cambiar_estado', { p_id:id, p_estado:estado });
   if(error){ toast(t('msg_error_prefix')+error.message,'err'); return; }
-  if(res.success){
-    toast(res.mensaje,'ok');
-    if(estado==='anulada'){
-      var { data: resRev } = await supabase.rpc('fc_anular_ventas_de_factura', { p_factura_id: String(id) });
-      if(resRev && resRev.success && resRev.revertidas>0){
-        toast('↩️ Stock restaurado ('+resRev.revertidas+' movimiento'+(resRev.revertidas!==1?'s':'')+').','ok');
-        cargarDatosIniciales();
-      }
-    }
-    cargarFacturas(); cargarDashboard();
-  }
+  if(res.success){ toast(res.mensaje,'ok'); cargarFacturas(); cargarDashboard(); }
   else toast(res.mensaje,'err');
 }
 
@@ -3201,7 +3196,6 @@ async function crearFactura(){
     if(res.success){
       toast(res.mensaje,'ok');
       var nombreClienteFactura=document.getElementById('nf-cli-nombre').textContent;
-      await descontarStockFacturado(items, nombreClienteFactura, res.factura.id);
       limpiarNF();
       confirmar('Factura creada','¿Descargar el PDF de la factura '+res.factura.id+'?',function(){ pdfFactura(res.factura.id); });
     } else showAlert('alert-nf',res.mensaje,'err');
@@ -3297,7 +3291,6 @@ async function facturarTodos(){
       });
       creadas++;
       if(error || !res.success) errores.push(c.nombre+': '+(error?error.message:res.mensaje));
-      else await descontarStockFacturado(items, c.nombre, res.factura&&res.factura.id);
     } catch(e){ creadas++; errores.push(c.nombre+': '+e.message); }
   }
 
@@ -3438,6 +3431,43 @@ async function editarCliente(id){
   abrirModal('modal-cliente');
 }
 
+async function sincronizarStockCliente(clienteId, cantidadesPayload, clienteNombre){
+  var nuevoMap={};
+  cantidadesPayload.forEach(function(p){ nuevoMap[p.id]=p.cantidad; });
+
+  var idsAConsiderar={};
+  Object.keys(_linksVenta).forEach(function(k){
+    if(k.indexOf(clienteId+':')===0) idsAConsiderar[k.split(':')[1]]=true;
+  });
+  Object.keys(nuevoMap).forEach(function(id){ idsAConsiderar[id]=true; });
+
+  for(var svcId in idsAConsiderar){
+    var svc=_servicios.find(function(s){return s.id===svcId;});
+    if(!svc) continue;
+    var esInventario=pfProductos.some(function(p){ return p.nombre.trim().toLowerCase()===svc.nombre.trim().toLowerCase(); });
+    if(!esInventario) continue; // solo sincronizamos stock para productos que vienen de Inventario
+
+    var key=clienteId+':'+svcId;
+    var ventaIdExistente=_linksVenta[key];
+    var nuevaCant=nuevoMap[svcId]||0;
+
+    if(nuevaCant>0 && !ventaIdExistente){
+      var { data: r1 } = await supabase.rpc('ventas_registrar', {
+        p_producto: svc.nombre, p_cantidad: nuevaCant, p_precio_unit: svc.precio, p_margen: 0,
+        p_notas: 'Asignado a '+(clienteNombre||'cliente')
+      });
+      var ventaId = r1 && (r1.id || r1.ventaId || (r1.venta&&r1.venta.id));
+      if(ventaId) await supabase.rpc('fc_guardar_link_cliente_venta', { p_cliente_id:clienteId, p_servicio_id:svcId, p_venta_id:ventaId });
+    } else if(nuevaCant>0 && ventaIdExistente){
+      await supabase.rpc('ventas_editar', { p_id:ventaIdExistente, p_cantidad:nuevaCant, p_precio_unit:svc.precio, p_notas:'Asignado a '+(clienteNombre||'cliente') });
+    } else if(nuevaCant===0 && ventaIdExistente){
+      await supabase.rpc('ventas_eliminar', { p_id: ventaIdExistente });
+      await supabase.rpc('fc_borrar_link_cliente_venta', { p_cliente_id:clienteId, p_servicio_id:svcId });
+    }
+  }
+  cargarDatosIniciales();
+}
+
 async function guardarCliente(){
   var svcsSeleccionados=[];
   var cantidadesPayload=[];
@@ -3468,6 +3498,7 @@ async function guardarCliente(){
     var clienteId = document.getElementById('mcli-id').value || res.id || (res.cliente&&res.cliente.id) || (res.data&&res.data.id);
     if(clienteId){
       await supabase.rpc('fc_guardar_cantidades', { p_cliente_id: clienteId, p_cantidades: cantidadesPayload });
+      await sincronizarStockCliente(clienteId, cantidadesPayload, nombre);
       await cargarCantidadesServicio();
     }
     toast(res.mensaje,'ok'); cerrarModal('modal-cliente'); cargarClientes();
