@@ -980,8 +980,15 @@ body {
               <input type="date" id="nf-vencimiento">
             </div>
           </div>
-<!-- IVA y tipo se toman del cliente; se guardan en campos ocultos -->
-          <input type="hidden" id="nf-iva" value="19">
+          <div class="form-g">
+            <label>IVA de esta factura</label>
+            <select id="nf-iva" onchange="recalcularNF()">
+              <option value="0" data-i18n="no_iva">Sin IVA (0%)</option>
+              <option value="5">5%</option>
+              <option value="19" selected>19%</option>
+            </select>
+          </div>
+<!-- tipo se toma del cliente; se guarda en campo oculto -->
           <input type="hidden" id="nf-tipo" value="fija">
         </div>
 
