@@ -64,6 +64,7 @@ body{font-family:var(--font-sans);background:var(--bg);color:var(--ink);font-siz
 nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);transition:box-shadow .3s}
 nav.scrolled{box-shadow:var(--shadow)}
 .nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-brand img{height:34px;width:auto;display:block}
 .nav-brand-text{font-family:var(--font-serif);font-size:20px;color:var(--ink);letter-spacing:-.3px}
 .nav-brand-text em{color:var(--green);font-style:normal}
 .nav-links{display:flex;align-items:center;gap:28px}
@@ -241,6 +242,7 @@ section{padding:96px 40px}
 footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
 .footer-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:40px;margin-bottom:40px}
 .footer-logo-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.footer-logo-row img{height:30px;width:auto;display:block}
 .footer-brand-name{font-family:var(--font-serif);font-size:18px;color:#fff}
 .footer-brand-name em{color:var(--green);font-style:normal}
 .footer-tagline{font-size:13px;color:rgba(255,255,255,.45);max-width:220px;line-height:1.6}
@@ -369,6 +371,7 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
 <!-- NAV -->
 <nav id="main-nav">
   <a href="#" class="nav-brand">
+    <img src="logo.png" alt="Skripto Apps">
     <span class="nav-brand-text">Skripto <em>Apps</em></span>
   </a>
   <div class="nav-links">
@@ -671,6 +674,7 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
   <div class="footer-inner">
     <div>
       <div class="footer-logo-row">
+        <img src="logo.png" alt="Skripto Apps">
         <div class="footer-brand-name">Skripto <em>Apps</em></div>
       </div>
       <div class="footer-tagline">Soluciones digitales para todo tipo de negocio.</div>
