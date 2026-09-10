@@ -329,6 +329,26 @@ body { -webkit-overflow-scrolling: touch; }
 .activity-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
 .activity-left{display:flex;align-items:center;gap:10px}
 .activity-icon{width:30px;height:30px;border-radius:8px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.bottom-nav{display:none}
+@media(max-width:680px){
+  .bottom-nav{
+    display:flex;position:fixed;left:0;right:0;bottom:0;z-index:150;
+    background:var(--bg2);border-top:1.5px solid var(--border);
+    padding:6px 2px calc(6px + env(safe-area-inset-bottom));
+    box-shadow:0 -4px 16px rgba(0,0,0,.06);
+  }
+  .bn-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;padding:6px 2px;border-radius:10px;color:var(--ink3);position:relative}
+  .bn-icon{font-size:18px;line-height:1}
+  .bn-label{font-size:9.5px;font-weight:600}
+  .bn-item.active{color:var(--green4)}
+  .bn-item.active .bn-icon{transform:translateY(-1px)}
+  .bn-dot{position:absolute;top:2px;right:18%;width:8px;height:8px;border-radius:50%;background:var(--red);border:1.5px solid var(--bg2)}
+  #screen-app{padding-bottom:64px}
+  .main-content{padding-bottom:76px}
+}
+.kpi-icon-card[onclick]{transition:transform .15s,box-shadow .15s}
+.kpi-icon-card[onclick]:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.stock-card[style*="cursor:pointer"]:hover{border-color:var(--green2);box-shadow:var(--shadow)}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
@@ -456,7 +476,25 @@ var I18N = { es: {
     pdf_footer_brand:'Skripto Apps - Sistema de Inventario - ', pdf_page:'Página', pdf_page_of:'de',
     pdf_year_label:'Año ', pdf_all_history:'Todo el historial',
     preparing_data:'Preparando datos…', generating_pdf:'Generando PDF…', report_downloaded:'Reporte descargado',
-    error_loading_data:'Error cargando datos', to_word_lower:'a'
+    error_loading_data:'Error cargando datos', to_word_lower:'a',
+    nav_providers:'Proveedores', prov_reg:'Registrar compra', prov_pagar:'Por pagar', prov_hist:'Historial',
+    prov_title:'Proveedores', prov_sub:'Registra compras a proveedores y controla tus pagos pendientes',
+    prov_reg_title:'Nueva compra a proveedor', prov_reg_sub:'Esto también suma stock al insumo comprado',
+    prov_name:'Proveedor', prov_insumo:'Insumo comprado', prov_cant:'Cantidad', prov_unidad:'Unidad',
+    prov_valor:'Valor total de la compra', prov_pagado_q:'¿Ya le pagaste?', prov_si_pagado:'Sí, ya pagado', prov_no_pagado:'No, queda pendiente',
+    prov_vencimiento:'Fecha límite de pago', prov_notas:'Notas (opcional)', prov_registrar_btn:'Registrar compra',
+    prov_kpi_pend:'Total por pagar', prov_kpi_venc:'Facturas vencidas', prov_kpi_prox:'Vencen pronto',
+    prov_pagar_title:'Cuentas por pagar', prov_pagar_none:'No tienes facturas pendientes de pago', prov_pagar_none_sub:'Cuando registres una compra sin pagar, aparecerá aquí',
+    prov_hist_title:'Historial de compras a proveedores', prov_hist_none:'Aún no has registrado compras a proveedores',
+    th_prov:'Proveedor', th_prov_insumo:'Insumo', th_prov_venc:'Vence', th_prov_estado:'Estado', th_prov_monto:'Monto',
+    prov_badge_pagada:'Pagada', prov_badge_vencida:'Vencida', prov_badge_proxima:'Próxima', prov_badge_pendiente:'Pendiente',
+    prov_marcar_pagada:'Marcar pagada', prov_msg_select_insumo:'Selecciona o escribe el insumo comprado.',
+    prov_msg_enter_prov:'Ingresa el nombre del proveedor.', prov_msg_enter_venc:'Si no está pagada, ingresa la fecha límite de pago.',
+    dc_por_pagar:'Por pagar a proveedores',
+    nav_mp_overview:'Insumos', mp_overview_title:'Gestión de Materia Prima', mp_overview_sub:'Vista general de todos tus insumos, de un vistazo',
+    prov_undo_pagada:'Deshacer pago', prov_all_providers:'Todos los proveedores', prov_filter_estado:'Estado',
+    prov_est_todas:'Todas', prov_est_pendientes:'Pendientes', prov_est_pagadas:'Pagadas',
+    mp_overview_empty:'Aún no tienes insumos registrados', mp_overview_empty_sub:'Registra una entrada para verlos aquí'
 } };
 function t(k){ return (I18N.es[k]) || k; }
 function aplicarIdioma(){
@@ -467,7 +505,6 @@ function aplicarIdioma(){
 </script>
 </head>
 <body>
-
 <div id="screen-login" class="screen visible">
   <div class="login-wrap">
     <div class="login-brand-panel">
@@ -626,6 +663,7 @@ function aplicarIdioma(){
         <div class="nav-subtabs visible" id="sub-mp">
           <button class="nav-sub active" id="sub-mp-entrada" onclick="mpTab('entrada')">📥 <span data-i18n="nav_entry">Entrada</span></button>
           <button class="nav-sub" id="sub-mp-consultar" onclick="mpTab('consultar')">🔍 <span data-i18n="nav_check_stock">Consultar stock</span></button>
+          <button class="nav-sub" id="sub-mp-insumos" onclick="mpTab('insumos')">📦 <span data-i18n="nav_mp_overview">Insumos</span></button>
         </div>
 
         <button class="nav-item" id="nav-prod" onclick="cambiarModulo('prod')">
@@ -641,6 +679,17 @@ function aplicarIdioma(){
           <button class="nav-sub active" id="sub-v-registrar" onclick="ventasTab('registrar')">🛒 <span data-i18n="nav_register">Registrar</span></button>
           <button class="nav-sub" id="sub-v-stock" onclick="ventasTab('stock')">📦 <span data-i18n="nav_stock">Stock</span></button>
           <button class="nav-sub" id="sub-v-historial" onclick="ventasTab('historial')">🗂️ <span data-i18n="nav_history">Historial</span></button>
+        </div>
+
+        <button class="nav-item" id="nav-proveedores" onclick="cambiarModulo('proveedores')" style="position:relative">
+          <span class="nav-item-icon" style="background:#FEECEC">🚚</span>
+          <span class="nav-item-text" data-i18n="nav_providers">Proveedores</span>
+          <span id="proveedores-badge" style="display:none;background:var(--red);color:#fff;font-size:10px;font-weight:700;border-radius:20px;padding:1px 7px;min-width:16px;text-align:center">0</span>
+        </button>
+        <div class="nav-subtabs" id="sub-proveedores">
+          <button class="nav-sub active" id="sub-p-registrar" onclick="provTab('registrar')">🧾 <span data-i18n="prov_reg">Registrar compra</span></button>
+          <button class="nav-sub" id="sub-p-pagar" onclick="provTab('pagar')">⏰ <span data-i18n="prov_pagar">Por pagar</span></button>
+          <button class="nav-sub" id="sub-p-historial" onclick="provTab('historial')">🗂️ <span data-i18n="prov_hist">Historial</span></button>
         </div>
       </div>
 
@@ -693,6 +742,11 @@ function aplicarIdioma(){
             <div class="kpi-label">Utilidad del mes</div>
             <div class="kpi-value" id="dc-utilidad">$0</div>
           </div>
+          <div class="kpi-icon-card" onclick="cambiarModulo('proveedores');provTab('pagar')" style="cursor:pointer">
+            <div class="kpi-icon-badge" style="background:#FEECEC">🚚</div>
+            <div class="kpi-label" data-i18n="dc_por_pagar">Por pagar a proveedores</div>
+            <div class="kpi-value" id="dc-por-pagar" style="color:var(--red)">$0</div>
+          </div>
         </div>
         <div class="card">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
@@ -708,6 +762,7 @@ function aplicarIdioma(){
       <div id="mod-mp" class="modulo" style="display:none">
         <div class="panel-header">
           <div class="panel-header-left">
+            <div class="dash-greeting" data-i18n="mp_overview_title">Gestión de Materia Prima</div>
             <div class="panel-title" id="mp-panel-title" data-i18n="mp_entry_title">Entrada de insumo</div>
             <div class="panel-sub" id="mp-panel-sub" data-i18n="mp_entry_sub">Registra una compra de materia prima</div>
           </div>
@@ -803,6 +858,15 @@ function aplicarIdioma(){
             <div class="empty-icon">🔍</div>
             <div style="font-weight:500" data-i18n="mp_select_empty_title">Selecciona un insumo para ver su detalle</div>
             <p style="font-size:12px;margin-top:6px" data-i18n="mp_select_empty_sub">Stock actual, costo promedio y todos los movimientos</p>
+          </div>
+        </div>
+
+        <div id="mpanel-insumos" class="panel">
+          <div id="mp-insumos-grid" class="grid-3"></div>
+          <div id="mp-insumos-empty" class="empty-state" style="display:none">
+            <div class="empty-icon">📦</div>
+            <div data-i18n="mp_overview_empty">Aún no tienes insumos registrados</div>
+            <p style="font-size:12px;margin-top:6px" data-i18n="mp_overview_empty_sub">Registra una entrada para verlos aquí</p>
           </div>
         </div>
       </div>
@@ -1034,6 +1098,129 @@ function aplicarIdioma(){
         </div>
       </div>
 
+      <div id="mod-proveedores" class="modulo" style="display:none">
+        <div class="panel-header">
+          <div class="panel-header-left">
+            <div class="panel-title" id="prov-panel-title" data-i18n="prov_reg_title">Nueva compra a proveedor</div>
+            <div class="panel-sub" id="prov-panel-sub" data-i18n="prov_reg_sub">Esto también suma stock al insumo comprado</div>
+          </div>
+        </div>
+
+        <div id="pvpanel-registrar" class="panel active">
+          <div id="alert-proveedores" class="alert"></div>
+          <div class="card">
+            <div class="card-title" data-i18n="prov_reg_title">Nueva compra a proveedor</div>
+            <div class="form-g">
+              <label data-i18n="prov_name">Proveedor</label>
+              <input type="text" id="pv-proveedor" list="pv-lista-prov" placeholder="Ej: Distribuidora El Trigal">
+              <datalist id="pv-lista-prov"></datalist>
+            </div>
+            <div class="form-g">
+              <label data-i18n="prov_insumo">Insumo comprado</label>
+              <input type="text" id="pv-insumo" list="pv-lista-insumo" oninput="onPvInsumoInput()" data-i18n-ph="ph_supply_name">
+              <datalist id="pv-lista-insumo"></datalist>
+            </div>
+            <div class="grid-2">
+              <div class="form-g">
+                <label data-i18n="prov_cant">Cantidad</label>
+                <input type="number" id="pv-cantidad" min="0.001" step="0.001" placeholder="0.000" inputmode="decimal">
+              </div>
+              <div class="form-g">
+                <label data-i18n="prov_unidad">Unidad</label>
+                <select id="pv-unidad">
+                  <option value="und" data-i18n="unit_und">Unidad (und)</option>
+                  <option value="kg" data-i18n="unit_kg">Kilogramo (kg)</option>
+                  <option value="g" data-i18n="unit_g">Gramo (g)</option>
+                  <option value="l" data-i18n="unit_l">Litro (l)</option>
+                  <option value="ml" data-i18n="unit_ml">Mililitro (ml)</option>
+                  <option value="m" data-i18n="unit_m">Metro (m)</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-g">
+              <label data-i18n="prov_valor">Valor total de la compra</label>
+              <input type="number" id="pv-valor" min="0" step="0.01" placeholder="$0.00" inputmode="decimal">
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title" data-i18n="prov_pagado_q">¿Ya le pagaste?</div>
+            <div class="precio-toggle">
+              <button class="ptoggle auto active" id="pvtog-si" onclick="pvSetPagado(true)">✅ <span data-i18n="prov_si_pagado">Sí, ya pagado</span></button>
+              <button class="ptoggle manual" id="pvtog-no" onclick="pvSetPagado(false)">⏰ <span data-i18n="prov_no_pagado">No, queda pendiente</span></button>
+            </div>
+            <div id="pv-blq-vencimiento" style="display:none">
+              <div class="form-g">
+                <label data-i18n="prov_vencimiento">Fecha límite de pago</label>
+                <input type="date" id="pv-vencimiento">
+              </div>
+            </div>
+            <div class="form-g">
+              <label data-i18n="prov_notas">Notas (opcional)</label>
+              <input type="text" id="pv-notas" placeholder="N° de factura, referencia…">
+            </div>
+          </div>
+
+          <button class="btn-primary" id="btn-pv-reg" onclick="pvRegistrar()">🧾 <span data-i18n="prov_registrar_btn">Registrar compra</span></button>
+        </div>
+
+        <div id="pvpanel-pagar" class="panel">
+          <div class="grid-3" style="margin-bottom:14px">
+            <div class="kpi"><div class="kpi-label" data-i18n="prov_kpi_pend">Total por pagar</div><div class="kpi-value" id="pv-kpi-pend" style="color:var(--red)">$0</div></div>
+            <div class="kpi"><div class="kpi-label" data-i18n="prov_kpi_venc">Facturas vencidas</div><div class="kpi-value" id="pv-kpi-venc" style="color:var(--red)">0</div></div>
+            <div class="kpi"><div class="kpi-label" data-i18n="prov_kpi_prox">Vencen pronto</div><div class="kpi-value" id="pv-kpi-prox" style="color:var(--amber)">0</div></div>
+          </div>
+          <div class="table-wrap">
+            <div class="table-head"><h3 data-i18n="prov_pagar_title">Cuentas por pagar</h3></div>
+            <div class="table-scroll">
+              <table id="pv-tabla-pagar" style="display:none">
+                <thead><tr>
+                  <th data-i18n="th_prov">Proveedor</th><th data-i18n="th_prov_insumo">Insumo</th>
+                  <th class="r" data-i18n="th_prov_monto">Monto</th><th data-i18n="th_prov_venc">Vence</th>
+                  <th data-i18n="th_prov_estado">Estado</th><th></th>
+                </tr></thead>
+                <tbody id="pv-tbody-pagar"></tbody>
+              </table>
+            </div>
+            <div class="empty-state" id="pv-pagar-empty" style="display:none">
+              <div class="empty-icon">✅</div>
+              <div data-i18n="prov_pagar_none">No tienes facturas pendientes de pago</div>
+              <p style="font-size:12px;margin-top:6px" data-i18n="prov_pagar_none_sub">Cuando registres una compra sin pagar, aparecerá aquí</p>
+            </div>
+          </div>
+        </div>
+
+        <div id="pvpanel-historial" class="panel">
+          <div class="table-wrap">
+            <div class="table-head">
+              <h3 data-i18n="prov_hist_title">Historial de compras a proveedores</h3>
+              <div class="filter-row">
+                <select id="pv-filtro-prov" onchange="pvFiltrarHistorial()"><option value="" data-i18n="prov_all_providers">Todos los proveedores</option></select>
+                <select id="pv-filtro-estado" onchange="pvFiltrarHistorial()">
+                  <option value="" data-i18n="prov_est_todas">Todas</option>
+                  <option value="pendiente" data-i18n="prov_est_pendientes">Pendientes</option>
+                  <option value="pagada" data-i18n="prov_est_pagadas">Pagadas</option>
+                </select>
+              </div>
+            </div>
+            <div class="table-scroll">
+              <table id="pv-tabla-hist" style="display:none">
+                <thead><tr>
+                  <th data-i18n="th_date">Fecha</th><th data-i18n="th_prov">Proveedor</th><th data-i18n="th_prov_insumo">Insumo</th>
+                  <th class="r" data-i18n="th_qty">Cant.</th><th class="r" data-i18n="th_prov_monto">Monto</th>
+                  <th data-i18n="th_prov_venc">Vence</th><th data-i18n="th_prov_estado">Estado</th><th data-i18n="th_notes">Notas</th><th></th>
+                </tr></thead>
+                <tbody id="pv-tbody-hist"></tbody>
+              </table>
+            </div>
+            <div class="empty-state" id="pv-hist-empty" style="display:none">
+              <div class="empty-icon">🚚</div>
+              <div data-i18n="prov_hist_none">Aún no has registrado compras a proveedores</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div id="mod-alertas" class="modulo" style="display:none">
         <div class="panel-header">
           <div class="panel-header-left">
@@ -1076,6 +1263,15 @@ function aplicarIdioma(){
 
     </div>
   </div>
+
+  <nav class="bottom-nav" id="bottom-nav">
+    <button class="bn-item active" id="bn-control" onclick="cambiarModulo('control')"><span class="bn-icon">🏠</span><span class="bn-label">Control</span></button>
+    <button class="bn-item" id="bn-mp" onclick="cambiarModulo('mp')"><span class="bn-icon">📋</span><span class="bn-label">Insumos</span></button>
+    <button class="bn-item" id="bn-prod" onclick="cambiarModulo('prod')"><span class="bn-icon">🏭</span><span class="bn-label">Producción</span></button>
+    <button class="bn-item" id="bn-ventas" onclick="cambiarModulo('ventas')"><span class="bn-icon">💰</span><span class="bn-label">Ventas</span></button>
+    <button class="bn-item" id="bn-proveedores" onclick="cambiarModulo('proveedores')" style="position:relative"><span class="bn-icon">🚚</span><span class="bn-label">Proveedores</span><span id="bn-prov-dot" class="bn-dot" style="display:none"></span></button>
+    <button class="bn-item" id="bn-mas" onclick="toggleSidebar()"><span class="bn-icon">☰</span><span class="bn-label">Más</span></button>
+  </nav>
 </div>
 
 <div class="modal-overlay" id="modal-eliminar-cuenta">
@@ -1153,14 +1349,41 @@ function aplicarIdioma(){
   </div>
 </div>
 
+<div class="modal-overlay" id="modal-editar-prov">
+  <div class="modal-box" style="max-width:420px">
+    <h3 data-i18n="edit_purchase">Editar compra</h3>
+    <p><span data-i18n="th_prov">Proveedor:</span> <strong id="pvedit-proveedor"></strong></p>
+    <input type="hidden" id="pvedit-id">
+    <div id="pvedit-error" style="display:none;color:var(--red);font-size:12px;margin-bottom:10px"></div>
+    <div class="form-g">
+      <label data-i18n="prov_cant">Cantidad</label>
+      <input type="number" id="pvedit-cantidad" min="0.001" step="0.001">
+    </div>
+    <div class="form-g">
+      <label data-i18n="prov_valor">Valor total de la compra</label>
+      <input type="number" id="pvedit-valor" min="0" step="0.01">
+    </div>
+    <div class="form-g">
+      <label data-i18n="prov_vencimiento">Fecha límite de pago</label>
+      <input type="date" id="pvedit-vencimiento">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" data-i18n="cancel" onclick="cerrarModalEditarProv()">Cancelar</button>
+      <button class="btn-primary" style="flex:1" data-i18n="save_changes" onclick="guardarEdicionProv()">Guardar cambios</button>
+    </div>
+  </div>
+</div>
+
 <script>
 var SESSION = null;
 aplicarIdioma();
 var mpProductos  = [];
 var pfProductos  = [];
 var todasVentas  = [];
+var todasCompras = [];
 var vModo        = 'auto';
 var vPrevOK      = false;
+var pvPagado     = true;
 var ultimoCalcProd = null;
 var cntMp = 0, cntCf = 0, cntMo = 0;
 
@@ -1193,26 +1416,38 @@ var moduloActual = 'control';
 function cambiarModulo(mod){
   closeSidebar();
   moduloActual = mod;
-  ['control','mp','prod','ventas','alertas'].forEach(function(m){
+  ['control','mp','prod','ventas','proveedores','alertas'].forEach(function(m){
     document.getElementById('nav-'+m).classList.toggle('active',m===mod);
     document.getElementById('mod-'+m).style.display = m===mod?'block':'none';
     var sub = document.getElementById('sub-'+m);
     if(sub) sub.classList.toggle('visible',m===mod);
   });
+  ['control','mp','prod','ventas','proveedores'].forEach(function(m){
+    var bn=document.getElementById('bn-'+m);
+    if(bn) bn.classList.toggle('active',m===mod);
+  });
   if(mod==='control') cargarControl();
   if(mod==='ventas') cargarPFVentas();
   if(mod==='alertas') cargarAlertas();
   if(mod==='prod') cargarHistorialProducciones();
+  if(mod==='proveedores') cargarProveedoresDatos();
+  if(mod==='mp' && document.getElementById('mpanel-insumos').classList.contains('active')) cargarInsumosOverview();
   window.scrollTo({top:0,behavior:'smooth'});
 }
 function mpTab(tab){
-  ['entrada','consultar'].forEach(function(p){
-    document.getElementById('sub-mp-'+p).classList.toggle('active',p===tab);
+  ['entrada','consultar','insumos'].forEach(function(p){
+    var subBtn=document.getElementById('sub-mp-'+p);
+    if(subBtn) subBtn.classList.toggle('active',p===tab);
     document.getElementById('mpanel-'+p).classList.toggle('active',p===tab);
   });
-  var titles={entrada:['mp_entry_title','mp_entry_sub'],consultar:['mp_check_title','mp_check_sub']};
+  var titles={
+    entrada:['mp_entry_title','mp_entry_sub'],
+    consultar:['mp_check_title','mp_check_sub'],
+    insumos:['nav_mp_overview','mp_overview_sub']
+  };
   document.getElementById('mp-panel-title').textContent=t(titles[tab][0]);
   document.getElementById('mp-panel-sub').textContent=t(titles[tab][1]);
+  if(tab==='insumos') cargarInsumosOverview();
 }
 function ventasTab(tab){
   var tabs=['registrar','stock','historial'];
@@ -1229,6 +1464,22 @@ function ventasTab(tab){
   document.getElementById('ventas-panel-sub').textContent=t(titles[tab][1]);
   if(tab==='stock')     cargarStockPF();
   if(tab==='historial') cargarHistorialVentas();
+}
+function provTab(tab){
+  var tabs=['registrar','pagar','historial'];
+  tabs.forEach(function(n){
+    document.getElementById('sub-p-'+n).classList.toggle('active',n===tab);
+    document.getElementById('pvpanel-'+n).classList.toggle('active',n===tab);
+  });
+  var titles={
+    registrar:['prov_reg_title','prov_reg_sub'],
+    pagar:['prov_pagar_title','prov_sub'],
+    historial:['prov_hist_title','prov_sub']
+  };
+  document.getElementById('prov-panel-title').textContent=t(titles[tab][0]);
+  document.getElementById('prov-panel-sub').textContent=t(titles[tab][1]);
+  if(tab==='pagar')     pvCargarPorPagar();
+  if(tab==='historial') pvCargarHistorial();
 }
 
 function setAuthTab(tab){
@@ -1404,11 +1655,12 @@ async function cargarControl(){
   var hora=(new Date()).getHours();
   document.getElementById('dash-saludo').textContent = hora<12?'Buen día':hora<19?'Buenas tardes':'Buenas noches';
 
-  var [{data:mpProds},{data:pfProds},{data:ventas},{data:alertas}] = await Promise.all([
+  var [{data:mpProds},{data:pfProds},{data:ventas},{data:alertas},{data:resumenProv}] = await Promise.all([
     supabase.rpc('mp_obtener_productos'),
     supabase.rpc('prod_obtener_pf'),
     supabase.rpc('ventas_historial'),
-    supabase.rpc('mp_listar_alertas')
+    supabase.rpc('mp_listar_alertas'),
+    supabase.rpc('prov_resumen')
   ]);
   mpProds=mpProds||[]; pfProds=pfProds||[]; ventas=ventas||[]; alertas=alertas||[];
 
@@ -1430,6 +1682,8 @@ async function cargarControl(){
   var numAlertas = alertas.filter(function(a){return a.alerta;}).length;
   document.getElementById('dc-alertas').textContent = numAlertas;
 
+  document.getElementById('dc-por-pagar').textContent = fmt(resumenProv?resumenProv.totalPendiente:0);
+
   var cont=document.getElementById('dc-actividad');
   if(!ventas.length){
     cont.innerHTML='<div class="empty-state" style="padding:20px 10px"><div class="empty-icon">🛒</div><div style="font-size:12px;color:var(--ink3)">Aún no has registrado ventas</div></div>';
@@ -1446,6 +1700,8 @@ async function cargarDatosIniciales(){
   mpProductos=lista;
   var dl=document.getElementById('mp-lista');dl.innerHTML='';
   lista.forEach(function(p){var o=document.createElement('option');o.value=p.nombre;dl.appendChild(o)});
+  var dl3=document.getElementById('pv-lista-insumo');
+  if(dl3){dl3.innerHTML='';lista.forEach(function(p){var o=document.createElement('option');o.value=p.nombre;dl3.appendChild(o)})}
   var sel=document.getElementById('mp-sel-consulta');var cur=sel.value;
   sel.innerHTML="<option value=''>"+t('mp_select_placeholder')+"</option>";
   lista.forEach(function(p){var o=document.createElement('option');o.value=p.nombre;o.textContent=p.nombre+' ('+t('stock_word')+' '+fmtN(p.stock)+' '+p.unidad+')';sel.appendChild(o)});
@@ -1458,6 +1714,7 @@ async function cargarDatosIniciales(){
   pfProductos.forEach(function(p){var o=document.createElement('option');o.value=p.nombre;dl2.appendChild(o)});
 
   actualizarBadgeAlertas();
+  actualizarBadgeProveedores();
 }
 
 async function actualizarBadgeAlertas(){
@@ -1467,6 +1724,15 @@ async function actualizarBadgeAlertas(){
   var badge = document.getElementById('alertas-badge');
   if(enAlerta > 0){ badge.textContent = enAlerta; badge.style.display = 'inline-block'; }
   else { badge.style.display = 'none'; }
+}
+
+async function actualizarBadgeProveedores(){
+  var { data: resumen } = await supabase.rpc('prov_resumen');
+  var pendientes = resumen ? (resumen.vencidas + resumen.proximas) : 0;
+  var badge = document.getElementById('proveedores-badge');
+  var dot = document.getElementById('bn-prov-dot');
+  if(pendientes > 0){ badge.textContent = pendientes; badge.style.display = 'inline-block'; if(dot) dot.style.display='block'; }
+  else { badge.style.display = 'none'; if(dot) dot.style.display='none'; }
 }
 
 async function cargarAlertas(){
@@ -1517,6 +1783,24 @@ async function guardarPuntoReorden(producto, valor){
 
 function toastAlertaSimple(msg){
   showAlert('alert-alertas', msg, 'err');
+}
+
+async function cargarInsumosOverview(){
+  var { data: lista } = await supabase.rpc('mp_obtener_productos');
+  lista = lista || [];
+  var grid = document.getElementById('mp-insumos-grid');
+  var empty = document.getElementById('mp-insumos-empty');
+  grid.innerHTML = '';
+  if(!lista.length){ grid.style.display='none'; empty.style.display='block'; return; }
+  grid.style.display='grid'; empty.style.display='none';
+  lista.forEach(function(p){
+    var card=document.createElement('div');card.className='stock-card';card.style.cursor='pointer';
+    card.onclick=function(){ mpTab('consultar'); document.getElementById('mp-sel-consulta').value=p.nombre; mpConsultar(); };
+    card.innerHTML='<div style="font-size:14px;font-weight:600;margin-bottom:12px;padding-bottom:8px;border-bottom:1.5px solid var(--border);display:flex;justify-content:space-between;align-items:center">📋 '+esc(p.nombre)+'<span class="icon-btn" style="font-size:11px">Ver →</span></div>'+
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><div><div style="font-size:10px;font-weight:600;text-transform:uppercase;color:var(--ink3);margin-bottom:4px">Stock</div><div class="stock-num" style="font-size:26px">'+fmtN(p.stock)+'</div><div style="font-size:11px;color:var(--ink3)">'+esc(p.unidad)+'</div></div><div class="stock-ico" style="background:'+(p.stock>0?'var(--green3)':'var(--red2)')+'">'+(p.stock>0?'✅':'⚠️')+'</div></div>'+
+      '<div style="background:var(--bg3);border-radius:var(--r);padding:8px 10px"><div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px"><span style="color:var(--ink3)">CPP</span><span>'+fmt(p.cpp)+'</span></div><div style="display:flex;justify-content:space-between;font-size:11px"><span style="color:var(--ink3)">Valor en stock</span><span style="color:var(--indigo)">'+fmt(p.stock*p.cpp)+'</span></div></div>';
+    grid.appendChild(card);
+  });
 }
 </script>
 <script>
@@ -1969,6 +2253,169 @@ async function guardarEdicionVenta(){
     cerrarModalEditarVenta();
     showAlert('alert-ventas', res.mensaje, 'ok');
     cargarHistorialVentas(); cargarPFVentas();
+  } else { errEl.textContent=res.mensaje; errEl.style.display='block'; }
+}
+</script>
+<script>
+function onPvInsumoInput(){
+  var val=document.getElementById('pv-insumo').value.trim();
+  var p=mpProductos.find(function(x){return x.nombre.toLowerCase()===val.toLowerCase()});
+  if(p){ document.getElementById('pv-unidad').value=p.unidad; }
+}
+function pvSetPagado(pagado){
+  pvPagado=pagado;
+  document.getElementById('pvtog-si').classList.toggle('active',pagado);
+  document.getElementById('pvtog-no').classList.toggle('active',!pagado);
+  document.getElementById('pv-blq-vencimiento').style.display=pagado?'none':'block';
+}
+async function cargarProveedoresDatos(){
+  var { data: provs } = await supabase.rpc('prov_obtener_proveedores');
+  provs = provs || [];
+  var dl=document.getElementById('pv-lista-prov'); dl.innerHTML='';
+  provs.forEach(function(p){var o=document.createElement('option');o.value=p;dl.appendChild(o)});
+  var fp=document.getElementById('pv-filtro-prov'); var cur=fp.value;
+  fp.innerHTML='<option value="">'+t('prov_all_providers')+'</option>';
+  provs.forEach(function(p){var o=document.createElement('option');o.value=p;o.textContent=p;fp.appendChild(o)});
+  if(cur) fp.value=cur;
+  pvCargarPorPagar();
+  actualizarBadgeProveedores();
+}
+async function pvRegistrar(){
+  var proveedor=document.getElementById('pv-proveedor').value.trim();
+  var insumo=document.getElementById('pv-insumo').value.trim();
+  var cant=parseFloat(document.getElementById('pv-cantidad').value)||0;
+  var unidad=document.getElementById('pv-unidad').value||'und';
+  var valor=parseFloat(document.getElementById('pv-valor').value)||0;
+  var venc=document.getElementById('pv-vencimiento').value||null;
+  var notas=document.getElementById('pv-notas').value.trim();
+
+  if(!proveedor) return showAlert('alert-proveedores',t('prov_msg_enter_prov'),'err');
+  if(!insumo) return showAlert('alert-proveedores',t('prov_msg_select_insumo'),'err');
+  if(cant<=0) return showAlert('alert-proveedores',t('msg_invalid_qty'),'err');
+  if(valor<=0) return showAlert('alert-proveedores',t('msg_invalid_total'),'err');
+  if(!pvPagado && !venc) return showAlert('alert-proveedores',t('prov_msg_enter_venc'),'err');
+
+  var btn=document.getElementById('btn-pv-reg'); btn.disabled=true; btn.textContent='Registrando…';
+  var { data: res, error } = await supabase.rpc('prov_registrar_compra', {
+    p_proveedor: proveedor, p_insumo: insumo, p_cantidad: cant, p_unidad: unidad,
+    p_valor_total: valor, p_pagado: pvPagado, p_fecha_vencimiento: venc, p_notas: notas
+  });
+  btn.disabled=false; btn.textContent='🧾 '+t('prov_registrar_btn');
+  if(error) return showAlert('alert-proveedores',t('msg_error_prefix')+error.message,'err');
+  if(res.success){
+    showAlert('alert-proveedores',res.mensaje+' — Stock: '+fmtN(res.nuevoStock)+' '+unidad,'ok');
+    ['pv-proveedor','pv-insumo','pv-cantidad','pv-valor','pv-vencimiento','pv-notas'].forEach(function(id){document.getElementById(id).value=''});
+    pvSetPagado(true);
+    cargarDatosIniciales(); cargarProveedoresDatos();
+  } else { showAlert('alert-proveedores',res.mensaje,'err'); }
+}
+function pvBadgeEstado(c){
+  if(c.pagado) return '<span class="badge badge-ok">✅ '+t('prov_badge_pagada')+'</span>';
+  if(c.diasRestantes!==null && c.diasRestantes<0) return '<span class="badge badge-neg">🔴 '+t('prov_badge_vencida')+'</span>';
+  if(c.diasRestantes!==null && c.diasRestantes<=3) return '<span class="badge" style="background:var(--amber2);color:var(--amber)">🟡 '+t('prov_badge_proxima')+'</span>';
+  return '<span class="badge" style="background:var(--bg3);color:var(--ink2)">⏳ '+t('prov_badge_pendiente')+'</span>';
+}
+async function pvCargarPorPagar(){
+  var { data: resumen } = await supabase.rpc('prov_resumen');
+  document.getElementById('pv-kpi-pend').textContent = fmt(resumen?resumen.totalPendiente:0);
+  document.getElementById('pv-kpi-venc').textContent = resumen?resumen.vencidas:0;
+  document.getElementById('pv-kpi-prox').textContent = resumen?resumen.proximas:0;
+
+  var { data: lista } = await supabase.rpc('prov_alertas');
+  lista = lista || [];
+  var tabla=document.getElementById('pv-tabla-pagar'); var empty=document.getElementById('pv-pagar-empty');
+  var tbody=document.getElementById('pv-tbody-pagar'); tbody.innerHTML='';
+  if(!lista.length){ tabla.style.display='none'; empty.style.display='block'; return; }
+  tabla.style.display='table'; empty.style.display='none';
+  lista.forEach(function(c){
+    var tr=document.createElement('tr');
+    tr.innerHTML='<td><strong>'+esc(c.proveedor)+'</strong></td><td>'+esc(c.insumo)+'</td>'+
+      '<td class="r"><strong>'+fmt(c.valorTotal)+'</strong></td>'+
+      '<td>'+(c.fechaVencimiento||'—')+(c.diasRestantes!==null?' <span style="color:var(--ink3);font-size:11px">('+(c.diasRestantes<0?'vencida hace '+Math.abs(c.diasRestantes)+'d':c.diasRestantes+'d')+')</span>':'')+'</td>'+
+      '<td>'+pvBadgeEstado(c)+'</td>'+
+      '<td><button class="icon-btn" onclick="provMarcarPagada(\''+c.id+'\')">✅ '+t('prov_marcar_pagada')+'</button></td>';
+    tbody.appendChild(tr);
+  });
+}
+async function pvCargarHistorial(){
+  var { data: lista } = await supabase.rpc('prov_listar');
+  lista = lista || [];
+  todasCompras = lista;
+  pvFiltrarHistorial();
+}
+function pvFiltrarHistorial(){
+  var prov=document.getElementById('pv-filtro-prov').value;
+  var est=document.getElementById('pv-filtro-estado').value;
+  var filtradas=todasCompras.filter(function(c){
+    var okProv = !prov || c.proveedor===prov;
+    var okEst = !est || (est==='pagada'?c.pagado:!c.pagado);
+    return okProv && okEst;
+  });
+  var tabla=document.getElementById('pv-tabla-hist'); var empty=document.getElementById('pv-hist-empty');
+  var tbody=document.getElementById('pv-tbody-hist'); tbody.innerHTML='';
+  if(!filtradas.length){ tabla.style.display='none'; empty.style.display='block'; return; }
+  tabla.style.display='table'; empty.style.display='none';
+  filtradas.forEach(function(c){
+    var tr=document.createElement('tr');
+    var acciones = '<button class="icon-btn" title="'+t('edit_tt')+'" onclick="pvEditarCompra(\''+c.id+'\',\''+esc(c.proveedor)+'\','+c.cantidad+','+c.valorTotal+',\''+(c.fechaVencimiento||'')+'\')" style="margin-right:4px">✏️</button>'+
+      (c.pagado?'<button class="icon-btn" title="'+t('prov_undo_pagada')+'" onclick="provDesmarcarPagada(\''+c.id+'\')" style="margin-right:4px">↩️</button>':'')+
+      '<button class="btn-rm" title="'+t('delete_tt')+'" onclick="pvEliminarCompra(\''+c.id+'\',\''+esc(c.proveedor)+'\')" style="font-size:15px">🗑</button>';
+    tr.innerHTML='<td>'+esc(c.fecha)+'</td><td><strong>'+esc(c.proveedor)+'</strong></td><td>'+esc(c.insumo)+'</td>'+
+      '<td class="r">'+fmtN(c.cantidad)+' '+esc(c.unidad)+'</td><td class="r"><strong>'+fmt(c.valorTotal)+'</strong></td>'+
+      '<td>'+(c.fechaVencimiento||'—')+'</td><td>'+pvBadgeEstado(c)+'</td>'+
+      '<td style="font-size:11px;color:var(--ink3);font-style:italic;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(c.notas||'—')+'</td>'+
+      '<td style="white-space:nowrap">'+acciones+'</td>';
+    tbody.appendChild(tr);
+  });
+}
+async function provMarcarPagada(id){
+  var { data: res, error } = await supabase.rpc('prov_marcar_pagado', { p_id: id });
+  if(error){ showAlert('alert-proveedores',t('msg_error_prefix')+error.message,'err'); return; }
+  showAlert('alert-proveedores',res.mensaje,'ok');
+  pvCargarPorPagar(); actualizarBadgeProveedores();
+  if(document.getElementById('pvpanel-historial').classList.contains('active')) pvCargarHistorial();
+}
+async function provDesmarcarPagada(id){
+  var { data: res, error } = await supabase.rpc('prov_desmarcar_pagado', { p_id: id });
+  if(error){ showAlert('alert-proveedores',t('msg_error_prefix')+error.message,'err'); return; }
+  showAlert('alert-proveedores',res.mensaje,'ok');
+  pvCargarHistorial(); pvCargarPorPagar(); actualizarBadgeProveedores();
+}
+function pvEliminarCompra(id, proveedor){
+  confirmar(
+    t('modal_del_movement'),
+    '¿Eliminar esta compra de "'+proveedor+'"? Esto también descuenta el stock que había sumado al insumo.',
+    async function(){
+      var { data: res, error } = await supabase.rpc('prov_eliminar_compra', { p_id: id });
+      if(error){ showAlert('alert-proveedores',t('msg_error_prefix')+error.message,'err'); return; }
+      if(res.success){ showAlert('alert-proveedores',res.mensaje,'ok'); pvCargarHistorial(); pvCargarPorPagar(); cargarDatosIniciales(); }
+      else showAlert('alert-proveedores',res.mensaje,'err');
+    }
+  );
+}
+function pvEditarCompra(id, proveedor, cantidadActual, valorActual, vencActual){
+  document.getElementById('pvedit-id').value = id;
+  document.getElementById('pvedit-proveedor').textContent = proveedor;
+  document.getElementById('pvedit-cantidad').value = cantidadActual;
+  document.getElementById('pvedit-valor').value = valorActual;
+  document.getElementById('pvedit-vencimiento').value = vencActual||'';
+  document.getElementById('pvedit-error').style.display='none';
+  document.getElementById('modal-editar-prov').classList.add('visible');
+}
+function cerrarModalEditarProv(){ document.getElementById('modal-editar-prov').classList.remove('visible'); }
+async function guardarEdicionProv(){
+  var id = document.getElementById('pvedit-id').value;
+  var cant = parseFloat(document.getElementById('pvedit-cantidad').value)||0;
+  var valor = parseFloat(document.getElementById('pvedit-valor').value)||0;
+  var venc = document.getElementById('pvedit-vencimiento').value||null;
+  var errEl = document.getElementById('pvedit-error');
+  if(cant<=0 || valor<=0){ errEl.textContent='Completa cantidad y valor con valores mayores a 0.'; errEl.style.display='block'; return; }
+  var { data: res, error } = await supabase.rpc('prov_editar_compra', { p_id:id, p_cantidad:cant, p_valor_total:valor, p_fecha_vencimiento:venc });
+  if(error){ errEl.textContent='Error: '+error.message; errEl.style.display='block'; return; }
+  if(res.success){
+    cerrarModalEditarProv();
+    showAlert('alert-proveedores', res.mensaje, 'ok');
+    pvCargarHistorial(); pvCargarPorPagar(); cargarDatosIniciales();
   } else { errEl.textContent=res.mensaje; errEl.style.display='block'; }
 }
 
