@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#B45309">
+<meta name="theme-color" content="#0F6E56">
 <title>Sistema de Turnos — Skripto Apps</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -23,7 +23,7 @@
 :root{
   --bg:#F7F6F2;--bg2:#FFFFFF;--bg3:#EEECEA;
   --ink:#1C1B18;--ink2:#5C5A55;--ink3:#9C9A94;
-  --amber:#B45309;--amber2:#D97706;--amber3:#FEF3C7;--amber4:#78350F;
+  --amber:#0F6E56;--amber2:#1D9E75;--amber3:#E1F5EE;--amber4:#085041;
   --green:#0F9E6E;--green2:#1D9E75;--green3:#E1F5EE;
   --red:#993C1D;--red2:#FAECE7;--red3:#D85A30;
   --blue:#1a56db;--blue3:#e8f0fe;
@@ -37,14 +37,14 @@
 body{font-family:var(--font-sans);background:var(--bg);color:var(--ink);font-size:14px;line-height:1.6;min-height:100vh}
 h1,h2,h3{font-family:var(--font-serif);font-weight:400;line-height:1.2}
 input,select,textarea{font-family:var(--font-sans);font-size:14px;border:1.5px solid var(--border);border-radius:var(--r);padding:10px 12px;background:var(--bg2);color:var(--ink);outline:none;width:100%;transition:border .15s,box-shadow .15s}
-input:focus,select:focus,textarea:focus{border-color:var(--amber2);box-shadow:0 0 0 3px rgba(217,119,6,.1)}
+input:focus,select:focus,textarea:focus{border-color:var(--amber2);box-shadow:0 0 0 3px rgba(15,110,86,.1)}
 button{font-family:var(--font-sans);cursor:pointer;border:none;border-radius:var(--r)}
 
 .screen{display:none;min-height:100vh}
 .screen.visible{display:flex}
 
 #screen-login{align-items:center;justify-content:center;background:var(--bg);padding:16px}
-.login-wrap{display:flex;width:100%;max-width:860px;background:var(--bg2);border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(180,83,9,.14),0 4px 16px rgba(0,0,0,.06);min-height:600px}
+.login-wrap{display:flex;width:100%;max-width:860px;background:var(--bg2);border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(15,110,86,.14),0 4px 16px rgba(0,0,0,.06);min-height:600px}
 .login-brand-panel{flex:0 0 40%;background:var(--amber2);position:relative;overflow:hidden;padding:40px 32px;display:flex;flex-direction:column;justify-content:space-between;color:#fff}
 .login-brand-panel::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.08)}
 .login-brand-panel::after{content:'';position:absolute;bottom:-90px;left:-50px;width:260px;height:260px;border-radius:50%;background:rgba(255,255,255,.06)}
