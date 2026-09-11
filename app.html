@@ -494,7 +494,10 @@ var I18N = { es: {
     nav_mp_overview:'Insumos', mp_overview_title:'Gestión de Materia Prima', mp_overview_sub:'Vista general de todos tus insumos, de un vistazo',
     prov_undo_pagada:'Deshacer pago', prov_all_providers:'Todos los proveedores', prov_filter_estado:'Estado',
     prov_est_todas:'Todas', prov_est_pendientes:'Pendientes', prov_est_pagadas:'Pagadas',
-    mp_overview_empty:'Aún no tienes insumos registrados', mp_overview_empty_sub:'Registra una entrada para verlos aquí'
+    mp_overview_empty:'Aún no tienes insumos registrados', mp_overview_empty_sub:'Registra una entrada para verlos aquí',
+    sales_pagado_q:'¿Ya te pagaron?', sales_si_pagado:'Sí, ya me pagaron', sales_no_pagado:'No, queda pendiente',
+    th_cobro:'Cobro', sales_marcar_pagada:'Marcar pagada', sales_undo_pagada:'Deshacer pago',
+    dc_por_cobrar:'Ventas por cobrar'
 } };
 function t(k){ return (I18N.es[k]) || k; }
 function aplicarIdioma(){
@@ -746,6 +749,11 @@ function aplicarIdioma(){
             <div class="kpi-label" data-i18n="dc_por_pagar">Por pagar a proveedores</div>
             <div class="kpi-value" id="dc-por-pagar" style="color:var(--red)">$0</div>
           </div>
+          <div class="kpi-icon-card" onclick="cambiarModulo('ventas');ventasTab('historial')" style="cursor:pointer">
+            <div class="kpi-icon-badge" style="background:var(--amber2)">🧾</div>
+            <div class="kpi-label" data-i18n="dc_por_cobrar">Ventas por cobrar</div>
+            <div class="kpi-value" id="dc-por-cobrar" style="color:var(--amber)">$0</div>
+          </div>
         </div>
         <div class="card">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
@@ -972,6 +980,14 @@ function aplicarIdioma(){
             </div>
           </div>
 
+          <div class="card">
+            <div class="card-title" data-i18n="sales_pagado_q">¿Ya te pagaron?</div>
+            <div class="precio-toggle">
+              <button class="ptoggle auto active" id="vtog-si" onclick="vSetPagado(true)">✅ <span data-i18n="sales_si_pagado">Sí, ya me pagaron</span></button>
+              <button class="ptoggle manual" id="vtog-no" onclick="vSetPagado(false)">⏰ <span data-i18n="sales_no_pagado">No, queda pendiente</span></button>
+            </div>
+          </div>
+
           <div class="util-preview" id="v-util-preview">
             <div class="drow"><span class="dn" data-i18n="sales_util_preview">Costo total</span><span class="dv" id="v-prev-costo"></span></div>
             <div class="drow"><span class="dn" data-i18n="sales_income">Ingreso total</span><span class="dv" id="v-prev-ingreso"></span></div>
@@ -1030,6 +1046,7 @@ function aplicarIdioma(){
                   <th class="r" data-i18n="th_qty">Cant.</th><th class="r" data-i18n="th_unit_cost">C.Unit.</th>
                   <th class="r" data-i18n="th_price">Precio</th><th class="r" data-i18n="th_income">Ingreso</th>
                   <th class="r" data-i18n="th_margin">Margen</th><th class="r" data-i18n="th_profit">Utilidad</th>
+                  <th data-i18n="th_cobro">Cobro</th>
                   <th data-i18n="th_notes">Notas</th><th></th>
                 </tr></thead>
                 <tbody id="v-tbody"></tbody>
@@ -1328,6 +1345,7 @@ var todasVentas  = [];
 var todasCompras = [];
 var vModo        = 'auto';
 var vPrevOK      = false;
+var vPagado      = true;
 var pvPagado     = true;
 var ultimoCalcProd = null;
 var cntMp = 0, cntCf = 0, cntMo = 0;
@@ -1599,12 +1617,13 @@ async function cargarControl(){
   var hora=(new Date()).getHours();
   document.getElementById('dash-saludo').textContent = hora<12?'Buen día':hora<19?'Buenas tardes':'Buenas noches';
 
-  var [{data:mpProds},{data:pfProds},{data:ventas},{data:alertas},{data:resumenProv}] = await Promise.all([
+  var [{data:mpProds},{data:pfProds},{data:ventas},{data:alertas},{data:resumenProv},{data:resumenCobro}] = await Promise.all([
     supabase.rpc('mp_obtener_productos'),
     supabase.rpc('prod_obtener_pf'),
     supabase.rpc('ventas_historial'),
     supabase.rpc('mp_listar_alertas'),
-    supabase.rpc('prov_resumen')
+    supabase.rpc('prov_resumen'),
+    supabase.rpc('ventas_resumen_cobro')
   ]);
   mpProds=mpProds||[]; pfProds=pfProds||[]; ventas=ventas||[]; alertas=alertas||[];
 
@@ -1627,6 +1646,7 @@ async function cargarControl(){
   document.getElementById('dc-alertas').textContent = numAlertas;
 
   document.getElementById('dc-por-pagar').textContent = fmt(resumenProv?resumenProv.totalPendiente:0);
+  document.getElementById('dc-por-cobrar').textContent = fmt(resumenCobro?resumenCobro.totalPendiente:0);
 
   var cont=document.getElementById('dc-actividad');
   if(!ventas.length){
@@ -1993,6 +2013,11 @@ function vSetModo(m){
   document.getElementById('vblq-manual').style.display=m==='manual'?'block':'none';
   vResetPreview();vRecalc();
 }
+function vSetPagado(pagado){
+  vPagado=pagado;
+  document.getElementById('vtog-si').classList.toggle('active',pagado);
+  document.getElementById('vtog-no').classList.toggle('active',!pagado);
+}
 function vRecalc(){
   vPrevOK=false;document.getElementById('btn-vender').disabled=true;
   var nombre=document.getElementById('v-producto').value;
@@ -2042,7 +2067,7 @@ async function vConfirmar(){
   var btn=document.getElementById('btn-vender');btn.disabled=true;btn.textContent='Registrando…';
 
   var { data: res, error } = await supabase.rpc('ventas_registrar', {
-    p_producto: nombre, p_cantidad: cant, p_precio_unit: pu, p_margen: mg, p_notas: notas
+    p_producto: nombre, p_cantidad: cant, p_precio_unit: pu, p_margen: mg, p_notas: notas, p_pagado: vPagado
   });
   btn.textContent='✅ Confirmar';
   if(error){ showAlert('alert-ventas',t('msg_error_prefix')+error.message,'err'); btn.disabled=false; return; }
@@ -2054,6 +2079,7 @@ async function vConfirmar(){
 function vLimpiarForm(){
   ['v-producto','v-cantidad','v-notas','v-margen','v-precio-manual'].forEach(function(id){document.getElementById(id).value=''});
   document.getElementById('v-stock-info').textContent='';document.getElementById('v-cpp-info').textContent='';
+  vSetPagado(true);
   vResetPreview();
 }
 async function cargarStockPF(){
@@ -2111,12 +2137,31 @@ function renderHistorial(ventas){
   var tbody=document.getElementById('v-tbody');tbody.innerHTML='';
   ventas.forEach(function(v){
     var ep=v.utilidad>=0;var tr=document.createElement('tr');
+    var cobroBadge = v.pagado
+      ? '<span class="badge badge-ok">✅ '+t('prov_badge_pagada')+'</span>'
+      : '<span class="badge" style="background:var(--bg3);color:var(--ink2)">⏳ '+t('prov_badge_pendiente')+'</span>';
+    var cobroBtn = v.pagado
+      ? '<button class="icon-btn" title="'+t('sales_undo_pagada')+'" onclick="ventasMarcarPendiente(\''+v.id+'\')" style="margin-top:4px">↩️</button>'
+      : '<button class="icon-btn" title="'+t('sales_marcar_pagada')+'" onclick="ventasMarcarPagada(\''+v.id+'\')" style="margin-top:4px">✅ '+t('sales_marcar_pagada')+'</button>';
     var acciones =
       '<button class="icon-btn" title="Editar" onclick="ventasEditarRegistro(\''+v.id+'\',\''+esc(v.producto)+'\','+v.cantidad+','+v.precioUnit+',\''+esc(v.notas||'')+'\')" style="margin-right:4px">✏️</button>'+
       '<button class="btn-rm" title="Eliminar" onclick="ventasEliminarRegistro(\''+v.id+'\',\''+esc(v.producto)+'\')" style="font-size:15px">🗑</button>';
-    tr.innerHTML='<td style="font-size:10px;color:var(--ink3);font-family:var(--font-mono)">'+esc(v.id)+'</td><td>'+esc(v.fecha)+'</td><td><strong>'+esc(v.producto)+'</strong></td><td class="r">'+v.cantidad+'</td><td class="r">'+fmt(v.cpp)+'</td><td class="r">'+fmt(v.precioUnit)+'</td><td class="r"><strong>'+fmt(v.ingresoTotal)+'</strong></td><td class="r">'+v.margen.toFixed(2)+'%</td><td class="r"><span class="badge '+(ep?'badge-ok':'badge-neg')+'">'+(ep?'+':'')+fmt(v.utilidad)+'</span></td><td style="font-size:11px;color:var(--ink3);font-style:italic;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+esc(v.notas)+'">'+esc(v.notas||'—')+'</td><td style="white-space:nowrap">'+acciones+'</td>';
+    tr.innerHTML='<td style="font-size:10px;color:var(--ink3);font-family:var(--font-mono)">'+esc(v.id)+'</td><td>'+esc(v.fecha)+'</td><td><strong>'+esc(v.producto)+'</strong></td><td class="r">'+v.cantidad+'</td><td class="r">'+fmt(v.cpp)+'</td><td class="r">'+fmt(v.precioUnit)+'</td><td class="r"><strong>'+fmt(v.ingresoTotal)+'</strong></td><td class="r">'+v.margen.toFixed(2)+'%</td><td class="r"><span class="badge '+(ep?'badge-ok':'badge-neg')+'">'+(ep?'+':'')+fmt(v.utilidad)+'</span></td><td style="white-space:nowrap">'+cobroBadge+'<br>'+cobroBtn+'</td><td style="font-size:11px;color:var(--ink3);font-style:italic;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+esc(v.notas)+'">'+esc(v.notas||'—')+'</td><td style="white-space:nowrap">'+acciones+'</td>';
     tbody.appendChild(tr);
   });
+}
+
+async function ventasMarcarPagada(id){
+  var { data: res, error } = await supabase.rpc('ventas_marcar_pagada', { p_id: id });
+  if(error){ showAlert('alert-ventas',t('msg_error_prefix')+error.message,'err'); return; }
+  showAlert('alert-ventas',res.mensaje,'ok');
+  cargarHistorialVentas(); cargarControl();
+}
+async function ventasMarcarPendiente(id){
+  var { data: res, error } = await supabase.rpc('ventas_marcar_pendiente', { p_id: id });
+  if(error){ showAlert('alert-ventas',t('msg_error_prefix')+error.message,'err'); return; }
+  showAlert('alert-ventas',res.mensaje,'ok');
+  cargarHistorialVentas(); cargarControl();
 }
 
 function ventasEliminarRegistro(id, producto){
