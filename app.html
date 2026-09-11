@@ -656,13 +656,23 @@ function aplicarIdioma(){
       <div class="sidebar-section">
         <div class="sidebar-label" data-i18n="nav_modules">Módulos</div>
 
-        <button class="nav-item active" id="nav-mp" onclick="cambiarModulo('mp')">
+        <button class="nav-item active" id="nav-proveedores" onclick="cambiarModulo('proveedores')" style="position:relative">
+          <span class="nav-item-icon" style="background:#FEECEC">🚚</span>
+          <span class="nav-item-text" data-i18n="nav_providers">Proveedores</span>
+          <span id="proveedores-badge" style="display:none;background:var(--red);color:#fff;font-size:10px;font-weight:700;border-radius:20px;padding:1px 7px;min-width:16px;text-align:center">0</span>
+        </button>
+        <div class="nav-subtabs visible" id="sub-proveedores">
+          <button class="nav-sub active" id="sub-p-registrar" onclick="provTab('registrar')">🧾 <span data-i18n="prov_reg">Registrar compra</span></button>
+          <button class="nav-sub" id="sub-p-pagar" onclick="provTab('pagar')">⏰ <span data-i18n="prov_pagar">Por pagar</span></button>
+          <button class="nav-sub" id="sub-p-historial" onclick="provTab('historial')">🗂️ <span data-i18n="prov_hist">Historial</span></button>
+        </div>
+
+        <button class="nav-item" id="nav-mp" onclick="cambiarModulo('mp')">
           <span class="nav-item-icon" style="background:var(--green3)">📋</span>
           <span class="nav-item-text" data-i18n="nav_mp">Materia Prima</span>
         </button>
-        <div class="nav-subtabs visible" id="sub-mp">
-          <button class="nav-sub active" id="sub-mp-entrada" onclick="mpTab('entrada')">📥 <span data-i18n="nav_entry">Entrada</span></button>
-          <button class="nav-sub" id="sub-mp-consultar" onclick="mpTab('consultar')">🔍 <span data-i18n="nav_check_stock">Consultar stock</span></button>
+        <div class="nav-subtabs" id="sub-mp">
+          <button class="nav-sub active" id="sub-mp-consultar" onclick="mpTab('consultar')">🔍 <span data-i18n="nav_check_stock">Consultar stock</span></button>
           <button class="nav-sub" id="sub-mp-insumos" onclick="mpTab('insumos')">📦 <span data-i18n="nav_mp_overview">Insumos</span></button>
         </div>
 
@@ -679,17 +689,6 @@ function aplicarIdioma(){
           <button class="nav-sub active" id="sub-v-registrar" onclick="ventasTab('registrar')">🛒 <span data-i18n="nav_register">Registrar</span></button>
           <button class="nav-sub" id="sub-v-stock" onclick="ventasTab('stock')">📦 <span data-i18n="nav_stock">Stock</span></button>
           <button class="nav-sub" id="sub-v-historial" onclick="ventasTab('historial')">🗂️ <span data-i18n="nav_history">Historial</span></button>
-        </div>
-
-        <button class="nav-item" id="nav-proveedores" onclick="cambiarModulo('proveedores')" style="position:relative">
-          <span class="nav-item-icon" style="background:#FEECEC">🚚</span>
-          <span class="nav-item-text" data-i18n="nav_providers">Proveedores</span>
-          <span id="proveedores-badge" style="display:none;background:var(--red);color:#fff;font-size:10px;font-weight:700;border-radius:20px;padding:1px 7px;min-width:16px;text-align:center">0</span>
-        </button>
-        <div class="nav-subtabs" id="sub-proveedores">
-          <button class="nav-sub active" id="sub-p-registrar" onclick="provTab('registrar')">🧾 <span data-i18n="prov_reg">Registrar compra</span></button>
-          <button class="nav-sub" id="sub-p-pagar" onclick="provTab('pagar')">⏰ <span data-i18n="prov_pagar">Por pagar</span></button>
-          <button class="nav-sub" id="sub-p-historial" onclick="provTab('historial')">🗂️ <span data-i18n="prov_hist">Historial</span></button>
         </div>
       </div>
 
@@ -763,68 +762,14 @@ function aplicarIdioma(){
         <div class="panel-header">
           <div class="panel-header-left">
             <div class="dash-greeting" data-i18n="mp_overview_title">Gestión de Materia Prima</div>
-            <div class="panel-title" id="mp-panel-title" data-i18n="mp_entry_title">Entrada de insumo</div>
-            <div class="panel-sub" id="mp-panel-sub" data-i18n="mp_entry_sub">Registra una compra de materia prima</div>
+            <div class="panel-title" id="mp-panel-title" data-i18n="mp_check_title">Consultar stock</div>
+            <div class="panel-sub" id="mp-panel-sub" data-i18n="mp_check_sub">Revisa el estado actual de tus insumos</div>
           </div>
         </div>
 
         <div id="alert-mp" class="alert"></div>
 
-        <div id="mpanel-entrada" class="panel active">
-          <div class="card">
-            <div class="card-title" data-i18n="mp_card_title">Registrar compra de insumo</div>
-            <div class="form-g">
-              <label data-i18n="mp_ins_name">Nombre del insumo</label>
-              <input type="text" id="mp-nombre" list="mp-lista" oninput="onMpNombreInput()" data-i18n-ph="ph_supply_name">
-              <datalist id="mp-lista"></datalist>
-            </div>
-            <div class="grid-2">
-              <div class="form-g">
-                <label data-i18n="mp_qty_bought">Cantidad comprada</label>
-                <input type="number" id="mp-cantidad" min="0.001" step="0.001" placeholder="0.000" oninput="mpCalc()" inputmode="decimal">
-              </div>
-              <div class="form-g">
-                <label data-i18n="mp_unit">Unidad de medida</label>
-                <select id="mp-unidad">
-                  <option value="und" data-i18n="unit_und">Unidad (und)</option>
-                  <option value="kg" data-i18n="unit_kg">Kilogramo (kg)</option>
-                  <option value="g" data-i18n="unit_g">Gramo (g)</option>
-                  <option value="l" data-i18n="unit_l">Litro (l)</option>
-                  <option value="ml" data-i18n="unit_ml">Mililitro (ml)</option>
-                  <option value="m" data-i18n="unit_m">Metro (m)</option>
-                </select>
-              </div>
-            </div>
-            <div class="form-g">
-              <label data-i18n="mp_total_val">Valor total factura</label>
-              <input type="number" id="mp-vtotal" min="0" step="0.01" placeholder="$0.00" oninput="mpCalc()" inputmode="decimal">
-            </div>
-          </div>
-
-          <div class="calc-box" id="mp-calc">
-            <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px" data-i18n="mp_calc_unit_val">Valor unitario calculado</div>
-            <div class="calc-formula">
-              <div class="calc-chip" id="calc-total">$0</div>
-              <div class="calc-op">÷</div>
-              <div class="calc-chip" id="calc-cant">0</div>
-              <div class="calc-op">=</div>
-              <div class="calc-result" id="calc-unit">$0/und</div>
-            </div>
-          </div>
-
-          <div class="cpp-preview" id="mp-cpp-preview">
-            <div style="font-size:12px;font-weight:600;margin-bottom:8px" id="mp-cpp-nombre"></div>
-            <div class="cpp-row">
-              <div class="cpp-item"><label data-i18n="mp_curr_stock">Stock actual</label><span id="mp-cpp-stock"></span></div>
-              <div class="cpp-item"><label data-i18n="mp_curr_cpp">CPP actual</label><span id="mp-cpp-val"></span></div>
-              <div class="cpp-item"><label data-i18n="mp_unit_label">Unidad</label><span id="mp-cpp-uni"></span></div>
-            </div>
-          </div>
-
-          <button class="btn-primary" id="btn-mp-reg" onclick="mpRegistrar()">📥 <span data-i18n="mp_register_entry">Registrar Entrada</span></button>
-        </div>
-
-        <div id="mpanel-consultar" class="panel">
+        <div id="mpanel-consultar" class="panel active">
           <div class="sel-box">
             <label style="font-size:12px;font-weight:500;white-space:nowrap" data-i18n="mp_select_insumo">Insumo:</label>
             <select id="mp-sel-consulta" onchange="mpConsultar()">
@@ -1266,10 +1211,10 @@ function aplicarIdioma(){
 
   <nav class="bottom-nav" id="bottom-nav">
     <button class="bn-item active" id="bn-control" onclick="cambiarModulo('control')"><span class="bn-icon">🏠</span><span class="bn-label">Control</span></button>
+    <button class="bn-item" id="bn-proveedores" onclick="cambiarModulo('proveedores')" style="position:relative"><span class="bn-icon">🚚</span><span class="bn-label">Proveedores</span><span id="bn-prov-dot" class="bn-dot" style="display:none"></span></button>
     <button class="bn-item" id="bn-mp" onclick="cambiarModulo('mp')"><span class="bn-icon">📋</span><span class="bn-label">Insumos</span></button>
     <button class="bn-item" id="bn-prod" onclick="cambiarModulo('prod')"><span class="bn-icon">🏭</span><span class="bn-label">Producción</span></button>
     <button class="bn-item" id="bn-ventas" onclick="cambiarModulo('ventas')"><span class="bn-icon">💰</span><span class="bn-label">Ventas</span></button>
-    <button class="bn-item" id="bn-proveedores" onclick="cambiarModulo('proveedores')" style="position:relative"><span class="bn-icon">🚚</span><span class="bn-label">Proveedores</span><span id="bn-prov-dot" class="bn-dot" style="display:none"></span></button>
     <button class="bn-item" id="bn-mas" onclick="toggleSidebar()"><span class="bn-icon">☰</span><span class="bn-label">Más</span></button>
   </nav>
 </div>
@@ -1435,13 +1380,12 @@ function cambiarModulo(mod){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 function mpTab(tab){
-  ['entrada','consultar','insumos'].forEach(function(p){
+  ['consultar','insumos'].forEach(function(p){
     var subBtn=document.getElementById('sub-mp-'+p);
     if(subBtn) subBtn.classList.toggle('active',p===tab);
     document.getElementById('mpanel-'+p).classList.toggle('active',p===tab);
   });
   var titles={
-    entrada:['mp_entry_title','mp_entry_sub'],
     consultar:['mp_check_title','mp_check_sub'],
     insumos:['nav_mp_overview','mp_overview_sub']
   };
@@ -1698,8 +1642,6 @@ async function cargarDatosIniciales(){
   var { data: lista } = await supabase.rpc('mp_obtener_productos');
   lista = lista || [];
   mpProductos=lista;
-  var dl=document.getElementById('mp-lista');dl.innerHTML='';
-  lista.forEach(function(p){var o=document.createElement('option');o.value=p.nombre;dl.appendChild(o)});
   var dl3=document.getElementById('pv-lista-insumo');
   if(dl3){dl3.innerHTML='';lista.forEach(function(p){var o=document.createElement('option');o.value=p.nombre;dl3.appendChild(o)})}
   var sel=document.getElementById('mp-sel-consulta');var cur=sel.value;
@@ -1804,44 +1746,6 @@ async function cargarInsumosOverview(){
 }
 </script>
 <script>
-function onMpNombreInput(){
-  var val=document.getElementById('mp-nombre').value.trim();
-  var p=mpProductos.find(function(x){return x.nombre.toLowerCase()===val.toLowerCase()});
-  if(p){document.getElementById('mp-cpp-nombre').textContent=p.nombre;document.getElementById('mp-cpp-stock').textContent=fmtN(p.stock)+' '+p.unidad;document.getElementById('mp-cpp-val').textContent=fmt(p.cpp);document.getElementById('mp-cpp-uni').textContent=p.unidad;document.getElementById('mp-unidad').value=p.unidad;document.getElementById('mp-cpp-preview').style.display='flex'}
-  else{document.getElementById('mp-cpp-preview').style.display='none'}
-  mpCalc();
-}
-function mpCalc(){
-  var q=parseFloat(document.getElementById('mp-cantidad').value)||0;
-  var tot=parseFloat(document.getElementById('mp-vtotal').value)||0;
-  var u=document.getElementById('mp-unidad').value||'und';
-  var box=document.getElementById('mp-calc');
-  if(q>0&&tot>0){document.getElementById('calc-total').textContent=fmt(tot);document.getElementById('calc-cant').textContent=fmtN(q)+' '+u;document.getElementById('calc-unit').textContent=fmt(tot/q)+'/'+u;box.style.display='block'}
-  else{box.style.display='none'}
-}
-async function mpRegistrar(){
-  var nombre=document.getElementById('mp-nombre').value.trim();
-  var cant=parseFloat(document.getElementById('mp-cantidad').value)||0;
-  var vtotal=parseFloat(document.getElementById('mp-vtotal').value)||0;
-  var unidad=document.getElementById('mp-unidad').value||'und';
-  if(!nombre) return showAlert('alert-mp',t('msg_enter_supply_name'),'err');
-  if(cant<=0) return showAlert('alert-mp',t('msg_invalid_qty'),'err');
-  if(vtotal<=0) return showAlert('alert-mp',t('msg_invalid_total'),'err');
-  var btn=document.getElementById('btn-mp-reg');btn.disabled=true;btn.textContent='Registrando…';
-
-  var { data: res, error } = await supabase.rpc('mp_registrar_entrada', {
-    p_producto: nombre, p_cantidad: cant, p_unidad: unidad, p_valor_total: vtotal
-  });
-  btn.disabled=false;btn.textContent='📥 Registrar Entrada';
-  if(error) return showAlert('alert-mp',t('msg_error_prefix')+error.message,'err');
-
-  if(res.success){
-    showAlert('alert-mp',res.mensaje+' — Stock: '+fmtN(res.nuevoStock)+' '+res.unidad+' — CPP: '+fmt(res.nuevoCPP),'ok');
-    document.getElementById('mp-nombre').value='';document.getElementById('mp-cantidad').value='';document.getElementById('mp-vtotal').value='';
-    document.getElementById('mp-cpp-preview').style.display='none';document.getElementById('mp-calc').style.display='none';
-    cargarDatosIniciales();
-  } else { showAlert('alert-mp',res.mensaje,'err'); }
-}
 async function mpConsultar(){
   var nombre=document.getElementById('mp-sel-consulta').value;
   document.getElementById('mp-resultado').style.display=nombre?'block':'none';
