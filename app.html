@@ -739,10 +739,11 @@ function aplicarIdioma(){
             <div class="kpi-label">Insumos bajos</div>
             <div class="kpi-value" id="dc-alertas">0</div>
           </div>
-          <div class="kpi-icon-card">
+          <div class="kpi-icon-card" id="dc-util-card" onclick="irUtilidadMes()" style="cursor:pointer">
             <div class="kpi-icon-badge" style="background:var(--green3)">📊</div>
             <div class="kpi-label">Utilidad del mes</div>
             <div class="kpi-value" id="dc-utilidad">$0</div>
+            <div class="kpi-sub" id="dc-utilidad-formula"></div>
           </div>
           <div class="kpi-icon-card" onclick="cambiarModulo('proveedores');provTab('pagar')" style="cursor:pointer">
             <div class="kpi-icon-badge" style="background:#FEECEC">🚚</div>
@@ -1613,6 +1614,17 @@ async function doEliminarCuenta(){
   showAlert('alert-auth',t('msg_del_access'),'ok');
 }
 
+function irUtilidadMes(){
+  cambiarModulo('ventas');
+  ventasTab('historial');
+  var hoy = new Date();
+  setTimeout(function(){
+    document.getElementById('filtro-anio').value = String(hoy.getFullYear());
+    document.getElementById('filtro-mes').value = String(hoy.getMonth()+1).padStart(2,'0');
+    vFiltrar();
+  }, 150);
+}
+
 async function cargarControl(){
   var hora=(new Date()).getHours();
   document.getElementById('dash-saludo').textContent = hora<12?'Buen día':hora<19?'Buenas tardes':'Buenas noches';
@@ -1638,9 +1650,13 @@ async function cargarControl(){
   });
   var totalVentasMes = ventasMes.reduce(function(s,v){return s+v.ingresoTotal;},0);
   var totalUtilMes = ventasMes.reduce(function(s,v){return s+v.utilidad;},0);
+  var totalIngresosMes = ventasMes.reduce(function(s,v){return s+v.ingresoTotal;},0);
+  var totalCostosMes   = ventasMes.reduce(function(s,v){return s+v.costoTotal;},0);
   document.getElementById('dc-ventas-mes').textContent = fmt(totalVentasMes);
   var elU=document.getElementById('dc-utilidad'); elU.textContent = fmt(totalUtilMes);
   elU.style.color = totalUtilMes>=0 ? 'var(--green)' : '#993C1D';
+  document.getElementById('dc-utilidad-formula').textContent =
+    fmt(totalIngresosMes) + ' − ' + fmt(totalCostosMes) + ' costos';
 
   var numAlertas = alertas.filter(function(a){return a.alerta;}).length;
   document.getElementById('dc-alertas').textContent = numAlertas;
