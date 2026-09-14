@@ -980,7 +980,7 @@ body {
               <input type="date" id="nf-vencimiento">
             </div>
           </div>
-          <div class="form-g">
+          <div class="form-g" id="nf-iva-wrap">
             <label>IVA de esta factura</label>
             <select id="nf-iva" onchange="recalcularNF()">
               <option value="0" data-i18n="no_iva">Sin IVA (0%)</option>
@@ -1939,6 +1939,7 @@ function setNFMode(mode){
   document.getElementById('nf-blq-individual').style.display = mode==='individual' ? 'block' : 'none';
   document.getElementById('nf-blq-todos').style.display      = mode==='todos'      ? 'block' : 'none';
   document.getElementById('nf-modo-info-todos').style.display= mode==='todos'      ? 'block' : 'none';
+  document.getElementById('nf-iva-wrap').style.display       = mode==='individual' ? 'block' : 'none';
   if(mode==='todos') cargarVistaPreviaTodos();
 }
 
