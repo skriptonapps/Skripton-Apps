@@ -1344,6 +1344,15 @@ body {
       </div>
     </div>
 
+    <div class="form-g" style="margin-top:14px;margin-bottom:0">
+  <label>Tipo de facturación</label>
+  <select id="mcli-tipo-facturacion">
+    <option value="tradicional" selected>🧾 Tradicional</option>
+    <option value="electronica">💻 Electrónica</option>
+  </select>
+  <div class="hint">Solo los clientes de facturación tradicional (con servicio asignado) se facturan desde esta app</div>
+</div>
+
     <!-- ── SERVICIOS CONTRATADOS ── -->
     <div class="form-g">
       <label data-i18n="contracted_services">Servicios contratados</label>
@@ -2167,8 +2176,8 @@ async function cargarVistaPreviaTodos(){
   wrap.innerHTML='<div style="font-size:12px;color:var(--ink3);padding:12px 0">'+t('loading_word')+'</div>';
   var { data: lista } = await supabase.rpc('fac_cliente_listar');
   _clientes=lista||[];
-  var aptos=lista.filter(function(c){return c.serviciosContratados&&c.serviciosContratados.length>0;});
-  var omitidos=lista.filter(function(c){return !c.serviciosContratados||!c.serviciosContratados.length;});
+  var aptos=lista.filter(function(c){return (c.tipoFacturacion||'tradicional')==='tradicional' && c.serviciosContratados&&c.serviciosContratados.length>0;});
+var omitidos=lista.filter(function(c){return (c.tipoFacturacion||'tradicional')!=='tradicional' || !c.serviciosContratados||!c.serviciosContratados.length;});
   if(!aptos.length){
     wrap.innerHTML='<div class="empty-state" style="padding:20px 10px"><div class="empty-icon">👥</div><div>'+t('no_client_services')+'</div><p style="font-size:12px;margin-top:6px">'+t('edit_clients_first')+'</p></div>';
     return;
@@ -2205,7 +2214,7 @@ async function cargarVistaPreviaTodos(){
 }
 
 async function facturarTodos(){
-  var aptos=_clientes.filter(function(c){return c.serviciosContratados&&c.serviciosContratados.length>0;});
+  var aptos=_clientes.filter(function(c){return (c.tipoFacturacion||'tradicional')==='tradicional' && c.serviciosContratados&&c.serviciosContratados.length>0;});
   if(!aptos.length){ toast(t('no_client_has_services'),'warn'); return; }
   var btn=document.getElementById('btn-facturar-todos');
   btn.disabled=true; btn.textContent='Generando facturas…';
@@ -2324,6 +2333,7 @@ async function abrirModalNuevoCliente(){
     .forEach(function(id){document.getElementById(id).value='';});
   document.getElementById('mcli-iva').value='19';
   document.getElementById('mcli-tipo-factura').value='fija';
+  document.getElementById('mcli-tipo-facturacion').value='tradicional';
   hideAlert('alert-mcli');
   if(!_servicios.length){ var { data: s } = await supabase.rpc('fac_servicio_listar'); _servicios=s||[]; }
   _renderServiciosEnModal([]);
@@ -2344,6 +2354,7 @@ async function editarCliente(id){
   document.getElementById('mcli-notas').value=c.notas||'';
   document.getElementById('mcli-iva').value=String(c.ivaDefault!==undefined?c.ivaDefault:19);
   document.getElementById('mcli-tipo-factura').value=c.tipoFactura||'fija';
+  document.getElementById('mcli-tipo-facturacion').value=c.tipoFacturacion||'tradicional';
   hideAlert('alert-mcli');
   var seleccionados=c.serviciosContratados||[];
   if(!_servicios.length){ var { data: s } = await supabase.rpc('fac_servicio_listar'); _servicios=s||[]; }
@@ -2360,18 +2371,20 @@ async function guardarCliente(){
   if(!nombre) return showAlert('alert-mcli',t('msg_name_required'),'err');
 
   var { data: res, error } = await supabase.rpc('fac_cliente_guardar', {
-    p_id: document.getElementById('mcli-id').value || null,
-    p_nombre: nombre,
-    p_nitcc: document.getElementById('mcli-nitcc').value.trim(),
-    p_telefono: document.getElementById('mcli-tel').value.trim(),
-    p_email: document.getElementById('mcli-email').value.trim(),
-    p_direccion: document.getElementById('mcli-dir').value.trim(),
-    p_ciudad: document.getElementById('mcli-ciudad').value.trim(),
-    p_notas: document.getElementById('mcli-notas').value.trim(),
-    p_iva_default: parseFloat(document.getElementById('mcli-iva').value)||0,
-    p_tipo_factura: document.getElementById('mcli-tipo-factura').value||'fija',
-    p_servicios_contratados: svcsSeleccionados
-  });
+  p_id: document.getElementById('mcli-id').value || null,
+  p_nombre: nombre,
+  p_nitcc: document.getElementById('mcli-nitcc').value.trim(),
+  p_telefono: document.getElementById('mcli-tel').value.trim(),
+  p_email: document.getElementById('mcli-email').value.trim(),
+  p_direccion: document.getElementById('mcli-dir').value.trim(),
+  p_ciudad: document.getElementById('mcli-ciudad').value.trim(),
+  p_notas: document.getElementById('mcli-notas').value.trim(),
+  p_iva_default: parseFloat(document.getElementById('mcli-iva').value)||0,
+  p_tipo_factura: document.getElementById('mcli-tipo-factura').value||'fija',
+  p_tipo_facturacion: document.getElementById('mcli-tipo-facturacion').value||'tradicional',
+  p_servicios_contratados: svcsSeleccionados
+});
+  
   if(error){ showAlert('alert-mcli',t('msg_error_prefix')+error.message,'err'); return; }
   if(res.success){ toast(res.mensaje,'ok'); cerrarModal('modal-cliente'); cargarClientes(); }
   else showAlert('alert-mcli',res.mensaje,'err');
