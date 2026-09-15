@@ -1366,10 +1366,11 @@ body {
             <div class="kpi-icon-badge" style="background:#FAECE7">💸</div>
             <div class="kpi-label" data-i18n="kpi_expenses_month">Gastos (mes)</div>
             <div class="kpi-value" id="kpi-gas" style="color:var(--red)">$0</div></div>
-          <div class="kpi-icon-card">
+          <div class="kpi-icon-card" id="kpi-util-card" onclick="cambiarMod('facturas')" style="cursor:pointer">
             <div class="kpi-icon-badge" style="background:var(--green3)">📊</div>
             <div class="kpi-label" data-i18n="kpi_profit_month">Utilidad (mes)</div>
-            <div class="kpi-value" id="kpi-util">$0</div></div>
+            <div class="kpi-value" id="kpi-util">$0</div>
+            <div class="kpi-sub" id="kpi-util-formula"></div></div>
           <div class="kpi-icon-card">
             <div class="kpi-icon-badge" style="background:#FEF3C7">⏳</div>
             <div class="kpi-label" data-i18n="kpi_pending">Pendientes de cobro</div>
@@ -1413,6 +1414,12 @@ body {
           <button class="chip" onclick="setChipEstado(this,'anulada')">❌ <span data-i18n="chip_voided">Anuladas</span></button>
         </div>
 
+        <div class="chips" id="chips-tipo-fact">
+          <button class="chip active" onclick="setChipTipoFact(this,'')">Tradicional + Electrónica</button>
+          <button class="chip" onclick="setChipTipoFact(this,'tradicional')">🧾 Tradicional</button>
+          <button class="chip" onclick="setChipTipoFact(this,'electronica')">💻 Electrónica</button>
+        </div>
+
         <div class="filter-row" style="margin-bottom:14px">
           <div class="search-box" style="flex:2;min-width:160px">
             <span class="search-icon">🔍</span>
@@ -1453,6 +1460,7 @@ body {
             <table>
               <thead><tr>
                 <th>#</th><th data-i18n="th_client">Cliente</th><th data-i18n="th_nit">NIT/CC</th>
+                <th>Tipo</th>
                 <th data-i18n="th_date">Fecha</th><th class="r" data-i18n="th_subtotal">Subtotal</th>
                 <th class="r" data-i18n="th_iva">IVA</th><th class="r" data-i18n="th_total">Total</th>
                 <th data-i18n="th_status">Estado</th><th></th>
@@ -1501,7 +1509,7 @@ body {
               <input type="date" id="nf-vencimiento">
             </div>
           </div>
-          <div class="form-g">
+          <div class="form-g" id="nf-iva-wrap">
             <label>IVA de esta factura</label>
             <select id="nf-iva" onchange="recalcularNF()">
               <option value="0">Sin IVA (0%)</option>
@@ -1603,7 +1611,7 @@ body {
             <table>
               <thead><tr>
                 <th data-i18n="th_name">Nombre</th><th data-i18n="th_nit">NIT/CC</th><th data-i18n="th_phone">Teléfono</th>
-                <th data-i18n="th_email">Correo</th><th data-i18n="th_city">Ciudad</th><th data-i18n="th_iva">IVA</th><th data-i18n="th_type">Tipo</th><th></th>
+                <th data-i18n="th_email">Correo</th><th data-i18n="th_city">Ciudad</th><th data-i18n="th_iva">IVA</th><th data-i18n="th_type">Tipo</th><th>Estado</th><th></th>
               </tr></thead>
               <tbody id="cli-tbody"></tbody>
             </table>
@@ -2277,6 +2285,15 @@ body {
       </div>
     </div>
 
+    <div class="form-g" style="margin-top:14px;margin-bottom:0">
+      <label>Tipo de facturación</label>
+      <select id="mcli-tipo-facturacion">
+        <option value="tradicional" selected>🧾 Tradicional</option>
+        <option value="electronica">💻 Electrónica</option>
+      </select>
+      <div class="hint">Solo los clientes de facturación tradicional (con servicio asignado) se facturan desde esta app</div>
+    </div>
+
     <!-- ── SERVICIOS CONTRATADOS ── -->
     <div class="form-g">
       <label data-i18n="contracted_services">Servicios contratados</label>
@@ -2764,6 +2781,7 @@ async function cargarDashboard(){
   document.getElementById('kpi-gas').textContent=fmt(r.totalGastos);
   var u=r.utilidad; var ku=document.getElementById('kpi-util');
   ku.textContent=fmt(u); ku.style.color=u>=0?'var(--green2)':'var(--red)';
+  document.getElementById('kpi-util-formula').textContent=fmt(r.totalFacturado)+' − '+fmt(r.totalGastos)+' gastos';
 
   var pend=r.facturas.filter(function(f){return f.estado==='emitida';});
   var totalPend=pend.reduce(function(s,f){return s+f.total;},0);
@@ -2831,6 +2849,19 @@ function setChipEstado(btn,estado){
   filtrarFacturas();
 }
 
+var _chipTipoFact='';
+function setChipTipoFact(btn,tipo){
+  _chipTipoFact=tipo;
+  document.querySelectorAll('#chips-tipo-fact .chip').forEach(function(c){c.classList.remove('active');});
+  btn.classList.add('active');
+  filtrarFacturas();
+}
+function tipoFactBadge(tipo){
+  return tipo==='electronica'
+    ? '<span class="badge" style="background:var(--purple2);color:var(--purple)">💻 Electrónica</span>'
+    : '<span class="badge badge-blue">🧾 Tradicional</span>';
+}
+
 function filtrarFacturas(){
   var q=(document.getElementById('f-fac-q').value||'').toLowerCase();
   var mes=document.getElementById('f-fac-mes').value;
@@ -2839,10 +2870,11 @@ function filtrarFacturas(){
   var filtradas=_facturas.filter(function(f){
     var p=(f.fechaSolo||'').split('/');
     var okEstado=!_chipEstado||f.estado===_chipEstado;
+    var okTipoFact=!_chipTipoFact||(f.tipoFacturacion||'tradicional')===_chipTipoFact;
     var okMes=!mes||p[1]===mes;
     var okAnio=!anio||p[2]===anio;
     var okQ=!q||(f.clienteNombre||'').toLowerCase().includes(q)||(f.clienteNitcc||'').toLowerCase().includes(q)||(f.id||'').toLowerCase().includes(q)||(f.numero||'').includes(q);
-    return okEstado&&okMes&&okAnio&&okQ;
+    return okEstado&&okTipoFact&&okMes&&okAnio&&okQ;
   });
 
   var tbody=document.getElementById('fac-tbody');
@@ -2865,6 +2897,7 @@ function filtrarFacturas(){
     tr.innerHTML='<td style="font-family:var(--font-mono);font-size:11px;color:var(--ink3)">'+esc(f.id)+'</td>'+
       '<td><strong>'+esc(f.clienteNombre)+'</strong></td>'+
       '<td style="font-family:var(--font-mono);font-size:11px">'+esc(f.clienteNitcc||'—')+'</td>'+
+      '<td>'+tipoFactBadge(f.tipoFacturacion)+'</td>'+
       '<td>'+esc(f.fechaSolo)+'</td>'+
       '<td class="r">'+fmt(f.subtotal)+'</td>'+
       '<td class="r" style="color:var(--ink3)">'+fmt(f.ivaValor)+'</td>'+
@@ -2874,7 +2907,7 @@ function filtrarFacturas(){
         '<button class="icon-btn btn-sm" title="'+t('view_pdf_tt')+'" onclick="verFactura(\''+esc(f.id)+'\')">👁</button>'+
         (f.estado==='emitida'?'<button class="icon-btn btn-sm" title="'+t('mark_paid_tt')+'" onclick="cambiarEstadoFac(\''+esc(f.id)+'\',\'pagada\')">✅</button>':'')+
         (f.estado!=='anulada'?'<button class="icon-btn btn-sm danger" title="'+t('void_tt')+'" onclick="confirmar(\''+t('void_invoice_title')+'\',\''+t('confirm_void_msg').replace('{id}',esc(f.id))+'\',function(){cambiarEstadoFac(\''+esc(f.id)+'\',\'anulada\');})">❌</button>':'')+
-        '<button class="icon-btn btn-sm" title="'+t('individual_pdf_tt')+'" onclick="pdfFactura(\''+esc(f.id)+'\')">📄</button>'+
+        (f.tipoFacturacion!=='electronica'?'<button class="icon-btn btn-sm" title="'+t('individual_pdf_tt')+'" onclick="pdfFactura(\''+esc(f.id)+'\')">📄</button>':'')+
       '</div></td>';
     tbody.appendChild(tr);
   });
@@ -2917,7 +2950,7 @@ async function verFactura(id){
     '<div>'+t('number_word')+' <strong>'+esc(f.numero)+'</strong></div>'+
     '<div style="color:var(--ink3)">'+t('issued_word')+' '+esc(f.fechaSolo)+'</div>'+
     (f.fechaVencimiento?'<div style="color:var(--amber)">'+t('due_word')+' '+esc(formatFechaCorta(f.fechaVencimiento))+'</div>':'')+
-    '<div style="margin-top:4px"><span class="badge badge-'+esc(f.estado)+'">'+badgeLabel(f.estado)+'</span></div>'+
+    '<div style="margin-top:4px">'+tipoFactBadge(f.tipoFacturacion)+' <span class="badge badge-'+esc(f.estado)+'">'+badgeLabel(f.estado)+'</span></div>'+
     '</div></div></div>';
 
   html+='<table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:12px">'+
@@ -2966,6 +2999,7 @@ function setNFMode(mode){
   document.getElementById('nf-blq-individual').style.display = mode==='individual' ? 'block' : 'none';
   document.getElementById('nf-blq-todos').style.display      = mode==='todos'      ? 'block' : 'none';
   document.getElementById('nf-modo-info-todos').style.display= mode==='todos'      ? 'block' : 'none';
+  document.getElementById('nf-iva-wrap').style.display       = mode==='individual' ? 'block' : 'none';
   if(mode==='todos') cargarVistaPreviaTodos();
 }
 
@@ -3221,14 +3255,19 @@ function limpiarNF(){
 /* ─────────────────────────────────────────────────
    FACTURAR A TODOS LOS CLIENTES
 ───────────────────────────────────────────────── */
+function _clienteFacturable(c){
+  return (c.estado||'activo')!=='suspendido'
+    && c.serviciosContratados && c.serviciosContratados.length>0;
+}
+
 async function cargarVistaPreviaTodos(){
   var wrap=document.getElementById('nf-todos-preview');
   wrap.innerHTML='<div style="font-size:12px;color:var(--ink3);padding:12px 0">'+t('loading_word')+'</div>';
   var { data: lista } = await supabase.rpc('fac_cliente_listar');
   _clientes=lista||[];
   await cargarCantidadesServicio();
-  var aptos=lista.filter(function(c){return c.serviciosContratados&&c.serviciosContratados.length>0;});
-  var omitidos=lista.filter(function(c){return !c.serviciosContratados||!c.serviciosContratados.length;});
+  var aptos=lista.filter(_clienteFacturable);
+  var omitidos=lista.filter(function(c){return !_clienteFacturable(c);});
   if(!aptos.length){
     wrap.innerHTML='<div class="empty-state" style="padding:20px 10px"><div class="empty-icon">👥</div><div>'+t('no_client_services')+'</div><p style="font-size:12px;margin-top:6px">'+t('edit_clients_first')+'</p></div>';
     return;
@@ -3254,19 +3293,20 @@ async function cargarVistaPreviaTodos(){
       '</div>'+
       '<div style="text-align:right;flex-shrink:0">'+
         '<div style="font-family:var(--font-serif);font-size:16px;color:var(--blue)">'+fmt(total)+'</div>'+
-        '<div style="font-size:10px;color:var(--ink3)">'+(c.tipoFactura==='temporal'?t('fixed_short'):t('fixed_short2'))+'</div>'+
+        '<div style="font-size:10px;color:var(--ink3)">'+(c.tipoFactura==='temporal'?t('fixed_short'):t('fixed_short2'))+
+          ' · '+(c.tipoFacturacion==='electronica'?'💻 Electrónica':'🧾 Tradicional')+'</div>'+
       '</div>'+
     '</div>';
   });
   if(omitidos.length){
-    html+='<div style="font-size:11px;color:var(--ink3);padding:8px 12px;background:var(--bg);border-radius:var(--r)">'+t('omitted_no_services')+' '+omitidos.map(function(c){return esc(c.nombre);}).join(', ')+'</div>';
+    html+='<div style="font-size:11px;color:var(--ink3);padding:8px 12px;background:var(--bg);border-radius:var(--r)">'+t('omitted_no_services')+' '+omitidos.map(function(c){return esc(c.nombre)+((c.estado==='suspendido')?' (suspendido)':'');}).join(', ')+'</div>';
   }
   html+='</div>';
   wrap.innerHTML=html;
 }
 
 async function facturarTodos(){
-  var aptos=_clientes.filter(function(c){return c.serviciosContratados&&c.serviciosContratados.length>0;});
+  var aptos=_clientes.filter(_clienteFacturable);
   if(!aptos.length){ toast(t('no_client_has_services'),'warn'); return; }
   var btn=document.getElementById('btn-facturar-todos');
   btn.disabled=true; btn.textContent='Generando facturas…';
@@ -3324,6 +3364,7 @@ function renderClientes(lista){
   if(!lista.length){empty.style.display='block';return;}
   empty.style.display='none';
   lista.forEach(function(c){
+    var suspendido = (c.estado||'activo')==='suspendido';
     var tr=document.createElement('tr');
     tr.innerHTML=
       '<td>'+
@@ -3344,13 +3385,30 @@ function renderClientes(lista){
       '<td>'+(c.tipoFactura==='temporal'
         ? '<span class="badge" style="background:var(--amber2);color:var(--amber)">'+t('fixed_short')+'</span>'
         : '<span class="badge badge-blue">'+t('fixed_short2')+'</span>')+
+        (c.tipoFacturacion==='electronica'
+          ? '<br><span class="badge" style="background:var(--purple2);color:var(--purple);margin-top:3px">💻 Electrónica</span>'
+          : '<br><span class="badge badge-blue" style="margin-top:3px">🧾 Tradicional</span>')+
+      '</td>'+
+      '<td>'+(suspendido
+        ? '<span class="badge" style="background:var(--red2);color:var(--red)">⏸ Suspendido</span>'
+        : '<span class="badge" style="background:var(--green3);color:var(--green4,var(--green))">✅ Activo</span>')+
       '</td>'+
       '<td><div style="display:flex;gap:4px">'+
         '<button class="icon-btn btn-sm" onclick="editarCliente(\''+esc(c.id)+'\')">✏️</button>'+
+        (suspendido
+          ? '<button class="icon-btn btn-sm" title="Activar" onclick="cambiarEstadoCliente(\''+esc(c.id)+'\',\'activo\')">▶️</button>'
+          : '<button class="icon-btn btn-sm" title="Suspender" onclick="cambiarEstadoCliente(\''+esc(c.id)+'\',\'suspendido\')">⏸</button>')+
         '<button class="icon-btn btn-sm danger" onclick="confirmar(\''+t('delete_client_title')+'\',\''+t('confirm_del_client_msg').replace('{nombre}',esc(c.nombre))+'\',function(){eliminarCliente(\''+esc(c.id)+'\');})">🗑</button>'+
       '</div></td>';
     tbody.appendChild(tr);
   });
+}
+
+async function cambiarEstadoCliente(id, estado){
+  var { data: res, error } = await supabase.rpc('fac_cliente_cambiar_estado', { p_id:id, p_estado:estado });
+  if(error){ toast(t('msg_error_prefix')+error.message,'err'); return; }
+  if(res.success){ toast(res.mensaje,'ok'); cargarClientes(); }
+  else toast(res.mensaje,'err');
 }
 
 function _cantidadGuardada(seleccionados, id, clienteId){
@@ -3404,6 +3462,7 @@ async function abrirModalNuevoCliente(){
     .forEach(function(id){document.getElementById(id).value='';});
   document.getElementById('mcli-iva').value='19';
   document.getElementById('mcli-tipo-factura').value='fija';
+  document.getElementById('mcli-tipo-facturacion').value='tradicional';
   hideAlert('alert-mcli');
   if(!_servicios.length){ var { data: s } = await supabase.rpc('fac_servicio_listar'); _servicios=s||[]; }
   _renderServiciosEnModal([]);
@@ -3424,6 +3483,7 @@ async function editarCliente(id){
   document.getElementById('mcli-notas').value=c.notas||'';
   document.getElementById('mcli-iva').value=String(c.ivaDefault!==undefined?c.ivaDefault:19);
   document.getElementById('mcli-tipo-factura').value=c.tipoFactura||'fija';
+  document.getElementById('mcli-tipo-facturacion').value=c.tipoFacturacion||'tradicional';
   hideAlert('alert-mcli');
   var seleccionados=c.serviciosContratados||[];
   if(!_servicios.length){ var { data: s } = await supabase.rpc('fac_servicio_listar'); _servicios=s||[]; }
@@ -3494,6 +3554,7 @@ async function guardarCliente(){
     p_notas: document.getElementById('mcli-notas').value.trim(),
     p_iva_default: parseFloat(document.getElementById('mcli-iva').value)||0,
     p_tipo_factura: document.getElementById('mcli-tipo-factura').value||'fija',
+    p_tipo_facturacion: document.getElementById('mcli-tipo-facturacion').value||'tradicional',
     p_servicios_contratados: svcsSeleccionados
   });
   if(error){ showAlert('alert-mcli',t('msg_error_prefix')+error.message,'err'); return; }
@@ -4030,10 +4091,11 @@ function exportarFacturasMasivo(){
     var anio=document.getElementById('f-fac-anio').value;
     var p=(f.fechaSolo||'').split('/');
     var ok=(!_chipEstado||f.estado===_chipEstado)
+          &&(!_chipTipoFact||(f.tipoFacturacion||'tradicional')===_chipTipoFact)
           &&(!mes||p[1]===mes)
           &&(!anio||p[2]===anio)
           &&(!q||(f.clienteNombre||'').toLowerCase().includes(q)||(f.id||'').toLowerCase().includes(q));
-    if(ok&&f.estado!=='anulada') ids.push(f.id);
+    if(ok&&f.estado!=='anulada'&&f.tipoFacturacion!=='electronica') ids.push(f.id);
   });
 
   if(!ids.length){ toast(t('no_active_invoices_export'),'warn'); return; }
