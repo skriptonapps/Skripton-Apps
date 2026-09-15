@@ -440,6 +440,20 @@ tbody tr:hover{background:var(--bg)}
             <div class="kpi-value" id="kpi-prom" style="color:var(--amber2)">$0</div>
           </div>
         </div>
+        <div class="grid-2" style="margin-bottom:16px">
+          <div class="kpi-icon-card">
+            <div class="kpi-icon-badge" style="background:var(--green3)">💵</div>
+            <div class="kpi-label">Deberías tener en efectivo</div>
+            <div class="kpi-value" id="kpi-util-efectivo" style="color:var(--green)">$0</div>
+            <div class="kpi-sub" id="kpi-util-efectivo-sub"></div>
+          </div>
+          <div class="kpi-icon-card">
+            <div class="kpi-icon-badge" style="background:var(--blue3)">🏦</div>
+            <div class="kpi-label">Deberías tener en transferencia</div>
+            <div class="kpi-value" id="kpi-util-transferencia" style="color:var(--blue)">$0</div>
+            <div class="kpi-sub" id="kpi-util-transferencia-sub"></div>
+          </div>
+        </div>
         <div class="grid-2">
           <div class="card">
             <div class="card-title" style="color:var(--amber4)">⚖️ Ingresos por plataforma (mes)</div>
@@ -571,7 +585,7 @@ tbody tr:hover{background:var(--bg)}
           <div class="table-scroll">
             <table>
               <thead><tr>
-                <th>Fecha</th><th>Tipo</th><th>Categoría</th><th class="r">Monto</th><th>Notas</th><th></th>
+                <th>Fecha</th><th>Tipo</th><th>Categoría</th><th>Pago</th><th class="r">Monto</th><th>Notas</th><th></th>
               </tr></thead>
               <tbody id="gas-tbody"></tbody>
             </table>
@@ -684,6 +698,14 @@ tbody tr:hover{background:var(--bg)}
     </div>
     <div class="form-g"><label>Monto</label>
       <input type="number" id="mgas-monto" min="0" step="500" inputmode="numeric" placeholder="$0"></div>
+    <div class="form-g">
+      <label>¿Cómo pagaste este gasto?</label>
+      <div class="pago-toggle">
+        <button type="button" class="pago-opt active" id="mgas-pago-efectivo" onclick="setMetodoPagoGasto('efectivo')">💵 Efectivo</button>
+        <button type="button" class="pago-opt" id="mgas-pago-transferencia" onclick="setMetodoPagoGasto('transferencia')">🏦 Transferencia</button>
+      </div>
+      <input type="hidden" id="mgas-metodo-pago" value="efectivo">
+    </div>
     <div class="form-g"><label>Notas</label>
       <input type="text" id="mgas-notas" placeholder="Detalle adicional…"></div>
     <div class="modal-actions">
@@ -730,7 +752,7 @@ tbody tr:hover{background:var(--bg)}
 var SESSION = null;
 var _viajes = [];
 var _gastos = [];
-var _metodosPago = {}; // { viajeId: 'efectivo'|'transferencia' }
+var _metodosPago = {}; // { id: 'efectivo'|'transferencia' } — se usa tanto para viajes como para gastos
 
 function fmt(v){ return new Intl.NumberFormat('es-CO',{style:'currency',currency:'COP',minimumFractionDigits:0}).format(v||0); }
 function esc(s){ return (s||'').toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
@@ -753,7 +775,7 @@ async function cargarMetodosPago(){
   var { data } = await supabase.rpc('tur_obtener_metodos_pago');
   _metodosPago = data || {};
 }
-function metodoDe(viajeId){ return _metodosPago[viajeId] || 'efectivo'; }
+function metodoDe(id){ return _metodosPago[id] || 'efectivo'; }
 
 /* ══ SIDEBAR / USER MENU ══ */
 function toggleSidebar(){
@@ -974,6 +996,28 @@ async function cargarDashboard(){
   var etiquetas={efectivo:'💵 Efectivo',transferencia:'🏦 Transferencia'};
   var dataPago=Object.keys(porPago).map(function(k){ return {label:etiquetas[k]||k, val:porPago[k]}; });
   renderGrafico('graf-pagos-dash', dataPago, dataPago.map(function(d){return d.val;}), 'var(--blue)');
+
+  /* ── Conciliación: cuánto deberías tener en efectivo vs transferencia ── */
+  var { data: listaGastosDash } = await supabase.rpc('tur_listar_gastos');
+  var gastosMes=(listaGastosDash||[]).filter(function(g){
+    var p=(g.fechaSolo||'').split('/');
+    return p.length>=3 && p[1]===mesActual && p[2]===anioActual;
+  });
+  var gastosPorPago={};
+  gastosMes.forEach(function(g){
+    var m=metodoDe(g.id); gastosPorPago[m]=(gastosPorPago[m]||0)+g.monto;
+  });
+  var ingEfectivo=porPago.efectivo||0, ingTransferencia=porPago.transferencia||0;
+  var gasEfectivo=gastosPorPago.efectivo||0, gasTransferencia=gastosPorPago.transferencia||0;
+  var utilEfectivo=ingEfectivo-gasEfectivo, utilTransferencia=ingTransferencia-gasTransferencia;
+
+  var elUE=document.getElementById('kpi-util-efectivo');
+  elUE.textContent=fmt(utilEfectivo); elUE.style.color=utilEfectivo>=0?'var(--green)':'var(--red)';
+  document.getElementById('kpi-util-efectivo-sub').textContent='Ingresos '+fmt(ingEfectivo)+' − Gastos '+fmt(gasEfectivo);
+
+  var elUT=document.getElementById('kpi-util-transferencia');
+  elUT.textContent=fmt(utilTransferencia); elUT.style.color=utilTransferencia>=0?'var(--blue)':'var(--red)';
+  document.getElementById('kpi-util-transferencia-sub').textContent='Ingresos '+fmt(ingTransferencia)+' − Gastos '+fmt(gasTransferencia);
 }
 
 function renderGrafico(id,data,vals,color){
@@ -1141,6 +1185,7 @@ function eliminarViaje(id){
 async function cargarGastos(){
   var { data: lista } = await supabase.rpc('tur_listar_gastos');
   _gastos = lista||[];
+  await cargarMetodosPago();
 
   var fa=document.getElementById('f-gas-anio'); var va=fa.value;
   var anios=[]; _gastos.forEach(function(g){ var p=(g.fechaSolo||'').split('/'); if(p.length>=3 && !anios.includes(p[2])) anios.push(p[2]); });
@@ -1168,10 +1213,13 @@ function renderGastos(lista){
   if(!lista.length){ empty.style.display='block'; return; }
   empty.style.display='none';
   lista.forEach(function(g){
+    var mg=metodoDe(g.id);
+    var badgePagoG = mg==='transferencia' ? '<span class="badge badge-transferencia">🏦 Transferencia</span>' : '<span class="badge badge-efectivo">💵 Efectivo</span>';
     var tr=document.createElement('tr');
     tr.innerHTML='<td>'+esc(g.fechaSolo)+'</td>'+
       '<td><span class="badge '+(g.tipo==='fijo'?'badge-fijo':'badge-variable')+'">'+(g.tipo==='fijo'?'Fijo':'Variable')+'</span></td>'+
       '<td>'+esc(g.categoria)+'</td>'+
+      '<td>'+badgePagoG+'</td>'+
       '<td class="r"><strong style="color:var(--red)">'+fmt(g.monto)+'</strong></td>'+
       '<td style="font-size:11px;color:var(--ink3)">'+esc(g.notas||'—')+'</td>'+
       '<td><div style="display:flex;gap:4px">'+
@@ -1182,12 +1230,19 @@ function renderGastos(lista){
   });
 }
 
+function setMetodoPagoGasto(m){
+  document.getElementById('mgas-metodo-pago').value=m;
+  document.getElementById('mgas-pago-efectivo').classList.toggle('active',m==='efectivo');
+  document.getElementById('mgas-pago-transferencia').classList.toggle('active',m==='transferencia');
+}
+
 function abrirModalNuevoGasto(){
   document.getElementById('mgas-title').textContent='Registrar gasto';
   document.getElementById('mgas-id').value='';
   document.getElementById('mgas-tipo').value='variable';
   document.getElementById('mgas-fecha').value=fechaHoyCorta();
   ['mgas-cat','mgas-monto','mgas-notas'].forEach(function(id){document.getElementById(id).value='';});
+  setMetodoPagoGasto('efectivo');
   hideAlert('alert-mgas');
   abrirModal('modal-gasto');
 }
@@ -1202,6 +1257,7 @@ function editarGasto(id){
   document.getElementById('mgas-cat').value=g.categoria;
   document.getElementById('mgas-monto').value=g.monto;
   document.getElementById('mgas-notas').value=g.notas||'';
+  setMetodoPagoGasto(metodoDe(g.id));
   hideAlert('alert-mgas');
   abrirModal('modal-gasto');
 }
@@ -1212,6 +1268,7 @@ async function guardarGasto(){
   var monto=parseFloat(document.getElementById('mgas-monto').value)||0;
   var fecha=document.getElementById('mgas-fecha').value;
   var notas=document.getElementById('mgas-notas').value.trim();
+  var metodoPago=document.getElementById('mgas-metodo-pago').value;
   if(!categoria) return showAlert('alert-mgas','La categoría es obligatoria.','err');
   if(monto<=0) return showAlert('alert-mgas','El monto debe ser mayor a 0.','err');
 
@@ -1222,7 +1279,16 @@ async function guardarGasto(){
 
   var { data: res, error } = await supabase.rpc(fn, params);
   if(error){ showAlert('alert-mgas','Error: '+error.message,'err'); return; }
-  if(res.success){ toast(res.mensaje,'ok'); cerrarModal('modal-gasto'); cargarGastos(); cargarDashboard(); }
+  if(res.success){
+    var gastoId=id;
+    if(!gastoId){
+      var { data: listaFresca } = await supabase.rpc('tur_listar_gastos');
+      var nuevo = listaFresca && listaFresca[0];
+      if(nuevo && nuevo.id) gastoId=nuevo.id;
+    }
+    if(gastoId) await supabase.rpc('tur_actualizar_metodo_pago', { p_id: gastoId, p_metodo: metodoPago });
+    toast(res.mensaje,'ok'); cerrarModal('modal-gasto'); cargarGastos(); cargarDashboard();
+  }
   else showAlert('alert-mgas',res.mensaje,'err');
 }
 function eliminarGastoConfirm(id){
