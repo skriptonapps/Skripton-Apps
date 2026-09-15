@@ -1309,12 +1309,12 @@ body {
       </div>
       <div class="sidebar-section">
         <div class="sidebar-label">Inventario</div>
-        <button class="nav-item" id="nav-prov-registrar" onclick="cambiarMod('prov-registrar')" style="position:relative">
+        <button class="nav-item" id="nav-prov-registrar" onclick="cambiarMod('prov-registrar')">
           <span class="nav-item-icon" style="background:#FEECEC">🚚</span><span>Proveedores</span>
-          <span id="proveedores-badge" style="display:none;background:var(--red);color:#fff;font-size:10px;font-weight:700;border-radius:20px;padding:1px 7px;min-width:16px;text-align:center">0</span>
         </button>
-        <button class="nav-item" id="nav-prov-pagar" onclick="cambiarMod('prov-pagar')">
+        <button class="nav-item" id="nav-prov-pagar" onclick="cambiarMod('prov-pagar')" style="position:relative">
           <span class="nav-item-icon" style="background:#FEECEC">⏰</span><span>Por pagar</span>
+          <span id="proveedores-badge" style="display:none;background:var(--red);color:#fff;font-size:10px;font-weight:700;border-radius:20px;padding:1px 7px;min-width:16px;text-align:center">0</span>
         </button>
         <button class="nav-item" id="nav-prov-historial" onclick="cambiarMod('prov-historial')">
           <span class="nav-item-icon" style="background:#FEECEC">🗂️</span><span>Historial de compras</span>
@@ -3621,11 +3621,21 @@ async function sincronizarStockCliente(clienteId, cantidadesPayload, clienteNomb
   });
   Object.keys(nuevoMap).forEach(function(id){ idsAConsiderar[id]=true; });
 
+  // Refrescamos pfProductos justo antes de comparar, para no trabajar con datos
+  // desactualizados si se produjo algo nuevo en esta misma sesión.
+  var { data: pfsFrescos } = await supabase.rpc('prod_obtener_pf');
+  if(pfsFrescos) pfProductos = pfsFrescos;
+
+  var errores=[]; var omitidosPorNombre=[]; var sincronizados=0;
+
   for(var svcId in idsAConsiderar){
     var svc=_servicios.find(function(s){return s.id===svcId;});
     if(!svc) continue;
     var esInventario=pfProductos.some(function(p){ return p.nombre.trim().toLowerCase()===svc.nombre.trim().toLowerCase(); });
-    if(!esInventario) continue; // solo sincronizamos stock para productos que vienen de Inventario
+    if(!esInventario){
+      if((nuevoMap[svcId]||0)>0) omitidosPorNombre.push(svc.nombre);
+      continue; // solo sincronizamos stock para productos que vienen de Inventario
+    }
 
     var key=clienteId+':'+svcId;
     var ventaIdExistente=_linksVenta[key];
@@ -3636,18 +3646,38 @@ async function sincronizarStockCliente(clienteId, cantidadesPayload, clienteNomb
         p_producto: svc.nombre, p_cantidad: nuevaCant, p_precio_unit: svc.precio, p_margen: 0,
         p_notas: 'Asignado a '+(clienteNombre||'cliente')
       });
-      if(!e1 && r1 && r1.success){
+      if(e1){ errores.push(svc.nombre+': '+e1.message); }
+      else if(!r1 || !r1.success){ errores.push(svc.nombre+': '+(r1?r1.mensaje:'error desconocido')); }
+      else {
         var { data: histFresco } = await supabase.rpc('ventas_historial');
         var ventaId = histFresco && histFresco[0] && histFresco[0].id;
-        if(ventaId) await supabase.rpc('fc_guardar_link_cliente_venta', { p_cliente_id:clienteId, p_servicio_id:svcId, p_venta_id:ventaId });
+        if(ventaId){
+          var { error: eLink } = await supabase.rpc('fc_guardar_link_cliente_venta', { p_cliente_id:clienteId, p_servicio_id:svcId, p_venta_id:ventaId });
+          if(eLink) errores.push(svc.nombre+' (link): '+eLink.message);
+          else sincronizados++;
+        }
       }
     } else if(nuevaCant>0 && ventaIdExistente){
-      await supabase.rpc('ventas_editar', { p_id:ventaIdExistente, p_cantidad:nuevaCant, p_precio_unit:svc.precio, p_notas:'Asignado a '+(clienteNombre||'cliente') });
+      var { data: r2, error: e2 } = await supabase.rpc('ventas_editar', { p_id:ventaIdExistente, p_cantidad:nuevaCant, p_precio_unit:svc.precio, p_notas:'Asignado a '+(clienteNombre||'cliente') });
+      if(e2) errores.push(svc.nombre+': '+e2.message);
+      else if(!r2 || !r2.success) errores.push(svc.nombre+': '+(r2?r2.mensaje:'error desconocido'));
+      else sincronizados++;
     } else if(nuevaCant===0 && ventaIdExistente){
-      await supabase.rpc('ventas_eliminar', { p_id: ventaIdExistente });
+      var { error: e3 } = await supabase.rpc('ventas_eliminar', { p_id: ventaIdExistente });
+      if(e3) errores.push(svc.nombre+': '+e3.message);
       await supabase.rpc('fc_borrar_link_cliente_venta', { p_cliente_id:clienteId, p_servicio_id:svcId });
     }
   }
+
+  if(omitidosPorNombre.length){
+    toast('⚠️ No se movió stock de: '+omitidosPorNombre.join(', ')+' — el nombre no coincide con ningún producto de Inventario.','warn');
+  }
+  if(errores.length){
+    toast('⚠️ Error sincronizando stock: '+errores.join(' · '),'err');
+  } else if(sincronizados>0){
+    toast('📦 Stock actualizado: '+sincronizados+' producto'+(sincronizados!==1?'s':'')+' movido'+(sincronizados!==1?'s':'')+' en Inventario.','ok');
+  }
+
   cargarDatosIniciales();
 }
 
