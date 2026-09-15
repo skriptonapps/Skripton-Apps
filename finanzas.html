@@ -2180,8 +2180,7 @@ function limpiarNF(){
    FACTURAR A TODOS LOS CLIENTES
 ───────────────────────────────────────────────── */
 function _clienteFacturable(c){
-  return (c.tipoFacturacion||'tradicional')==='tradicional'
-    && (c.estado||'activo')!=='suspendido'
+  return (c.estado||'activo')!=='suspendido'
     && c.serviciosContratados && c.serviciosContratados.length>0;
 }
 
