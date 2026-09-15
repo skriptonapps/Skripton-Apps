@@ -753,6 +753,12 @@ var SESSION = null;
 var _viajes = [];
 var _gastos = [];
 var _metodosPago = {}; // { id: 'efectivo'|'transferencia' } — se usa tanto para viajes como para gastos
+var _metodosPagoGastos = {};
+function metodoDeGasto(id){ return _metodosPagoGastos[id] || 'efectivo'; }
+async function cargarMetodosPagoGastos(){
+  var { data } = await supabase.rpc('tur_obtener_metodos_pago_gastos');
+  _metodosPagoGastos = data || {};
+}
 
 function fmt(v){ return new Intl.NumberFormat('es-CO',{style:'currency',currency:'COP',minimumFractionDigits:0}).format(v||0); }
 function esc(s){ return (s||'').toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
@@ -998,14 +1004,16 @@ async function cargarDashboard(){
   renderGrafico('graf-pagos-dash', dataPago, dataPago.map(function(d){return d.val;}), 'var(--blue)');
 
   /* ── Conciliación: cuánto deberías tener en efectivo vs transferencia ── */
+   /* ── Conciliación: cuánto deberías tener en efectivo vs transferencia ── */
   var { data: listaGastosDash } = await supabase.rpc('tur_listar_gastos');
   var gastosMes=(listaGastosDash||[]).filter(function(g){
     var p=(g.fechaSolo||'').split('/');
     return p.length>=3 && p[1]===mesActual && p[2]===anioActual;
   });
+  await cargarMetodosPagoGastos();
   var gastosPorPago={};
   gastosMes.forEach(function(g){
-    var m=metodoDe(g.id); gastosPorPago[m]=(gastosPorPago[m]||0)+g.monto;
+    var m=metodoDeGasto(g.id); gastosPorPago[m]=(gastosPorPago[m]||0)+g.monto;
   });
   var ingEfectivo=porPago.efectivo||0, ingTransferencia=porPago.transferencia||0;
   var gasEfectivo=gastosPorPago.efectivo||0, gasTransferencia=gastosPorPago.transferencia||0;
@@ -1185,7 +1193,7 @@ function eliminarViaje(id){
 async function cargarGastos(){
   var { data: lista } = await supabase.rpc('tur_listar_gastos');
   _gastos = lista||[];
-  await cargarMetodosPago();
+  await cargarMetodosPagoGastos();
 
   var fa=document.getElementById('f-gas-anio'); var va=fa.value;
   var anios=[]; _gastos.forEach(function(g){ var p=(g.fechaSolo||'').split('/'); if(p.length>=3 && !anios.includes(p[2])) anios.push(p[2]); });
@@ -1213,7 +1221,7 @@ function renderGastos(lista){
   if(!lista.length){ empty.style.display='block'; return; }
   empty.style.display='none';
   lista.forEach(function(g){
-    var mg=metodoDe(g.id);
+    var mg=metodoDeGasto(g.id);
     var badgePagoG = mg==='transferencia' ? '<span class="badge badge-transferencia">🏦 Transferencia</span>' : '<span class="badge badge-efectivo">💵 Efectivo</span>';
     var tr=document.createElement('tr');
     tr.innerHTML='<td>'+esc(g.fechaSolo)+'</td>'+
@@ -1257,7 +1265,7 @@ function editarGasto(id){
   document.getElementById('mgas-cat').value=g.categoria;
   document.getElementById('mgas-monto').value=g.monto;
   document.getElementById('mgas-notas').value=g.notas||'';
-  setMetodoPagoGasto(metodoDe(g.id));
+  setMetodoPagoGasto(metodoDeGasto(g.id));
   hideAlert('alert-mgas');
   abrirModal('modal-gasto');
 }
@@ -1286,7 +1294,7 @@ async function guardarGasto(){
       var nuevo = listaFresca && listaFresca[0];
       if(nuevo && nuevo.id) gastoId=nuevo.id;
     }
-    if(gastoId) await supabase.rpc('tur_actualizar_metodo_pago', { p_id: gastoId, p_metodo: metodoPago });
+    if(gastoId) await supabase.rpc('tur_actualizar_metodo_pago_gasto', { p_id: gastoId, p_metodo: metodoPago });
     toast(res.mensaje,'ok'); cerrarModal('modal-gasto'); cargarGastos(); cargarDashboard();
   }
   else showAlert('alert-mgas',res.mensaje,'err');
