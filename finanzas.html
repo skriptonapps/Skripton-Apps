@@ -832,13 +832,9 @@ body {
           <div style="display:flex;gap:8px;flex-wrap:wrap">
             <button class="chip active" id="nfmode-individual" onclick="setNFMode('individual')">👤 <span data-i18n="individual_client">Cliente individual</span></button>
             <button class="chip" id="nfmode-todos" onclick="setNFMode('todos')">👥 <span data-i18n="bill_all_clients">Facturar a TODOS los clientes</span></button>
-            <button class="chip" id="nfmode-electronica" onclick="setNFMode('electronica')">💻 <span>Registrar factura electrónica</span></button>
           </div>
           <div id="nf-modo-info-todos" style="display:none;margin-top:10px;background:var(--amber2);border:1px solid var(--amber);border-radius:var(--r);padding:10px 14px;font-size:12px;color:var(--amber)">
             ⚠️ <span data-i18n="bill_all_warning">Se generará una factura por cada cliente registrado usando sus servicios contratados. Los clientes sin servicios asignados serán omitidos.</span>
-          </div>
-          <div id="nf-modo-info-electronica" style="display:none;margin-top:10px;background:var(--blue3);border:1px solid var(--blue);border-radius:var(--r);padding:10px 14px;font-size:12px;color:var(--blue2)">
-            💻 Usa esto para registrar aquí una factura que ya emitiste como electrónica (DIAN u otro software), solo para que aparezca en tu historial y en los reportes de esta app.
           </div>
         </div>
 
@@ -934,52 +930,6 @@ body {
             <input type="text" id="nf-todos-notas" placeholder="Se aplicará a todas las facturas…" data-i18n-ph="ph_apply_all_invoices">
           </div>
           <button class="btn-green" style="width:100%" id="btn-facturar-todos" onclick="facturarTodos()">⚡ <span data-i18n="generate_invoices_all">Generar facturas para todos los clientes</span></button>
-        </div>
-
-        <!-- Modo ELECTRÓNICA (registro manual) -->
-        <div id="nf-blq-electronica" style="display:none">
-          <div class="card">
-            <div class="card-title">Cliente</div>
-            <div class="search-box" style="margin-bottom:10px">
-              <span class="search-icon">🔍</span>
-              <input type="text" id="nfe-cli-q" placeholder="Buscar por nombre o NIT/CC…" oninput="buscarClienteElec()">
-            </div>
-            <div id="nfe-cli-results" style="display:none;margin-bottom:10px;border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;max-height:200px;overflow-y:auto"></div>
-            <div id="nfe-cli-sel" style="display:none;background:var(--blue3);border:1.5px solid var(--blue);border-radius:var(--r);padding:12px 14px">
-              <div style="display:flex;justify-content:space-between;align-items:center">
-                <div>
-                  <div style="font-weight:600;color:var(--blue2)" id="nfe-cli-nombre"></div>
-                  <div style="font-size:12px;color:var(--ink3)" id="nfe-cli-info"></div>
-                </div>
-                <button class="icon-btn" onclick="limpiarClienteElec()">✕ Cambiar</button>
-              </div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-title">Valor de la factura electrónica</div>
-            <div class="grid-2">
-              <div class="form-g">
-                <label>Total (con IVA incluido si aplica)</label>
-                <input type="number" id="nfe-total" min="0" step="1000" inputmode="numeric" placeholder="$0">
-              </div>
-              <div class="form-g">
-                <label>Fecha de emisión</label>
-                <input type="date" id="nfe-fecha">
-              </div>
-            </div>
-            <div class="form-g">
-              <label>¿Ya te la pagaron?</label>
-              <div class="precio-toggle" style="display:flex;gap:8px">
-                <button class="chip active" id="nfe-tog-si" onclick="setNfePagada(true)">✅ Sí, ya pagada</button>
-                <button class="chip" id="nfe-tog-no" onclick="setNfePagada(false)">⏰ No, pendiente</button>
-              </div>
-            </div>
-            <div class="form-g">
-              <label>Notas (opcional)</label>
-              <input type="text" id="nfe-notas" placeholder="N° de factura DIAN, referencia…">
-            </div>
-          </div>
-          <button class="btn-primary" style="width:100%" onclick="registrarFacturaElectronica()">💾 Registrar factura electrónica</button>
         </div>
       </div>
 
@@ -1418,8 +1368,7 @@ var _facturaActual = null;
 var _chipEstado   = '';
 var _chipTipoFact = '';
 var _rentPeriodo  = 'mes';
-var _nfeClienteId = '';
-var _nfePagada    = true;
+
 
 /* ─────────────────────────────────────────────────
    HELPERS
@@ -1885,23 +1834,11 @@ function setNFMode(mode){
   _nfMode = mode;
   document.getElementById('nfmode-individual').classList.toggle('active', mode==='individual');
   document.getElementById('nfmode-todos').classList.toggle('active', mode==='todos');
-  document.getElementById('nfmode-electronica').classList.toggle('active', mode==='electronica');
   document.getElementById('nf-blq-individual').style.display = mode==='individual' ? 'block' : 'none';
   document.getElementById('nf-blq-todos').style.display      = mode==='todos'      ? 'block' : 'none';
-  document.getElementById('nf-blq-electronica').style.display= mode==='electronica'? 'block' : 'none';
   document.getElementById('nf-modo-info-todos').style.display= mode==='todos'      ? 'block' : 'none';
-  document.getElementById('nf-modo-info-electronica').style.display = mode==='electronica' ? 'block' : 'none';
-  document.getElementById('nf-datos-generales').style.display = mode==='electronica' ? 'none' : 'block';
   document.getElementById('nf-iva-wrap').style.display       = mode==='individual' ? 'block' : 'none';
   if(mode==='todos') cargarVistaPreviaTodos();
-  if(mode==='electronica'){
-    limpiarClienteElec();
-    document.getElementById('nfe-total').value='';
-    document.getElementById('nfe-fecha').value=fechaHoy();
-    document.getElementById('nfe-notas').value='';
-    setNfePagada(true);
-    if(!_clientes.length){ supabase.rpc('fac_cliente_listar').then(function(r){_clientes=r.data||[];}); }
-  }
 }
 
 function onNFTipoChange(){
@@ -1979,61 +1916,7 @@ function limpiarClienteNF(){
   document.getElementById('nf-cli-sel').style.display='none';
 }
 
-/* ── Cliente para el modo "Registrar factura electrónica" ── */
-async function buscarClienteElec(){
-  var q=document.getElementById('nfe-cli-q').value.trim();
-  if(!q){document.getElementById('nfe-cli-results').style.display='none';return;}
-  var { data: lista } = await supabase.rpc('fac_cliente_buscar', { p_q: q });
-  var res=document.getElementById('nfe-cli-results');
-  if(!lista||!lista.length){res.innerHTML='<div style="padding:10px 14px;font-size:13px;color:var(--ink3)">'+t('no_results')+'</div>';res.style.display='block';return;}
-  res.innerHTML=lista.map(function(c){
-    return '<div onclick="seleccionarClienteElec(\''+esc(c.id)+'\',\''+esc(c.nombre)+'\',\''+esc(c.nitcc||'')+'\')" style="padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--border);font-size:13px" onmouseover="this.style.background=\'var(--blue3)\'" onmouseout="this.style.background=\'\'">'+
-      '<div style="font-weight:500">'+esc(c.nombre)+'</div>'+
-      '<div style="font-size:11px;color:var(--ink3)">'+(c.nitcc?'NIT: '+esc(c.nitcc):'')+'</div></div>';
-  }).join('');
-  res.style.display='block';
-}
-function seleccionarClienteElec(id,nombre,nitcc){
-  _nfeClienteId=id;
-  document.getElementById('nfe-cli-q').value='';
-  document.getElementById('nfe-cli-results').style.display='none';
-  document.getElementById('nfe-cli-sel').style.display='block';
-  document.getElementById('nfe-cli-nombre').textContent=nombre;
-  document.getElementById('nfe-cli-info').textContent=nitcc?'NIT: '+nitcc:'';
-}
-function limpiarClienteElec(){
-  _nfeClienteId='';
-  document.getElementById('nfe-cli-q').value='';
-  document.getElementById('nfe-cli-results').style.display='none';
-  document.getElementById('nfe-cli-sel').style.display='none';
-}
-function setNfePagada(pagada){
-  _nfePagada=pagada;
-  document.getElementById('nfe-tog-si').classList.toggle('active',pagada);
-  document.getElementById('nfe-tog-no').classList.toggle('active',!pagada);
-}
 
-async function registrarFacturaElectronica(){
-  if(!_nfeClienteId) return showAlert('alert-nf','Selecciona un cliente.','err');
-  var total=parseFloat(document.getElementById('nfe-total').value)||0;
-  if(total<=0) return showAlert('alert-nf','El total debe ser mayor a 0.','err');
-  var fecha=document.getElementById('nfe-fecha').value||fechaHoy();
-  var notas=document.getElementById('nfe-notas').value.trim();
-
-  var { data: res, error } = await supabase.rpc('fac_factura_registrar_electronica', {
-    p_cliente_id: _nfeClienteId, p_total: total, p_fecha: fecha,
-    p_pagada: _nfePagada, p_notas: notas
-  });
-  if(error){ showAlert('alert-nf',t('msg_error_prefix')+error.message,'err'); return; }
-  if(res.success){
-    toast(res.mensaje,'ok');
-    limpiarClienteElec();
-    document.getElementById('nfe-total').value='';
-    document.getElementById('nfe-notas').value='';
-    setNfePagada(true);
-    cambiarMod('facturas');
-  } else showAlert('alert-nf',res.mensaje,'err');
-}
 
 var _nfItemCnt=0;
 
