@@ -1293,8 +1293,15 @@ body {
       </div>
       <div class="sidebar-section">
         <div class="sidebar-label">Inventario</div>
-        <button class="nav-item" id="nav-mp-entrada" onclick="cambiarMod('mp-entrada')">
-          <span class="nav-item-icon" style="background:var(--green3)">📥</span><span data-i18n="nav_entry">Entrada</span>
+        <button class="nav-item" id="nav-prov-registrar" onclick="cambiarMod('prov-registrar')" style="position:relative">
+          <span class="nav-item-icon" style="background:#FEECEC">🚚</span><span>Proveedores</span>
+          <span id="proveedores-badge" style="display:none;background:var(--red);color:#fff;font-size:10px;font-weight:700;border-radius:20px;padding:1px 7px;min-width:16px;text-align:center">0</span>
+        </button>
+        <button class="nav-item" id="nav-prov-pagar" onclick="cambiarMod('prov-pagar')">
+          <span class="nav-item-icon" style="background:#FEECEC">⏰</span><span>Por pagar</span>
+        </button>
+        <button class="nav-item" id="nav-prov-historial" onclick="cambiarMod('prov-historial')">
+          <span class="nav-item-icon" style="background:#FEECEC">🗂️</span><span>Historial de compras</span>
         </button>
         <button class="nav-item" id="nav-mp-consultar" onclick="cambiarMod('mp-consultar')">
           <span class="nav-item-icon" style="background:var(--green3)">🔍</span><span data-i18n="nav_check_stock">Consultar stock</span>
@@ -1820,31 +1827,34 @@ body {
 
 
       <!-- ═══ MÓDULOS DE INVENTARIO ═══ -->
-      <div id="mod-mp-entrada" class="modulo" style="display:none">
+      <div id="mod-prov-registrar" class="modulo" style="display:none">
         <div class="panel-header">
           <div class="panel-header-left">
-            <div class="panel-title" data-i18n="mp_entry_title">Entrada de insumo</div>
-            <div class="panel-sub" data-i18n="mp_entry_sub">Registra una compra de materia prima</div>
+            <div class="panel-title" data-i18n="prov_reg_title">Nueva compra a proveedor</div>
+            <div class="panel-sub" data-i18n="prov_reg_sub">Esto también suma stock al insumo comprado</div>
           </div>
         </div>
-
-        <div id="alert-mp" class="alert"></div>
-
+        <div id="alert-proveedores" class="alert"></div>
         <div class="card">
-          <div class="card-title" data-i18n="mp_card_title">Registrar compra de insumo</div>
+          <div class="card-title" data-i18n="prov_reg_title">Nueva compra a proveedor</div>
           <div class="form-g">
-            <label data-i18n="mp_ins_name">Nombre del insumo</label>
-            <input type="text" id="mp-nombre" list="mp-lista" oninput="onMpNombreInput()" data-i18n-ph="ph_supply_name">
-            <datalist id="mp-lista"></datalist>
+            <label data-i18n="prov_name">Proveedor</label>
+            <input type="text" id="pv-proveedor" list="pv-lista-prov" placeholder="Ej: Distribuidora El Trigal">
+            <datalist id="pv-lista-prov"></datalist>
+          </div>
+          <div class="form-g">
+            <label data-i18n="prov_insumo">Insumo comprado</label>
+            <input type="text" id="pv-insumo" list="pv-lista-insumo" oninput="onPvInsumoInput()" data-i18n-ph="ph_supply_name">
+            <datalist id="pv-lista-insumo"></datalist>
           </div>
           <div class="grid-2">
             <div class="form-g">
-              <label data-i18n="mp_qty_bought">Cantidad comprada</label>
-              <input type="number" id="mp-cantidad" min="0.001" step="0.001" placeholder="0.000" oninput="mpCalc()" inputmode="decimal">
+              <label data-i18n="prov_cant">Cantidad</label>
+              <input type="number" id="pv-cantidad" min="0.001" step="0.001" placeholder="0.000" inputmode="decimal">
             </div>
             <div class="form-g">
-              <label data-i18n="mp_unit">Unidad de medida</label>
-              <select id="mp-unidad">
+              <label data-i18n="prov_unidad">Unidad</label>
+              <select id="pv-unidad">
                 <option value="und" data-i18n="unit_und">Unidad (und)</option>
                 <option value="kg" data-i18n="unit_kg">Kilogramo (kg)</option>
                 <option value="g" data-i18n="unit_g">Gramo (g)</option>
@@ -1855,32 +1865,96 @@ body {
             </div>
           </div>
           <div class="form-g">
-            <label data-i18n="mp_total_val">Valor total factura</label>
-            <input type="number" id="mp-vtotal" min="0" step="0.01" placeholder="$0.00" oninput="mpCalc()" inputmode="decimal">
+            <label data-i18n="prov_valor">Valor total de la compra</label>
+            <input type="number" id="pv-valor" min="0" step="0.01" placeholder="$0.00" inputmode="decimal">
           </div>
         </div>
-
-        <div class="calc-box" id="mp-calc">
-          <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px" data-i18n="mp_calc_unit_val">Valor unitario calculado</div>
-          <div class="calc-formula">
-            <div class="calc-chip" id="calc-total">$0</div>
-            <div class="calc-op">÷</div>
-            <div class="calc-chip" id="calc-cant">0</div>
-            <div class="calc-op">=</div>
-            <div class="calc-result" id="calc-unit">$0/und</div>
+        <div class="card">
+          <div class="card-title" data-i18n="prov_pagado_q">¿Ya le pagaste?</div>
+          <div class="precio-toggle">
+            <button class="ptoggle auto active" id="pvtog-si" onclick="pvSetPagado(true)">✅ <span data-i18n="prov_si_pagado">Sí, ya pagado</span></button>
+            <button class="ptoggle manual" id="pvtog-no" onclick="pvSetPagado(false)">⏰ <span data-i18n="prov_no_pagado">No, queda pendiente</span></button>
+          </div>
+          <div id="pv-blq-vencimiento" style="display:none">
+            <div class="form-g">
+              <label data-i18n="prov_vencimiento">Fecha límite de pago</label>
+              <input type="date" id="pv-vencimiento">
+            </div>
+          </div>
+          <div class="form-g">
+            <label data-i18n="prov_notas">Notas (opcional)</label>
+            <input type="text" id="pv-notas" placeholder="N° de factura, referencia…">
           </div>
         </div>
+        <button class="btn-primary" id="btn-pv-reg" onclick="pvRegistrar()">🧾 <span data-i18n="prov_registrar_btn">Registrar compra</span></button>
+      </div>
 
-        <div class="cpp-preview" id="mp-cpp-preview">
-          <div style="font-size:12px;font-weight:600;margin-bottom:8px" id="mp-cpp-nombre"></div>
-          <div class="cpp-row">
-            <div class="cpp-item"><label data-i18n="mp_curr_stock">Stock actual</label><span id="mp-cpp-stock"></span></div>
-            <div class="cpp-item"><label data-i18n="mp_curr_cpp">CPP actual</label><span id="mp-cpp-val"></span></div>
-            <div class="cpp-item"><label data-i18n="mp_unit_label">Unidad</label><span id="mp-cpp-uni"></span></div>
+      <div id="mod-prov-pagar" class="modulo" style="display:none">
+        <div class="panel-header">
+          <div class="panel-header-left">
+            <div class="panel-title" data-i18n="prov_pagar_title">Cuentas por pagar</div>
+            <div class="panel-sub" data-i18n="prov_sub">Registra compras a proveedores y controla tus pagos pendientes</div>
           </div>
         </div>
+        <div class="grid-3" style="margin-bottom:14px">
+          <div class="kpi"><div class="kpi-label" data-i18n="prov_kpi_pend">Total por pagar</div><div class="kpi-value" id="pv-kpi-pend" style="color:var(--red)">$0</div></div>
+          <div class="kpi"><div class="kpi-label" data-i18n="prov_kpi_venc">Facturas vencidas</div><div class="kpi-value" id="pv-kpi-venc" style="color:var(--red)">0</div></div>
+          <div class="kpi"><div class="kpi-label" data-i18n="prov_kpi_prox">Vencen pronto</div><div class="kpi-value" id="pv-kpi-prox" style="color:var(--amber)">0</div></div>
+        </div>
+        <div class="table-wrap">
+          <div class="table-head"><h3 data-i18n="prov_pagar_title">Cuentas por pagar</h3></div>
+          <div class="table-scroll">
+            <table id="pv-tabla-pagar" style="display:none">
+              <thead><tr>
+                <th data-i18n="th_prov">Proveedor</th><th data-i18n="th_prov_insumo">Insumo</th>
+                <th class="r" data-i18n="th_prov_monto">Monto</th><th data-i18n="th_prov_venc">Vence</th>
+                <th data-i18n="th_prov_estado">Estado</th><th></th>
+              </tr></thead>
+              <tbody id="pv-tbody-pagar"></tbody>
+            </table>
+          </div>
+          <div class="empty-state" id="pv-pagar-empty" style="display:none">
+            <div class="empty-icon">✅</div>
+            <div data-i18n="prov_pagar_none">No tienes facturas pendientes de pago</div>
+            <p style="font-size:12px;margin-top:6px" data-i18n="prov_pagar_none_sub">Cuando registres una compra sin pagar, aparecerá aquí</p>
+          </div>
+        </div>
+      </div>
 
-        <button class="btn-primary" id="btn-mp-reg" onclick="mpRegistrar()">📥 <span data-i18n="mp_register_entry">Registrar Entrada</span></button>
+      <div id="mod-prov-historial" class="modulo" style="display:none">
+        <div class="panel-header">
+          <div class="panel-header-left">
+            <div class="panel-title" data-i18n="prov_hist_title">Historial de compras a proveedores</div>
+            <div class="panel-sub" data-i18n="prov_sub">Registra compras a proveedores y controla tus pagos pendientes</div>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <div class="table-head">
+            <h3 data-i18n="prov_hist_title">Historial de compras a proveedores</h3>
+            <div class="filter-row">
+              <select id="pv-filtro-prov" onchange="pvFiltrarHistorial()"><option value="" data-i18n="prov_all_providers">Todos los proveedores</option></select>
+              <select id="pv-filtro-estado" onchange="pvFiltrarHistorial()">
+                <option value="" data-i18n="prov_est_todas">Todas</option>
+                <option value="pendiente" data-i18n="prov_est_pendientes">Pendientes</option>
+                <option value="pagada" data-i18n="prov_est_pagadas">Pagadas</option>
+              </select>
+            </div>
+          </div>
+          <div class="table-scroll">
+            <table id="pv-tabla-hist" style="display:none">
+              <thead><tr>
+                <th data-i18n="th_date">Fecha</th><th data-i18n="th_prov">Proveedor</th><th data-i18n="th_prov_insumo">Insumo</th>
+                <th class="r" data-i18n="th_qty">Cant.</th><th class="r" data-i18n="th_prov_monto">Monto</th>
+                <th data-i18n="th_prov_venc">Vence</th><th data-i18n="th_prov_estado">Estado</th><th data-i18n="th_notes">Notas</th><th></th>
+              </tr></thead>
+              <tbody id="pv-tbody-hist"></tbody>
+            </table>
+          </div>
+          <div class="empty-state" id="pv-hist-empty" style="display:none">
+            <div class="empty-icon">🚚</div>
+            <div data-i18n="prov_hist_none">Aún no has registrado compras a proveedores</div>
+          </div>
+        </div>
       </div>
 
       <div id="mod-mp-consultar" class="modulo" style="display:none">
@@ -1890,6 +1964,8 @@ body {
             <div class="panel-sub" data-i18n="mp_check_sub">Revisa el estado actual de tus insumos</div>
           </div>
         </div>
+
+        <div id="alert-mp" class="alert"></div>
 
         <div class="sel-box">
           <label style="font-size:12px;font-weight:500;white-space:nowrap" data-i18n="mp_select_insumo">Insumo:</label>
@@ -2423,6 +2499,31 @@ body {
 <div class="toast" id="toast"></div>
 
 
+<div class="modal-overlay" id="modal-editar-prov">
+  <div class="modal-box" style="max-width:420px">
+    <h3 data-i18n="edit_purchase">Editar compra</h3>
+    <p><span data-i18n="th_prov">Proveedor:</span> <strong id="pvedit-proveedor"></strong></p>
+    <input type="hidden" id="pvedit-id">
+    <div id="pvedit-error" style="display:none;color:var(--red);font-size:12px;margin-bottom:10px"></div>
+    <div class="form-g">
+      <label data-i18n="prov_cant">Cantidad</label>
+      <input type="number" id="pvedit-cantidad" min="0.001" step="0.001">
+    </div>
+    <div class="form-g">
+      <label data-i18n="prov_valor">Valor total de la compra</label>
+      <input type="number" id="pvedit-valor" min="0" step="0.01">
+    </div>
+    <div class="form-g">
+      <label data-i18n="prov_vencimiento">Fecha límite de pago</label>
+      <input type="date" id="pvedit-vencimiento">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" data-i18n="cancel" onclick="cerrarModalEditarProv()">Cancelar</button>
+      <button class="btn-primary" style="flex:1" data-i18n="save_changes" onclick="guardarEdicionProv()">Guardar cambios</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="modal-editar-mp">
   <div class="modal-box" style="max-width:420px">
     <h3 data-i18n="edit_purchase">Editar compra</h3>
@@ -2565,7 +2666,7 @@ function closeSidebar(){
   document.getElementById('sidebar-overlay').classList.remove('visible');
 }
 
-var MODS=['dashboard','facturas','nueva-factura','clientes','servicios','gastos','rentabilidad','config','mp-entrada','mp-consultar','prod','ventas','alertas','movimientos'];
+var MODS=['dashboard','facturas','nueva-factura','clientes','servicios','gastos','rentabilidad','config','prov-registrar','prov-pagar','prov-historial','mp-consultar','prod','ventas','alertas','movimientos'];
 function cambiarMod(mod){
   closeSidebar();
   MODS.forEach(function(m){
@@ -2588,6 +2689,9 @@ function cambiarMod(mod){
   if(mod==='alertas')       cargarAlertas();
   if(mod==='prod')          cargarHistorialProducciones();
   if(mod==='movimientos')   cargarMovimientos();
+  if(mod==='prov-registrar')cargarProveedoresDatos();
+  if(mod==='prov-pagar')    { cargarProveedoresDatos(); pvCargarPorPagar(); }
+  if(mod==='prov-historial'){ cargarProveedoresDatos(); pvCargarHistorial(); }
 }
 // alias por compatibilidad con onclick heredados de Inventario
 function cambiarModulo(mod){ cambiarMod(mod); }
@@ -4480,8 +4584,8 @@ async function cargarDatosIniciales(){
   var { data: lista } = await supabase.rpc('mp_obtener_productos');
   lista = lista || [];
   mpProductos=lista;
-  var dl=document.getElementById('mp-lista');dl.innerHTML='';
-  lista.forEach(function(p){var o=document.createElement('option');o.value=p.nombre;dl.appendChild(o)});
+  var dl3=document.getElementById('pv-lista-insumo');
+  if(dl3){dl3.innerHTML='';lista.forEach(function(p){var o=document.createElement('option');o.value=p.nombre;dl3.appendChild(o)})}
   var sel=document.getElementById('mp-sel-consulta');var cur=sel.value;
   sel.innerHTML="<option value=''>"+t('mp_select_placeholder')+"</option>";
   lista.forEach(function(p){var o=document.createElement('option');o.value=p.nombre;o.textContent=p.nombre+' ('+t('stock_word')+' '+fmtN(p.stock)+' '+p.unidad+')';sel.appendChild(o)});
@@ -4494,6 +4598,7 @@ async function cargarDatosIniciales(){
   pfProductos.forEach(function(p){var o=document.createElement('option');o.value=p.nombre;dl2.appendChild(o)});
 
   actualizarBadgeAlertas();
+  actualizarBadgeProveedores();
 }
 
 async function actualizarBadgeAlertas(){
@@ -4503,6 +4608,180 @@ async function actualizarBadgeAlertas(){
   var badge = document.getElementById('alertas-badge');
   if(enAlerta > 0){ badge.textContent = enAlerta; badge.style.display = 'inline-block'; }
   else { badge.style.display = 'none'; }
+}
+
+async function actualizarBadgeProveedores(){
+  var { data: resumen } = await supabase.rpc('prov_resumen');
+  var pendientes = resumen ? (resumen.vencidas + resumen.proximas) : 0;
+  var badge = document.getElementById('proveedores-badge');
+  if(pendientes > 0){ badge.textContent = pendientes; badge.style.display = 'inline-block'; }
+  else { badge.style.display = 'none'; }
+}
+
+var pvPagado = true;
+var todasCompras = [];
+
+function onPvInsumoInput(){
+  var val=document.getElementById('pv-insumo').value.trim();
+  var p=mpProductos.find(function(x){return x.nombre.toLowerCase()===val.toLowerCase()});
+  if(p){ document.getElementById('pv-unidad').value=p.unidad; }
+}
+function pvSetPagado(pagado){
+  pvPagado=pagado;
+  document.getElementById('pvtog-si').classList.toggle('active',pagado);
+  document.getElementById('pvtog-no').classList.toggle('active',!pagado);
+  document.getElementById('pv-blq-vencimiento').style.display=pagado?'none':'block';
+}
+async function cargarProveedoresDatos(){
+  var { data: provs } = await supabase.rpc('prov_obtener_proveedores');
+  provs = provs || [];
+  var dl=document.getElementById('pv-lista-prov'); dl.innerHTML='';
+  provs.forEach(function(p){var o=document.createElement('option');o.value=p;dl.appendChild(o)});
+  var fp=document.getElementById('pv-filtro-prov'); var cur=fp.value;
+  fp.innerHTML='<option value="">'+t('prov_all_providers')+'</option>';
+  provs.forEach(function(p){var o=document.createElement('option');o.value=p;o.textContent=p;fp.appendChild(o)});
+  if(cur) fp.value=cur;
+  pvCargarPorPagar();
+  actualizarBadgeProveedores();
+}
+async function pvRegistrar(){
+  var proveedor=document.getElementById('pv-proveedor').value.trim();
+  var insumo=document.getElementById('pv-insumo').value.trim();
+  var cant=parseFloat(document.getElementById('pv-cantidad').value)||0;
+  var unidad=document.getElementById('pv-unidad').value||'und';
+  var valor=parseFloat(document.getElementById('pv-valor').value)||0;
+  var venc=document.getElementById('pv-vencimiento').value||null;
+  var notas=document.getElementById('pv-notas').value.trim();
+
+  if(!proveedor) return showAlert('alert-proveedores',t('prov_msg_enter_prov'),'err');
+  if(!insumo) return showAlert('alert-proveedores',t('prov_msg_select_insumo'),'err');
+  if(cant<=0) return showAlert('alert-proveedores',t('msg_invalid_qty'),'err');
+  if(valor<=0) return showAlert('alert-proveedores',t('msg_invalid_total'),'err');
+  if(!pvPagado && !venc) return showAlert('alert-proveedores',t('prov_msg_enter_venc'),'err');
+
+  var btn=document.getElementById('btn-pv-reg'); btn.disabled=true; btn.textContent='Registrando…';
+  var { data: res, error } = await supabase.rpc('prov_registrar_compra', {
+    p_proveedor: proveedor, p_insumo: insumo, p_cantidad: cant, p_unidad: unidad,
+    p_valor_total: valor, p_pagado: pvPagado, p_fecha_vencimiento: venc, p_notas: notas
+  });
+  btn.disabled=false; btn.textContent='🧾 '+t('prov_registrar_btn');
+  if(error) return showAlert('alert-proveedores',t('msg_error_prefix')+error.message,'err');
+  if(res.success){
+    showAlert('alert-proveedores',res.mensaje+' — Stock: '+fmtN(res.nuevoStock)+' '+unidad,'ok');
+    ['pv-proveedor','pv-insumo','pv-cantidad','pv-valor','pv-vencimiento','pv-notas'].forEach(function(id){document.getElementById(id).value=''});
+    pvSetPagado(true);
+    cargarDatosIniciales(); cargarProveedoresDatos();
+  } else { showAlert('alert-proveedores',res.mensaje,'err'); }
+}
+function pvBadgeEstado(c){
+  if(c.pagado) return '<span class="badge badge-ok">✅ '+t('prov_badge_pagada')+'</span>';
+  if(c.diasRestantes!==null && c.diasRestantes<0) return '<span class="badge badge-neg">🔴 '+t('prov_badge_vencida')+'</span>';
+  if(c.diasRestantes!==null && c.diasRestantes<=3) return '<span class="badge" style="background:var(--amber2);color:var(--amber)">🟡 '+t('prov_badge_proxima')+'</span>';
+  return '<span class="badge" style="background:var(--bg3);color:var(--ink2)">⏳ '+t('prov_badge_pendiente')+'</span>';
+}
+async function pvCargarPorPagar(){
+  var { data: resumen } = await supabase.rpc('prov_resumen');
+  document.getElementById('pv-kpi-pend').textContent = fmt(resumen?resumen.totalPendiente:0);
+  document.getElementById('pv-kpi-venc').textContent = resumen?resumen.vencidas:0;
+  document.getElementById('pv-kpi-prox').textContent = resumen?resumen.proximas:0;
+
+  var { data: lista } = await supabase.rpc('prov_alertas');
+  lista = lista || [];
+  var tabla=document.getElementById('pv-tabla-pagar'); var empty=document.getElementById('pv-pagar-empty');
+  var tbody=document.getElementById('pv-tbody-pagar'); tbody.innerHTML='';
+  if(!lista.length){ tabla.style.display='none'; empty.style.display='block'; return; }
+  tabla.style.display='table'; empty.style.display='none';
+  lista.forEach(function(c){
+    var tr=document.createElement('tr');
+    tr.innerHTML='<td><strong>'+esc(c.proveedor)+'</strong></td><td>'+esc(c.insumo)+'</td>'+
+      '<td class="r"><strong>'+fmt(c.valorTotal)+'</strong></td>'+
+      '<td>'+(c.fechaVencimiento||'—')+(c.diasRestantes!==null?' <span style="color:var(--ink3);font-size:11px">('+(c.diasRestantes<0?'vencida hace '+Math.abs(c.diasRestantes)+'d':c.diasRestantes+'d')+')</span>':'')+'</td>'+
+      '<td>'+pvBadgeEstado(c)+'</td>'+
+      '<td><button class="icon-btn" onclick="provMarcarPagada(\''+c.id+'\')">✅ '+t('prov_marcar_pagada')+'</button></td>';
+    tbody.appendChild(tr);
+  });
+}
+async function pvCargarHistorial(){
+  var { data: lista } = await supabase.rpc('prov_listar');
+  lista = lista || [];
+  todasCompras = lista;
+  pvFiltrarHistorial();
+}
+function pvFiltrarHistorial(){
+  var prov=document.getElementById('pv-filtro-prov').value;
+  var est=document.getElementById('pv-filtro-estado').value;
+  var filtradas=todasCompras.filter(function(c){
+    var okProv = !prov || c.proveedor===prov;
+    var okEst = !est || (est==='pagada'?c.pagado:!c.pagado);
+    return okProv && okEst;
+  });
+  var tabla=document.getElementById('pv-tabla-hist'); var empty=document.getElementById('pv-hist-empty');
+  var tbody=document.getElementById('pv-tbody-hist'); tbody.innerHTML='';
+  if(!filtradas.length){ tabla.style.display='none'; empty.style.display='block'; return; }
+  tabla.style.display='table'; empty.style.display='none';
+  filtradas.forEach(function(c){
+    var tr=document.createElement('tr');
+    var acciones = '<button class="icon-btn" title="'+t('edit_tt')+'" onclick="pvEditarCompra(\''+c.id+'\',\''+esc(c.proveedor)+'\','+c.cantidad+','+c.valorTotal+',\''+(c.fechaVencimiento||'')+'\')" style="margin-right:4px">✏️</button>'+
+      (c.pagado?'<button class="icon-btn" title="'+t('prov_undo_pagada')+'" onclick="provDesmarcarPagada(\''+c.id+'\')" style="margin-right:4px">↩️</button>':'')+
+      '<button class="btn-rm" title="'+t('delete_tt')+'" onclick="pvEliminarCompra(\''+c.id+'\',\''+esc(c.proveedor)+'\')" style="font-size:15px">🗑</button>';
+    tr.innerHTML='<td>'+esc(c.fecha)+'</td><td><strong>'+esc(c.proveedor)+'</strong></td><td>'+esc(c.insumo)+'</td>'+
+      '<td class="r">'+fmtN(c.cantidad)+' '+esc(c.unidad)+'</td><td class="r"><strong>'+fmt(c.valorTotal)+'</strong></td>'+
+      '<td>'+(c.fechaVencimiento||'—')+'</td><td>'+pvBadgeEstado(c)+'</td>'+
+      '<td style="font-size:11px;color:var(--ink3);font-style:italic;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(c.notas||'—')+'</td>'+
+      '<td style="white-space:nowrap">'+acciones+'</td>';
+    tbody.appendChild(tr);
+  });
+}
+async function provMarcarPagada(id){
+  var { data: res, error } = await supabase.rpc('prov_marcar_pagado', { p_id: id });
+  if(error){ showAlert('alert-proveedores',t('msg_error_prefix')+error.message,'err'); return; }
+  showAlert('alert-proveedores',res.mensaje,'ok');
+  pvCargarPorPagar(); actualizarBadgeProveedores();
+  var histTbody=document.getElementById('pv-tbody-hist');
+  if(histTbody && histTbody.closest('.modulo').style.display!=='none') pvCargarHistorial();
+}
+async function provDesmarcarPagada(id){
+  var { data: res, error } = await supabase.rpc('prov_desmarcar_pagado', { p_id: id });
+  if(error){ showAlert('alert-proveedores',t('msg_error_prefix')+error.message,'err'); return; }
+  showAlert('alert-proveedores',res.mensaje,'ok');
+  pvCargarHistorial(); pvCargarPorPagar(); actualizarBadgeProveedores();
+}
+function pvEliminarCompra(id, proveedor){
+  confirmar(
+    t('modal_del_movement'),
+    '¿Eliminar esta compra de "'+proveedor+'"? Esto también descuenta el stock que había sumado al insumo.',
+    async function(){
+      var { data: res, error } = await supabase.rpc('prov_eliminar_compra', { p_id: id });
+      if(error){ showAlert('alert-proveedores',t('msg_error_prefix')+error.message,'err'); return; }
+      if(res.success){ showAlert('alert-proveedores',res.mensaje,'ok'); pvCargarHistorial(); pvCargarPorPagar(); cargarDatosIniciales(); }
+      else showAlert('alert-proveedores',res.mensaje,'err');
+    }
+  );
+}
+function pvEditarCompra(id, proveedor, cantidadActual, valorActual, vencActual){
+  document.getElementById('pvedit-id').value = id;
+  document.getElementById('pvedit-proveedor').textContent = proveedor;
+  document.getElementById('pvedit-cantidad').value = cantidadActual;
+  document.getElementById('pvedit-valor').value = valorActual;
+  document.getElementById('pvedit-vencimiento').value = vencActual||'';
+  document.getElementById('pvedit-error').style.display='none';
+  document.getElementById('modal-editar-prov').classList.add('visible');
+}
+function cerrarModalEditarProv(){ document.getElementById('modal-editar-prov').classList.remove('visible'); }
+async function guardarEdicionProv(){
+  var id = document.getElementById('pvedit-id').value;
+  var cant = parseFloat(document.getElementById('pvedit-cantidad').value)||0;
+  var valor = parseFloat(document.getElementById('pvedit-valor').value)||0;
+  var venc = document.getElementById('pvedit-vencimiento').value||null;
+  var errEl = document.getElementById('pvedit-error');
+  if(cant<=0 || valor<=0){ errEl.textContent='Completa cantidad y valor con valores mayores a 0.'; errEl.style.display='block'; return; }
+  var { data: res, error } = await supabase.rpc('prov_editar_compra', { p_id:id, p_cantidad:cant, p_valor_total:valor, p_fecha_vencimiento:venc });
+  if(error){ errEl.textContent='Error: '+error.message; errEl.style.display='block'; return; }
+  if(res.success){
+    cerrarModalEditarProv();
+    showAlert('alert-proveedores', res.mensaje, 'ok');
+    pvCargarHistorial(); pvCargarPorPagar(); cargarDatosIniciales();
+  } else { errEl.textContent=res.mensaje; errEl.style.display='block'; }
 }
 
 async function cargarAlertas(){
