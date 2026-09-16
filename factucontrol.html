@@ -3724,9 +3724,24 @@ async function guardarCliente(){
     var clienteId = document.getElementById('mcli-id').value || res.id || (res.cliente&&res.cliente.id) || (res.data&&res.data.id);
     var resumen = { errores:[], omitidos:[], sincronizados:0 };
     if(clienteId){
-      await supabase.rpc('fc_guardar_cantidades', { p_cliente_id: clienteId, p_cantidades: cantidadesPayload });
+      var { error: errCant } = await supabase.rpc('fc_guardar_cantidades', { p_cliente_id: clienteId, p_cantidades: cantidadesPayload });
       resumen = await sincronizarStockCliente(clienteId, cantidadesPayload, nombre);
       await cargarCantidadesServicio();
+
+      // DIAGNÓSTICO TEMPORAL — ventana bloqueante para ver exactamente qué pasó,
+      // sin riesgo de que un toast la tape o desaparezca sola.
+      window.alert(
+        'DIAGNÓSTICO GUARDAR CLIENTE\n\n'+
+        'clienteId: '+clienteId+'\n'+
+        'checkboxes marcados: '+JSON.stringify(svcsSeleccionados)+'\n'+
+        'cantidades enviadas: '+JSON.stringify(cantidadesPayload)+'\n'+
+        'error fc_guardar_cantidades: '+(errCant?errCant.message:'ninguno')+'\n'+
+        'servicios en catálogo (_servicios): '+_servicios.length+'\n'+
+        'productos en Inventario (pfProductos): '+pfProductos.map(function(p){return p.nombre+'('+p.stock+')';}).join(', ')+'\n'+
+        'sincronizados: '+resumen.sincronizados+'\n'+
+        'omitidos (nombre no coincide): '+JSON.stringify(resumen.omitidos)+'\n'+
+        'errores: '+JSON.stringify(resumen.errores)
+      );
     }
     cargarClientes();
 
