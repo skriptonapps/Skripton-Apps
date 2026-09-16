@@ -1295,77 +1295,80 @@ body {
 
   <div class="app-body">
     <nav class="sidebar" id="sidebar">
-      <div class="sidebar-section">
-        <div class="sidebar-label" data-i18n="nav_system">Sistema</div>
-        <button class="nav-item active" id="nav-dashboard" onclick="cambiarMod('dashboard')">
-          <span class="nav-item-icon" style="background:var(--blue3)">📊</span><span data-i18n="nav_control">Control</span>
-        </button>
-        <button class="nav-item" id="nav-facturas" onclick="cambiarMod('facturas')">
-          <span class="nav-item-icon" style="background:var(--blue3)">🧾</span><span data-i18n="nav_invoices">Facturas</span>
-        </button>
-        <button class="nav-item" id="nav-nueva-factura" onclick="cambiarMod('nueva-factura')">
-          <span class="nav-item-icon" style="background:var(--blue3)">➕</span><span data-i18n="nav_new_invoice">Nueva Factura</span>
-        </button>
-      </div>
-      <div class="sidebar-section">
-        <div class="sidebar-label">Inventario</div>
-        <button class="nav-item" id="nav-prov-registrar" onclick="cambiarMod('prov-registrar')">
-          <span class="nav-item-icon" style="background:#FEECEC">🚚</span><span>Proveedores</span>
-        </button>
-        <button class="nav-item" id="nav-prov-pagar" onclick="cambiarMod('prov-pagar')" style="position:relative">
-          <span class="nav-item-icon" style="background:#FEECEC">⏰</span><span>Por pagar</span>
-          <span id="proveedores-badge" style="display:none;background:var(--red);color:#fff;font-size:10px;font-weight:700;border-radius:20px;padding:1px 7px;min-width:16px;text-align:center">0</span>
-        </button>
-        <button class="nav-item" id="nav-prov-historial" onclick="cambiarMod('prov-historial')">
-          <span class="nav-item-icon" style="background:#FEECEC">🗂️</span><span>Historial de compras</span>
-        </button>
-        <button class="nav-item" id="nav-mp-consultar" onclick="cambiarMod('mp-consultar')">
-          <span class="nav-item-icon" style="background:var(--green3)">🔍</span><span data-i18n="nav_check_stock">Consultar stock</span>
-        </button>
-        <button class="nav-item" id="nav-prod" onclick="cambiarMod('prod')">
-          <span class="nav-item-icon" style="background:var(--indigo2)">🏭</span><span data-i18n="nav_prod">Producción</span>
-        </button>
-        <button class="nav-item" id="nav-movimientos" onclick="cambiarMod('movimientos')">
-          <span class="nav-item-icon" style="background:var(--green3)">🔁</span><span>Movimientos de Producto</span>
-        </button>
-        <button class="nav-item" id="nav-alertas" onclick="cambiarMod('alertas')" style="position:relative">
-          <span class="nav-item-icon" style="background:#FAECE7">🔔</span><span data-i18n="nav_alerts">Alertas de stock</span>
-          <span id="alertas-badge" style="display:none;background:var(--red);color:#fff;font-size:10px;font-weight:700;border-radius:20px;padding:1px 7px;min-width:16px;text-align:center">0</span>
-        </button>
-      </div>
-      <div class="sidebar-section">
-        <div class="sidebar-label" data-i18n="nav_catalogs">Catálogos</div>
-        <button class="nav-item" id="nav-clientes" onclick="cambiarMod('clientes')">
-          <span class="nav-item-icon" style="background:var(--purple2)">👥</span><span data-i18n="nav_clients">Clientes</span>
-        </button>
-        <button class="nav-item" id="nav-servicios" onclick="cambiarMod('servicios')">
-          <span class="nav-item-icon" style="background:#FEF3C7">🛠</span><span data-i18n="nav_services">Servicios</span>
-        </button>
-      </div>
-      <div class="sidebar-section">
-        <div class="sidebar-label" data-i18n="nav_finances">Finanzas</div>
-        <button class="nav-item" id="nav-gastos" onclick="cambiarMod('gastos')">
-          <span class="nav-item-icon" style="background:#FAECE7">💸</span><span data-i18n="nav_expenses">Gastos</span>
-        </button>
-        <button class="nav-item" id="nav-rentabilidad" onclick="cambiarMod('rentabilidad')">
-          <span class="nav-item-icon" style="background:var(--green3)">📈</span><span data-i18n="nav_profitability">Rentabilidad</span>
-        </button>
-      </div>
-      <div class="sidebar-section">
-        <div class="sidebar-label" data-i18n="nav_settings">Ajustes</div>
-        <button class="nav-item" id="nav-config" onclick="cambiarMod('config')">
-          <span class="nav-item-icon" style="background:var(--bg3)">🏢</span><span data-i18n="nav_my_company">Datos generales</span>
-        </button>
-      </div>
-      <div class="sidebar-footer">
-        <button class="btn-pdf-side" onclick="generarReportePDF()">
-          <span>📄</span><span data-i18n="nav_pdf_report">Reporte PDF</span>
-        </button>
-        <button class="btn-pdf-side" style="margin-top:6px;background:var(--amber2);border-color:rgba(186,117,23,.3);color:var(--amber)" onclick="renovarFacturasManuales()" id="btn-renovar">
-          <span>🔄</span><span data-i18n="nav_renew_fixed">Renovar facturas fijas</span>
-        </button>
-      </div>
-    </nav>
+  <div class="sidebar-section">
+    <div class="sidebar-label" data-i18n="nav_system">Sistema</div>
+    <button class="nav-item active" id="nav-dashboard" onclick="cambiarMod('dashboard')">
+      <span class="nav-item-icon" style="background:var(--blue3)">📊</span><span data-i18n="nav_control">Control</span>
+    </button>
+    <button class="nav-item" id="nav-rentabilidad" onclick="cambiarMod('rentabilidad')">
+      <span class="nav-item-icon" style="background:var(--green3)">📈</span><span data-i18n="nav_profitability">Rentabilidad</span>
+    </button>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label" data-i18n="nav_settings">Ajustes</div>
+    <button class="nav-item" id="nav-config" onclick="cambiarMod('config')">
+      <span class="nav-item-icon" style="background:var(--bg3)">🏢</span><span data-i18n="nav_my_company">Datos generales</span>
+    </button>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Inventario</div>
+    <button class="nav-item" id="nav-prov-registrar" onclick="cambiarMod('prov-registrar')">
+      <span class="nav-item-icon" style="background:#FEECEC">🚚</span><span>Proveedores</span>
+    </button>
+    <button class="nav-item" id="nav-mp-consultar" onclick="cambiarMod('mp-consultar')">
+      <span class="nav-item-icon" style="background:var(--green3)">🔍</span><span data-i18n="nav_check_stock">Consultar stock</span>
+    </button>
+    <button class="nav-item" id="nav-alertas" onclick="cambiarMod('alertas')" style="position:relative">
+      <span class="nav-item-icon" style="background:#FAECE7">🔔</span><span data-i18n="nav_alerts">Alertas de stock</span>
+      <span id="alertas-badge" style="display:none;background:var(--red);color:#fff;font-size:10px;font-weight:700;border-radius:20px;padding:1px 7px;min-width:16px;text-align:center">0</span>
+    </button>
+    <button class="nav-item" id="nav-prov-historial" onclick="cambiarMod('prov-historial')">
+      <span class="nav-item-icon" style="background:#FEECEC">🗂️</span><span>Historial de compras</span>
+    </button>
+    <button class="nav-item" id="nav-prov-pagar" onclick="cambiarMod('prov-pagar')" style="position:relative">
+      <span class="nav-item-icon" style="background:#FEECEC">⏰</span><span>Por pagar</span>
+      <span id="proveedores-badge" style="display:none;background:var(--red);color:#fff;font-size:10px;font-weight:700;border-radius:20px;padding:1px 7px;min-width:16px;text-align:center">0</span>
+    </button>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Producción</div>
+    <button class="nav-item" id="nav-prod" onclick="cambiarMod('prod')">
+      <span class="nav-item-icon" style="background:var(--indigo2)">🏭</span><span data-i18n="nav_prod">Producción</span>
+    </button>
+    <button class="nav-item" id="nav-servicios" onclick="cambiarMod('servicios')">
+      <span class="nav-item-icon" style="background:#FEF3C7">🛠</span><span data-i18n="nav_services">Servicios</span>
+    </button>
+    <button class="nav-item" id="nav-movimientos" onclick="cambiarMod('movimientos')">
+      <span class="nav-item-icon" style="background:var(--green3)">🔁</span><span>Movimientos de Producto</span>
+    </button>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label" data-i18n="nav_catalogs">Catálogos</div>
+    <button class="nav-item" id="nav-clientes" onclick="cambiarMod('clientes')">
+      <span class="nav-item-icon" style="background:var(--purple2)">👥</span><span data-i18n="nav_clients">Clientes</span>
+    </button>
+    <button class="nav-item" id="nav-facturas" onclick="cambiarMod('facturas')">
+      <span class="nav-item-icon" style="background:var(--blue3)">🧾</span><span data-i18n="nav_invoices">Facturas</span>
+    </button>
+    <button class="nav-item" id="nav-nueva-factura" onclick="cambiarMod('nueva-factura')">
+      <span class="nav-item-icon" style="background:var(--blue3)">➕</span><span data-i18n="nav_new_invoice">Nueva Factura</span>
+    </button>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label" data-i18n="nav_finances">Finanzas</div>
+    <button class="nav-item" id="nav-gastos" onclick="cambiarMod('gastos')">
+      <span class="nav-item-icon" style="background:#FAECE7">💸</span><span data-i18n="nav_expenses">Gastos</span>
+    </button>
+  </div>
+  <div class="sidebar-footer">
+    <button class="btn-pdf-side" onclick="generarReportePDF()">
+      <span>📄</span><span data-i18n="nav_pdf_report">Reporte PDF</span>
+    </button>
+    <button class="btn-pdf-side" style="margin-top:6px;background:var(--amber2);border-color:rgba(186,117,23,.3);color:var(--amber)" onclick="renovarFacturasManuales()" id="btn-renovar">
+      <span>🔄</span><span data-i18n="nav_renew_fixed">Renovar facturas fijas</span>
+    </button>
+  </div>
+</nav>
 
     <div class="main-content">
 
