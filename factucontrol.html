@@ -3590,6 +3590,14 @@ async function abrirModalNuevoCliente(){
 }
 
 async function editarCliente(id){
+  // Recargamos clientes y servicios frescos del servidor antes de abrir el
+  // modal, para no depender de una copia en memoria que pudo quedar
+  // desactualizada tras guardados anteriores.
+  var { data: listaFresca } = await supabase.rpc('fac_cliente_listar');
+  _clientes = listaFresca || _clientes;
+  var { data: s } = await supabase.rpc('fac_servicio_listar');
+  _servicios = s || _servicios;
+
   var c=_clientes.find(function(x){return x.id===id;});
   if(!c)return;
   document.getElementById('mcli-title').textContent=t('modal_edit_client');
@@ -3606,7 +3614,19 @@ async function editarCliente(id){
   document.getElementById('mcli-tipo-facturacion').value=c.tipoFacturacion||'tradicional';
   hideAlert('alert-mcli');
   var seleccionados=c.serviciosContratados||[];
-  if(!_servicios.length){ var { data: s } = await supabase.rpc('fac_servicio_listar'); _servicios=s||[]; }
+
+  // Aviso si hay servicios duplicados con el mismo nombre — causa muy común
+  // de que el checkbox correcto no coincida con el que quedó vinculado.
+  var nombresVistos={}; var duplicados=[];
+  _servicios.forEach(function(sv){
+    var n=sv.nombre.trim().toLowerCase();
+    if(nombresVistos[n]) duplicados.push(sv.nombre);
+    nombresVistos[n]=true;
+  });
+  if(duplicados.length){
+    showAlert('alert-mcli','⚠️ Tienes servicios duplicados en el catálogo: '+duplicados.join(', ')+'. Elimina el que sobre en "Servicios" para evitar que la sincronización con Inventario falle.','warn');
+  }
+
   _renderServiciosEnModal(seleccionados, c.id);
   abrirModal('modal-cliente');
 }
@@ -3669,16 +3689,8 @@ async function sincronizarStockCliente(clienteId, cantidadesPayload, clienteNomb
     }
   }
 
-  if(omitidosPorNombre.length){
-    toast('⚠️ No se movió stock de: '+omitidosPorNombre.join(', ')+' — el nombre no coincide con ningún producto de Inventario.','warn');
-  }
-  if(errores.length){
-    toast('⚠️ Error sincronizando stock: '+errores.join(' · '),'err');
-  } else if(sincronizados>0){
-    toast('📦 Stock actualizado: '+sincronizados+' producto'+(sincronizados!==1?'s':'')+' movido'+(sincronizados!==1?'s':'')+' en Inventario.','ok');
-  }
-
   cargarDatosIniciales();
+  return { errores:errores, omitidos:omitidosPorNombre, sincronizados:sincronizados };
 }
 
 async function guardarCliente(){
@@ -3710,12 +3722,25 @@ async function guardarCliente(){
   if(error){ showAlert('alert-mcli',t('msg_error_prefix')+error.message,'err'); return; }
   if(res.success){
     var clienteId = document.getElementById('mcli-id').value || res.id || (res.cliente&&res.cliente.id) || (res.data&&res.data.id);
+    var resumen = { errores:[], omitidos:[], sincronizados:0 };
     if(clienteId){
       await supabase.rpc('fc_guardar_cantidades', { p_cliente_id: clienteId, p_cantidades: cantidadesPayload });
-      await sincronizarStockCliente(clienteId, cantidadesPayload, nombre);
+      resumen = await sincronizarStockCliente(clienteId, cantidadesPayload, nombre);
       await cargarCantidadesServicio();
     }
-    toast(res.mensaje,'ok'); cerrarModal('modal-cliente'); cargarClientes();
+    cargarClientes();
+
+    var partes=[res.mensaje];
+    if(resumen.sincronizados>0) partes.push('📦 '+resumen.sincronizados+' producto'+(resumen.sincronizados!==1?'s':'')+' de Inventario actualizado'+(resumen.sincronizados!==1?'s':'')+'.');
+    if(resumen.omitidos.length) partes.push('⚠️ Sin coincidencia en Inventario: '+resumen.omitidos.join(', ')+'.');
+    if(resumen.errores.length) partes.push('❌ '+resumen.errores.join(' · '));
+
+    if(resumen.errores.length || resumen.omitidos.length){
+      showAlert('alert-mcli', partes.join(' '), resumen.errores.length?'err':'warn');
+    } else {
+      toast(partes.join(' '),'ok');
+      cerrarModal('modal-cliente');
+    }
   }
   else showAlert('alert-mcli',res.mensaje,'err');
 }
