@@ -3318,7 +3318,7 @@ async function descontarStockFacturado(items, clienteNombre, facturaId){
     }
     var { data: resV, error: errV } = await supabase.rpc('ventas_registrar', {
       p_producto: it.nombre, p_cantidad: it.cantidad, p_precio_unit: it.precio, p_margen: 0,
-      p_notas: 'Facturado a '+(clienteNombre||'cliente')
+      p_notas: 'Facturado a '+(clienteNombre||'cliente'), p_pagado: true
     });
     if(errV){ console.error(errV); toast('⚠️ No se pudo descontar el stock de "'+it.nombre+'".','warn'); continue; }
     var ventaId = resV && (resV.id || resV.ventaId || (resV.venta&&resV.venta.id));
@@ -3664,7 +3664,7 @@ async function sincronizarStockCliente(clienteId, cantidadesPayload, clienteNomb
     if(nuevaCant>0 && !ventaIdExistente){
       var { data: r1, error: e1 } = await supabase.rpc('ventas_registrar', {
         p_producto: svc.nombre, p_cantidad: nuevaCant, p_precio_unit: svc.precio, p_margen: 0,
-        p_notas: 'Asignado a '+(clienteNombre||'cliente')
+        p_notas: 'Asignado a '+(clienteNombre||'cliente'), p_pagado: true
       });
       if(e1){ errores.push(svc.nombre+': '+e1.message); }
       else if(!r1 || !r1.success){ errores.push(svc.nombre+': '+(r1?r1.mensaje:'error desconocido')); }
@@ -3724,24 +3724,9 @@ async function guardarCliente(){
     var clienteId = document.getElementById('mcli-id').value || res.id || (res.cliente&&res.cliente.id) || (res.data&&res.data.id);
     var resumen = { errores:[], omitidos:[], sincronizados:0 };
     if(clienteId){
-      var { error: errCant } = await supabase.rpc('fc_guardar_cantidades', { p_cliente_id: clienteId, p_cantidades: cantidadesPayload });
+      await supabase.rpc('fc_guardar_cantidades', { p_cliente_id: clienteId, p_cantidades: cantidadesPayload });
       resumen = await sincronizarStockCliente(clienteId, cantidadesPayload, nombre);
       await cargarCantidadesServicio();
-
-      // DIAGNÓSTICO TEMPORAL — ventana bloqueante para ver exactamente qué pasó,
-      // sin riesgo de que un toast la tape o desaparezca sola.
-      window.alert(
-        'DIAGNÓSTICO GUARDAR CLIENTE\n\n'+
-        'clienteId: '+clienteId+'\n'+
-        'checkboxes marcados: '+JSON.stringify(svcsSeleccionados)+'\n'+
-        'cantidades enviadas: '+JSON.stringify(cantidadesPayload)+'\n'+
-        'error fc_guardar_cantidades: '+(errCant?errCant.message:'ninguno')+'\n'+
-        'servicios en catálogo (_servicios): '+_servicios.length+'\n'+
-        'productos en Inventario (pfProductos): '+pfProductos.map(function(p){return p.nombre+'('+p.stock+')';}).join(', ')+'\n'+
-        'sincronizados: '+resumen.sincronizados+'\n'+
-        'omitidos (nombre no coincide): '+JSON.stringify(resumen.omitidos)+'\n'+
-        'errores: '+JSON.stringify(resumen.errores)
-      );
     }
     cargarClientes();
 
@@ -5355,7 +5340,7 @@ async function vConfirmar(){
   var btn=document.getElementById('btn-vender');btn.disabled=true;btn.textContent='Registrando…';
 
   var { data: res, error } = await supabase.rpc('ventas_registrar', {
-    p_producto: nombre, p_cantidad: cant, p_precio_unit: pu, p_margen: mg, p_notas: notas
+    p_producto: nombre, p_cantidad: cant, p_precio_unit: pu, p_margen: mg, p_notas: notas, p_pagado: true
   });
   btn.textContent='✅ Confirmar';
   if(error){ showAlert('alert-ventas',t('msg_error_prefix')+error.message,'err'); btn.disabled=false; return; }
