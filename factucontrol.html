@@ -1294,7 +1294,7 @@ body {
   <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
 
   <div class="app-body">
-   <nav class="sidebar" id="sidebar">
+    <nav class="sidebar" id="sidebar">
   <div class="sidebar-section">
     <div class="sidebar-label" data-i18n="nav_system">Sistema</div>
     <button class="nav-item active" id="nav-dashboard" onclick="cambiarMod('dashboard')">
@@ -1311,9 +1311,35 @@ body {
     </button>
   </div>
   <div class="sidebar-section">
-    <div class="sidebar-label">Servicios</div>
+    <div class="sidebar-label">Inventario</div>
+    <button class="nav-item" id="nav-prov-registrar" onclick="cambiarMod('prov-registrar')">
+      <span class="nav-item-icon" style="background:#FEECEC">🚚</span><span>Proveedores</span>
+    </button>
+    <button class="nav-item" id="nav-mp-consultar" onclick="cambiarMod('mp-consultar')">
+      <span class="nav-item-icon" style="background:var(--green3)">🔍</span><span data-i18n="nav_check_stock">Consultar stock</span>
+    </button>
+    <button class="nav-item" id="nav-alertas" onclick="cambiarMod('alertas')" style="position:relative">
+      <span class="nav-item-icon" style="background:#FAECE7">🔔</span><span data-i18n="nav_alerts">Alertas de stock</span>
+      <span id="alertas-badge" style="display:none;background:var(--red);color:#fff;font-size:10px;font-weight:700;border-radius:20px;padding:1px 7px;min-width:16px;text-align:center">0</span>
+    </button>
+    <button class="nav-item" id="nav-prov-historial" onclick="cambiarMod('prov-historial')">
+      <span class="nav-item-icon" style="background:#FEECEC">🗂️</span><span>Historial de compras</span>
+    </button>
+    <button class="nav-item" id="nav-prov-pagar" onclick="cambiarMod('prov-pagar')" style="position:relative">
+      <span class="nav-item-icon" style="background:#FEECEC">⏰</span><span>Por pagar</span>
+      <span id="proveedores-badge" style="display:none;background:var(--red);color:#fff;font-size:10px;font-weight:700;border-radius:20px;padding:1px 7px;min-width:16px;text-align:center">0</span>
+    </button>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Producción</div>
+    <button class="nav-item" id="nav-prod" onclick="cambiarMod('prod')">
+      <span class="nav-item-icon" style="background:var(--indigo2)">🏭</span><span data-i18n="nav_prod">Producción</span>
+    </button>
     <button class="nav-item" id="nav-servicios" onclick="cambiarMod('servicios')">
       <span class="nav-item-icon" style="background:#FEF3C7">🛠</span><span data-i18n="nav_services">Servicios</span>
+    </button>
+    <button class="nav-item" id="nav-movimientos" onclick="cambiarMod('movimientos')">
+      <span class="nav-item-icon" style="background:var(--green3)">🔁</span><span>Movimientos de Producto</span>
     </button>
   </div>
   <div class="sidebar-section">
