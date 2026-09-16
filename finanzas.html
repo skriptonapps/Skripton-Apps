@@ -657,12 +657,15 @@ body {
     </button>
   </div>
   <div class="sidebar-section">
+    <div class="sidebar-label">Servicios</div>
+    <button class="nav-item" id="nav-servicios" onclick="cambiarMod('servicios')">
+      <span class="nav-item-icon" style="background:#FEF3C7">🛠</span><span data-i18n="nav_services">Servicios</span>
+    </button>
+  </div>
+  <div class="sidebar-section">
     <div class="sidebar-label" data-i18n="nav_catalogs">Catálogos</div>
     <button class="nav-item" id="nav-clientes" onclick="cambiarMod('clientes')">
       <span class="nav-item-icon" style="background:var(--purple2)">👥</span><span data-i18n="nav_clients">Clientes</span>
-    </button>
-    <button class="nav-item" id="nav-servicios" onclick="cambiarMod('servicios')">
-      <span class="nav-item-icon" style="background:#FEF3C7">🛠</span><span data-i18n="nav_services">Servicios</span>
     </button>
     <button class="nav-item" id="nav-facturas" onclick="cambiarMod('facturas')">
       <span class="nav-item-icon" style="background:var(--blue3)">🧾</span><span data-i18n="nav_invoices">Facturas</span>
@@ -675,6 +678,14 @@ body {
     <div class="sidebar-label" data-i18n="nav_finances">Finanzas</div>
     <button class="nav-item" id="nav-gastos" onclick="cambiarMod('gastos')">
       <span class="nav-item-icon" style="background:#FAECE7">💸</span><span data-i18n="nav_expenses">Gastos</span>
+    </button>
+  </div>
+  <div class="sidebar-footer">
+    <button class="btn-pdf-side" onclick="generarReportePDF()">
+      <span>📄</span><span data-i18n="nav_pdf_report">Reporte PDF</span>
+    </button>
+    <button class="btn-pdf-side" style="margin-top:6px;background:var(--amber2);border-color:rgba(186,117,23,.3);color:var(--amber)" onclick="renovarFacturasManuales()" id="btn-renovar">
+      <span>🔄</span><span data-i18n="nav_renew_fixed">Renovar facturas fijas</span>
     </button>
   </div>
 </nav>
