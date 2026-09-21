@@ -74,6 +74,10 @@ nav.scrolled{box-shadow:var(--shadow)}
 .nav-links a:hover::after{transform:scaleX(1)}
 .nav-cta{padding:9px 20px;background:var(--green);color:#fff;border-radius:var(--r);font-size:13px;font-weight:600;text-decoration:none;transition:all .2s;box-shadow:0 2px 8px rgba(15,158,110,.25)}
 .nav-cta:hover{background:var(--green2);box-shadow:0 4px 16px rgba(15,158,110,.35);transform:translateY(-1px)}
+.nav-actions{display:flex;align-items:center;gap:18px}
+.nav-login{color:var(--ink2);text-decoration:none;font-size:13px;font-weight:600;transition:color .15s}
+.nav-login:hover{color:var(--green2)}
+@media(max-width:768px){.nav-login{display:none}}
 
 /* ── PROMO BANNER (día 16) ── */
 .promo-banner{display:none;position:fixed;top:0;left:0;right:0;z-index:101;background:linear-gradient(90deg,#B91C1C,#DC2626);color:#fff;text-align:center;padding:10px 16px;font-size:13px;font-weight:600;line-height:1.5}
@@ -408,7 +412,10 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
     <a href="#pago">Precios</a>
     <a href="#faq">FAQ</a>
   </div>
-  <button class="nav-cta" onclick="abrirModal()">Comenzar →</button>
+  <div class="nav-actions">
+    <a href="#" class="nav-login" onclick="abrirModalLogin();return false">Iniciar sesión</a>
+    <button class="nav-cta" onclick="abrirModal()">Suscribirse →</button>
+  </div>
 </nav>
 
 <!-- HERO -->
@@ -851,6 +858,30 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
   </div>
 </div>
 
+<!-- MODAL LOGIN -->
+<div class="modal-overlay" id="modal-login">
+  <div class="modal-box">
+    <button class="modal-close" onclick="cerrarModalLogin()">×</button>
+    <div class="modal-header">
+      <span class="modal-icon">🔑</span>
+      <div class="modal-title">Iniciar sesión</div>
+      <div class="modal-subtitle">Entra a tu app con tu correo y contraseña</div>
+    </div>
+    <div id="alert-login" class="modal-alert"></div>
+    <div class="form-g">
+      <label>Correo electrónico</label>
+      <input type="email" id="login-email" placeholder="tu@correo.com" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <div class="form-g">
+      <label>Contraseña</label>
+      <input type="password" id="login-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="btn-modal-primary" id="btn-login-main" onclick="doLogin()">Iniciar sesión →</button>
+    <div class="app-picker" id="login-app-picker" style="display:none;margin-top:14px"></div>
+    <div class="modal-footer-txt"><span>¿No tienes cuenta?</span> <a href="#" onclick="cerrarModalLogin();abrirModal();return false" style="color:var(--green2);font-weight:600;text-decoration:none">Suscríbete aquí</a></div>
+  </div>
+</div>
+
 <script>
 
 // ── FAQ ──────────────────────────────────────────────────────
@@ -1077,9 +1108,88 @@ async function doAgregarApp(){
   document.getElementById('exist-password').value='';
 }
 
+// ── LOGIN (cuentas existentes) ───────────────────────────────
+var NOMBRES_APP = { inventario:'Inventario', finanzas:'Facturación', turnos:'Servicios de carro', factucontrol:'FactuControl' };
+
+function abrirModalLogin(){
+  document.getElementById('login-email').value='';
+  document.getElementById('login-password').value='';
+  document.getElementById('alert-login').style.display='none';
+  var picker=document.getElementById('login-app-picker');
+  picker.style.display='none'; picker.innerHTML='';
+  document.getElementById('btn-login-main').style.display='';
+  document.getElementById('modal-login').classList.add('visible');
+  setTimeout(function(){var el=document.getElementById('login-email');if(el)el.focus();},100);
+}
+
+function cerrarModalLogin(){
+  document.getElementById('modal-login').classList.remove('visible');
+}
+
+function mostrarAlertaLogin(msg,tipo){
+  var a=document.getElementById('alert-login');
+  a.textContent=msg;a.className='modal-alert '+tipo;a.style.display='block';
+}
+
+async function doLogin(){
+  var email=document.getElementById('login-email').value.trim();
+  var password=document.getElementById('login-password').value;
+  if(!email)    return mostrarAlertaLogin('Ingresa tu correo electrónico.','err');
+  if(!password) return mostrarAlertaLogin('Ingresa tu contraseña.','err');
+
+  var btn=document.getElementById('btn-login-main');
+  btn.disabled=true; btn.textContent='Ingresando…';
+
+  var { data, error } = await supabase.auth.signInWithPassword({ email:email, password:password });
+  if(error){
+    btn.disabled=false; btn.textContent='Iniciar sesión →';
+    return mostrarAlertaLogin('Correo o contraseña incorrectos.','err');
+  }
+
+  var { data: perfil, error: perfilError } = await supabase.from('perfiles').select('*').eq('id', data.user.id).single();
+  btn.disabled=false; btn.textContent='Iniciar sesión →';
+
+  if(perfilError || !perfil || !perfil.apps || perfil.apps.length===0){
+    await supabase.auth.signOut();
+    return mostrarAlertaLogin('Tu cuenta no tiene ninguna app activa todavía.','err');
+  }
+
+  if(perfil.apps.length===1){
+    window.location.href = APP_PAGES[perfil.apps[0]] || APP_PAGES.inventario;
+    return;
+  }
+
+  // Varias apps activas: deja elegir a cuál entrar
+  mostrarSelectorAppsLogin(perfil.apps);
+}
+
+function mostrarSelectorAppsLogin(apps){
+  var cont=document.getElementById('login-app-picker');
+  cont.innerHTML='';
+  cont.style.display='flex';
+  document.getElementById('btn-login-main').style.display='none';
+
+  var label=document.createElement('div');
+  label.style.cssText='font-size:11px;font-weight:600;color:var(--ink2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px';
+  label.textContent='Tienes varias apps activas, elige una:';
+  cont.appendChild(label);
+
+  apps.forEach(function(app){
+    var info=APP_INFO[app]||APP_INFO.inventario;
+    var btn=document.createElement('button');
+    btn.className='app-pick-btn';
+    btn.innerHTML='<span class="app-pick-emoji">'+info.icon+'</span>'
+      +'<div class="app-pick-info"><div class="app-pick-name">'+(NOMBRES_APP[app]||app)+'</div></div>'
+      +'<span class="app-pick-check" style="color:var(--ink3)">→</span>';
+    btn.onclick=function(){ window.location.href = APP_PAGES[app] || APP_PAGES.inventario; };
+    cont.appendChild(btn);
+  });
+}
+
 // ── CERRAR con ESC / click fuera ─────────────────────────────
-document.addEventListener('keydown',function(e){if(e.key==='Escape')cerrarModal();});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){cerrarModal();cerrarModalLogin();}});
 document.getElementById('modal-registro').addEventListener('click',function(e){if(e.target===this)cerrarModal();});
+document.getElementById('modal-login').addEventListener('click',function(e){if(e.target===this)cerrarModalLogin();});
 
 // ── NAV scroll ───────────────────────────────────────────────
 window.addEventListener('scroll',function(){
