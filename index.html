@@ -75,9 +75,8 @@ nav.scrolled{box-shadow:var(--shadow)}
 .nav-cta{padding:9px 20px;background:var(--green);color:#fff;border-radius:var(--r);font-size:13px;font-weight:600;text-decoration:none;transition:all .2s;box-shadow:0 2px 8px rgba(15,158,110,.25)}
 .nav-cta:hover{background:var(--green2);box-shadow:0 4px 16px rgba(15,158,110,.35);transform:translateY(-1px)}
 .nav-actions{display:flex;align-items:center;gap:18px}
-.nav-login{color:var(--ink2);text-decoration:none;font-size:13px;font-weight:600;transition:color .15s}
+.nav-login{color:var(--ink2);text-decoration:none;font-size:13px;font-weight:600;transition:color .15s;white-space:nowrap}
 .nav-login:hover{color:var(--green2)}
-@media(max-width:768px){.nav-login{display:none}}
 
 /* ── PROMO BANNER (día 16) ── */
 .promo-banner{display:none;position:fixed;top:0;left:0;right:0;z-index:101;background:linear-gradient(90deg,#B91C1C,#DC2626);color:#fff;text-align:center;padding:10px 16px;font-size:13px;font-weight:600;line-height:1.5}
@@ -354,6 +353,10 @@ footer{background:var(--ink);padding:50px 40px 32px;color:rgba(255,255,255,.7)}
 @media(max-width:768px){
   nav{padding:0 16px}
   .nav-links{display:none}
+  .nav-brand-text{font-size:17px}
+  .nav-actions{gap:12px}
+  .nav-login{font-size:12px}
+  .nav-cta{padding:8px 14px;font-size:12px}
   section{padding:60px 20px}
   .hero{padding:100px 20px 60px}
   .hero-stats{flex-direction:column;border-radius:var(--r);max-width:300px}
