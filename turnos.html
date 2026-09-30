@@ -672,7 +672,7 @@ tbody tr:hover{background:var(--bg)}
       <input type="text" id="vedit-notas"></div>
     <div class="modal-actions">
       <button class="btn-cancel" onclick="cerrarModal('modal-editar-viaje')">Cancelar</button>
-      <button class="btn-confirm" onclick="guardarEdicionViaje()">Guardar cambios</button>
+      <button class="btn-confirm" id="btn-guardar-edicion-viaje" onclick="guardarEdicionViaje()">Guardar cambios</button>
     </div>
   </div>
 </div>
@@ -710,7 +710,7 @@ tbody tr:hover{background:var(--bg)}
       <input type="text" id="mgas-notas" placeholder="Detalle adicional…"></div>
     <div class="modal-actions">
       <button class="btn-cancel" onclick="cerrarModal('modal-gasto')">Cancelar</button>
-      <button class="btn-confirm" onclick="guardarGasto()">Guardar gasto</button>
+      <button class="btn-confirm" id="btn-guardar-gasto" onclick="guardarGasto()">Guardar gasto</button>
     </div>
   </div>
 </div>
@@ -752,13 +752,8 @@ tbody tr:hover{background:var(--bg)}
 var SESSION = null;
 var _viajes = [];
 var _gastos = [];
-var _metodosPago = {}; // { id: 'efectivo'|'transferencia' } — se usa tanto para viajes como para gastos
-var _metodosPagoGastos = {};
-function metodoDeGasto(id){ return _metodosPagoGastos[id] || 'efectivo'; }
-async function cargarMetodosPagoGastos(){
-  var { data } = await supabase.rpc('tur_obtener_metodos_pago_gastos');
-  _metodosPagoGastos = data || {};
-}
+var _metodosPago = {};        // { idViaje: 'efectivo'|'transferencia' }
+var _metodosPagoGastos = {};  // { idGasto: 'efectivo'|'transferencia' }
 
 function fmt(v){ return new Intl.NumberFormat('es-CO',{style:'currency',currency:'COP',minimumFractionDigits:0}).format(v||0); }
 function esc(s){ return (s||'').toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
@@ -777,11 +772,43 @@ function fechaHoyCorta(){
 }
 function mesAnioHoy(){ var d=new Date(); return d.getFullYear()+'/'+String(d.getMonth()+1).padStart(2,'0'); }
 
+/* ══ MÉTODOS DE PAGO ══ */
 async function cargarMetodosPago(){
-  var { data } = await supabase.rpc('tur_obtener_metodos_pago');
+  var { data, error } = await supabase.rpc('tur_obtener_metodos_pago');
+  if(error){ console.error('tur_obtener_metodos_pago:', error); toast('⚠️ No se pudieron leer los métodos de pago: '+error.message,'err'); }
   _metodosPago = data || {};
 }
 function metodoDe(id){ return _metodosPago[id] || 'efectivo'; }
+
+async function cargarMetodosPagoGastos(){
+  var { data, error } = await supabase.rpc('tur_obtener_metodos_pago_gastos');
+  if(error){ console.error('tur_obtener_metodos_pago_gastos:', error); toast('⚠️ No se pudieron leer los métodos de pago de gastos: '+error.message,'err'); }
+  _metodosPagoGastos = data || {};
+}
+function metodoDeGasto(id){ return _metodosPagoGastos[id] || 'efectivo'; }
+
+/* Guarda el método de pago y avisa si falla (antes fallaba en silencio) */
+async function guardarMetodo(fn, id, metodo){
+  var { data, error } = await supabase.rpc(fn, { p_id: id, p_metodo: metodo });
+  if(error || !data || !data.success){
+    var msg = error ? error.message : ((data && data.mensaje) || 'sin respuesta del servidor');
+    console.error(fn+':', error || data);
+    toast('⚠️ No se guardó el método de pago: '+msg,'err');
+    return false;
+  }
+  return true;
+}
+/* IDs existentes antes de crear un registro */
+async function idsActuales(rpcListar){
+  var { data } = await supabase.rpc(rpcListar);
+  return (data||[]).map(function(x){ return x.id; });
+}
+/* Encuentra el ID del registro recién creado comparando contra la lista anterior */
+async function idNuevo(rpcListar, antes){
+  var { data } = await supabase.rpc(rpcListar);
+  var n = (data||[]).find(function(x){ return antes.indexOf(x.id) === -1; });
+  return n ? n.id : null;
+}
 
 /* ══ SIDEBAR / USER MENU ══ */
 function toggleSidebar(){
@@ -971,11 +998,12 @@ async function cargarDashboard(){
   var ma=mesAnioHoy();
   document.getElementById('dash-periodo-label').textContent='Cargando…';
 
-  var [{data:r},{data:listaViajes}] = await Promise.all([
+  var [{data:r},{data:listaViajes},{data:listaGastosDash}] = await Promise.all([
     supabase.rpc('tur_resumen', { p_desde: ma, p_hasta: ma }),
-    supabase.rpc('tur_listar_viajes')
+    supabase.rpc('tur_listar_viajes'),
+    supabase.rpc('tur_listar_gastos')
   ]);
-  await cargarMetodosPago();
+  await Promise.all([cargarMetodosPago(), cargarMetodosPagoGastos()]);
   if(!r) return;
 
   document.getElementById('dash-periodo-label').textContent='Mes actual · '+(new Date()).toLocaleDateString('es-CO',{month:'long',year:'numeric'});
@@ -1004,13 +1032,10 @@ async function cargarDashboard(){
   renderGrafico('graf-pagos-dash', dataPago, dataPago.map(function(d){return d.val;}), 'var(--blue)');
 
   /* ── Conciliación: cuánto deberías tener en efectivo vs transferencia ── */
-   /* ── Conciliación: cuánto deberías tener en efectivo vs transferencia ── */
-  var { data: listaGastosDash } = await supabase.rpc('tur_listar_gastos');
   var gastosMes=(listaGastosDash||[]).filter(function(g){
     var p=(g.fechaSolo||'').split('/');
     return p.length>=3 && p[1]===mesActual && p[2]===anioActual;
   });
-  await cargarMetodosPagoGastos();
   var gastosPorPago={};
   gastosMes.forEach(function(g){
     var m=metodoDeGasto(g.id); gastosPorPago[m]=(gastosPorPago[m]||0)+g.monto;
@@ -1073,15 +1098,17 @@ async function registrarViaje(){
   var btn=document.getElementById('btn-guardar-viaje');
   btn.disabled=true; btn.textContent='Guardando…';
   try{
+    var antes = await idsActuales('tur_listar_viajes');
     var { data: res, error } = await supabase.rpc('tur_registrar_viaje', {
       p_plataforma: plataforma, p_monto: monto, p_fecha: fecha, p_notas: notas
     });
     if(error){ showAlert('alert-viaje','Error: '+error.message,'err'); return; }
     if(res.success){
-      var { data: listaFresca } = await supabase.rpc('tur_listar_viajes');
-      var nuevo = listaFresca && listaFresca[0];
-      if(nuevo && nuevo.id) await supabase.rpc('tur_actualizar_metodo_pago', { p_id: nuevo.id, p_metodo: metodoPago });
-      toast(res.mensaje,'ok');
+      var nuevoId = await idNuevo('tur_listar_viajes', antes);
+      var okMetodo = true;
+      if(nuevoId) okMetodo = await guardarMetodo('tur_actualizar_metodo_pago', nuevoId, metodoPago);
+      else if(metodoPago!=='efectivo'){ okMetodo=false; toast('⚠️ Viaje guardado, pero no se encontró para marcar el método de pago.','err'); }
+      if(okMetodo) toast(res.mensaje,'ok');
       initViaje();
     } else showAlert('alert-viaje',res.mensaje,'err');
   } finally {
@@ -1172,13 +1199,21 @@ async function guardarEdicionViaje(){
   var metodoPago=document.getElementById('vedit-metodo-pago').value;
   var errEl=document.getElementById('vedit-error');
   if(!plataforma||monto<=0){ errEl.textContent='Completa plataforma y monto válido.'; errEl.style.display='block'; return; }
-  var { data: res, error } = await supabase.rpc('tur_editar_viaje', { p_id:id, p_plataforma:plataforma, p_monto:monto, p_fecha:fecha, p_notas:notas });
-  if(error){ errEl.textContent='Error: '+error.message; errEl.style.display='block'; return; }
-  if(res.success){
-    await supabase.rpc('tur_actualizar_metodo_pago', { p_id: id, p_metodo: metodoPago });
-    cerrarModal('modal-editar-viaje'); toast(res.mensaje,'ok'); cargarHistorialViajes(); cargarDashboard();
+  var btn=document.getElementById('btn-guardar-edicion-viaje');
+  btn.disabled=true; btn.textContent='Guardando…';
+  try{
+    var { data: res, error } = await supabase.rpc('tur_editar_viaje', { p_id:id, p_plataforma:plataforma, p_monto:monto, p_fecha:fecha, p_notas:notas });
+    if(error){ errEl.textContent='Error: '+error.message; errEl.style.display='block'; return; }
+    if(res.success){
+      var okMetodo = await guardarMetodo('tur_actualizar_metodo_pago', id, metodoPago);
+      if(!okMetodo){ errEl.textContent='El viaje se guardó, pero no el método de pago. Revisa el aviso rojo.'; errEl.style.display='block'; }
+      else { cerrarModal('modal-editar-viaje'); toast(res.mensaje,'ok'); }
+      cargarHistorialViajes(); cargarDashboard();
+    }
+    else { errEl.textContent=res.mensaje; errEl.style.display='block'; }
+  } finally {
+    btn.disabled=false; btn.textContent='Guardar cambios';
   }
-  else { errEl.textContent=res.mensaje; errEl.style.display='block'; }
 }
 function eliminarViaje(id){
   confirmar('Eliminar viaje','¿Eliminar este viaje? Esta acción no se puede deshacer.', async function(){
@@ -1285,19 +1320,26 @@ async function guardarGasto(){
     ? { p_id:id, p_tipo:tipo, p_categoria:categoria, p_monto:monto, p_fecha:fecha, p_notas:notas }
     : { p_tipo:tipo, p_categoria:categoria, p_monto:monto, p_fecha:fecha, p_notas:notas };
 
-  var { data: res, error } = await supabase.rpc(fn, params);
-  if(error){ showAlert('alert-mgas','Error: '+error.message,'err'); return; }
-  if(res.success){
-    var gastoId=id;
-    if(!gastoId){
-      var { data: listaFresca } = await supabase.rpc('tur_listar_gastos');
-      var nuevo = listaFresca && listaFresca[0];
-      if(nuevo && nuevo.id) gastoId=nuevo.id;
+  var btn=document.getElementById('btn-guardar-gasto');
+  btn.disabled=true; btn.textContent='Guardando…';
+  try{
+    var antesGastos = id ? [] : await idsActuales('tur_listar_gastos');
+    var { data: res, error } = await supabase.rpc(fn, params);
+    if(error){ showAlert('alert-mgas','Error: '+error.message,'err'); return; }
+    if(res.success){
+      var gastoId = id;
+      if(!gastoId) gastoId = await idNuevo('tur_listar_gastos', antesGastos);
+      var okMetodo = true;
+      if(gastoId) okMetodo = await guardarMetodo('tur_actualizar_metodo_pago_gasto', gastoId, metodoPago);
+      else if(metodoPago!=='efectivo'){ okMetodo=false; toast('⚠️ Gasto guardado, pero no se encontró para marcar el método de pago.','err'); }
+      if(okMetodo){ toast(res.mensaje,'ok'); cerrarModal('modal-gasto'); }
+      else showAlert('alert-mgas','El gasto se guardó, pero no el método de pago. Revisa el aviso rojo.','err');
+      cargarGastos(); cargarDashboard();
     }
-    if(gastoId) await supabase.rpc('tur_actualizar_metodo_pago_gasto', { p_id: gastoId, p_metodo: metodoPago });
-    toast(res.mensaje,'ok'); cerrarModal('modal-gasto'); cargarGastos(); cargarDashboard();
+    else showAlert('alert-mgas',res.mensaje,'err');
+  } finally {
+    btn.disabled=false; btn.textContent='Guardar gasto';
   }
-  else showAlert('alert-mgas',res.mensaje,'err');
 }
 function eliminarGastoConfirm(id){
   confirmar('Eliminar gasto','¿Eliminar este gasto? Esta acción no se puede deshacer.', async function(){
