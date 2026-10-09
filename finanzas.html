@@ -18,6 +18,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
   var SUPABASE_URL = 'https://tpynubemonzmtlcjioff.supabase.co';
   var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRweW51YmVtb256bXRsY2ppb2ZmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY4OTU0MTgsImV4cCI6MjEwMjQ3MTQxOH0.R80Zc-4bM8Qo1W9EaRAXhBD2q_JFF1h7VpQIwLWZPH0';
@@ -941,7 +942,12 @@ body {
         <div class="panel-header">
           <div><div class="panel-title" data-i18n="clients_title">Clientes</div>
             <div class="panel-sub" data-i18n="clients_sub">Base de datos de tus clientes</div></div>
-          <button class="btn-primary btn-sm" onclick="abrirModalNuevoCliente()">+ <span data-i18n="new_client">Nuevo cliente</span></button>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+  <button class="btn-outline btn-sm" onclick="descargarPlantillaClientes()">⬇ Plantilla</button>
+  <button class="btn-outline btn-sm" onclick="document.getElementById('cli-import-file').click()">📥 Importar</button>
+  <button class="btn-primary btn-sm" onclick="abrirModalNuevoCliente()">+ <span data-i18n="new_client">Nuevo cliente</span></button>
+</div>
+<input type="file" id="cli-import-file" accept=".csv,.xlsx,.xls" style="display:none" onchange="importarClientesArchivo(event)">
         </div>
         <div id="alert-clientes" class="alert"></div>
 
@@ -2389,7 +2395,149 @@ async function eliminarServicio(id){
   if(error){ toast(t('msg_error_prefix')+error.message,'err'); return; }
   if(res.success){ toast(res.mensaje,'ok'); cargarServicios(); }
 }
+/* ── IMPORTAR CLIENTES (CSV / Excel) ── */
+function _normCol(s){
+  return (s||'').toString().toLowerCase().normalize('NFD')
+    .replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');
+}
+var _COL_MAP = {
+  nombre:'nombre', razonsocial:'nombre',
+  nitcc:'nitcc', nit:'nitcc', cc:'nitcc', cedula:'nitcc', identificacion:'nitcc',
+  telefono:'telefono', celular:'telefono', tel:'telefono',
+  correo:'email', correoelectronico:'email', email:'email',
+  direccion:'direccion', ciudad:'ciudad',
+  notas:'notas', observaciones:'notas',
+  iva:'iva', ivapordefecto:'iva',
+  tipofactura:'tipoFactura', tipodefactura:'tipoFactura',
+  tipofacturacion:'tipoFacturacion', tipodefacturacion:'tipoFacturacion',
+  servicios:'servicios', serviciocontratados:'servicios', serviciosContratados:'servicios'
+};
 
+function _parseCSV(text){
+  text = text.replace(/^\uFEFF/,'');
+  var first = text.split(/\r?\n/)[0] || '';
+  var delim = [';',',','\t'].map(function(d){ return [d, first.split(d).length]; })
+    .sort(function(a,b){ return b[1]-a[1]; })[0][0];
+  var rows=[], row=[], cur='', q=false;
+  for(var i=0;i<text.length;i++){
+    var ch=text[i];
+    if(q){
+      if(ch==='"'){ if(text[i+1]==='"'){ cur+='"'; i++; } else q=false; }
+      else cur+=ch;
+    }
+    else if(ch==='"') q=true;
+    else if(ch===delim){ row.push(cur); cur=''; }
+    else if(ch==='\n'||ch==='\r'){
+      if(ch==='\r' && text[i+1]==='\n') i++;
+      row.push(cur); cur=''; rows.push(row); row=[];
+    }
+    else cur+=ch;
+  }
+  if(cur!=='' || row.length){ row.push(cur); rows.push(row); }
+  return rows;
+}
+
+function descargarPlantillaClientes(){
+  var csv = '\uFEFFNombre;NIT/CC;Teléfono;Correo;Dirección;Ciudad;Notas;IVA;Tipo factura;Tipo facturación;Servicios\r\n' +
+    'Juan Pérez;1234567890;3001234567;juan@correo.com;Calle 1 # 2-3;Medellín;;0;Fija;Tradicional;Servicio A|Servicio B\r\n';
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+  a.download = 'plantilla_clientes.csv';
+  a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); }, 1000);
+}
+
+async function importarClientesArchivo(ev){
+  var file = ev.target.files[0];
+  ev.target.value = '';
+  if(!file) return;
+  try{
+    var buf = await file.arrayBuffer(), rows;
+    if(/\.xlsx?$/i.test(file.name)){
+      var wb = XLSX.read(buf,{type:'array'});
+      rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,defval:'',raw:false});
+    } else {
+      var txt;
+      try{ txt = new TextDecoder('utf-8',{fatal:true}).decode(buf); }
+      catch(e){ txt = new TextDecoder('windows-1252').decode(buf); }
+      rows = _parseCSV(txt);
+    }
+    rows = rows.filter(function(r){ return r.some(function(c){ return String(c).trim()!==''; }); });
+    if(rows.length<2) return showAlert('alert-clientes','El archivo no tiene filas de datos.','err');
+
+    var cols = rows[0].map(function(h){ return _COL_MAP[_normCol(h)] || null; });
+    if(cols.indexOf('nombre')<0)
+      return showAlert('alert-clientes','No encontré la columna "Nombre" en la primera fila. Descarga la plantilla para ver los nombres.','err');
+
+    // Datos actuales, para evitar duplicados y reconocer servicios
+    var r1 = await supabase.rpc('fac_cliente_listar'); _clientes = r1.data || [];
+    if(!_servicios.length){ var r2 = await supabase.rpc('fac_servicio_listar'); _servicios = r2.data || []; }
+
+    var nits = {};
+    _clientes.forEach(function(c){ if(c.nitcc) nits[_normCol(c.nitcc)] = 1; });
+
+    var validos=[], dup=[], sinNombre=0, svcFaltan={};
+    rows.slice(1).forEach(function(r){
+      var o = {};
+      cols.forEach(function(k,i){ if(k) o[k] = (r[i]==null ? '' : String(r[i])).trim(); });
+      if(!o.nombre){ sinNombre++; return; }
+      var nit = _normCol(o.nitcc||'');
+      if(nit && nits[nit]){ dup.push(o.nombre); return; }
+      if(nit) nits[nit] = 1;
+
+      var iva = parseFloat((o.iva||'').replace('%','').replace(',','.'));
+      o._iva = isNaN(iva) ? 0 : iva;
+      o._tipoFactura = /temp/i.test(o.tipoFactura||'') ? 'temporal' : 'fija';
+      o._tipoFacturacion = /electr/i.test(o.tipoFacturacion||'') ? 'electronica' : 'tradicional';
+      o._svcs = [];
+      (o.servicios||'').split('|').forEach(function(n){
+        n = n.trim(); if(!n) return;
+        var s = _servicios.find(function(x){ return x.nombre.trim().toLowerCase()===n.toLowerCase(); });
+        if(s) o._svcs.push(s.id); else svcFaltan[n] = 1;
+      });
+      validos.push(o);
+    });
+
+    var msg = 'Se importarán ' + validos.length + ' cliente(s).' +
+      (dup.length ? ' ' + dup.length + ' ya existen (mismo NIT/CC) y se omiten.' : '') +
+      (sinNombre ? ' ' + sinNombre + ' fila(s) sin nombre se omiten.' : '') +
+      (Object.keys(svcFaltan).length ? ' Servicios no encontrados en el catálogo: ' + Object.keys(svcFaltan).join(', ') + '.' : '');
+    if(!validos.length) return showAlert('alert-clientes', msg, 'warn');
+    confirmar('Importar clientes', msg, function(){ _importarClientes(validos); });
+  } catch(e){
+    console.error(e);
+    showAlert('alert-clientes','No pude leer el archivo: '+e.message,'err');
+  }
+}
+
+async function _importarClientes(lista){
+  var ok=0, errores=[];
+  for(var i=0;i<lista.length;i++){
+    var c = lista[i];
+    toast('Importando '+(i+1)+' de '+lista.length+'…','ok');
+    var { data: res, error } = await supabase.rpc('fac_cliente_guardar', {
+      p_id: null,
+      p_nombre: c.nombre,
+      p_nitcc: c.nitcc || '',
+      p_telefono: c.telefono || '',
+      p_email: c.email || '',
+      p_direccion: c.direccion || '',
+      p_ciudad: c.ciudad || '',
+      p_notas: c.notas || '',
+      p_iva_default: c._iva,
+      p_tipo_factura: c._tipoFactura,
+      p_tipo_facturacion: c._tipoFacturacion,
+      p_servicios_contratados: c._svcs
+    });
+    if(error || !res || !res.success) errores.push(c.nombre+': '+(error ? error.message : (res && res.mensaje)));
+    else ok++;
+  }
+  if(errores.length){
+    console.error(errores);
+    showAlert('alert-clientes', ok+' importados, '+errores.length+' con error: '+errores.slice(0,3).join(' · '), 'warn');
+  } else toast('✅ '+ok+' clientes importados','ok');
+  cargarClientes();
+}
 /* ─────────────────────────────────────────────────
    GASTOS
 ───────────────────────────────────────────────── */
