@@ -2395,6 +2395,7 @@ async function eliminarServicio(id){
   if(error){ toast(t('msg_error_prefix')+error.message,'err'); return; }
   if(res.success){ toast(res.mensaje,'ok'); cargarServicios(); }
 }
+
 /* ── IMPORTAR CLIENTES (CSV / Excel) ── */
 function _normCol(s){
   return (s||'').toString().toLowerCase().normalize('NFD')
@@ -2408,9 +2409,10 @@ var _COL_MAP = {
   direccion:'direccion', ciudad:'ciudad',
   notas:'notas', observaciones:'notas',
   iva:'iva', ivapordefecto:'iva',
+  producto:'servicios', productos:'servicios', servicio:'servicios',
+  servicios:'servicios', servicioscontratados:'servicios',
   tipofactura:'tipoFactura', tipodefactura:'tipoFactura',
-  tipofacturacion:'tipoFacturacion', tipodefacturacion:'tipoFacturacion',
-  servicios:'servicios', serviciocontratados:'servicios', serviciosContratados:'servicios'
+  tipofacturacion:'tipoFacturacion', tipodefacturacion:'tipoFacturacion'
 };
 
 function _parseCSV(text){
@@ -2437,9 +2439,31 @@ function _parseCSV(text){
   return rows;
 }
 
+// IVA del Excel: "SI" → se pregunta el % al importar; número/% → ese valor; "NO" → 0; vacío → sin dato
+function _ivaDeCelda(v){
+  v = (v==null ? '' : String(v)).trim().toLowerCase().replace('%','').replace(',','.');
+  if(v==='') return {k:'vacio'};
+  if(/^(si|sí|s|x|yes|true)$/.test(v)) return {k:'si'};
+  if(/^(no|n|false)$/.test(v)) return {k:'num', val:0};
+  var n = parseFloat(v);
+  return isNaN(n) ? {k:'vacio'} : {k:'num', val:n};
+}
+
+// Busca el servicio por nombre tal como está en el catálogo (ignora mayúsculas, espacios y tildes;
+// también tolera confundir la letra O con el cero, ej. "MO5V" vs "M05V")
+function _buscarServicio(nombre){
+  var n = _normCol(nombre);
+  var s = _servicios.find(function(x){ return _normCol(x.nombre)===n; });
+  if(!s){
+    var n2 = n.replace(/o/g,'0');
+    s = _servicios.find(function(x){ return _normCol(x.nombre).replace(/o/g,'0')===n2; });
+  }
+  return s;
+}
+
 function descargarPlantillaClientes(){
-  var csv = '\uFEFFNombre;NIT/CC;Teléfono;Correo;Dirección;Ciudad;Notas;IVA;Tipo factura;Tipo facturación;Servicios\r\n' +
-    'Juan Pérez;1234567890;3001234567;juan@correo.com;Calle 1 # 2-3;Medellín;;0;Fija;Tradicional;Servicio A|Servicio B\r\n';
+  var csv = '\uFEFFNombre;NIT/CC;Teléfono;Correo;Dirección;Ciudad;Notas;IVA;Producto;Tipo de Factura\r\n' +
+    'Juan Pérez;1234567890;3001234567;juan@correo.com;Calle 1 # 2-3;Toledo;;SI;M10;Tradicional\r\n';
   var a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
   a.download = 'plantilla_clientes.csv';
@@ -2467,67 +2491,119 @@ async function importarClientesArchivo(ev){
 
     var cols = rows[0].map(function(h){ return _COL_MAP[_normCol(h)] || null; });
     if(cols.indexOf('nombre')<0)
-      return showAlert('alert-clientes','No encontré la columna "Nombre" en la primera fila. Descarga la plantilla para ver los nombres.','err');
+      return showAlert('alert-clientes','No encontré la columna "Nombre" en la primera fila.','err');
 
-    // Datos actuales, para evitar duplicados y reconocer servicios
+    // Datos actuales: clientes (para detectar los que ya existen) y servicios (para asignarlos)
     var r1 = await supabase.rpc('fac_cliente_listar'); _clientes = r1.data || [];
-    if(!_servicios.length){ var r2 = await supabase.rpc('fac_servicio_listar'); _servicios = r2.data || []; }
+    var r2 = await supabase.rpc('fac_servicio_listar'); _servicios = r2.data || [];
 
-    var nits = {};
-    _clientes.forEach(function(c){ if(c.nitcc) nits[_normCol(c.nitcc)] = 1; });
+    var porNit = {};
+    _clientes.forEach(function(c){ if(c.nitcc) porNit[_normCol(c.nitcc)] = c; });
 
-    var validos=[], dup=[], sinNombre=0, svcFaltan={};
+    var nuevos=[], existentes=[], enArchivo={}, sinNombre=0, svcFaltan={}, haySI=false;
     rows.slice(1).forEach(function(r){
       var o = {};
       cols.forEach(function(k,i){ if(k) o[k] = (r[i]==null ? '' : String(r[i])).trim(); });
       if(!o.nombre){ sinNombre++; return; }
-      var nit = _normCol(o.nitcc||'');
-      if(nit && nits[nit]){ dup.push(o.nombre); return; }
-      if(nit) nits[nit] = 1;
 
-      var iva = parseFloat((o.iva||'').replace('%','').replace(',','.'));
-      o._iva = isNaN(iva) ? 0 : iva;
-      o._tipoFactura = /temp/i.test(o.tipoFactura||'') ? 'temporal' : 'fija';
-      o._tipoFacturacion = /electr/i.test(o.tipoFacturacion||'') ? 'electronica' : 'tradicional';
-      o._svcs = [];
-      (o.servicios||'').split('|').forEach(function(n){
+      // Servicios de la fila (varios separados por | o ;)
+      var ids = [];
+      (o.servicios||'').split(/[|;]/).forEach(function(n){
         n = n.trim(); if(!n) return;
-        var s = _servicios.find(function(x){ return x.nombre.trim().toLowerCase()===n.toLowerCase(); });
-        if(s) o._svcs.push(s.id); else svcFaltan[n] = 1;
+        var s = _buscarServicio(n);
+        if(s) ids.push(s.id); else svcFaltan[n] = 1;
       });
-      validos.push(o);
+
+      // "Tipo de Factura" puede traer Tradicional/Electrónica (tipo de facturación) o Fija/Temporal: se detecta por el valor
+      var tf='', tp='';
+      [o.tipoFactura, o.tipoFacturacion].forEach(function(v){
+        v = v || '';
+        if(/electr/i.test(v)) tf='electronica';
+        else if(/tradic/i.test(v)) tf='tradicional';
+        else if(/temp/i.test(v)) tp='temporal';
+        else if(/fij/i.test(v)) tp='fija';
+      });
+
+      o._iva = _ivaDeCelda(o.iva);
+      if(o._iva.k==='si') haySI = true;
+      o._svcs = ids; o._tf = tf; o._tp = tp;
+
+      var nit = _normCol(o.nitcc||'');
+      // Mismo NIT repetido en el archivo (segundo servicio del mismo cliente): se unen los servicios
+      if(nit && enArchivo[nit]){ enArchivo[nit]._svcs = enArchivo[nit]._svcs.concat(ids); return; }
+      if(nit) enArchivo[nit] = o;
+      var ex = nit && porNit[nit];
+      if(ex){ o._ex = ex; existentes.push(o); } else nuevos.push(o);
     });
 
-    var msg = 'Se importarán ' + validos.length + ' cliente(s).' +
-      (dup.length ? ' ' + dup.length + ' ya existen (mismo NIT/CC) y se omiten.' : '') +
-      (sinNombre ? ' ' + sinNombre + ' fila(s) sin nombre se omiten.' : '') +
-      (Object.keys(svcFaltan).length ? ' Servicios no encontrados en el catálogo: ' + Object.keys(svcFaltan).join(', ') + '.' : '');
-    if(!validos.length) return showAlert('alert-clientes', msg, 'warn');
-    confirmar('Importar clientes', msg, function(){ _importarClientes(validos); });
+    if(!nuevos.length && !existentes.length)
+      return showAlert('alert-clientes','No encontré filas válidas para importar.','warn');
+
+    var msg = 'Clientes nuevos: ' + nuevos.length + '.' +
+      (existentes.length ? ' Ya existen (mismo NIT/CC): ' + existentes.length + '.' : '') +
+      (sinNombre ? ' Filas sin nombre omitidas: ' + sinNombre + '.' : '') +
+      (Object.keys(svcFaltan).length ? ' Servicios que no encontré en el catálogo (esos clientes quedan sin ese servicio): ' + Object.keys(svcFaltan).join(', ') + '.' : '');
+
+    _dialogoImportar({msg:msg, haySI:haySI, nExistentes:existentes.length}, function(opts){
+      _importarClientes(nuevos, existentes, opts);
+    });
   } catch(e){
     console.error(e);
     showAlert('alert-clientes','No pude leer el archivo: '+e.message,'err');
   }
 }
 
-async function _importarClientes(lista){
+// Ventana de confirmación: pregunta el % de IVA para los clientes con "SI" y si se actualizan los existentes
+function _dialogoImportar(info, onOk){
+  var ov = document.createElement('div');
+  ov.className = 'modal-overlay center visible';
+  ov.innerHTML =
+    '<div class="modal-box"><h3>Importar clientes</h3><p id="imp-msg"></p>' +
+    (info.haySI ? '<div class="form-g"><label>¿De cuánto IVA para los clientes con IVA = "SI"?</label>' +
+      '<select id="imp-iva"><option value="19">19%</option><option value="5">5%</option></select>' +
+      '<div class="hint">Los que no dicen "SI" quedan sin IVA (0%).</div></div>' : '') +
+    (info.nExistentes ? '<label class="svc-check-item"><input type="checkbox" id="imp-upd">' +
+      '<span class="svc-check-label">Actualizar también los ' + info.nExistentes + ' que ya existen (completa ciudad, servicios, IVA y tipo; no borra lo que ya tienen)</span></label>' : '') +
+    '<div class="modal-actions"><button class="btn-cancel" id="imp-no">Cancelar</button>' +
+    '<button class="btn-confirm" id="imp-si">Importar</button></div></div>';
+  document.body.appendChild(ov);
+  ov.querySelector('#imp-msg').textContent = info.msg;
+  ov.querySelector('#imp-no').onclick = function(){ ov.remove(); };
+  ov.querySelector('#imp-si').onclick = function(){
+    var iva = ov.querySelector('#imp-iva'), upd = ov.querySelector('#imp-upd');
+    var opts = { iva: iva ? parseFloat(iva.value) : 0, actualizar: !!(upd && upd.checked) };
+    ov.remove();
+    onOk(opts);
+  };
+}
+
+async function _importarClientes(nuevos, existentes, opts){
+  var lista = nuevos.concat(opts.actualizar ? existentes : []);
   var ok=0, errores=[];
+  function pick(a,b){ return a ? a : (b||''); }
   for(var i=0;i<lista.length;i++){
-    var c = lista[i];
+    var c = lista[i], ex = c._ex;
     toast('Importando '+(i+1)+' de '+lista.length+'…','ok');
+
+    var iva = c._iva.k==='si' ? opts.iva
+            : c._iva.k==='num' ? c._iva.val
+            : (ex ? (ex.ivaDefault||0) : 0);
+    var svcs = (ex ? (ex.serviciosContratados||[]) : []).concat(c._svcs)
+      .filter(function(v,idx,arr){ return arr.indexOf(v)===idx; });
+
     var { data: res, error } = await supabase.rpc('fac_cliente_guardar', {
-      p_id: null,
+      p_id: ex ? ex.id : null,
       p_nombre: c.nombre,
-      p_nitcc: c.nitcc || '',
-      p_telefono: c.telefono || '',
-      p_email: c.email || '',
-      p_direccion: c.direccion || '',
-      p_ciudad: c.ciudad || '',
-      p_notas: c.notas || '',
-      p_iva_default: c._iva,
-      p_tipo_factura: c._tipoFactura,
-      p_tipo_facturacion: c._tipoFacturacion,
-      p_servicios_contratados: c._svcs
+      p_nitcc: pick(c.nitcc, ex && ex.nitcc),
+      p_telefono: pick(c.telefono, ex && ex.telefono),
+      p_email: pick(c.email, ex && ex.email),
+      p_direccion: pick(c.direccion, ex && ex.direccion),
+      p_ciudad: pick(c.ciudad, ex && ex.ciudad),
+      p_notas: pick(c.notas, ex && ex.notas),
+      p_iva_default: iva,
+      p_tipo_factura: c._tp || (ex && ex.tipoFactura) || 'fija',
+      p_tipo_facturacion: c._tf || (ex && ex.tipoFacturacion) || 'tradicional',
+      p_servicios_contratados: svcs
     });
     if(error || !res || !res.success) errores.push(c.nombre+': '+(error ? error.message : (res && res.mensaje)));
     else ok++;
@@ -2538,6 +2614,7 @@ async function _importarClientes(lista){
   } else toast('✅ '+ok+' clientes importados','ok');
   cargarClientes();
 }
+  
 /* ─────────────────────────────────────────────────
    GASTOS
 ───────────────────────────────────────────────── */
