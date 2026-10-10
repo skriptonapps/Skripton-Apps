@@ -1243,6 +1243,8 @@ body {
         </div>
       </div>
       <div class="hint" data-i18n="mark_services_hint">Marca los servicios que este cliente tiene activos o contratados</div>
+      <button type="button" class="btn-add" style="margin-top:8px" onclick="abrirServicioUnico()">⭐ + Servicio único para este cliente</button>
+<div id="mcli-svc-unicos"></div>
     </div>
 
     <div class="modal-actions">
@@ -1266,17 +1268,11 @@ body {
       <div class="form-g"><label data-i18n="unit_price_req">Precio unitario *</label>
         <input type="number" id="msvc-precio" min="0" step="1000" inputmode="numeric" placeholder="$0"></div>
       <div class="form-g"><label data-i18n="unit_word2">Unidad</label>
-        <select id="msvc-unidad">
-          <option value="und" data-i18n="unit_opt">Unidad</option>
-          <option value="hora" data-i18n="hour_opt">Hora</option>
-          <option value="mes" data-i18n="month_opt">Mes</option>
-          <option value="proyecto" data-i18n="project_opt">Proyecto</option>
-          <option value="día" data-i18n="day_opt">Día</option>
-          <option value="sesión" data-i18n="session_opt">Sesión</option>
-        </select></div>
+        <input type="text" id="msvc-unidad" list="svc-unidades" value="und" placeholder="und, hora, mes, Mbps…">
+<datalist id="svc-unidades"><option value="und"><option value="hora"><option value="mes"><option value="proyecto"><option value="día"><option value="sesión"><option value="Mbps"></datalist></div>
       <div class="form-g"><label data-i18n="category_word">Categoría</label>
         <input type="text" id="msvc-cat" placeholder="General" list="svc-cats">
-        <datalist id="svc-cats"><option value="Consultoría"><option value="Desarrollo"><option value="Diseño"><option value="Soporte"><option value="Capacitación"><option value="General"></datalist>
+        <datalist id="svc-cats"><option value="Consultoría"><option value="Desarrollo"><option value="Diseño"><option value="Soporte"><option value="Capacitación"><option value="General"><option value="Internet"></datalist>
       </div>
     </div>
     <div class="modal-actions">
@@ -1930,9 +1926,10 @@ function limpiarClienteNF(){
 var _nfItemCnt=0;
 
 function _pobDatalistServiciosNF(){
-  var dl=document.getElementById('dl-servicios-nf');
+  var dl = document.getElementById('dl-servicios-nf');
   if(!dl) return;
-  dl.innerHTML = _servicios.map(function(s){ return '<option value="'+esc(s.nombre)+'">'; }).join('');
+  dl.innerHTML = _servicios.filter(function(s){ return s.categoria !== CAT_UNICO; })
+    .map(function(s){ return '<option value="' + esc(s.nombre) + '">'; }).join('');
 }
 
 function agregarItemNF(){
@@ -2220,30 +2217,35 @@ async function cambiarEstadoCliente(id, estado){
 }
 
 function _renderServiciosEnModal(seleccionados){
-  var lista=document.getElementById('mcli-servicios-lista');
-  if(!_servicios||!_servicios.length){
-    lista.innerHTML='<div style="font-size:12px;color:var(--ink3);text-align:center;padding:12px 0">'+t('no_services_catalog')+'<br><span style="font-size:11px">'+t('add_from_services')+' <strong>'+t('nav_services')+'</strong> '+t('first_word')+'</span></div>';
+  _svcUnicosPend = []; _renderUnicosPend();
+  var lista = document.getElementById('mcli-servicios-lista');
+  // Los servicios únicos solo se muestran en el cliente que los tiene
+  var visibles = (_servicios || []).filter(function(s){
+    return s.categoria !== CAT_UNICO || (seleccionados && seleccionados.includes(s.id));
+  });
+  if(!visibles.length){
+    lista.innerHTML = '<div style="font-size:12px;color:var(--ink3);text-align:center;padding:12px 0">' + t('no_services_catalog') + '<br><span style="font-size:11px">' + t('add_from_services') + ' <strong>' + t('nav_services') + '</strong> ' + t('first_word') + '</span></div>';
     return;
   }
-  var cats={};
-  _servicios.forEach(function(s){
-    var cat=s.categoria||t('general_word');
-    if(!cats[cat]) cats[cat]=[];
+  var cats = {};
+  visibles.forEach(function(s){
+    var cat = s.categoria || t('general_word');
+    if(!cats[cat]) cats[cat] = [];
     cats[cat].push(s);
   });
-  var html='';
+  var html = '';
   Object.keys(cats).sort().forEach(function(cat){
-    html+='<span class="svc-check-cat-head">'+esc(cat)+'</span>';
+    html += '<span class="svc-check-cat-head">' + esc(cat) + '</span>';
     cats[cat].forEach(function(s){
-      var checked=seleccionados&&seleccionados.includes(s.id)?'checked':'';
-      html+='<label class="svc-check-item">'+
-        '<input type="checkbox" class="mcli-svc-cb" value="'+esc(s.id)+'" '+checked+'>'+
-        '<span class="svc-check-label">'+esc(s.nombre)+'</span>'+
-        '<span class="svc-check-precio">'+fmt(s.precio)+'/'+esc(s.unidad||'und')+'</span>'+
+      var checked = seleccionados && seleccionados.includes(s.id) ? 'checked' : '';
+      html += '<label class="svc-check-item">' +
+        '<input type="checkbox" class="mcli-svc-cb" value="' + esc(s.id) + '" ' + checked + '>' +
+        '<span class="svc-check-label">' + esc(s.nombre) + '</span>' +
+        '<span class="svc-check-precio">' + fmt(s.precio) + '/' + esc(s.unidad || 'und') + '</span>' +
       '</label>';
     });
   });
-  lista.innerHTML=html;
+  lista.innerHTML = html;
 }
 
 async function abrirModalNuevoCliente(){
@@ -2283,31 +2285,51 @@ async function editarCliente(id){
 }
 
 async function guardarCliente(){
-  var svcsSeleccionados=[];
-  document.querySelectorAll('.mcli-svc-cb:checked').forEach(function(cb){
-    svcsSeleccionados.push(cb.value);
-  });
-  var nombre=document.getElementById('mcli-nombre').value.trim();
-  if(!nombre) return showAlert('alert-mcli',t('msg_name_required'),'err');
+  var svcsSeleccionados = [];
+  document.querySelectorAll('.mcli-svc-cb:checked').forEach(function(cb){ svcsSeleccionados.push(cb.value); });
+  var nombre = document.getElementById('mcli-nombre').value.trim();
+  if(!nombre) return showAlert('alert-mcli', t('msg_name_required'), 'err');
+
+  // Crear los servicios únicos pendientes y asignarlos a este cliente
+  if(_svcUnicosPend.length){
+    var creados = [];
+    for(var i = 0; i < _svcUnicosPend.length; i++){
+      var s = _svcUnicosPend[i], nom = s.nombre + ' · ' + nombre;
+      var rs = await supabase.rpc('fac_servicio_guardar', {
+        p_id: null, p_nombre: nom, p_descripcion: s.descripcion,
+        p_precio: s.precio, p_unidad: s.unidad, p_categoria: CAT_UNICO
+      });
+      if(rs.error || !rs.data || !rs.data.success){
+        showAlert('alert-mcli', 'No pude crear el servicio único "' + s.nombre + '": ' + (rs.error ? rs.error.message : (rs.data && rs.data.mensaje)), 'err');
+        return;
+      }
+      creados.push(nom);
+    }
+    var rl = await supabase.rpc('fac_servicio_listar'); _servicios = rl.data || [];
+    creados.forEach(function(nom){
+      var f = _servicios.find(function(x){ return x.nombre === nom && x.categoria === CAT_UNICO; });
+      if(f && svcsSeleccionados.indexOf(f.id) < 0) svcsSeleccionados.push(f.id);
+    });
+    _renderServiciosEnModal(svcsSeleccionados);   // refresca la lista con los nuevos ya marcados
+  }
 
   var { data: res, error } = await supabase.rpc('fac_cliente_guardar', {
-  p_id: document.getElementById('mcli-id').value || null,
-  p_nombre: nombre,
-  p_nitcc: document.getElementById('mcli-nitcc').value.trim(),
-  p_telefono: document.getElementById('mcli-tel').value.trim(),
-  p_email: document.getElementById('mcli-email').value.trim(),
-  p_direccion: document.getElementById('mcli-dir').value.trim(),
-  p_ciudad: document.getElementById('mcli-ciudad').value.trim(),
-  p_notas: document.getElementById('mcli-notas').value.trim(),
-  p_iva_default: parseFloat(document.getElementById('mcli-iva').value)||0,
-  p_tipo_factura: document.getElementById('mcli-tipo-factura').value||'fija',
-  p_tipo_facturacion: document.getElementById('mcli-tipo-facturacion').value||'tradicional',
-  p_servicios_contratados: svcsSeleccionados
-});
-  
-  if(error){ showAlert('alert-mcli',t('msg_error_prefix')+error.message,'err'); return; }
-  if(res.success){ toast(res.mensaje,'ok'); cerrarModal('modal-cliente'); cargarClientes(); }
-  else showAlert('alert-mcli',res.mensaje,'err');
+    p_id: document.getElementById('mcli-id').value || null,
+    p_nombre: nombre,
+    p_nitcc: document.getElementById('mcli-nitcc').value.trim(),
+    p_telefono: document.getElementById('mcli-tel').value.trim(),
+    p_email: document.getElementById('mcli-email').value.trim(),
+    p_direccion: document.getElementById('mcli-dir').value.trim(),
+    p_ciudad: document.getElementById('mcli-ciudad').value.trim(),
+    p_notas: document.getElementById('mcli-notas').value.trim(),
+    p_iva_default: parseFloat(document.getElementById('mcli-iva').value) || 0,
+    p_tipo_factura: document.getElementById('mcli-tipo-factura').value || 'fija',
+    p_tipo_facturacion: document.getElementById('mcli-tipo-facturacion').value || 'tradicional',
+    p_servicios_contratados: svcsSeleccionados
+  });
+  if(error){ showAlert('alert-mcli', t('msg_error_prefix') + error.message, 'err'); return; }
+  if(res.success){ toast(res.mensaje, 'ok'); cerrarModal('modal-cliente'); cargarClientes(); }
+  else showAlert('alert-mcli', res.mensaje, 'err');
 }
 
 async function eliminarCliente(id){
@@ -2317,6 +2339,87 @@ async function eliminarCliente(id){
   else toast(res.mensaje,'err');
 }
 
+  /* ── SERVICIO ÚNICO POR CLIENTE ── */
+var CAT_UNICO = 'Personalizado';
+var _svcUnicosPend = [];
+
+function _renderUnicosPend(){
+  var el = document.getElementById('mcli-svc-unicos');
+  if(!el) return;
+  el.innerHTML = _svcUnicosPend.map(function(s,i){
+    return '<div class="badge badge-blue" style="margin:6px 6px 0 0;font-size:11px">⭐ ' + esc(s.nombre) + ' · ' + fmt(s.precio) +
+      ' <button type="button" class="btn-rm" style="min-width:18px;min-height:18px;padding:0 4px;font-size:14px" onclick="quitarUnicoPend(' + i + ')">×</button></div>';
+  }).join('');
+}
+function quitarUnicoPend(i){ _svcUnicosPend.splice(i,1); _renderUnicosPend(); }
+
+function abrirServicioUnico(){
+  var base = _servicios.filter(function(s){ return s.categoria !== CAT_UNICO; });
+  var ov = document.createElement('div');
+  ov.className = 'modal-overlay center visible';
+  ov.innerHTML =
+    '<div class="modal-box"><h3>Servicio único para este cliente</h3>' +
+    '<p>No aparece en el catálogo general; solo lo tendrá este cliente.</p>' +
+    '<div class="form-g"><label>¿Cómo se calcula el precio?</label><select id="su-modo">' +
+      '<option value="prop">Proporcional a un servicio de la lista (regla de tres)</option>' +
+      '<option value="manual">Precio manual</option></select></div>' +
+    '<div id="su-prop">' +
+      '<div class="form-g"><label>Servicio base</label><select id="su-base">' +
+        base.map(function(s){ return '<option value="' + esc(s.id) + '">' + esc(s.nombre) + ' — ' + fmt(s.precio) + '</option>'; }).join('') +
+      '</select></div>' +
+      '<div class="grid-3">' +
+        '<div class="form-g"><label>Cantidad de la base</label><input type="number" id="su-cb" min="0" step="any" placeholder="20"></div>' +
+        '<div class="form-g"><label>Cantidad del cliente</label><input type="number" id="su-cc" min="0" step="any" placeholder="27"></div>' +
+        '<div class="form-g"><label>Unidad</label><input type="text" id="su-u" placeholder="Mbps, horas…"></div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="form-g"><label>Nombre del servicio</label><input type="text" id="su-n" placeholder="Ej: M27"></div>' +
+    '<div class="form-g"><label>Precio</label><input type="number" id="su-p" min="0" step="1" placeholder="$0"><div class="hint" id="su-calc"></div></div>' +
+    '<div class="form-g"><label>Descripción (aparece en la factura)</label><textarea id="su-d" rows="2"></textarea></div>' +
+    '<div class="modal-actions"><button class="btn-cancel" id="su-no">Cancelar</button><button class="btn-confirm" id="su-si">Agregar</button></div></div>';
+  document.body.appendChild(ov);
+
+  function g(id){ return ov.querySelector('#' + id); }
+  var descEditada = false;
+  g('su-d').oninput = function(){ descEditada = true; };
+
+  function calc(){
+    var prop = g('su-modo').value === 'prop';
+    g('su-prop').style.display = prop ? 'block' : 'none';
+    if(!prop){ g('su-calc').textContent = ''; return; }
+    var b = _servicios.find(function(s){ return s.id === g('su-base').value; });
+    var cb = parseFloat(g('su-cb').value), cc = parseFloat(g('su-cc').value), u = g('su-u').value.trim();
+    if(!b || !(cb > 0) || !(cc > 0)) return;
+    var pu = b.precio / cb, total = Math.round(pu * cc), extra = cc - cb, un = u ? ' ' + u : '';
+    g('su-p').value = total;
+    g('su-calc').textContent = fmt(b.precio) + ' ÷ ' + cb + ' × ' + cc + ' = ' + fmt(total);
+    if(!descEditada){
+      g('su-d').value = cc + un + (extra > 0
+        ? ' (Base: ' + cb + un + ' + ' + extra + un + ' × ' + fmt(Math.round(pu)) + ')'
+        : ' (' + cc + ' × ' + fmt(Math.round(pu)) + ')');
+    }
+  }
+  ['su-modo','su-base','su-cb','su-cc','su-u'].forEach(function(id){
+    g(id).addEventListener('input', calc);
+    g(id).addEventListener('change', calc);
+  });
+  calc();
+
+  g('su-no').onclick = function(){ ov.remove(); };
+  g('su-si').onclick = function(){
+    var n = g('su-n').value.trim(), p = parseFloat(g('su-p').value) || 0;
+    if(!n) return toast('Escribe el nombre del servicio','warn');
+    if(p <= 0) return toast('El precio debe ser mayor a 0','warn');
+    var b = _servicios.find(function(s){ return s.id === g('su-base').value; });
+    _svcUnicosPend.push({
+      nombre: n, descripcion: g('su-d').value.trim(), precio: p,
+      unidad: (g('su-modo').value === 'prop' && b) ? (b.unidad || 'und') : 'und'
+    });
+    ov.remove();
+    _renderUnicosPend();
+  };
+}
+  
 /* ─────────────────────────────────────────────────
    SERVICIOS
 ───────────────────────────────────────────────── */
