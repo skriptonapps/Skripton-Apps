@@ -414,6 +414,17 @@ tbody tr:hover{background:var(--bg)}
             <div class="dash-title">Tu turno hoy</div>
             <div class="panel-sub" id="dash-periodo-label" style="margin-top:2px">Cargando datos…</div>
           </div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:20px;flex-wrap:wrap;gap:10px">
+  <div>
+    <div class="dash-greeting" id="dash-saludo">Buen día</div>
+    <div class="dash-title">Tu turno hoy</div>
+    <div class="panel-sub" id="dash-periodo-label" style="margin-top:2px">Cargando datos…</div>
+  </div>
+  <div class="filter-row" style="flex-wrap:nowrap">
+    <select id="dash-mes" onchange="cargarDashboard()" style="min-width:120px"></select>
+    <select id="dash-anio" onchange="cargarDashboard()" style="min-width:90px"></select>
+  </div>
+</div>
         </div>
         <div id="alert-dash" class="alert"></div>
         <div class="grid-4" style="margin-bottom:16px">
@@ -992,11 +1003,28 @@ function confirmar(titulo,msg,fn){
 </script>
 <script>
 /* ══ DASHBOARD ══ */
+  function initDashFiltros(){
+  var selM=document.getElementById('dash-mes'), selA=document.getElementById('dash-anio');
+  if(selM.options.length) return; // ya inicializados
+  var meses=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  meses.forEach(function(m,i){
+    var o=document.createElement('option'); o.value=String(i+1).padStart(2,'0'); o.textContent=m; selM.appendChild(o);
+  });
+  var hoy=new Date(), y=hoy.getFullYear();
+  for(var a=y-3;a<=y+1;a++){
+    var o=document.createElement('option'); o.value=String(a); o.textContent=String(a); selA.appendChild(o);
+  }
+  selM.value=String(hoy.getMonth()+1).padStart(2,'0');
+  selA.value=String(y);
+}
 async function cargarDashboard(){
   var hora=(new Date()).getHours();
   document.getElementById('dash-saludo').textContent = hora<12?'Buen día':hora<19?'Buenas tardes':'Buenas noches';
-  var ma=mesAnioHoy();
-  document.getElementById('dash-periodo-label').textContent='Cargando…';
+  initDashFiltros();
+var mesSel=document.getElementById('dash-mes').value;
+var anioSel=document.getElementById('dash-anio').value;
+var ma=anioSel+'/'+mesSel;
+document.getElementById('dash-periodo-label').textContent='Cargando…';
 
   var [{data:r},{data:listaViajes},{data:listaGastosDash}] = await Promise.all([
     supabase.rpc('tur_resumen', { p_desde: ma, p_hasta: ma }),
@@ -1006,7 +1034,9 @@ async function cargarDashboard(){
   await Promise.all([cargarMetodosPago(), cargarMetodosPagoGastos()]);
   if(!r) return;
 
-  document.getElementById('dash-periodo-label').textContent='Mes actual · '+(new Date()).toLocaleDateString('es-CO',{month:'long',year:'numeric'});
+  var hoyD=new Date();
+var esActual=(mesSel===String(hoyD.getMonth()+1).padStart(2,'0') && anioSel===String(hoyD.getFullYear()));
+document.getElementById('dash-periodo-label').textContent=(esActual?'Mes actual · ':'')+(new Date(anioSel,parseInt(mesSel,10)-1,1)).toLocaleDateString('es-CO',{month:'long',year:'numeric'});
   document.getElementById('kpi-ing').textContent=fmt(r.totalIngresos);
   document.getElementById('kpi-ing-sub').textContent=r.numViajes+' viaje'+(r.numViajes!==1?'s':'');
   document.getElementById('kpi-gas').textContent=fmt(r.totalGastos);
@@ -1018,7 +1048,7 @@ async function cargarDashboard(){
   renderGrafico('graf-plataformas-dash', r.porPlataforma.map(function(p){return{label:p.plataforma,val:p.total};}), r.porPlataforma.map(function(p){return p.total;}), 'var(--amber2)');
   renderGrafico('graf-gastos-dash', r.porCategoriaGasto.map(function(g){return{label:g.categoria,val:g.total};}), r.porCategoriaGasto.map(function(g){return g.total;}), 'var(--red)');
 
-  var hoy=new Date(); var mesActual=String(hoy.getMonth()+1).padStart(2,'0'); var anioActual=String(hoy.getFullYear());
+  var mesActual=mesSel; var anioActual=anioSel;
   var viajesMes=(listaViajes||[]).filter(function(v){
     var p=(v.fechaSolo||'').split('/');
     return p.length>=3 && p[1]===mesActual && p[2]===anioActual;
