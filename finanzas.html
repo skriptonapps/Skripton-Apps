@@ -1045,40 +1045,7 @@ body {
           </div>
         </div>
       </div>
-/* ── Cobros por método de pago (Control + Rentabilidad) ── */
-async function renderMetodosPago(id, d, h, conLista){
-  var el=document.getElementById(id); if(!el) return;
-  var { data: r, error } = await supabase.rpc('fac_reporte_metodos_pago', { p_desde:d, p_hasta:h });
-  if(error || !r){
-    el.innerHTML='<div class="empty-state" style="padding:16px 10px"><div style="font-size:12px;color:var(--ink3)">No se pudo cargar</div></div>';
-    return;
-  }
-  function n(c){ return c+' factura'+(c!==1?'s':''); }
-  var html='<div class="grid-2" style="margin-bottom:12px">'+
-    '<div class="kpi" style="background:var(--green3)"><div class="kpi-label">💵 Efectivo</div>'+
-      '<div class="kpi-value" style="color:var(--green4)">'+fmt(r.efectivo.total)+'</div><div class="kpi-sub">'+n(r.efectivo.cantidad)+'</div></div>'+
-    '<div class="kpi" style="background:var(--blue3)"><div class="kpi-label">🏦 Transferencia</div>'+
-      '<div class="kpi-value" style="color:var(--blue2)">'+fmt(r.transferencia.total)+'</div><div class="kpi-sub">'+n(r.transferencia.cantidad)+'</div></div>'+
-  '</div>';
-  if(r.sinMetodo.cantidad>0){
-    html+='<div style="font-size:11px;color:var(--ink3);margin-bottom:10px">Sin método registrado (pagadas antes de este cambio): '+fmt(r.sinMetodo.total)+' · '+n(r.sinMetodo.cantidad)+'</div>';
-  }
-  html+='<div style="font-size:12px;font-weight:600;color:var(--ink2);margin-bottom:6px">Total cobrado: '+fmt(r.total)+'</div>';
-  if(conLista){
-    if(!r.pagos.length){
-      html+='<div class="empty-state" style="padding:16px 10px"><div style="font-size:12px;color:var(--ink3)">Sin cobros este mes</div></div>';
-    } else {
-      html+=r.pagos.map(function(p){
-        var m=p.metodoPago==='efectivo'?'💵 Efectivo':p.metodoPago==='transferencia'?'🏦 Transferencia':'— Sin método';
-        return '<div class="activity-item"><div class="activity-left"><div class="activity-icon">'+(p.metodoPago==='efectivo'?'💵':p.metodoPago==='transferencia'?'🏦':'🧾')+'</div><div>'+
-          '<div style="font-size:13px;color:var(--ink)">'+esc(p.clienteNombre)+'</div>'+
-          '<div style="font-size:11px;color:var(--ink3)">'+esc(p.fechaSolo)+' · '+m+'</div></div></div>'+
-          '<div style="font-size:13px;font-weight:600;color:var(--green2)">'+fmt(p.total)+'</div></div>';
-      }).join('');
-    }
-  }
-  el.innerHTML=html;
-}
+
       <!-- ════ RENTABILIDAD ════ -->
       <div id="mod-rentabilidad" class="modulo" style="display:none">
         <div class="panel-header">
@@ -1704,6 +1671,57 @@ function renderGrafico(id,data,vals,color){
   });
   html+='</div>';
   el.innerHTML=html;
+}
+
+/* ── Cobros por método de pago (Control + Rentabilidad) ── */
+async function renderMetodosPago(id, d, h, conLista){
+  var el = document.getElementById(id);
+  if(!el) return;
+
+  var { data: r, error } = await supabase.rpc('fac_reporte_metodos_pago', { p_desde: d, p_hasta: h });
+  if(error || !r){
+    el.innerHTML = '<div class="empty-state" style="padding:16px 10px"><div style="font-size:12px;color:var(--ink3)">No se pudo cargar</div></div>';
+    return;
+  }
+
+  function n(c){ return c + ' factura' + (c !== 1 ? 's' : ''); }
+
+  var html = '<div class="grid-2" style="margin-bottom:12px">' +
+    '<div class="kpi" style="background:var(--green3)">' +
+      '<div class="kpi-label">💵 Efectivo</div>' +
+      '<div class="kpi-value" style="color:var(--green4)">' + fmt(r.efectivo.total) + '</div>' +
+      '<div class="kpi-sub">' + n(r.efectivo.cantidad) + '</div></div>' +
+    '<div class="kpi" style="background:var(--blue3)">' +
+      '<div class="kpi-label">🏦 Transferencia</div>' +
+      '<div class="kpi-value" style="color:var(--blue2)">' + fmt(r.transferencia.total) + '</div>' +
+      '<div class="kpi-sub">' + n(r.transferencia.cantidad) + '</div></div>' +
+  '</div>';
+
+  if(r.sinMetodo.cantidad > 0){
+    html += '<div style="font-size:11px;color:var(--ink3);margin-bottom:10px">Sin método registrado (pagadas antes de este cambio): ' +
+      fmt(r.sinMetodo.total) + ' · ' + n(r.sinMetodo.cantidad) + '</div>';
+  }
+
+  html += '<div style="font-size:12px;font-weight:600;color:var(--ink2);margin-bottom:6px">Total cobrado: ' + fmt(r.total) + '</div>';
+
+  if(conLista){
+    if(!r.pagos.length){
+      html += '<div class="empty-state" style="padding:16px 10px"><div style="font-size:12px;color:var(--ink3)">Sin cobros este mes</div></div>';
+    } else {
+      html += r.pagos.map(function(p){
+        var m = p.metodoPago === 'efectivo' ? '💵 Efectivo' : p.metodoPago === 'transferencia' ? '🏦 Transferencia' : '— Sin método';
+        var ic = p.metodoPago === 'efectivo' ? '💵' : p.metodoPago === 'transferencia' ? '🏦' : '🧾';
+        return '<div class="activity-item"><div class="activity-left">' +
+          '<div class="activity-icon">' + ic + '</div><div>' +
+            '<div style="font-size:13px;color:var(--ink)">' + esc(p.clienteNombre) + '</div>' +
+            '<div style="font-size:11px;color:var(--ink3)">' + esc(p.fechaSolo) + ' · ' + m + '</div>' +
+          '</div></div>' +
+          '<div style="font-size:13px;font-weight:600;color:var(--green2)">' + fmt(p.total) + '</div></div>';
+      }).join('');
+    }
+  }
+
+  el.innerHTML = html;
 }
 
 /* ─────────────────────────────────────────────────
