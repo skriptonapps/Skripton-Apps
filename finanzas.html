@@ -734,15 +734,13 @@ body {
             <div id="graf-servicios"><div class="empty-state" style="padding:20px 10px"><div style="font-size:12px;color:var(--ink3)" data-i18n="no_data_month">Sin datos este mes</div></div></div>
           </div>
         </div>
-        <div class="card">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-            <div class="icon-card-title" style="margin-bottom:0"><span class="icon-card-badge" style="background:var(--blue3)">🧾</span><span data-i18n="last_invoices">Últimas facturas</span></div>
-            <button class="link-btn" style="color:var(--blue)" data-i18n="view_all" onclick="cambiarMod('facturas')">Ver todas →</button>
-          </div>
-          <div id="dash-actividad">
-            <div class="empty-state" style="padding:20px 10px"><div style="font-size:12px;color:var(--ink3)">Cargando…</div></div>
-          </div>
-        </div>
+   <div class="card">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+    <div class="icon-card-title" style="margin-bottom:0"><span class="icon-card-badge" style="background:var(--green3)">💰</span><span>Cobros del mes (efectivo y transferencia)</span></div>
+    <button class="link-btn" style="color:var(--blue)" onclick="cambiarMod('facturas')">Ver facturas →</button>
+  </div>
+  <div id="dash-pagos"><div class="empty-state" style="padding:20px 10px"><div style="font-size:12px;color:var(--ink3)">Cargando…</div></div></div>
+</div>
       </div>
 
       <!-- ════ FACTURAS ════ -->
@@ -1047,7 +1045,40 @@ body {
           </div>
         </div>
       </div>
-
+/* ── Cobros por método de pago (Control + Rentabilidad) ── */
+async function renderMetodosPago(id, d, h, conLista){
+  var el=document.getElementById(id); if(!el) return;
+  var { data: r, error } = await supabase.rpc('fac_reporte_metodos_pago', { p_desde:d, p_hasta:h });
+  if(error || !r){
+    el.innerHTML='<div class="empty-state" style="padding:16px 10px"><div style="font-size:12px;color:var(--ink3)">No se pudo cargar</div></div>';
+    return;
+  }
+  function n(c){ return c+' factura'+(c!==1?'s':''); }
+  var html='<div class="grid-2" style="margin-bottom:12px">'+
+    '<div class="kpi" style="background:var(--green3)"><div class="kpi-label">💵 Efectivo</div>'+
+      '<div class="kpi-value" style="color:var(--green4)">'+fmt(r.efectivo.total)+'</div><div class="kpi-sub">'+n(r.efectivo.cantidad)+'</div></div>'+
+    '<div class="kpi" style="background:var(--blue3)"><div class="kpi-label">🏦 Transferencia</div>'+
+      '<div class="kpi-value" style="color:var(--blue2)">'+fmt(r.transferencia.total)+'</div><div class="kpi-sub">'+n(r.transferencia.cantidad)+'</div></div>'+
+  '</div>';
+  if(r.sinMetodo.cantidad>0){
+    html+='<div style="font-size:11px;color:var(--ink3);margin-bottom:10px">Sin método registrado (pagadas antes de este cambio): '+fmt(r.sinMetodo.total)+' · '+n(r.sinMetodo.cantidad)+'</div>';
+  }
+  html+='<div style="font-size:12px;font-weight:600;color:var(--ink2);margin-bottom:6px">Total cobrado: '+fmt(r.total)+'</div>';
+  if(conLista){
+    if(!r.pagos.length){
+      html+='<div class="empty-state" style="padding:16px 10px"><div style="font-size:12px;color:var(--ink3)">Sin cobros este mes</div></div>';
+    } else {
+      html+=r.pagos.map(function(p){
+        var m=p.metodoPago==='efectivo'?'💵 Efectivo':p.metodoPago==='transferencia'?'🏦 Transferencia':'— Sin método';
+        return '<div class="activity-item"><div class="activity-left"><div class="activity-icon">'+(p.metodoPago==='efectivo'?'💵':p.metodoPago==='transferencia'?'🏦':'🧾')+'</div><div>'+
+          '<div style="font-size:13px;color:var(--ink)">'+esc(p.clienteNombre)+'</div>'+
+          '<div style="font-size:11px;color:var(--ink3)">'+esc(p.fechaSolo)+' · '+m+'</div></div></div>'+
+          '<div style="font-size:13px;font-weight:600;color:var(--green2)">'+fmt(p.total)+'</div></div>';
+      }).join('');
+    }
+  }
+  el.innerHTML=html;
+}
       <!-- ════ RENTABILIDAD ════ -->
       <div id="mod-rentabilidad" class="modulo" style="display:none">
         <div class="panel-header">
@@ -1097,7 +1128,10 @@ body {
             <div class="kpi-value" id="rent-margen" style="color:var(--amber)">0%</div>
             <div class="kpi-sub" data-i18n="over_income">sobre ingresos</div></div>
         </div>
-
+<div class="card" style="margin-bottom:16px">
+  <div class="card-title" style="color:var(--green4)">💰 <span>Cobros por método de pago</span></div>
+  <div id="rent-metodos"></div>
+</div>
         <div class="grid-2" style="margin-bottom:16px">
           <div class="card">
             <div class="card-title" style="color:var(--blue2)">💹 <span data-i18n="income_by_service">Ingresos por servicio</span></div>
@@ -1336,6 +1370,20 @@ body {
     <div class="modal-actions" style="margin-top:16px">
       <button class="btn-cancel" data-i18n="close_word" onclick="cerrarModal('modal-ver-factura')">Cerrar</button>
       <button class="btn-green" id="vf-btn-pagar" onclick="marcarPagada()">✅ <span data-i18n="mark_paid">Marcar como pagada</span></button>
+    </div>
+  </div>
+</div>
+<!-- MODAL: Método de pago -->
+<div class="modal-overlay center" id="modal-metodo-pago">
+  <div class="modal-box">
+    <h3>¿Cómo pagó el cliente?</h3>
+    <p id="mmp-info"></p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <button class="btn-outline-green" style="padding:22px 10px;font-size:15px;font-weight:600" onclick="confirmarMetodoPago('efectivo')">💵<br>Efectivo</button>
+      <button class="btn-outline" style="padding:22px 10px;font-size:15px;font-weight:600" onclick="confirmarMetodoPago('transferencia')">🏦<br>Transferencia</button>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="cerrarModal('modal-metodo-pago')">Cancelar</button>
     </div>
   </div>
 </div>
@@ -1635,19 +1683,7 @@ async function cargarDashboard(){
   renderGrafico('graf-clientes',r.porCliente.map(function(c){return{label:c.nombre,val:c.total};}),r.porCliente.map(function(c){return c.total;}),'var(--blue)');
   renderGrafico('graf-servicios',r.porServicio.map(function(s){return{label:s.nombre,val:s.total};}),r.porServicio.map(function(s){return s.total;}),'var(--green2)');
 
-  var cont=document.getElementById('dash-actividad');
-  if(!r.facturas.length){
-    cont.innerHTML='<div class="empty-state" style="padding:20px 10px"><div class="empty-icon">🧾</div><div style="font-size:12px;color:var(--ink3)">'+t('no_invoices')+'</div></div>';
-  } else {
-    cont.innerHTML = r.facturas.slice(0,5).map(function(f){
-      return '<div class="activity-item" style="cursor:pointer" onclick="verFactura(\''+f.id+'\')">'+
-        '<div class="activity-left"><div class="activity-icon">🧾</div><div>'+
-        '<div style="font-size:13px;color:var(--ink)">'+esc(f.clienteNombre)+'</div>'+
-        '<div style="font-size:11px;color:var(--ink3)">'+esc(f.fechaSolo)+' · <span class="badge badge-'+esc(f.estado)+'" style="font-size:9px;padding:1px 7px">'+badgeLabel(f.estado)+'</span></div>'+
-        '</div></div>'+
-        '<div style="font-size:13px;font-weight:600;color:var(--blue)">'+fmt(f.total)+'</div></div>';
-    }).join('');
-  }
+   renderMetodosPago('dash-pagos', ma, ma, true);
 }
 
 function badgeLabel(estado){
@@ -1749,7 +1785,7 @@ function filtrarFacturas(){
       '<td><span class="badge badge-'+esc(f.estado)+'">'+badgeLabel(f.estado)+'</span></td>'+
       '<td><div style="display:flex;gap:4px">'+
         '<button class="icon-btn btn-sm" title="'+t('view_pdf_tt')+'" onclick="verFactura(\''+esc(f.id)+'\')">👁</button>'+
-        (f.estado==='emitida'?'<button class="icon-btn btn-sm" title="'+t('mark_paid_tt')+'" onclick="cambiarEstadoFac(\''+esc(f.id)+'\',\'pagada\')">✅</button>':'')+
+        (f.estado==='emitida'?'<button class="icon-btn btn-sm" title="'+t('mark_paid_tt')+'" onclick="pedirMetodoPago(\''+esc(f.id)+'\')">✅</button>':'')+
         (f.estado!=='anulada'?'<button class="icon-btn btn-sm danger" title="'+t('void_tt')+'" onclick="confirmar(\''+t('void_invoice_title')+'\',\''+t('confirm_void_msg').replace('{id}',esc(f.id))+'\',function(){cambiarEstadoFac(\''+esc(f.id)+'\',\'anulada\');})">❌</button>':'')+
         (f.tipoFacturacion!=='electronica'?'<button class="icon-btn btn-sm" title="'+t('individual_pdf_tt')+'" onclick="pdfFactura(\''+esc(f.id)+'\')">📄</button>':'')+
       '</div></td>';
@@ -1762,11 +1798,30 @@ function filtrarFacturas(){
   document.getElementById('frp-pend').textContent=fmt(totalPend);
 }
 
-async function cambiarEstadoFac(id,estado){
-  var { data: res, error } = await supabase.rpc('fac_factura_cambiar_estado', { p_id:id, p_estado:estado });
+async function cambiarEstadoFac(id,estado,metodo){
+  var { data: res, error } = await supabase.rpc('fac_factura_cambiar_estado', { p_id:id, p_estado:estado, p_metodo_pago: metodo||null });
   if(error){ toast(t('msg_error_prefix')+error.message,'err'); return; }
   if(res.success){ toast(res.mensaje,'ok'); cargarFacturas(); cargarDashboard(); }
   else toast(res.mensaje,'err');
+}
+
+var _pagoPendienteId = null;
+function pedirMetodoPago(id){
+  _pagoPendienteId = id;
+  document.getElementById('mmp-info').textContent = 'Factura ' + id;
+  abrirModal('modal-metodo-pago');
+}
+function confirmarMetodoPago(metodo){
+  var id = _pagoPendienteId; _pagoPendienteId = null;
+  cerrarModal('modal-metodo-pago');
+  if(id) cambiarEstadoFac(id,'pagada',metodo);
+}
+
+function marcarPagada(){
+  if(!_facturaActual) return;
+  var id=_facturaActual.id;
+  cerrarModal('modal-ver-factura');
+  pedirMetodoPago(id);
 }
 
 /* ─────────────────────────────────────────────────
@@ -1823,12 +1878,6 @@ async function verFactura(id){
   document.getElementById('vf-contenido').innerHTML=html;
   document.getElementById('vf-btn-pagar').style.display=f.estado==='emitida'?'block':'none';
   abrirModal('modal-ver-factura');
-}
-
-function marcarPagada(){
-  if(!_facturaActual) return;
-  cambiarEstadoFac(_facturaActual.id,'pagada');
-  cerrarModal('modal-ver-factura');
 }
 
 /* ─────────────────────────────────────────────────
@@ -2871,6 +2920,7 @@ async function cargarRentabilidad(){
   document.getElementById('rent-fac-sub').textContent=r.totalFacturas+' '+(r.totalFacturas!==1?t('invoice_plural'):t('invoice_singular'))+', '+r.pagadas+' '+t('status_paid').toLowerCase();
   document.getElementById('rent-gas').textContent=fmt(r.totalGastos);
   document.getElementById('rent-margen').textContent=r.margen.toFixed(1)+'%';
+    renderMetodosPago('rent-metodos', d, h, false);
 
   renderGrafico('graf-rent-svc',r.porServicio.map(function(s){return{label:s.nombre,val:s.total};}),r.porServicio.map(function(s){return s.total;}),'var(--blue)');
   renderGrafico('graf-rent-gas',r.porCatGasto.map(function(g){return{label:g.cat,val:g.total};}),r.porCatGasto.map(function(g){return g.total;}),'var(--red)');
