@@ -19,6 +19,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
   var SUPABASE_URL = 'https://tpynubemonzmtlcjioff.supabase.co';
   var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRweW51YmVtb256bXRsY2ppb2ZmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY4OTU0MTgsImV4cCI6MjEwMjQ3MTQxOH0.R80Zc-4bM8Qo1W9EaRAXhBD2q_JFF1h7VpQIwLWZPH0';
@@ -3004,12 +3005,13 @@ async function pdfFactura(id){
   if(f){ _facturaActual=f; pdfFacturaObj(f); } else toast(t('invoice_not_found2'),'err');
 }
 
-async function pdfFacturaObj(f){
-  // Siempre traemos la configuración más reciente directo de la
-  // base de datos, para no depender de una copia en memoria que
-  // se pudo quedar desactualizada.
-  var { data: c } = await supabase.rpc('fac_configuracion_obtener');
-  if(c) _config = c;
+async function pdfFacturaObj(f, opts){
+  opts = opts || {};
+  // En modo masivo la configuración se carga una sola vez antes (opts.sinConfig)
+  if(!opts.sinConfig){
+    var { data: c } = await supabase.rpc('fac_configuracion_obtener');
+    if(c) _config = c;
+  }
 
   var doc=new window.jspdf.jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
   var W=doc.internal.pageSize.getWidth(), H=doc.internal.pageSize.getHeight();
@@ -3138,7 +3140,9 @@ async function pdfFacturaObj(f){
   doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(150,150,150);
   doc.text(t('pdf_generated_with'),W/2,H-6,{align:'center'});
 
-  doc.save('Factura_'+f.numero+'_'+f.clienteNombre.replace(/\s+/g,'_').substring(0,20)+'.pdf');
+    var nombreArchivo = 'Factura_'+f.numero+'_'+f.clienteNombre.replace(/[\\\/:*?"<>|]/g,'').replace(/\s+/g,'_').substring(0,20)+'.pdf';
+  if(opts.zip){ return { nombre: nombreArchivo, blob: doc.output('blob') }; }
+  doc.save(nombreArchivo);
   toast('📄 '+t('pdf_downloaded'),'ok');
 }
 
@@ -3146,38 +3150,63 @@ function exportarFacturasMasivo(){
   var tbody=document.getElementById('fac-tbody');
   if(!tbody.rows.length){ toast(t('no_invoices_export'),'warn'); return; }
 
-  var ids=[];
-  _facturas.forEach(function(f){
-    var q=(document.getElementById('f-fac-q').value||'').toLowerCase();
-    var mes=document.getElementById('f-fac-mes').value;
-    var anio=document.getElementById('f-fac-anio').value;
+  var q=(document.getElementById('f-fac-q').value||'').toLowerCase();
+  var mes=document.getElementById('f-fac-mes').value;
+  var anio=document.getElementById('f-fac-anio').value;
+
+  var lista=_facturas.filter(function(f){
     var p=(f.fechaSolo||'').split('/');
     var ok=(!_chipEstado||f.estado===_chipEstado)
-          &&(!_chipTipoFact||(f.tipoFacturacion||'tradicional')===_chipTipoFact)
-          &&(!mes||p[1]===mes)
-          &&(!anio||p[2]===anio)
-          &&(!q||(f.clienteNombre||'').toLowerCase().includes(q)||(f.id||'').toLowerCase().includes(q));
-    if(ok&&f.estado!=='anulada'&&f.tipoFacturacion!=='electronica') ids.push(f.id);
+      &&(!_chipTipoFact||(f.tipoFacturacion||'tradicional')===_chipTipoFact)
+      &&(!mes||p[1]===mes)
+      &&(!anio||p[2]===anio)
+      &&(!q||(f.clienteNombre||'').toLowerCase().includes(q)||(f.clienteNitcc||'').toLowerCase().includes(q)||(f.id||'').toLowerCase().includes(q)||(f.numero||'').includes(q));
+    return ok && f.estado!=='anulada' && f.tipoFacturacion!=='electronica';
   });
 
-  if(!ids.length){ toast(t('no_active_invoices_export'),'warn'); return; }
-
-  function descargarSiguiente(index){
-    if(index>=ids.length) return;
-    var id=ids[index];
-    var f=_facturas.find(function(x){return x.id===id;});
-    if(!f){ descargarSiguiente(index+1); return; }
-    setTimeout(function(){
-      pdfFacturaObj(f);
-      toast(t('downloading_x_of_y').replace('{a}',(index+1)).replace('{b}',ids.length),'ok');
-      descargarSiguiente(index+1);
-    }, index===0?0:600);
-  }
+  if(!lista.length){ toast(t('no_active_invoices_export'),'warn'); return; }
+  if(typeof JSZip==='undefined'){ toast('No se cargó la librería ZIP. Recarga la página.','err'); return; }
 
   confirmar(
-    t('pdf_per_invoice_title'),
-    t('pdf_per_invoice_msg').replace('{n}',ids.length).replace('{s}',ids.length!==1?'s':''),
-    function(){ descargarSiguiente(0); }
+    'Descargar facturas en ZIP',
+    'Se generarán '+lista.length+' PDF y se descargarán juntos en un solo archivo .zip. ¿Continuar?',
+    async function(){
+      var btn=document.querySelector('[onclick="exportarFacturasMasivo()"]');
+      if(btn){ btn.disabled=true; }
+      try{
+        // Configuración de la empresa: una sola vez
+        var { data: c } = await supabase.rpc('fac_configuracion_obtener');
+        if(c) _config = c;
+
+        var zip=new JSZip();
+        var usados={};
+        for(var i=0;i<lista.length;i++){
+          toast('Generando PDF '+(i+1)+' de '+lista.length+'…','ok');
+          var r=await pdfFacturaObj(lista[i],{zip:true,sinConfig:true});
+          var nombre=r.nombre;
+          // Evitar nombres repetidos dentro del ZIP
+          if(usados[nombre]){ nombre=nombre.replace(/\.pdf$/,'_'+lista[i].id+'.pdf'); }
+          usados[nombre]=1;
+          zip.file(nombre,r.blob);
+          // Cede el control al navegador para que no se congele
+          await new Promise(function(res){ setTimeout(res,0); });
+        }
+
+        toast('Comprimiendo archivos…','ok');
+        var blob=await zip.generateAsync({type:'blob',compression:'DEFLATE',compressionOptions:{level:6}});
+        var a=document.createElement('a');
+        a.href=URL.createObjectURL(blob);
+        a.download='Facturas_'+fechaHoy().replace(/-/g,'')+'.zip';
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(function(){ URL.revokeObjectURL(a.href); },5000);
+        toast('📦 '+lista.length+' facturas descargadas en ZIP','ok');
+      } catch(e){
+        console.error(e);
+        toast(t('msg_error_prefix')+e.message,'err');
+      } finally {
+        if(btn){ btn.disabled=false; }
+      }
+    }
   );
 }
 
