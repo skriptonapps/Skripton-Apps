@@ -1304,10 +1304,10 @@ body {
     <div class="form-g"><label data-i18n="amount_req">Monto *</label>
       <input type="number" id="mgas-monto" min="0" step="1000" inputmode="numeric" placeholder="$0"></div>
     <div class="form-g"><label>Método de pago *</label>
-      <select id="mgas-metodo">
-        <option value="efectivo">💵 Efectivo</option>
-        <option value="transferencia">🏦 Transferencia</option>
-      </select></div>
+  <select id="mgas-metodo">
+    <option value="efectivo">💵 Efectivo</option>
+    <option value="transferencia">🏦 Transferencia</option>
+  </select></div>
     <div class="form-g"><label data-i18n="notes2">Notas</label>
       <input type="text" id="mgas-notas" placeholder="Detalle adicional…" data-i18n-ph="ph_additional_detail"></div>
     <div class="modal-actions">
@@ -1691,8 +1691,7 @@ function renderGrafico(id,data,vals,color){
   el.innerHTML=html;
 }
 
-/* ── Cobros por método de pago (Control + Rentabilidad) ──
-   Muestra cobrado − gastos por método = lo que queda en efectivo / transferencia */
+/* ── Cobros por método de pago (Control + Rentabilidad) ── */
 async function renderMetodosPago(id, d, h, conLista){
   var el = document.getElementById(id);
   if(!el) return;
@@ -1705,29 +1704,29 @@ async function renderMetodosPago(id, d, h, conLista){
 
   function n(c){ return c + ' factura' + (c !== 1 ? 's' : ''); }
 
-  var gs = r.gastos || {efectivo:0, transferencia:0, sinMetodo:0, cantSinMetodo:0};
-  var ne = r.neto || {efectivo:r.efectivo.total, transferencia:r.transferencia.total};
-  function neg(v){ return v>=0 ? 'var(--green4)' : 'var(--red)'; }
+var gs = r.gastos || {efectivo:0, transferencia:0, sinMetodo:0, cantSinMetodo:0};
+var ne = r.neto || {efectivo:r.efectivo.total, transferencia:r.transferencia.total};
+function neg(v){ return v>=0 ? 'var(--green4)' : 'var(--red)'; }
 
-  var html = '<div class="grid-2" style="margin-bottom:12px">' +
-    '<div class="kpi" style="background:var(--green3)">' +
-      '<div class="kpi-label">💵 Efectivo</div>' +
-      '<div class="kpi-sub">Cobrado: ' + fmt(r.efectivo.total) + ' · ' + n(r.efectivo.cantidad) + '</div>' +
-      '<div class="kpi-sub" style="color:var(--red)">Gastos: − ' + fmt(gs.efectivo) + '</div>' +
-      '<div class="kpi-value" style="color:' + neg(ne.efectivo) + ';margin-top:6px">' + fmt(ne.efectivo) + '</div>' +
-      '<div class="kpi-sub">Queda en efectivo</div></div>' +
-    '<div class="kpi" style="background:var(--blue3)">' +
-      '<div class="kpi-label">🏦 Transferencia</div>' +
-      '<div class="kpi-sub">Cobrado: ' + fmt(r.transferencia.total) + ' · ' + n(r.transferencia.cantidad) + '</div>' +
-      '<div class="kpi-sub" style="color:var(--red)">Gastos: − ' + fmt(gs.transferencia) + '</div>' +
-      '<div class="kpi-value" style="color:' + neg(ne.transferencia) + ';margin-top:6px">' + fmt(ne.transferencia) + '</div>' +
-      '<div class="kpi-sub">Queda por transferencia</div></div>' +
-  '</div>';
+var html = '<div class="grid-2" style="margin-bottom:12px">' +
+  '<div class="kpi" style="background:var(--green3)">' +
+    '<div class="kpi-label">💵 Efectivo</div>' +
+    '<div class="kpi-sub">Cobrado: ' + fmt(r.efectivo.total) + ' · ' + n(r.efectivo.cantidad) + '</div>' +
+    '<div class="kpi-sub" style="color:var(--red)">Gastos: − ' + fmt(gs.efectivo) + '</div>' +
+    '<div class="kpi-value" style="color:' + neg(ne.efectivo) + ';margin-top:6px">' + fmt(ne.efectivo) + '</div>' +
+    '<div class="kpi-sub">Queda en efectivo</div></div>' +
+  '<div class="kpi" style="background:var(--blue3)">' +
+    '<div class="kpi-label">🏦 Transferencia</div>' +
+    '<div class="kpi-sub">Cobrado: ' + fmt(r.transferencia.total) + ' · ' + n(r.transferencia.cantidad) + '</div>' +
+    '<div class="kpi-sub" style="color:var(--red)">Gastos: − ' + fmt(gs.transferencia) + '</div>' +
+    '<div class="kpi-value" style="color:' + neg(ne.transferencia) + ';margin-top:6px">' + fmt(ne.transferencia) + '</div>' +
+    '<div class="kpi-sub">Queda por transferencia</div></div>' +
+'</div>';
 
-  if(gs.cantSinMetodo > 0){
-    html += '<div style="font-size:11px;color:var(--amber);margin-bottom:10px">⚠️ ' + gs.cantSinMetodo +
-      ' gasto(s) sin método (' + fmt(gs.sinMetodo) + ') no se están restando. Asígnales método en Gastos.</div>';
-  }
+if(gs.cantSinMetodo > 0){
+  html += '<div style="font-size:11px;color:var(--amber);margin-bottom:10px">⚠️ ' + gs.cantSinMetodo +
+    ' gasto(s) sin método (' + fmt(gs.sinMetodo) + ') no se están restando. Asígnales método en Gastos.</div>';
+}
 
   if(r.sinMetodo.cantidad > 0){
     html += '<div style="font-size:11px;color:var(--ink3);margin-bottom:10px">Sin método registrado (pagadas antes de este cambio): ' +
@@ -1905,7 +1904,7 @@ async function verFactura(id){
   html+='<table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:12px">'+
     '<thead><tr style="background:var(--bg3)"><th style="padding:8px;text-align:left;font-size:10px;color:var(--ink3);text-transform:uppercase">'+t('th_service')+'</th>'+
     '<th style="padding:8px;text-align:right;font-size:10px;color:var(--ink3);text-transform:uppercase">'+t('th_qty_short')+'</th>'+
-    '<th style="padding:8px;text-align:right;font-size:10px;color:var(--ink3);text-transform:uppercase">'+t('th_unit_price')+'</th>'+
+    '<th style="padding:8px;text-align:right;font-size:10px;color:var(--ink3);text-transform:uppercase">'+t('th_price')+'</th>'+
     '<th style="padding:8px;text-align:right;font-size:10px;color:var(--ink3);text-transform:uppercase">'+t('th_subtotal2')+'</th></tr></thead><tbody>';
   (f.items||[]).forEach(function(it){
     html+='<tr style="border-bottom:1px solid var(--border)">'+
@@ -2819,18 +2818,15 @@ async function _importarClientes(nuevos, existentes, opts){
 }
   
 /* ─────────────────────────────────────────────────
-   GASTOS (ahora con método de pago)
+   GASTOS
 ───────────────────────────────────────────────── */
 async function cargarGastos(){
   var mes=document.getElementById('f-gas-mes').value;
   var anio=document.getElementById('f-gas-anio').value;
   var { data: lista } = await supabase.rpc('fac_gasto_listar');
   _gastos=lista||[];
-
-  // Método de pago de cada gasto (mapa id → método)
   var { data: mapa } = await supabase.rpc('fac_gasto_metodos');
-  _gastos.forEach(function(g){ g.metodoPago = (mapa||{})[g.id] || ''; });
-
+_gastos.forEach(function(g){ g.metodoPago = (mapa||{})[g.id] || ''; });
   var fa=document.getElementById('f-gas-anio'); var va=fa.value;
   fa.innerHTML='<option value="">'+t('all')+'</option>';
   var anios=[];
@@ -2860,13 +2856,23 @@ function renderGastos(lista){
       '<td>'+esc(g.descripcion)+'</td>'+
       '<td class="r"><strong style="color:var(--red)">'+fmt(g.monto)+'</strong></td>'+
       '<td><select style="padding:4px 6px;font-size:11px;width:auto" onchange="cambiarMetodoGasto(\''+esc(g.id)+'\',this.value)">'+
-        '<option value=""'+(g.metodoPago?'':' selected')+' disabled>— elegir —</option>'+
-        '<option value="efectivo"'+(g.metodoPago==='efectivo'?' selected':'')+'>💵 Efectivo</option>'+
-        '<option value="transferencia"'+(g.metodoPago==='transferencia'?' selected':'')+'>🏦 Transferencia</option></select></td>'+
+  '<option value=""'+(g.metodoPago?'':' selected')+' disabled>— elegir —</option>'+
+  '<option value="efectivo"'+(g.metodoPago==='efectivo'?' selected':'')+'>💵 Efectivo</option>'+
+  '<option value="transferencia"'+(g.metodoPago==='transferencia'?' selected':'')+'>🏦 Transferencia</option></select></td>'+
       '<td style="font-size:11px;color:var(--ink3)">'+esc(g.notas||'—')+'</td>'+
       '<td><button class="icon-btn btn-sm danger" onclick="confirmar(\''+t('delete_expense_title')+'\',\''+t('confirm_del_expense_msg').replace('{monto}',fmt(g.monto))+'\',function(){eliminarGasto(\''+esc(g.id)+'\');})">🗑</button></td>';
     tbody.appendChild(tr);
   });
+}
+
+function abrirModalNuevoGasto(){
+  document.getElementById('mgas-title').textContent=t('new_expense_title');
+  document.getElementById('mgas-id').value='';
+  document.getElementById('mgas-fecha').value=fechaHoy();
+  document.getElementById('mgas-metodo').value='efectivo';
+  ['mgas-cat','mgas-desc','mgas-monto','mgas-notas'].forEach(function(id){document.getElementById(id).value='';});
+  hideAlert('alert-mgas');
+  abrirModal('modal-gasto');
 }
 
 async function cambiarMetodoGasto(id, metodo){
@@ -2875,26 +2881,13 @@ async function cambiarMetodoGasto(id, metodo){
   toast(res.mensaje,'ok'); cargarGastos();
 }
 
-function abrirModalNuevoGasto(){
-  document.getElementById('mgas-title').textContent=t('new_expense_title');
-  document.getElementById('mgas-id').value='';
-  document.getElementById('mgas-fecha').value=fechaHoy();
-  ['mgas-cat','mgas-desc','mgas-monto','mgas-notas'].forEach(function(id){document.getElementById(id).value='';});
-  document.getElementById('mgas-metodo').value='efectivo';
-  hideAlert('alert-mgas');
-  abrirModal('modal-gasto');
-}
-
 async function guardarGasto(){
   var descripcion=document.getElementById('mgas-desc').value.trim();
   var monto=parseFloat(document.getElementById('mgas-monto').value)||0;
   if(!descripcion) return showAlert('alert-mgas',t('msg_desc_required'),'err');
   if(monto<=0) return showAlert('alert-mgas',t('msg_amount_gt0'),'err');
 
-  // Deja el método elegido listo para que el trigger lo asigne al gasto nuevo
-  await supabase.rpc('fac_gasto_metodo_pendiente_set', { p_metodo: document.getElementById('mgas-metodo').value });
-
-  var { data: res, error } = await supabase.rpc('fac_gasto_guardar', {
+  var { data: res, error } = await supabase.rpc('fac_gasto_metodo_pendiente_set', { p_metodo: document.getElementById('mgas-metodo').value }); supabase.rpc('fac_gasto_guardar', {
     p_id: document.getElementById('mgas-id').value || null,
     p_categoria: document.getElementById('mgas-cat').value.trim()||'Otros',
     p_descripcion: descripcion,
