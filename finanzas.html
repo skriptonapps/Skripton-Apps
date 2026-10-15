@@ -717,7 +717,8 @@ body {
           <div class="kpi-icon-card">
             <div class="kpi-icon-badge" style="background:var(--green3)">📊</div>
             <div class="kpi-label" data-i18n="kpi_profit_month">Utilidad (mes)</div>
-            <div class="kpi-value" id="kpi-util">$0</div></div>
+           <div class="kpi-value" id="kpi-util">$0</div>
+<div class="kpi-sub" id="kpi-util-sub"></div></div>
           <div class="kpi-icon-card">
             <div class="kpi-icon-badge" style="background:#FEF3C7">⏳</div>
             <div class="kpi-label" data-i18n="kpi_pending">Pendientes de cobro</div>
@@ -1639,8 +1640,11 @@ async function cargarDashboard(){
   document.getElementById('kpi-fac').textContent=fmt(r.totalFacturado);
   document.getElementById('kpi-fac-sub').textContent=r.totalFacturas+' factura'+(r.totalFacturas!==1?'s':'');
   document.getElementById('kpi-gas').textContent=fmt(r.totalGastos);
-  var u=r.utilidad; var ku=document.getElementById('kpi-util');
-  ku.textContent=fmt(u); ku.style.color=u>=0?'var(--green2)':'var(--red)';
+
+  var calc=calcUtilidadCobrada(r);
+  var ku=document.getElementById('kpi-util');
+  ku.textContent=fmt(calc.util); ku.style.color=calc.util>=0?'var(--green2)':'var(--red)';
+  document.getElementById('kpi-util-sub').textContent='Cobrado '+fmt(calc.cobrado)+' − gastos';
 
   var pend=r.facturas.filter(function(f){return f.estado==='emitida';});
   var totalPend=pend.reduce(function(s,f){return s+f.total;},0);
@@ -1650,7 +1654,16 @@ async function cargarDashboard(){
   renderGrafico('graf-clientes',r.porCliente.map(function(c){return{label:c.nombre,val:c.total};}),r.porCliente.map(function(c){return c.total;}),'var(--blue)');
   renderGrafico('graf-servicios',r.porServicio.map(function(s){return{label:s.nombre,val:s.total};}),r.porServicio.map(function(s){return s.total;}),'var(--green2)');
 
-   renderMetodosPago('dash-pagos', ma, ma, true);
+  renderMetodosPago('dash-pagos', ma, ma, true);
+}
+  
+/* Utilidad real = lo cobrado (facturas pagadas) − gastos */
+function calcUtilidadCobrada(r){
+  var cobrado = (r.facturas||[]).filter(function(f){ return f.estado==='pagada'; })
+    .reduce(function(s,f){ return s+f.total; },0);
+  var util = cobrado - (r.totalGastos||0);
+  var margen = cobrado>0 ? util/cobrado*100 : 0;
+  return { cobrado:cobrado, util:util, margen:margen };
 }
 
 function badgeLabel(estado){
@@ -2932,13 +2945,15 @@ async function cargarRentabilidad(){
   var h=hasta?hasta.replace('-','/'):'';
   var { data: r } = await supabase.rpc('fac_reporte_rentabilidad', { p_desde:d, p_hasta:h });
   if(!r) return;
-  var u=r.utilidad; var ku=document.getElementById('rent-util');
-  ku.textContent=fmt(u); ku.style.color=u>=0?'var(--green2)':'var(--red)';
+
+  var calc=calcUtilidadCobrada(r);
+  var ku=document.getElementById('rent-util');
+  ku.textContent=fmt(calc.util); ku.style.color=calc.util>=0?'var(--green2)':'var(--red)';
   document.getElementById('rent-fac').textContent=fmt(r.totalFacturado);
   document.getElementById('rent-fac-sub').textContent=r.totalFacturas+' '+(r.totalFacturas!==1?t('invoice_plural'):t('invoice_singular'))+', '+r.pagadas+' '+t('status_paid').toLowerCase();
   document.getElementById('rent-gas').textContent=fmt(r.totalGastos);
-  document.getElementById('rent-margen').textContent=r.margen.toFixed(1)+'%';
-    renderMetodosPago('rent-metodos', d, h, false);
+  document.getElementById('rent-margen').textContent=calc.margen.toFixed(1)+'%';
+  renderMetodosPago('rent-metodos', d, h, false);
 
   renderGrafico('graf-rent-svc',r.porServicio.map(function(s){return{label:s.nombre,val:s.total};}),r.porServicio.map(function(s){return s.total;}),'var(--blue)');
   renderGrafico('graf-rent-gas',r.porCatGasto.map(function(g){return{label:g.cat,val:g.total};}),r.porCatGasto.map(function(g){return g.total;}),'var(--red)');
