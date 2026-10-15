@@ -2887,7 +2887,14 @@ async function guardarGasto(){
   if(!descripcion) return showAlert('alert-mgas',t('msg_desc_required'),'err');
   if(monto<=0) return showAlert('alert-mgas',t('msg_amount_gt0'),'err');
 
-  var { data: res, error } = await supabase.rpc('fac_gasto_metodo_pendiente_set', { p_metodo: document.getElementById('mgas-metodo').value }); supabase.rpc('fac_gasto_guardar', {
+  // 1) Dejar el método de pago listo para que el trigger lo asigne
+  var rm = await supabase.rpc('fac_gasto_metodo_pendiente_set', {
+    p_metodo: document.getElementById('mgas-metodo').value
+  });
+  if(rm.error){ showAlert('alert-mgas',t('msg_error_prefix')+rm.error.message,'err'); return; }
+
+  // 2) Guardar el gasto
+  var { data: res, error } = await supabase.rpc('fac_gasto_guardar', {
     p_id: document.getElementById('mgas-id').value || null,
     p_categoria: document.getElementById('mgas-cat').value.trim()||'Otros',
     p_descripcion: descripcion,
@@ -2896,8 +2903,8 @@ async function guardarGasto(){
     p_notas: document.getElementById('mgas-notas').value.trim()
   });
   if(error){ showAlert('alert-mgas',t('msg_error_prefix')+error.message,'err'); return; }
-  if(res.success){ toast(res.mensaje,'ok'); cerrarModal('modal-gasto'); cargarGastos(); }
-  else showAlert('alert-mgas',res.mensaje,'err');
+  if(res && res.success){ toast(res.mensaje,'ok'); cerrarModal('modal-gasto'); cargarGastos(); }
+  else showAlert('alert-mgas',(res&&res.mensaje)||'No se pudo guardar el gasto.','err');
 }
 
 async function eliminarGasto(id){
