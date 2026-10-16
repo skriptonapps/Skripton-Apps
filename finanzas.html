@@ -451,6 +451,15 @@ tbody tr:hover{background:var(--bg)}
 .svc-check-precio{font-size:11px;color:var(--ink3);font-family:var(--font-mono);white-space:nowrap}
 .svc-check-cat-head{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink3);padding:6px 10px 3px;margin-top:4px;display:block}
 
+/* ── KPIs de Rentabilidad (tarjetas con borde de color) ── */
+.rent-kpi{background:#fff;border-radius:16px;padding:22px 14px 18px;text-align:center;
+  box-shadow:var(--shadow);border-left:5px solid var(--c);min-height:170px}
+.rent-kpi-ico{font-size:34px;line-height:1;margin-bottom:10px}
+.rent-kpi-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink2);margin-bottom:4px}
+.rent-kpi-val{font-family:var(--font-sans);font-size:28px;font-weight:700;color:var(--ink);line-height:1.2}
+.rent-kpi-sub{font-size:12px;color:var(--ink);margin-top:8px}
+.rent-kpi-sub2{font-size:12px;font-weight:700;margin-top:4px}
+  
 /* ════════ RESPONSIVE ════════ */
 @media(max-width:900px){
   .grid-4{grid-template-columns:1fr 1fr}
@@ -1096,20 +1105,34 @@ body {
           </div>
         </div>
 
-    <div class="grid-5" style="margin-bottom:16px">
-  <div class="kpi"><div class="kpi-label" data-i18n="total_billed">Total Facturado</div>
-    <div class="kpi-value" id="rent-fac" style="color:var(--blue)">$0</div>
-    <div class="kpi-sub" id="rent-fac-sub"></div></div>
-  <div class="kpi"><div class="kpi-label">Facturas pagadas</div>
-    <div class="kpi-value" id="rent-pag" style="color:var(--green2)">$0</div>
-    <div class="kpi-sub" id="rent-pag-sub"></div></div>
-  <div class="kpi"><div class="kpi-label" data-i18n="total_expenses">Total Gastos</div>
-    <div class="kpi-value" id="rent-gas" style="color:var(--red)">$0</div></div>
-  <div class="kpi"><div class="kpi-label" data-i18n="net_profit2">Utilidad Neta</div>
-    <div class="kpi-value" id="rent-util">$0</div></div>
-  <div class="kpi"><div class="kpi-label" data-i18n="kpi_pending">Pendientes de cobro</div>
-    <div class="kpi-value" id="rent-pend" style="color:var(--amber)">$0</div>
-    <div class="kpi-sub" id="rent-pend-sub"></div></div>
+<div class="grid-5" style="margin-bottom:16px">
+  <div class="rent-kpi" style="--c:#2E9E4F">
+    <div class="rent-kpi-ico">💵</div>
+    <div class="rent-kpi-label">Total ingresos</div>
+    <div class="rent-kpi-val" id="rent-ing">$0</div>
+  </div>
+  <div class="rent-kpi" style="--c:#DC3545">
+    <div class="rent-kpi-ico">💸</div>
+    <div class="rent-kpi-label">Total egresos</div>
+    <div class="rent-kpi-val" id="rent-egr">$0</div>
+  </div>
+  <div class="rent-kpi" style="--c:#1F4E79">
+    <div class="rent-kpi-ico">📈</div>
+    <div class="rent-kpi-label">Utilidad neta</div>
+    <div class="rent-kpi-val" id="rent-util">$0</div>
+  </div>
+  <div class="rent-kpi" style="--c:#7B3FC4">
+    <div class="rent-kpi-ico">📊</div>
+    <div class="rent-kpi-label">Margen de utilidad</div>
+    <div class="rent-kpi-val" id="rent-margen">0%</div>
+  </div>
+  <div class="rent-kpi" style="--c:#E8801A">
+    <div class="rent-kpi-ico">🧾</div>
+    <div class="rent-kpi-label">IVA recaudado</div>
+    <div class="rent-kpi-val" id="rent-iva" style="color:#E8801A">$0</div>
+    <div class="rent-kpi-sub" id="rent-iva-sub">0 facturas con IVA</div>
+    <div class="rent-kpi-sub2" id="rent-iva-pend" style="color:#E8801A">Por recaudar: $0</div>
+  </div>
 </div>
         
 <div class="card" style="margin-bottom:16px">
@@ -3019,17 +3042,7 @@ async function cargarRentabilidad(){
   if(!r) return;
 
   var calc=calcUtilidadCobrada(r);
-  var ku=document.getElementById('rent-util');
-  ku.textContent=fmt(calc.util); ku.style.color=calc.util>=0?'var(--green2)':'var(--red)';
-  document.getElementById('rent-fac').textContent=fmt(r.totalFacturado);
-  document.getElementById('rent-fac-sub').textContent=r.totalFacturas+' '+(r.totalFacturas!==1?t('invoice_plural'):t('invoice_singular'))+', '+r.pagadas+' '+t('status_paid').toLowerCase();
-  document.getElementById('rent-gas').textContent=fmt(r.totalGastos);
-  var pagR=r.facturas.filter(function(f){return f.estado==='pagada';});
-var pendR=r.facturas.filter(function(f){return f.estado==='emitida';});
-document.getElementById('rent-pag').textContent=fmt(calc.cobrado);
-document.getElementById('rent-pag-sub').textContent=pagR.length+' factura'+(pagR.length!==1?'s':'');
-document.getElementById('rent-pend').textContent=fmt(pendR.reduce(function(s,f){return s+f.total;},0));
-document.getElementById('rent-pend-sub').textContent=pendR.length+' factura'+(pendR.length!==1?'s':'');
+renderKpisRent(r, calc, d, h);
   renderMetodosPago('rent-metodos', d, h, false);
 
   renderGrafico('graf-rent-svc',r.porServicio.map(function(s){return{label:s.nombre,val:s.total};}),r.porServicio.map(function(s){return s.total;}),'var(--blue)');
@@ -3064,6 +3077,36 @@ document.getElementById('rent-pend-sub').textContent=pendR.length+' factura'+(pe
   });
   html+='</div>';
   flujoWrap.innerHTML=html;
+}
+
+    async function renderKpisRent(r, calc, d, h){
+  // Ingresos = lo realmente cobrado (facturas pagadas)
+  document.getElementById('rent-ing').textContent = fmt(calc.cobrado);
+  document.getElementById('rent-egr').textContent = fmt(r.totalGastos);
+
+  var ku = document.getElementById('rent-util');
+  ku.textContent = fmt(calc.util);
+  ku.style.color = calc.util >= 0 ? 'var(--green2)' : '#DC3545';
+
+  document.getElementById('rent-margen').textContent = calc.margen.toFixed(1) + '%';
+
+  // IVA: se calcula desde el listado de facturas, filtrando por el período
+  var { data: lista } = await supabase.rpc('fac_factura_listar');
+  var conIva = (lista || []).filter(function(f){
+    var p = (f.fechaSolo || '').split('/');           // dd/mm/yyyy
+    if(p.length < 3) return false;
+    var k = p[2] + '/' + p[1];                         // yyyy/mm
+    return (!d || k >= d) && (!h || k <= h) && f.estado !== 'anulada' && (f.ivaValor || 0) > 0;
+  });
+  var ivaCobrado = 0, ivaPend = 0;
+  conIva.forEach(function(f){
+    if(f.estado === 'pagada') ivaCobrado += f.ivaValor;
+    else if(f.estado === 'emitida') ivaPend += f.ivaValor;
+  });
+  document.getElementById('rent-iva').textContent = fmt(ivaCobrado);
+  document.getElementById('rent-iva-sub').textContent =
+    conIva.length + ' factura' + (conIva.length !== 1 ? 's' : '') + ' con IVA';
+  document.getElementById('rent-iva-pend').textContent = 'Por recaudar: ' + fmt(ivaPend);
 }
 
 /* ─────────────────────────────────────────────────
