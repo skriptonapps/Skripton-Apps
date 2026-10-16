@@ -1782,6 +1782,8 @@ if(gs.cantSinMetodo > 0){
 async function cargarFacturas(){
   var { data: lista } = await supabase.rpc('fac_factura_listar');
   _facturas=lista||[];
+  var { data: mapaM } = await supabase.rpc('fac_factura_metodos');
+_facturas.forEach(function(f){ f.metodoPago = (mapaM||{})[f.id] || ''; });
   var fa=document.getElementById('f-fac-anio'); var va=fa.value;
   fa.innerHTML='<option value="">'+t('all')+'</option>';
   var anios=[]; _facturas.forEach(function(f){
