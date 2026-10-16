@@ -321,6 +321,7 @@ button{font-family:var(--font-sans);cursor:pointer;border:none;border-radius:var
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
 .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.grid-5{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
 .kpi{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r2);padding:14px 16px}
 .kpi-icon-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px}
 .kpi-icon-badge{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-size:17px}
@@ -455,6 +456,7 @@ tbody tr:hover{background:var(--bg)}
   .grid-4{grid-template-columns:1fr 1fr}
   .item-row{grid-template-columns:1fr auto}
   .item-headers{display:none}
+  .grid-5{grid-template-columns:1fr 1fr}
 }
 @media(max-width:680px){
   :root{--sidebar-w:240px}
@@ -463,7 +465,7 @@ tbody tr:hover{background:var(--bg)}
   .sidebar{transform:translateX(-100%)}
   .sidebar.open{transform:translateX(0);box-shadow:4px 0 20px rgba(0,0,0,.15)}
   .main-content{margin-left:0;padding:16px}
-  .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
+  .grid-2,.grid-3,.grid-4,.grid-5{grid-template-columns:1fr}
   .btn-row{flex-direction:column}
   .panel-header{flex-direction:column;align-items:flex-start}
   .modal-actions{flex-direction:column}
@@ -705,27 +707,31 @@ body {
           </div>
         </div>
         <div id="alert-dash" class="alert"></div>
-        <div class="grid-4" style="margin-bottom:16px">
-          <div class="kpi-icon-card">
-            <div class="kpi-icon-badge" style="background:var(--blue3)">💰</div>
-            <div class="kpi-label" data-i18n="kpi_billed_month">Facturado (mes)</div>
-            <div class="kpi-value" id="kpi-fac" style="color:var(--blue)">$0</div>
-            <div class="kpi-sub" id="kpi-fac-sub">0 facturas</div></div>
-          <div class="kpi-icon-card">
-            <div class="kpi-icon-badge" style="background:#FAECE7">💸</div>
-            <div class="kpi-label" data-i18n="kpi_expenses_month">Gastos (mes)</div>
-            <div class="kpi-value" id="kpi-gas" style="color:var(--red)">$0</div></div>
-          <div class="kpi-icon-card">
-            <div class="kpi-icon-badge" style="background:var(--green3)">📊</div>
-            <div class="kpi-label" data-i18n="kpi_profit_month">Utilidad (mes)</div>
-           <div class="kpi-value" id="kpi-util">$0</div>
-<div class="kpi-sub" id="kpi-util-sub"></div></div>
-          <div class="kpi-icon-card">
-            <div class="kpi-icon-badge" style="background:#FEF3C7">⏳</div>
-            <div class="kpi-label" data-i18n="kpi_pending">Pendientes de cobro</div>
-            <div class="kpi-value" id="kpi-pend" style="color:var(--amber)">$0</div>
-            <div class="kpi-sub" id="kpi-pend-sub">0 facturas</div></div>
-        </div>
+<div class="grid-5" style="margin-bottom:16px">
+  <div class="kpi-icon-card">
+    <div class="kpi-icon-badge" style="background:var(--blue3)">💰</div>
+    <div class="kpi-label" data-i18n="kpi_billed_month">Facturado (mes)</div>
+    <div class="kpi-value" id="kpi-fac" style="color:var(--blue)">$0</div>
+    <div class="kpi-sub" id="kpi-fac-sub">0 facturas</div></div>
+  <div class="kpi-icon-card">
+    <div class="kpi-icon-badge" style="background:var(--green3)">✅</div>
+    <div class="kpi-label">Facturas pagadas</div>
+    <div class="kpi-value" id="kpi-pag" style="color:var(--green2)">$0</div>
+    <div class="kpi-sub" id="kpi-pag-sub">0 facturas</div></div>
+  <div class="kpi-icon-card">
+    <div class="kpi-icon-badge" style="background:#FAECE7">💸</div>
+    <div class="kpi-label" data-i18n="kpi_expenses_month">Gastos (mes)</div>
+    <div class="kpi-value" id="kpi-gas" style="color:var(--red)">$0</div></div>
+  <div class="kpi-icon-card">
+    <div class="kpi-icon-badge" style="background:var(--green3)">📊</div>
+    <div class="kpi-label" data-i18n="kpi_profit_month">Utilidad (mes)</div>
+    <div class="kpi-value" id="kpi-util">$0</div></div>
+  <div class="kpi-icon-card">
+    <div class="kpi-icon-badge" style="background:#FEF3C7">⏳</div>
+    <div class="kpi-label" data-i18n="kpi_pending">Pendientes de cobro</div>
+    <div class="kpi-value" id="kpi-pend" style="color:var(--amber)">$0</div>
+    <div class="kpi-sub" id="kpi-pend-sub">0 facturas</div></div>
+</div>
         <div class="grid-2">
           <div class="card">
             <div class="icon-card-title"><span class="icon-card-badge" style="background:var(--blue3)">🏆</span><span data-i18n="top_clients_month">Top clientes (mes)</span></div>
@@ -1085,18 +1091,22 @@ body {
           </div>
         </div>
 
-        <div class="grid-4" style="margin-bottom:16px">
-          <div class="kpi"><div class="kpi-label" data-i18n="total_billed">Total Facturado</div>
-            <div class="kpi-value" id="rent-fac" style="color:var(--blue)">$0</div>
-            <div class="kpi-sub" id="rent-fac-sub"></div></div>
-          <div class="kpi"><div class="kpi-label" data-i18n="total_expenses">Total Gastos</div>
-            <div class="kpi-value" id="rent-gas" style="color:var(--red)">$0</div></div>
-          <div class="kpi"><div class="kpi-label" data-i18n="net_profit2">Utilidad Neta</div>
-            <div class="kpi-value" id="rent-util">$0</div></div>
-          <div class="kpi"><div class="kpi-label" data-i18n="margin_word">Margen</div>
-            <div class="kpi-value" id="rent-margen" style="color:var(--amber)">0%</div>
-            <div class="kpi-sub" data-i18n="over_income">sobre ingresos</div></div>
-        </div>
+    <div class="grid-5" style="margin-bottom:16px">
+  <div class="kpi"><div class="kpi-label" data-i18n="total_billed">Total Facturado</div>
+    <div class="kpi-value" id="rent-fac" style="color:var(--blue)">$0</div>
+    <div class="kpi-sub" id="rent-fac-sub"></div></div>
+  <div class="kpi"><div class="kpi-label">Facturas pagadas</div>
+    <div class="kpi-value" id="rent-pag" style="color:var(--green2)">$0</div>
+    <div class="kpi-sub" id="rent-pag-sub"></div></div>
+  <div class="kpi"><div class="kpi-label" data-i18n="total_expenses">Total Gastos</div>
+    <div class="kpi-value" id="rent-gas" style="color:var(--red)">$0</div></div>
+  <div class="kpi"><div class="kpi-label" data-i18n="net_profit2">Utilidad Neta</div>
+    <div class="kpi-value" id="rent-util">$0</div></div>
+  <div class="kpi"><div class="kpi-label" data-i18n="kpi_pending">Pendientes de cobro</div>
+    <div class="kpi-value" id="rent-pend" style="color:var(--amber)">$0</div>
+    <div class="kpi-sub" id="rent-pend-sub"></div></div>
+</div>
+        
 <div class="card" style="margin-bottom:16px">
   <div class="card-title" style="color:var(--green4)">💰 <span>Cobros por método de pago</span></div>
   <div id="rent-metodos"></div>
@@ -1650,7 +1660,10 @@ async function cargarDashboard(){
   var calc=calcUtilidadCobrada(r);
   var ku=document.getElementById('kpi-util');
   ku.textContent=fmt(calc.util); ku.style.color=calc.util>=0?'var(--green2)':'var(--red)';
-  document.getElementById('kpi-util-sub').textContent='Cobrado '+fmt(calc.cobrado)+' − gastos';
+
+  var pag=r.facturas.filter(function(f){return f.estado==='pagada';});
+  document.getElementById('kpi-pag').textContent=fmt(calc.cobrado);
+  document.getElementById('kpi-pag-sub').textContent=pag.length+' factura'+(pag.length!==1?'s':'');
 
   var pend=r.facturas.filter(function(f){return f.estado==='emitida';});
   var totalPend=pend.reduce(function(s,f){return s+f.total;},0);
