@@ -2314,13 +2314,22 @@ async function facturarTodos(){
    CLIENTES
 ───────────────────────────────────────────────── */
 async function cargarClientes(){
-  var { data: lista } = await supabase.rpc('fac_cliente_listar');
-  _clientes=lista||[];
+  // Se cargan clientes y servicios juntos, para poder mostrar el nombre de cada servicio
+  var r = await Promise.all([
+    supabase.rpc('fac_cliente_listar'),
+    supabase.rpc('fac_servicio_listar')
+  ]);
+  _clientes  = r[0].data || [];
+  _servicios = r[1].data || [];
   renderClientes(_clientes);
 }
 
 async function buscarClientes(){
   var q=(document.getElementById('cli-q').value||'');
+  if(!_servicios.length){
+    var rs = await supabase.rpc('fac_servicio_listar');
+    _servicios = rs.data || [];
+  }
   var { data: filtrados } = await supabase.rpc('fac_cliente_buscar', { p_q: q });
   renderClientes(filtrados||[]);
 }
