@@ -772,6 +772,12 @@ body {
           <button class="chip" onclick="setChipTipoFact(this,'tradicional')">🧾 Tradicional</button>
           <button class="chip" onclick="setChipTipoFact(this,'electronica')">💻 Electrónica</button>
         </div>
+        <div class="chips" id="chips-metodo">
+  <button class="chip active" onclick="setChipMetodo(this,'')">Todos los métodos</button>
+  <button class="chip" onclick="setChipMetodo(this,'efectivo')">💵 Efectivo</button>
+  <button class="chip" onclick="setChipMetodo(this,'transferencia')">🏦 Transferencia</button>
+  <button class="chip" onclick="setChipMetodo(this,'sin')">— Sin método</button>
+</div>
 
         <div class="filter-row" style="margin-bottom:14px">
           <div class="search-box" style="flex:2;min-width:160px">
@@ -1405,6 +1411,7 @@ var _nfCnt        = 0;
 var _facturaActual = null;
 var _chipEstado   = '';
 var _chipTipoFact = '';
+  var _chipMetodo='';
 var _rentPeriodo  = 'mes';
 
 
@@ -1798,6 +1805,18 @@ function setChipTipoFact(btn,tipo){
   btn.classList.add('active');
   filtrarFacturas();
 }
+function setChipMetodo(btn,m){
+  _chipMetodo=m;
+  document.querySelectorAll('#chips-metodo .chip').forEach(function(c){c.classList.remove('active');});
+  btn.classList.add('active');
+  filtrarFacturas();
+}
+function okMetodo(f){
+  if(!_chipMetodo) return true;
+  if(f.estado!=='pagada') return false;
+  if(_chipMetodo==='sin') return !f.metodoPago;
+  return f.metodoPago===_chipMetodo;
+}
 
 function tipoFactBadge(tipo){
   return tipo==='electronica'
@@ -1817,7 +1836,7 @@ function filtrarFacturas(){
     var okMes=!mes||p[1]===mes;
     var okAnio=!anio||p[2]===anio;
     var okQ=!q||(f.clienteNombre||'').toLowerCase().includes(q)||(f.clienteNitcc||'').toLowerCase().includes(q)||(f.id||'').toLowerCase().includes(q)||(f.numero||'').includes(q);
-    return okEstado&&okTipoFact&&okMes&&okAnio&&okQ;
+    return okEstado&&okTipoFact&&okMetodo(f)&&okMes&&okAnio&&okQ;
   });
 
   var tbody=document.getElementById('fac-tbody');
@@ -3004,7 +3023,12 @@ async function cargarRentabilidad(){
   document.getElementById('rent-fac').textContent=fmt(r.totalFacturado);
   document.getElementById('rent-fac-sub').textContent=r.totalFacturas+' '+(r.totalFacturas!==1?t('invoice_plural'):t('invoice_singular'))+', '+r.pagadas+' '+t('status_paid').toLowerCase();
   document.getElementById('rent-gas').textContent=fmt(r.totalGastos);
-  document.getElementById('rent-margen').textContent=calc.margen.toFixed(1)+'%';
+  var pagR=r.facturas.filter(function(f){return f.estado==='pagada';});
+var pendR=r.facturas.filter(function(f){return f.estado==='emitida';});
+document.getElementById('rent-pag').textContent=fmt(calc.cobrado);
+document.getElementById('rent-pag-sub').textContent=pagR.length+' factura'+(pagR.length!==1?'s':'');
+document.getElementById('rent-pend').textContent=fmt(pendR.reduce(function(s,f){return s+f.total;},0));
+document.getElementById('rent-pend-sub').textContent=pendR.length+' factura'+(pendR.length!==1?'s':'');
   renderMetodosPago('rent-metodos', d, h, false);
 
   renderGrafico('graf-rent-svc',r.porServicio.map(function(s){return{label:s.nombre,val:s.total};}),r.porServicio.map(function(s){return s.total;}),'var(--blue)');
@@ -3296,7 +3320,7 @@ function exportarFacturasMasivo(){
       &&(!mes||p[1]===mes)
       &&(!anio||p[2]===anio)
       &&(!q||(f.clienteNombre||'').toLowerCase().includes(q)||(f.clienteNitcc||'').toLowerCase().includes(q)||(f.id||'').toLowerCase().includes(q)||(f.numero||'').includes(q));
-    return ok && f.estado!=='anulada' && f.tipoFacturacion!=='electronica';
+    return ok && f.estado!=='anulada' && f.tipoFacturacion!=='electronica' &&okMetodo(f);
   });
 
   if(!lista.length){ toast(t('no_active_invoices_export'),'warn'); return; }
