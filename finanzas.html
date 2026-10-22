@@ -2,7 +2,6 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -29,168 +28,111 @@
   var supabase = window._skriptoClient;
 </script>
 <script>
-  
 /* ══════════════════════════════════════════════════════
    SISTEMA DE IDIOMA (ES / EN)
 ══════════════════════════════════════════════════════ */
 var I18N = {
-  es: {
-    app_title:'Facturación', app_sub:'Sistema de facturación de servicios',
-    hero_badge_login:'3 días gratis, sin tarjeta', tab_login:'Entrar',
-    welcome_back:'Bienvenido de vuelta', welcome_back_sub:'Entra a tu cuenta para continuar',
-    create_your_account:'Crea tu cuenta', create_your_account_sub:'Empieza gratis en menos de un minuto',
-    email:'Correo electrónico', password:'Contraseña', forgot:'¿Olvidaste tu contraseña?', enter:'Entrar',
-    business_name:'Nombre del negocio', with_this_email:'Con este correo inicias sesión',
-    username:'Usuario (nombre visible)', min_chars:'Mínimo 6 caracteres', create_account:'Crear cuenta',
-    recover_title:'Recuperar contraseña', recover_sub:'Te enviaremos un enlace a tu correo',
-    your_email:'Tu correo electrónico', send_instructions:'Enviar instrucciones', back_to_login:'Volver al inicio de sesión',
-    new_pwd_title:'Nueva contraseña', new_pwd:'Nueva contraseña', confirm_pwd:'Confirmar contraseña',
-    repeat_pwd:'Repite la contraseña', save_new_pwd:'Guardar contraseña',
-    del_account:'Eliminar cuenta', logout:'Salir', cancel:'Cancelar', save_changes:'Guardar cambios',
-    confirm_action:'¿Confirmar acción?', delete:'Sí, eliminar', confirm:'Confirmar', notes:'Notas',
-    nav_system:'Sistema', nav_control:'Control', nav_invoices:'Facturas', nav_new_invoice:'Nueva Factura',
-    nav_catalogs:'Catálogos', nav_clients:'Clientes', nav_services:'Servicios',
-    nav_finances:'Finanzas', nav_expenses:'Gastos', nav_profitability:'Rentabilidad',
-    nav_settings:'Ajustes', nav_my_company:'Datos generales', nav_pdf_report:'Reporte PDF', nav_renew_fixed:'Renovar facturas fijas',
-    all_months:'Todos los meses', all:'Todos',
-    mo1:'Enero',mo2:'Febrero',mo3:'Marzo',mo4:'Abril',mo5:'Mayo',mo6:'Junio',mo7:'Julio',mo8:'Agosto',mo9:'Septiembre',mo10:'Octubre',mo11:'Noviembre',mo12:'Diciembre',
-    del_account_title:'Eliminar mi cuenta', del_account_p1:'Esta acción cerrará tu sesión y eliminará tu acceso.',
-    del_account_p2:'Tus datos se conservan por 30 días.', del_account_confirm:'Confirma con tu contraseña actual:',
-    current_pwd:'Tu contraseña actual',
-    loading_data:'Cargando datos…', kpi_billed_month:'Facturado (mes)', kpi_expenses_month:'Gastos (mes)',
-    kpi_profit_month:'Utilidad (mes)', kpi_pending:'Pendientes de cobro', invoices_word:'facturas',
-    top_clients_month:'Top clientes (mes)', top_services_month:'Servicios más facturados (mes)', no_data_month:'Sin datos este mes',
-    last_invoices:'Últimas facturas', view_all:'Ver todas →', th_client:'Cliente', th_date:'Fecha', th_total:'Total', th_status:'Estado',
-    invoices_title:'Facturas', invoices_sub:'Historial completo de facturas emitidas', new_invoice:'Nueva Factura',
-    chip_all:'Todas', chip_pending:'Pendientes', chip_paid:'Pagadas', chip_voided:'Anuladas',
-    search_placeholder:'Buscar cliente, NIT, número…', th_nit:'NIT/CC', th_subtotal:'Subtotal', th_iva:'IVA',
-    massive_pdf:'PDF masivo', no_invoices:'No hay facturas registradas', create_first_invoice:'Crea tu primera factura desde "Nueva Factura"',
-    label_invoices:'Facturas', label_total:'Total', label_paid:'Pagado', label_pending:'Pendiente',
-    nf_title:'Nueva Factura', nf_sub:'Individual por cliente o masiva para todos a la vez', billing_mode:'Modo de facturación',
-    individual_client:'Cliente individual', bill_all_clients:'Facturar a TODOS los clientes',
-    bill_all_warning:'Se generará una factura por cada cliente registrado usando sus servicios contratados. Los clientes sin servicios asignados serán omitidos.',
-    invoice_data:'Datos de la factura', issue_date:'Fecha de emisión', due_date_opt:'Fecha de vencimiento (opcional)',
-    client_word:'Cliente', search_by_name_nit:'Buscar por nombre o NIT/CC…', change_word:'Cambiar',
-    create_new_client_here:'Crear cliente nuevo desde aquí', services_items:'Servicios / Ítems',
-    th_service:'Servicio', th_qty_short:'Cant.', th_unit_price:'Precio unit.', th_subtotal2:'Subtotal',
-    add_item:'Agregar ítem', totals_word:'Totales', notes_opt:'Notas / Observaciones', ph_payment_30:'Ej: Pago a 30 días…',
-    subtotal_word:'Subtotal', total_word2:'TOTAL', save_invoice:'Guardar Factura', clear_word:'Limpiar',
-    preview_clients_bill:'Vista previa — clientes a facturar', loading_clients:'Cargando clientes…',
-    general_notes_opt:'Notas generales (opcional)', ph_apply_all_invoices:'Se aplicará a todas las facturas…',
-    generate_invoices_all:'Generar facturas para todos los clientes',
-    clients_title:'Clientes', clients_sub:'Base de datos de tus clientes', new_client:'Nuevo cliente',
-    search_name_nit:'Buscar por nombre o NIT/CC…', th_name:'Nombre', th_phone:'Teléfono', th_email:'Correo',
-    th_city:'Ciudad', th_iva:'IVA', th_type:'Tipo', no_clients:'No hay clientes registrados', add_first_client:'Agrega tu primer cliente con el botón de arriba',
-    svc_catalog_title:'Catálogo de Servicios', svc_catalog_sub:'Define los servicios que ofreces y su precio estándar',
-    new_service:'Nuevo servicio', th_service2:'Servicio', th_desc:'Descripción', th_category:'Categoría', th_unit:'Unidad', th_price2:'Precio',
-    no_services:'No hay servicios en el catálogo', add_services_hint:'Agrega los servicios que ofreces para usarlos rápidamente al facturar',
-    expenses_title:'Gastos', expenses_sub:'Registra los costos operativos para calcular rentabilidad', new_expense:'Registrar gasto',
-    th_amount:'Monto', no_expenses:'Sin gastos registrados',
-    profitability_title:'Rentabilidad', profitability_sub:'Ingresos vs gastos — análisis financiero del negocio', export_pdf:'Exportar PDF',
-    analysis_period:'Período de análisis', from_year_month:'Desde (año/mes)', to_year_month:'Hasta (año/mes)',
-    period_this_month:'Este mes', period_quarter:'Trimestre', period_this_year:'Este año', period_custom2:'Personalizado', update_word:'Actualizar',
-    total_billed:'Total Facturado', total_expenses:'Total Gastos', net_profit2:'Utilidad Neta', margin_word:'Margen', over_income:'sobre ingresos',
-    income_by_service:'Ingresos por servicio', expenses_by_category:'Gastos por categoría', monthly_flow:'Flujo mensual',
-    no_data_period:'Sin datos en el período', top_clients:'Top clientes',
-    my_company_sub:'Estos datos aparecen en el encabezado de tus facturas en PDF', logo_word:'Logo', no_logo:'Sin logo',
-    logo_hint:'PNG o JPG, idealmente cuadrado. Se guarda directamente en tu cuenta.', remove_logo:'Quitar logo',
-    company_data:'Datos de la empresa', company_name:'Nombre de la empresa', nit_word:'NIT', phone_word:'Teléfono',
-    city_word:'Ciudad', email_word:'Correo electrónico', default_notes:'Observaciones por defecto',
-    default_notes_hint:'Este texto aparece automáticamente en el PDF, en cada factura', save_company_data:'Guardar datos de mi empresa',
-    new_client_title:'Nuevo cliente', name_req:'Nombre *', nit_cc:'NIT / CC', phone_word2:'Teléfono', email_word2:'Correo electrónico',
-    address_word:'Dirección', city_word2:'Ciudad', notes2:'Notas', ph_client_notes:'Observaciones del cliente…',
-    billing_config:'Configuración de facturación', default_iva:'IVA por defecto', no_iva:'Sin IVA (0%)',
-    preselect_hint:'Se pre-selecciona al facturar a este cliente', invoice_type:'Tipo de factura',
-    fixed_type:'📌 Fija — se repite cada mes', temp_type:'⏱ Temporal — solo cuando se crea', fixed_persist_hint:'Las fijas persisten en la base del mes siguiente',
-    contracted_services:'Servicios contratados', loading_services:'Cargando servicios…', mark_services_hint:'Marca los servicios que este cliente tiene activos o contratados',
-    save_client:'Guardar cliente', new_service_title:'Nuevo servicio', service_name_req:'Nombre del servicio *',
-    ph_service_examples:'Ej: Diseño web, Consultoría, Asesoría…', description_word:'Descripción', ph_service_desc:'Descripción opcional del servicio…',
-    unit_price_req:'Precio unitario *', unit_word2:'Unidad', unit_opt:'Unidad', hour_opt:'Hora', month_opt:'Mes', project_opt:'Proyecto',
-    day_opt:'Día', session_opt:'Sesión', category_word:'Categoría', save_service:'Guardar servicio',
-    new_expense_title:'Registrar gasto', date_req:'Fecha *', category_word2:'Categoría', ph_rent_payroll:'Arriendo, Nómina…',
-    description_req:'Descripción *', ph_rent_example:'Ej: Arriendo oficina enero 2025…', amount_req:'Monto *',
-    ph_additional_detail:'Detalle adicional…', save_expense:'Guardar gasto', irreversible_action:'Esta acción no se puede deshacer.',
-    invoice_word:'Factura', pdf_word:'PDF', close_word:'Cerrar', mark_paid:'Marcar como pagada',
-    status_pending:'Pendiente', status_paid:'Pagada', status_voided:'Anulada',
-    invoice_singular:'factura', invoice_plural:'facturas', view_pdf_tt:'Ver/PDF', mark_paid_tt:'Marcar pagada',
-    void_tt:'Anular', void_invoice_title:'Anular factura', confirm_void_msg:'¿Seguro que deseas anular la factura {id}? Esta acción no se puede deshacer.',
-    individual_pdf_tt:'PDF individual',
-    invoice_not_found:'Factura no encontrada', client_word2:'Cliente', invoice_word2:'Factura', number_word:'N°',
-    issued_word:'Emitida:', due_word:'Vence:', notes_colon:'Notas:',
-    client_singular:'cliente', client_plural:'clientes', no_iva_short:'Sin IVA', fixed_short:'⏱ Temporal', fixed_short2:'📌 Fija',
-    delete_client_title:'Eliminar cliente', confirm_del_client_msg:'¿Eliminar a {nombre}? Solo si no tiene facturas activas.',
-    service_singular:'servicio', service_plural:'servicios', general_word:'General', unit_default:'und',
-    delete_service_title:'Eliminar servicio', confirm_del_service_msg:'¿Eliminar {nombre} del catálogo?',
-    expense_singular:'gasto', expense_plural:'gastos', total_colon:'Total:', other_word:'Otros',
-    delete_expense_title:'Eliminar gasto', confirm_del_expense_msg:'¿Eliminar este gasto de {monto}?',
-    mo_ene:'Ene',mo_feb:'Feb',mo_mar:'Mar',mo_abr:'Abr',mo_may:'May',mo_jun:'Jun',mo_jul:'Jul',mo_ago:'Ago',mo_sep:'Sep',mo_oct:'Oct',mo_nov:'Nov',mo_dic:'Dic',
-    billed_colon:'Facturado:', expenses_colon:'Gastos:',
-    no_results:'Sin resultados', assigned_service_singular:'servicio', assigned_service_plural:'servicios', no_assigned_services:'Sin servicios asignados',
-    loading_word:'Cargando…', no_client_services:'Ningún cliente tiene servicios asignados', edit_clients_first:'Edita los clientes y marca sus servicios contratados primero',
-    will_generate:'Se generarán', client_singular_omitted:'cliente', client_plural_omitted:'clientes', omitted_word:'omitido', omitted_word_pl:'omitidos', no_services_paren:'(sin servicios)',
-    omitted_no_services:'Omitidos (sin servicios):',
-    no_services_catalog:'No hay servicios en el catálogo aún.', add_from_services:'Agrégalos desde', first_word:'primero.',
-    downloading_word:'Descargando', msg_error_prefix:'Error: ', invoice_not_found2:'Factura no encontrada',
-    generating_pdf:'Generando PDF…', image_too_heavy:'La imagen es muy pesada (máx. 1MB)', no_client_has_services:'Ningún cliente tiene servicios asignados.',
-    no_invoice_selected:'No hay factura seleccionada', no_invoices_export:'No hay facturas para exportar',
-    no_data_period2:'Sin datos para el período', no_active_invoices_export:'Sin facturas activas que exportar',
-    pdf_downloaded:'PDF descargado', profitability_report_downloaded:'Reporte de rentabilidad descargado',
-    del_finanzas_access:'Acceso a Facturación eliminado. Tus datos se conservan.', msg_complete_fields:'Completa todos los campos.',
-    msg_wrong_credentials:'Correo o contraseña incorrectos.', msg_unexpected_error:'Error inesperado: ',
-    msg_enter_email_pwd:'Ingresa correo y contraseña.', msg_enter_email2:'Ingresa tu correo.',
-    msg_min_pwd:'La contraseña debe tener al menos 6 caracteres.', msg_pwd_mismatch:'Las contraseñas no coinciden.',
-    msg_min_6chars:'Mínimo 6 caracteres.', msg_no_finanzas_access:'Sin acceso a Facturación. Contacta al administrador.',
-    msg_pwd_updated:'Contraseña actualizada. Ya puedes iniciar sesión.',
-    msg_account_created_fin:'¡Cuenta creada! Revisa tu correo para confirmar y entrar directo con tus 3 días de prueba gratis.',
-    msg_recovery_sent:'Si ese correo está registrado, recibirás las instrucciones en unos minutos.',
-    msg_name_required:'El nombre es obligatorio.', msg_amount_gt0:'El monto debe ser mayor a 0.',
-    msg_desc_required:'La descripción es obligatoria.', msg_price_gt0:'El precio debe ser mayor a 0.',
-    msg_add_item_first:'Agrega al menos un ítem con nombre, cantidad y precio.', msg_select_client_first:'Selecciona un cliente primero.',
-    errors_word:'error(es). Ver consola.', invoice_generated:'factura', invoices_generated:'facturas', generated_ok:'generada', generated_ok_pl:'generadas', correctly_word:'correctamente',
-    downloading_x_of_y:'Descargando {a} de {b}…',
-    modal_edit_client:'Editar cliente', modal_edit_service:'Editar servicio', write_manually:'Escribir manualmente…',
-    current_month_label:'Mes actual', config_saved:'Configuración guardada.',
-    renew_fixed_title:'Renovar facturas fijas', renew_fixed_msg:'Se generará una factura del mes actual para cada cliente con tipo "Fija". Los que ya tengan factura este mes serán omitidos. ¿Continuar?',
-    service_name_ph:'Nombre del servicio',
-    pdf_invoice_of_sale:'Factura de Venta', pdf_invoice_datetime:'Fecha y hora Factura', pdf_generation:'Generación',
-    pdf_expedition:'Expedición', pdf_due:'Vencimiento', pdf_sirs:'Señores', pdf_phone_label:'Teléfono',
-    pdf_address_label:'Dirección', pdf_city_label:'Ciudad', pdf_item:'Ítem', pdf_description:'Descripción',
-    pdf_quantity:'Cantidad', pdf_total_value:'Vr. Total', pdf_total_items:'Total items:', pdf_gross_total:'Total Bruto',
-    pdf_total_pay:'Total a Pagar', pdf_observations:'Observaciones:', pdf_generated_with:'Generado con Skripto Apps',
-    invalid_logo:'Logo no válido para PDF',
-    pdf_rep_footer_brand:'Skripto Apps · ', pdf_rep_invoicing_system:'Sistema de Facturación', pdf_rep_page:'Página', pdf_rep_of:'de',
-    pdf_rep_title:'REPORTE DE RENTABILIDAD', pdf_rep_all_word:'Todo', pdf_rep_to_word:'a',
-    pdf_rep_total_billed:'Total Facturado', pdf_rep_invoices_suffix:'facturas', pdf_rep_total_expenses:'Total Gastos',
-    pdf_rep_net_profit:'Utilidad Neta', pdf_rep_positive:'Positiva', pdf_rep_negative:'Negativa',
-    pdf_rep_margin:'Margen', pdf_rep_over_income:'sobre ingresos',
-    pdf_rep_income_by_service:'Ingresos por Servicio', pdf_rep_th_service:'Servicio', pdf_rep_th_qty:'Cant.', pdf_rep_th_total:'Total', pdf_rep_total_word:'TOTAL',
-    pdf_rep_top_clients:'Top Clientes', pdf_rep_th_client:'Cliente', pdf_rep_th_invoices:'Facturas',
-    pdf_rep_expenses_by_cat:'Gastos por Categoría', pdf_rep_th_category:'Categoría',
-    pdf_rep_monthly_flow:'Flujo Mensual', pdf_rep_th_month:'Mes', pdf_rep_th_billed:'Facturado', pdf_rep_th_expenses:'Gastos', pdf_rep_th_profit:'Utilidad',
-    pdf_rep_invoice_detail:'Detalle de Facturas', pdf_rep_th_id:'#', pdf_rep_th_date:'Fecha', pdf_rep_paid_word:'Pagada', pdf_rep_pending_word:'Pendiente', pdf_rep_th_status:'Estado',
-    pdf_per_invoice_title:'PDF por factura', pdf_per_invoice_msg:'Se descargarán {n} PDF{s}, uno por cada factura. El navegador los descargará en secuencia. ¿Continuar?'
-  }
+app_sub:'Sistema de facturación de servicios',hero_badge_login:'3 días gratis, sin tarjeta',tab_login:'Entrar',welcome_back:'Bienvenido de vuelta',
+welcome_back_sub:'Entra a tu cuenta para continuar',create_your_account:'Crea tu cuenta',create_your_account_sub:'Empieza gratis en menos de un minuto',
+email:'Correo electrónico',password:'Contraseña',forgot:'¿Olvidaste tu contraseña?',enter:'Entrar',business_name:'Nombre del negocio',
+with_this_email:'Con este correo inicias sesión',username:'Usuario (nombre visible)',create_account:'Crear cuenta',recover_title:'Recuperar contraseña',
+recover_sub:'Te enviaremos un enlace a tu correo',your_email:'Tu correo electrónico',send_instructions:'Enviar instrucciones',
+back_to_login:'Volver al inicio de sesión',new_pwd_title:'Nueva contraseña',new_pwd:'Nueva contraseña',confirm_pwd:'Confirmar contraseña',
+save_new_pwd:'Guardar contraseña',del_account:'Eliminar cuenta',logout:'Salir',cancel:'Cancelar',confirm_action:'¿Confirmar acción?',delete:'Sí, eliminar',
+confirm:'Confirmar',notes:'Notas',nav_system:'Sistema',nav_control:'Control',nav_invoices:'Facturas',nav_new_invoice:'Nueva Factura',nav_catalogs:'Catálogos',
+nav_clients:'Clientes',nav_services:'Servicios',nav_finances:'Finanzas',nav_expenses:'Gastos',nav_profitability:'Rentabilidad',nav_settings:'Ajustes',
+nav_my_company:'Datos generales',nav_pdf_report:'Reporte PDF',nav_renew_fixed:'Renovar facturas fijas',all_months:'Todos los meses',all:'Todos',mo1:'Enero',
+mo2:'Febrero',mo3:'Marzo',mo4:'Abril',mo5:'Mayo',mo6:'Junio',mo7:'Julio',mo8:'Agosto',mo9:'Septiembre',mo10:'Octubre',mo11:'Noviembre',mo12:'Diciembre',
+del_account_title:'Eliminar mi cuenta',del_account_p1:'Esta acción cerrará tu sesión y eliminará tu acceso.',
+del_account_p2:'Tus datos se conservan por 30 días.',del_account_confirm:'Confirma con tu contraseña actual:',current_pwd:'Tu contraseña actual',
+loading_data:'Cargando datos…',top_clients_month:'Top clientes (mes)',top_services_month:'Servicios más facturados (mes)',no_data_month:'Sin datos este mes',
+th_client:'Cliente',th_date:'Fecha',th_total:'Total',th_status:'Estado',invoices_title:'Facturas',invoices_sub:'Historial completo de facturas emitidas',
+new_invoice:'Nueva Factura',chip_all:'Todas',chip_pending:'Pendientes',chip_paid:'Pagadas',chip_voided:'Anuladas',
+search_placeholder:'Buscar cliente, NIT, número…',th_nit:'NIT/CC',th_subtotal:'Subtotal',th_iva:'IVA',massive_pdf:'PDF masivo',
+no_invoices:'No hay facturas registradas',create_first_invoice:'Crea tu primera factura desde "Nueva Factura"',label_invoices:'Facturas',label_total:'Total',
+label_paid:'Pagado',label_pending:'Pendiente',nf_title:'Nueva Factura',nf_sub:'Individual por cliente o masiva para todos a la vez',
+billing_mode:'Modo de facturación',individual_client:'Cliente individual',bill_all_clients:'Facturar a TODOS los clientes',
+bill_all_warning:'Se generará una factura por cada cliente registrado usando sus servicios contratados. Los clientes sin servicios asignados serán omitidos.',
+invoice_data:'Datos de la factura',issue_date:'Fecha de emisión',due_date_opt:'Fecha de vencimiento (opcional)',client_word:'Cliente',
+search_by_name_nit:'Buscar por nombre o NIT/CC…',change_word:'Cambiar',create_new_client_here:'Crear cliente nuevo desde aquí',
+services_items:'Servicios / Ítems',th_service:'Servicio',th_qty_short:'Cant.',th_unit_price:'Precio unit.',th_subtotal2:'Subtotal',add_item:'Agregar ítem',
+totals_word:'Totales',notes_opt:'Notas / Observaciones',ph_payment_30:'Ej: Pago a 30 días…',subtotal_word:'Subtotal',total_word2:'TOTAL',
+save_invoice:'Guardar Factura',clear_word:'Limpiar',preview_clients_bill:'Vista previa — clientes a facturar',loading_clients:'Cargando clientes…',
+general_notes_opt:'Notas generales (opcional)',ph_apply_all_invoices:'Se aplicará a todas las facturas…',
+generate_invoices_all:'Generar facturas para todos los clientes',clients_title:'Clientes',clients_sub:'Base de datos de tus clientes',
+new_client:'Nuevo cliente',search_name_nit:'Buscar por nombre o NIT/CC…',th_name:'Nombre',th_phone:'Teléfono',th_email:'Correo',th_city:'Ciudad',th_iva:'IVA',
+th_type:'Tipo',no_clients:'No hay clientes registrados',add_first_client:'Agrega tu primer cliente con el botón de arriba',
+svc_catalog_title:'Catálogo de Servicios',svc_catalog_sub:'Define los servicios que ofreces y su precio estándar',new_service:'Nuevo servicio',
+th_service2:'Servicio',th_desc:'Descripción',th_category:'Categoría',th_unit:'Unidad',th_price2:'Precio',no_services:'No hay servicios en el catálogo',
+add_services_hint:'Agrega los servicios que ofreces para usarlos rápidamente al facturar',expenses_title:'Gastos',
+expenses_sub:'Registra los costos operativos para calcular rentabilidad',new_expense:'Registrar gasto',th_amount:'Monto',no_expenses:'Sin gastos registrados',
+profitability_title:'Rentabilidad',profitability_sub:'Ingresos vs gastos — análisis financiero del negocio',export_pdf:'Exportar PDF',
+analysis_period:'Período de análisis',from_year_month:'Desde (año/mes)',to_year_month:'Hasta (año/mes)',period_this_month:'Este mes',period_quarter:'Trimestre',
+period_this_year:'Este año',period_custom2:'Personalizado',update_word:'Actualizar',income_by_service:'Ingresos por servicio',
+expenses_by_category:'Gastos por categoría',monthly_flow:'Flujo mensual',no_data_period:'Sin datos en el período',top_clients:'Top clientes',
+my_company_sub:'Estos datos aparecen en el encabezado de tus facturas en PDF',logo_word:'Logo',no_logo:'Sin logo',
+logo_hint:'PNG o JPG, idealmente cuadrado. Se guarda directamente en tu cuenta.',remove_logo:'Quitar logo',company_data:'Datos de la empresa',
+company_name:'Nombre de la empresa',nit_word:'NIT',phone_word:'Teléfono',city_word:'Ciudad',email_word:'Correo electrónico',
+default_notes:'Observaciones por defecto',default_notes_hint:'Este texto aparece automáticamente en el PDF, en cada factura',
+save_company_data:'Guardar datos de mi empresa',new_client_title:'Nuevo cliente',name_req:'Nombre *',nit_cc:'NIT / CC',phone_word2:'Teléfono',
+email_word2:'Correo electrónico',address_word:'Dirección',city_word2:'Ciudad',notes2:'Notas',ph_client_notes:'Observaciones del cliente…',
+billing_config:'Configuración de facturación',default_iva:'IVA por defecto',no_iva:'Sin IVA (0%)',preselect_hint:'Se pre-selecciona al facturar a este cliente',
+invoice_type:'Tipo de factura',fixed_type:'📌 Fija — se repite cada mes',temp_type:'⏱ Temporal — solo cuando se crea',
+fixed_persist_hint:'Las fijas persisten en la base del mes siguiente',contracted_services:'Servicios contratados',loading_services:'Cargando servicios…',
+mark_services_hint:'Marca los servicios que este cliente tiene activos o contratados',save_client:'Guardar cliente',new_service_title:'Nuevo servicio',
+service_name_req:'Nombre del servicio *',ph_service_examples:'Ej: Diseño web, Consultoría, Asesoría…',description_word:'Descripción',
+ph_service_desc:'Descripción opcional del servicio…',unit_price_req:'Precio unitario *',unit_word2:'Unidad',category_word:'Categoría',
+save_service:'Guardar servicio',new_expense_title:'Registrar gasto',date_req:'Fecha *',category_word2:'Categoría',ph_rent_payroll:'Arriendo, Nómina…',
+description_req:'Descripción *',ph_rent_example:'Ej: Arriendo oficina enero 2025…',amount_req:'Monto *',ph_additional_detail:'Detalle adicional…',
+save_expense:'Guardar gasto',irreversible_action:'Esta acción no se puede deshacer.',invoice_word:'Factura',pdf_word:'PDF',close_word:'Cerrar',
+mark_paid:'Marcar como pagada',status_pending:'Pendiente',status_paid:'Pagada',status_voided:'Anulada',invoice_singular:'factura',invoice_plural:'facturas',
+view_pdf_tt:'Ver/PDF',mark_paid_tt:'Marcar pagada',void_tt:'Anular',void_invoice_title:'Anular factura',
+confirm_void_msg:'¿Seguro que deseas anular la factura {id}? Esta acción no se puede deshacer.',individual_pdf_tt:'PDF individual',
+invoice_not_found:'Factura no encontrada',client_word2:'Cliente',invoice_word2:'Factura',number_word:'N°',issued_word:'Emitida:',due_word:'Vence:',
+notes_colon:'Notas:',client_singular:'cliente',client_plural:'clientes',no_iva_short:'Sin IVA',fixed_short:'⏱ Temporal',fixed_short2:'📌 Fija',
+delete_client_title:'Eliminar cliente',confirm_del_client_msg:'¿Eliminar a {nombre}? Solo si no tiene facturas activas.',service_singular:'servicio',
+service_plural:'servicios',general_word:'General',delete_service_title:'Eliminar servicio',confirm_del_service_msg:'¿Eliminar {nombre} del catálogo?',
+expense_singular:'gasto',expense_plural:'gastos',total_colon:'Total:',other_word:'Otros',delete_expense_title:'Eliminar gasto',
+confirm_del_expense_msg:'¿Eliminar este gasto de {monto}?',mo_ene:'Ene',mo_feb:'Feb',mo_mar:'Mar',mo_abr:'Abr',mo_may:'May',mo_jun:'Jun',mo_jul:'Jul',
+mo_ago:'Ago',mo_sep:'Sep',mo_oct:'Oct',mo_nov:'Nov',mo_dic:'Dic',billed_colon:'Facturado:',expenses_colon:'Gastos:',no_results:'Sin resultados',
+assigned_service_singular:'servicio',assigned_service_plural:'servicios',no_assigned_services:'Sin servicios asignados',loading_word:'Cargando…',
+no_client_services:'Ningún cliente tiene servicios asignados',edit_clients_first:'Edita los clientes y marca sus servicios contratados primero',
+will_generate:'Se generarán',client_singular_omitted:'cliente',client_plural_omitted:'clientes',omitted_word:'omitido',omitted_word_pl:'omitidos',
+no_services_catalog:'No hay servicios en el catálogo aún.',add_from_services:'Agrégalos desde',first_word:'primero.',msg_error_prefix:'Error: ',
+invoice_not_found2:'Factura no encontrada',generating_pdf:'Generando PDF…',image_too_heavy:'La imagen es muy pesada (máx. 1MB)',
+no_client_has_services:'Ningún cliente tiene servicios asignados.',no_invoice_selected:'No hay factura seleccionada',
+no_invoices_export:'No hay facturas para exportar',no_data_period2:'Sin datos para el período',no_active_invoices_export:'Sin facturas activas que exportar',
+pdf_downloaded:'PDF descargado',profitability_report_downloaded:'Reporte de rentabilidad descargado',
+del_finanzas_access:'Acceso a Facturación eliminado. Tus datos se conservan.',msg_complete_fields:'Completa todos los campos.',
+msg_wrong_credentials:'Correo o contraseña incorrectos.',msg_unexpected_error:'Error inesperado: ',msg_enter_email_pwd:'Ingresa correo y contraseña.',
+msg_enter_email2:'Ingresa tu correo.',msg_min_pwd:'La contraseña debe tener al menos 6 caracteres.',msg_pwd_mismatch:'Las contraseñas no coinciden.',
+msg_min_6chars:'Mínimo 6 caracteres.',msg_no_finanzas_access:'Sin acceso a Facturación. Contacta al administrador.',
+msg_pwd_updated:'Contraseña actualizada. Ya puedes iniciar sesión.',
+msg_account_created_fin:'¡Cuenta creada! Revisa tu correo para confirmar y entrar directo con tus 3 días de prueba gratis.',
+msg_recovery_sent:'Si ese correo está registrado, recibirás las instrucciones en unos minutos.',msg_name_required:'El nombre es obligatorio.',
+msg_amount_gt0:'El monto debe ser mayor a 0.',msg_desc_required:'La descripción es obligatoria.',msg_price_gt0:'El precio debe ser mayor a 0.',
+msg_add_item_first:'Agrega al menos un ítem con nombre, cantidad y precio.',msg_select_client_first:'Selecciona un cliente primero.',
+errors_word:'error(es). Ver consola.',invoice_generated:'factura',invoices_generated:'facturas',generated_ok:'generada',generated_ok_pl:'generadas',
+correctly_word:'correctamente',modal_edit_client:'Editar cliente',modal_edit_service:'Editar servicio',current_month_label:'Mes actual',
+config_saved:'Configuración guardada.',renew_fixed_title:'Renovar facturas fijas',
+renew_fixed_msg:'Se generará una factura del mes actual para cada cliente con tipo "Fija". Los que ya tengan factura este mes serán omitidos. ¿Continuar?',
+service_name_ph:'Nombre del servicio',pdf_invoice_of_sale:'Factura de Venta',pdf_invoice_datetime:'Fecha y hora Factura',pdf_generation:'Generación',
+pdf_expedition:'Expedición',pdf_due:'Vencimiento',pdf_sirs:'Señores',pdf_phone_label:'Teléfono',pdf_address_label:'Dirección',pdf_city_label:'Ciudad',
+pdf_item:'Ítem',pdf_description:'Descripción',pdf_quantity:'Cantidad',pdf_total_value:'Vr. Total',pdf_total_items:'Total items:',pdf_gross_total:'Total Bruto',
+pdf_total_pay:'Total a Pagar',pdf_observations:'Observaciones:',pdf_generated_with:'Generado con Skripto Apps',invalid_logo:'Logo no válido para PDF',
+pdf_rep_footer_brand:'Skripto Apps · ',pdf_rep_invoicing_system:'Sistema de Facturación',pdf_rep_page:'Página',pdf_rep_of:'de',
+pdf_rep_title:'REPORTE DE RENTABILIDAD',pdf_rep_all_word:'Todo',pdf_rep_to_word:'a',pdf_rep_total_billed:'Total Facturado',pdf_rep_invoices_suffix:'facturas',
+pdf_rep_total_expenses:'Total Gastos',pdf_rep_net_profit:'Utilidad Neta',pdf_rep_positive:'Positiva',pdf_rep_negative:'Negativa',pdf_rep_margin:'Margen',
+pdf_rep_over_income:'sobre ingresos',pdf_rep_income_by_service:'Ingresos por Servicio',pdf_rep_th_service:'Servicio',pdf_rep_th_qty:'Cant.',
+pdf_rep_th_total:'Total',pdf_rep_total_word:'TOTAL',pdf_rep_top_clients:'Top Clientes',pdf_rep_th_client:'Cliente',pdf_rep_th_invoices:'Facturas',
+pdf_rep_expenses_by_cat:'Gastos por Categoría',pdf_rep_th_category:'Categoría',pdf_rep_monthly_flow:'Flujo Mensual',pdf_rep_th_month:'Mes',
+pdf_rep_th_billed:'Facturado',pdf_rep_th_expenses:'Gastos',pdf_rep_th_profit:'Utilidad',pdf_rep_invoice_detail:'Detalle de Facturas',pdf_rep_th_id:'#',
+pdf_rep_th_date:'Fecha',pdf_rep_paid_word:'Pagada',pdf_rep_pending_word:'Pendiente',pdf_rep_th_status:'Estado'
 };
-var LANG = 'es'; // Idioma fijo en español — selector de idioma removido
-function t(k){ return (I18N[LANG] && I18N[LANG][k]) || (I18N.es[k]) || k; }
-function setLang(l){
-  LANG = l;
-  try{ localStorage.setItem('skripto_lang', l); }catch(e){}
-  aplicarIdioma();
-}
+function t(k){ return I18N[k] || k; }
 function aplicarIdioma(){
   document.querySelectorAll('[data-i18n]').forEach(function(el){ el.textContent = t(el.getAttribute('data-i18n')); });
   document.querySelectorAll('[data-i18n-ph]').forEach(function(el){ el.placeholder = t(el.getAttribute('data-i18n-ph')); });
-  document.querySelectorAll('.lang-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.lang===LANG); });
-  document.documentElement.lang = LANG;
-  var langTag = LANG==='en' ? 'en-US' : 'es-CO';
-  document.querySelectorAll('input[type="month"], input[type="date"]').forEach(function(el){ el.setAttribute('lang', langTag); });
-  if(typeof _pobMesSelect === 'function'){
-    ['rent-desde-mes','rent-hasta-mes'].forEach(function(id){
-      var sel=document.getElementById(id);
-      if(sel && sel.options.length) _pobMesSelect(sel);
-    });
-  }
 }
 </script>
 <style>
@@ -216,12 +158,8 @@ h1,h2,h3{font-family:var(--font-serif);font-weight:400;line-height:1.2}
 input,select,textarea{font-family:var(--font-sans);font-size:14px;border:1.5px solid var(--border);border-radius:var(--r);padding:10px 12px;background:var(--bg2);color:var(--ink);outline:none;width:100%;transition:border .15s,box-shadow .15s}
 input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(15,110,86,.1)}
 button{font-family:var(--font-sans);cursor:pointer;border:none;border-radius:var(--r)}
-
-/* ── Pantallas ── */
 .screen{display:none;min-height:100vh}
 .screen.visible{display:flex}
-
-/* ════════ LOGIN ════════ */
 #screen-login{align-items:center;justify-content:center;background:var(--bg);padding:16px}
 .login-wrap{display:flex;width:100%;max-width:860px;background:var(--bg2);border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(15,110,86,.14),0 4px 16px rgba(0,0,0,.06);min-height:600px}
 .login-brand-panel{flex:0 0 40%;background:var(--blue);position:relative;overflow:hidden;padding:40px 32px;display:flex;flex-direction:column;justify-content:space-between;color:#fff}
@@ -234,7 +172,6 @@ button{font-family:var(--font-sans);cursor:pointer;border:none;border-radius:var
 .login-brand-badge{position:relative;z-index:1;display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.15);border-radius:20px;padding:8px 14px;font-size:12px;font-weight:600;width:fit-content}
 .login-form-panel{flex:1;padding:40px 36px;display:flex;flex-direction:column;justify-content:center;position:relative}
 .login-card{width:100%;max-width:340px;margin:0 auto}
-.login-logo{display:none}
 .login-form-title{font-family:var(--font-serif);font-size:24px;color:var(--ink);margin-bottom:4px}
 .login-form-sub{font-size:13px;color:var(--ink3);margin-bottom:22px}
 .tab-auth{display:flex;gap:0;background:var(--bg3);border-radius:12px;padding:4px;margin-bottom:22px}
@@ -253,8 +190,6 @@ button{font-family:var(--font-sans);cursor:pointer;border:none;border-radius:var
   .login-brand-panel::after{display:none}
   .login-form-panel{padding:28px 24px}
 }
-.login-logo h1{font-size:28px;color:var(--ink);letter-spacing:-.5px}
-.login-logo span{font-size:12px;color:var(--ink3);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.1em}
 .form-g{margin-bottom:14px}
 .form-g label{display:block;font-size:11px;font-weight:600;color:var(--ink2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
 .form-g .hint{font-size:11px;color:var(--ink3);margin-top:3px}
@@ -266,12 +201,6 @@ button{font-family:var(--font-sans);cursor:pointer;border:none;border-radius:var
 .alert.err{background:var(--red2);color:var(--red);border-color:var(--red3)}
 .alert.warn{background:var(--amber2);color:var(--amber);border-color:#D97706}
 .link-btn{background:none;border:none;color:var(--ink3);font-size:12px;cursor:pointer;text-decoration:underline;padding:0;font-family:var(--font-sans)}
-.lang-switch{position:fixed;top:14px;right:16px;display:flex;gap:0;background:var(--bg3);border-radius:20px;padding:3px;z-index:250;box-shadow:var(--shadow)}
-.lang-switch .lang-btn{padding:6px 12px;background:none;border-radius:16px;font-size:11px;font-weight:600;color:var(--ink2);transition:all .15s}
-.lang-switch .lang-btn.active{background:var(--blue);color:#fff}
-.topbar .lang-switch{position:static;box-shadow:none;background:var(--bg3);margin-right:8px}
-
-/* ════════ APP LAYOUT ════════ */
 #screen-app{flex-direction:column}
 .topbar{height:var(--topbar-h);background:var(--bg2);border-bottom:1.5px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:10px;position:fixed;top:0;left:0;right:0;z-index:200}
 .user-menu{position:relative;margin-left:auto}
@@ -293,13 +222,7 @@ button{font-family:var(--font-sans);cursor:pointer;border:none;border-radius:var
 .user-menu-item.danger{color:var(--red)}
 .user-menu-item.danger:hover{background:var(--red2)}
 .user-menu-item-icon{width:16px;text-align:center;flex-shrink:0;font-size:13px}
-.topbar-brand{font-family:var(--font-serif);font-size:18px;color:var(--ink);letter-spacing:-.3px;margin-right:auto}
-.topbar-brand span{color:var(--blue)}
-.topbar-user{font-size:11px;color:var(--ink2);font-family:var(--font-mono);max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.btn-logout{padding:6px 12px;background:var(--bg3);color:var(--ink2);font-size:12px;border-radius:6px;border:1.5px solid var(--border);transition:all .15s}
-.btn-logout:hover{background:var(--red2);color:var(--red);border-color:var(--red3)}
 .btn-menu-toggle{display:none;padding:6px 10px;background:var(--bg3);color:var(--ink2);font-size:18px;border-radius:6px;border:1.5px solid var(--border);line-height:1}
-
 .app-body{display:flex;padding-top:var(--topbar-h);min-height:100vh}
 .sidebar{width:var(--sidebar-w);background:var(--bg2);border-right:1.5px solid var(--border);position:fixed;top:var(--topbar-h);bottom:0;left:0;display:flex;flex-direction:column;overflow-y:auto;z-index:100;transition:transform .25s}
 .sidebar-section{padding:18px 12px 10px}
@@ -314,8 +237,6 @@ button{font-family:var(--font-sans);cursor:pointer;border:none;border-radius:var
 .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:99}
 .sidebar-overlay.visible{display:block}
 .main-content{flex:1;margin-left:var(--sidebar-w);padding:24px;min-width:0}
-
-/* ════════ COMPONENTES ════════ */
 .card{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r2);padding:16px;margin-bottom:14px}
 .card-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--ink3);margin-bottom:14px}
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -323,8 +244,6 @@ button{font-family:var(--font-sans);cursor:pointer;border:none;border-radius:var
 .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 .grid-5{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
 .kpi{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r2);padding:14px 16px}
-.kpi-icon-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px}
-.kpi-icon-badge{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-size:17px}
 .dash-greeting{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--ink3);margin-bottom:4px}
 .dash-title{font-family:var(--font-serif);font-size:26px;color:var(--ink)}
 .activity-item{display:flex;align-items:center;justify-content:space-between;padding-bottom:10px;margin-bottom:10px;border-bottom:1px solid var(--bg3)}
@@ -339,8 +258,6 @@ button{font-family:var(--font-sans);cursor:pointer;border:none;border-radius:var
 .panel-header{margin-bottom:20px;padding-bottom:16px;border-bottom:1.5px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
 .panel-title{font-family:var(--font-serif);font-size:24px;color:var(--ink);margin-bottom:2px}
 .panel-sub{font-size:12px;color:var(--ink3)}
-
-/* Botones */
 .btn-primary{padding:12px 20px;background:var(--blue);color:#fff;font-size:14px;font-weight:600;border-radius:var(--r);transition:background .15s;-webkit-tap-highlight-color:transparent}
 .btn-primary:hover{background:var(--blue2)}
 .btn-primary:disabled{background:var(--ink3);cursor:not-allowed}
@@ -360,8 +277,6 @@ button{font-family:var(--font-sans);cursor:pointer;border:none;border-radius:var
 .icon-btn{padding:6px 10px;background:var(--bg3);border:1.5px solid var(--border);color:var(--ink2);font-size:13px;border-radius:6px;transition:all .15s;cursor:pointer}
 .icon-btn:hover{background:var(--blue3);color:var(--blue);border-color:var(--blue)}
 .icon-btn.danger:hover{background:var(--red2);color:var(--red);border-color:var(--red3)}
-
-/* Tabla */
 .table-wrap{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r2);overflow:hidden}
 .table-head{padding:12px 16px;border-bottom:1.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
 .table-head h3{font-size:13px;font-weight:600;color:var(--ink)}
@@ -378,15 +293,11 @@ tbody tr:hover{background:var(--bg)}
 .badge-pagada{background:var(--green3);color:var(--green4)}
 .badge-anulada{background:var(--bg3);color:var(--ink3)}
 .badge-blue{background:var(--blue3);color:var(--blue2)}
-
-/* Búsqueda */
 .search-box{position:relative}
 .search-box input{padding-left:36px}
 .search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:15px;color:var(--ink3);pointer-events:none}
 .filter-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .filter-row select,.filter-row input{width:auto;flex:1;min-width:80px}
-
-/* Resumen factura (línea de ítems) */
 .item-row{display:grid;grid-template-columns:2.5fr 1fr 1.2fr 1fr auto;gap:8px;align-items:center;background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--r);padding:10px 12px;margin-bottom:8px}
 .item-headers{display:grid;grid-template-columns:2.5fr 1fr 1.2fr 1fr auto;gap:8px;padding:0 12px;margin-bottom:4px}
 .item-headers span{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3)}
@@ -397,16 +308,12 @@ tbody tr:hover{background:var(--bg)}
 .total-label{color:var(--blue2)}
 .total-value{font-family:var(--font-mono);color:var(--blue2);font-weight:600}
 .total-value.big{font-family:var(--font-serif);font-size:24px;color:var(--blue)}
-
-/* Barra gráfico */
 .grafico-wrap{display:flex;flex-direction:column;gap:8px;margin-top:8px}
 .grafico-item{display:flex;align-items:center;gap:8px;font-size:11px}
 .grafico-label{width:110px;color:var(--ink2);text-align:right;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .grafico-bar-wrap{flex:1;height:14px;background:var(--bg3);border-radius:4px;overflow:hidden}
 .grafico-bar{height:100%;border-radius:4px;transition:width .5s}
 .grafico-val{width:90px;color:var(--ink);font-weight:500;flex-shrink:0;font-size:11px}
-
-/* Modal */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;display:none;align-items:flex-end;justify-content:center}
 .modal-overlay.visible{display:flex}
 .modal-overlay.center{align-items:center}
@@ -418,51 +325,33 @@ tbody tr:hover{background:var(--bg)}
 .btn-cancel{padding:11px 18px;background:var(--bg3);color:var(--ink2);font-size:13px;border-radius:var(--r);border:1.5px solid var(--border);flex:1}
 .btn-danger{padding:11px 18px;background:var(--red);color:#fff;font-size:13px;font-weight:600;border-radius:var(--r);flex:1}
 .btn-confirm{padding:11px 18px;background:var(--blue);color:#fff;font-size:13px;font-weight:600;border-radius:var(--r);flex:1}
-
-/* Empty state */
 .empty-state{text-align:center;padding:40px 20px;color:var(--ink3)}
 .empty-icon{font-size:36px;margin-bottom:10px}
-
-/* Toast */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:#fff;border-radius:var(--r2);padding:12px 20px;font-size:13px;font-weight:500;box-shadow:0 8px 32px rgba(0,0,0,.25);z-index:500;opacity:0;transition:all .3s;white-space:nowrap;display:flex;align-items:center;gap:10px}
 .toast.visible{opacity:1;transform:translateX(-50%) translateY(0)}
 .toast.ok{background:var(--green4)}
 .toast.err{background:var(--red)}
 .toast.warn{background:#9a5d00}
-
-/* Chips de estado para filtro */
 .chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
 .chip{padding:6px 12px;background:var(--bg3);border:1.5px solid var(--border);color:var(--ink2);font-size:12px;font-weight:500;border-radius:20px;cursor:pointer;transition:all .15s}
 .chip.active{background:var(--blue3);border-color:var(--blue);color:var(--blue2);font-weight:600}
-
-/* Resumen periodo */
 .resumen-bar{background:var(--bg3);border-radius:var(--r);padding:12px 16px;margin-bottom:14px}
-
-/* Sidebar footer */
 .sidebar-footer{margin-top:auto;padding:14px 12px;border-top:1px solid var(--bg3)}
 .btn-pdf-side{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;background:var(--green3);border:1.5px solid rgba(29,158,117,.3);border-radius:12px;font-size:13px;font-weight:600;color:var(--green4);transition:all .2s;-webkit-tap-highlight-color:transparent}
 .btn-pdf-side:hover{background:var(--green);color:#fff;border-color:var(--green)}
-
-/* Checkboxes de servicios en modal cliente */
 .svc-check-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;transition:background .15s;cursor:pointer;user-select:none}
 .svc-check-item:hover{background:var(--bg2)}
 .svc-check-item input[type=checkbox]{width:16px;height:16px;flex-shrink:0;accent-color:var(--blue);cursor:pointer}
 .svc-check-label{font-size:13px;color:var(--ink);flex:1}
 .svc-check-precio{font-size:11px;color:var(--ink3);font-family:var(--font-mono);white-space:nowrap}
 .svc-check-cat-head{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink3);padding:6px 10px 3px;margin-top:4px;display:block}
-
-/* ── KPIs de Rentabilidad (tarjetas con borde de color) ── */
 .rent-kpi{background:#fff;border-radius:14px;padding:14px 10px 12px;text-align:center;
   box-shadow:var(--shadow);border-left:4px solid var(--c);min-height:120px}
 .rent-kpi-ico{font-size:26px;line-height:1;margin-bottom:6px}
 .rent-kpi-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink2);margin-bottom:3px}
 .rent-kpi-val{font-family:var(--font-sans);font-size:22px;font-weight:700;color:var(--ink);line-height:1.2}
-.rent-kpi-sub{font-size:11px;color:var(--ink);margin-top:5px}
-.rent-kpi-sub2{font-size:11px;font-weight:700;margin-top:3px}
-.rent-kpi-sub{margin-top:3px}
-.rent-kpi-sub2{margin-top:2px}
-  
-/* ════════ RESPONSIVE ════════ */
+.rent-kpi-sub{font-size:11px;color:var(--ink);margin-top:3px}
+.rent-kpi-sub2{font-size:11px;font-weight:700;margin-top:2px}
 @media(max-width:900px){
   .grid-4{grid-template-columns:1fr 1fr}
   .item-row{grid-template-columns:1fr auto}
@@ -472,7 +361,6 @@ tbody tr:hover{background:var(--bg)}
 @media(max-width:680px){
   :root{--sidebar-w:240px}
   .btn-menu-toggle{display:flex;align-items:center;justify-content:center}
-  .topbar-user{display:none}
   .sidebar{transform:translateX(-100%)}
   .sidebar.open{transform:translateX(0);box-shadow:4px 0 20px rgba(0,0,0,.15)}
   .main-content{margin-left:0;padding:16px}
@@ -485,41 +373,35 @@ tbody tr:hover{background:var(--bg)}
   input,select,textarea{font-size:16px !important}
   table{min-width:480px}
 }
-.btn-del-account{padding:6px 10px;background:none;color:var(--ink3);font-size:11px;border-radius:6px;border:1px solid transparent;transition:all .15s}
-.btn-del-account:hover{color:var(--red);border-color:var(--red3);background:var(--red2)}
-@media(max-width:680px){.btn-del-account{display:none}}
-/* ══ FIXES iOS ══ */
-* { -webkit-tap-highlight-color: transparent; }
-input, select, textarea {
+@media(max-width:680px){}
+*{ -webkit-tap-highlight-color: transparent; }
+input,select,textarea{
   -webkit-appearance: none;
   border-radius: var(--r);
 }
-body {
+body{
   -webkit-overflow-scrolling: touch;
 }
-/* Evitar zoom en inputs en iOS */
 @media (max-width: 680px) {
-  input, select, textarea {
+  input,select,textarea{
     font-size: 16px !important;
   }
 }
-/* Safe area para iPhone con notch */
-.topbar {
+.topbar{
   padding-top: env(safe-area-inset-top);
   height: calc(var(--topbar-h) + env(safe-area-inset-top));
 }
-.app-body {
+.app-body{
   padding-top: calc(var(--topbar-h) + env(safe-area-inset-top));
 }
-.sidebar {
+.sidebar{
   top: calc(var(--topbar-h) + env(safe-area-inset-top));
   padding-bottom: env(safe-area-inset-bottom);
 }
+h1,h2,h3,.titulo,.panel-title,.card-title,.dash-title,.dash-greeting,.login-form-title,.login-brand-title,.icon-card-title,.sidebar-label,.rent-kpi-label,.kpi-label{text-transform:uppercase}
 </style>
 </head>
 <body>
-
-<!-- ════════ LOGIN ════════ -->
 <div id="screen-login" class="screen visible">
   <div class="login-wrap">
     <div class="login-brand-panel">
@@ -530,22 +412,13 @@ body {
       </div>
       <div class="login-brand-badge">🎁 <span data-i18n="hero_badge_login">3 días gratis, sin tarjeta</span></div>
     </div>
-
     <div class="login-form-panel">
       <div class="login-card">
-        <div class="login-logo">
-          <h1>Factu<span style="color:var(--blue)">ración</span></h1>
-          <span data-i18n="app_sub">Sistema de facturación de servicios</span>
-        </div>
-
         <div id="alert-auth" class="alert"></div>
-
         <div class="tab-auth">
           <button class="active" id="tab-btn-login" onclick="setAuthTab('login')" data-i18n="tab_login">Entrar</button>
           <button id="tab-btn-registro" onclick="setAuthTab('registro')" data-i18n="create_account">Crear cuenta</button>
         </div>
-
-        <!-- LOGIN -->
         <div id="blq-login">
           <div class="login-form-title" data-i18n="welcome_back">Bienvenido de vuelta</div>
           <div class="login-form-sub" data-i18n="welcome_back_sub">Entra a tu cuenta para continuar</div>
@@ -567,8 +440,6 @@ body {
           </div>
           <button class="btn-main" id="btn-login" data-i18n="enter" onclick="doLogin()">Entrar</button>
         </div>
-
-        <!-- REGISTRO -->
         <div id="blq-registro" style="display:none">
           <div class="login-form-title" data-i18n="create_your_account">Crea tu cuenta</div>
           <div class="login-form-sub" data-i18n="create_your_account_sub">Empieza gratis en menos de un minuto</div>
@@ -592,12 +463,10 @@ body {
           </div>
           <button class="btn-main" id="btn-reg" data-i18n="create_account" onclick="doRegistro()">Crear cuenta</button>
         </div>
-
-        <!-- RECUPERAR -->
         <div id="blq-recuperar" style="display:none">
           <div style="text-align:center;margin-bottom:20px">
             <div style="font-size:28px;margin-bottom:6px">🔑</div>
-            <div style="font-size:15px;font-weight:600" data-i18n="recover_title">Recuperar contraseña</div>
+            <div class="titulo" style="font-size:15px;font-weight:600" data-i18n="recover_title">Recuperar contraseña</div>
             <div style="font-size:12px;color:var(--ink3);margin-top:4px" data-i18n="recover_sub">Te enviaremos un enlace a tu correo</div>
           </div>
           <div class="form-g"><label data-i18n="your_email">Tu correo electrónico</label>
@@ -608,12 +477,10 @@ body {
             <button class="link-btn" data-i18n="back_to_login" onclick="volverLogin()">Volver al inicio de sesión</button>
           </div>
         </div>
-
-        <!-- NUEVA CONTRASEÑA -->
         <div id="blq-reset" style="display:none">
           <div style="text-align:center;margin-bottom:20px">
             <div style="font-size:28px;margin-bottom:6px">🔐</div>
-            <div style="font-size:15px;font-weight:600" data-i18n="new_pwd_title">Nueva contraseña</div>
+            <div class="titulo" style="font-size:15px;font-weight:600" data-i18n="new_pwd_title">Nueva contraseña</div>
           </div>
           <div class="form-g"><label data-i18n="new_pwd">Nueva contraseña</label>
             <input type="password" id="reset-pwd" placeholder="Mínimo 6 caracteres"></div>
@@ -626,8 +493,6 @@ body {
     </div>
   </div>
 </div>
-
-<!-- ════════ APP ════════ -->
 <div id="screen-app" class="screen">
   <div class="topbar">
     <button class="btn-menu-toggle" onclick="toggleSidebar()">☰</button>
@@ -652,9 +517,7 @@ body {
       </div>
     </div>
   </div>
-
   <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
-
   <div class="app-body">
     <nav class="sidebar" id="sidebar">
   <div class="sidebar-section">
@@ -705,10 +568,7 @@ body {
     </button>
   </div>
 </nav>
-
     <div class="main-content">
-
-      <!-- ════ DASHBOARD ════ -->
       <div id="mod-dashboard" class="modulo">
         <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:20px;flex-wrap:wrap;gap:10px">
           <div>
@@ -750,24 +610,22 @@ body {
 </div>
         <div class="grid-2">
           <div class="card">
-            <div class="icon-card-title"><span class="icon-card-badge" style="background:var(--blue3)">🏆</span><span data-i18n="top_clients_month">TOP CLIENTES</span></div>
+            <div class="icon-card-title"><span class="icon-card-badge" style="background:var(--blue3)">🏆</span><span data-i18n="top_clients_month">Top clientes</span></div>
             <div id="graf-clientes"><div class="empty-state" style="padding:20px 10px"><div style="font-size:12px;color:var(--ink3)" data-i18n="no_data_month">Sin datos este mes</div></div></div>
           </div>
           <div class="card">
-            <div class="icon-card-title"><span class="icon-card-badge" style="background:var(--blue3)">🛠</span><span data-i18n="top_services_month">SERVICIOS MÁS FACTURADOS</span></div>
+            <div class="icon-card-title"><span class="icon-card-badge" style="background:var(--blue3)">🛠</span><span data-i18n="top_services_month">Servicios más facturados</span></div>
             <div id="graf-servicios"><div class="empty-state" style="padding:20px 10px"><div style="font-size:12px;color:var(--ink3)" data-i18n="no_data_month">Sin datos este mes</div></div></div>
           </div>
         </div>
    <div class="card">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-    <div class="icon-card-title" style="margin-bottom:0"><span class="icon-card-badge" style="background:var(--green3)">💰</span><span>COBROS POR MÉTODO DE PAGO</span></div>
+    <div class="icon-card-title" style="margin-bottom:0"><span class="icon-card-badge" style="background:var(--green3)">💰</span><span>Cobros por método de pago</span></div>
     <button class="link-btn" style="color:var(--blue)" onclick="cambiarMod('facturas')">Ver facturas →</button>
   </div>
   <div id="dash-pagos"><div class="empty-state" style="padding:20px 10px"><div style="font-size:12px;color:var(--ink3)">Cargando…</div></div></div>
 </div>
       </div>
-
-      <!-- ════ FACTURAS ════ -->
       <div id="mod-facturas" class="modulo" style="display:none">
         <div class="panel-header">
           <div><div class="panel-title" data-i18n="invoices_title">Facturas</div>
@@ -775,14 +633,12 @@ body {
           <button class="btn-primary btn-sm" onclick="cambiarMod('nueva-factura')">+ <span data-i18n="new_invoice">Nueva Factura</span></button>
         </div>
         <div id="alert-facturas" class="alert"></div>
-
         <div class="chips" id="chips-estado">
           <button class="chip active" data-i18n="chip_all" onclick="setChipEstado(this,'')">Todas</button>
           <button class="chip" onclick="setChipEstado(this,'emitida')">⏳ <span data-i18n="chip_pending">Pendientes</span></button>
           <button class="chip" onclick="setChipEstado(this,'pagada')">✅ <span data-i18n="chip_paid">Pagadas</span></button>
           <button class="chip" onclick="setChipEstado(this,'anulada')">❌ <span data-i18n="chip_voided">Anuladas</span></button>
         </div>
-
         <div class="chips" id="chips-tipo-fact">
           <button class="chip active" onclick="setChipTipoFact(this,'')">Tradicional + Electrónica</button>
           <button class="chip" onclick="setChipTipoFact(this,'tradicional')">🧾 Tradicional</button>
@@ -793,7 +649,6 @@ body {
   <button class="chip" onclick="setChipMetodo(this,'efectivo')">💵 Efectivo</button>
   <button class="chip" onclick="setChipMetodo(this,'transferencia')">🏦 Transferencia</button>
 </div>
-
         <div class="filter-row" style="margin-bottom:14px">
           <div class="search-box" style="flex:2;min-width:160px">
             <span class="search-icon">🔍</span>
@@ -812,7 +667,6 @@ body {
             <option value="" data-i18n="all">Todos</option>
           </select>
         </div>
-
         <div class="resumen-bar" id="fac-resumen" style="display:none">
           <div class="grid-4">
             <div><div style="font-size:10px;text-transform:uppercase;color:var(--ink3);margin-bottom:2px" data-i18n="label_invoices">Facturas</div>
@@ -825,7 +679,6 @@ body {
               <div style="font-family:var(--font-serif);font-size:18px;color:var(--amber)" id="frp-pend">$0</div></div>
           </div>
         </div>
-
         <div class="table-wrap">
           <div class="table-head"><h3 id="fac-count" data-i18n="invoices_title">Facturas</h3>
             <button class="btn-outline-green btn-sm" onclick="exportarFacturasMasivo()">📄 <span data-i18n="massive_pdf">PDF masivo</span></button>
@@ -849,16 +702,12 @@ body {
           </div>
         </div>
       </div>
-
-      <!-- ════ NUEVA FACTURA ════ -->
       <div id="mod-nueva-factura" class="modulo" style="display:none">
         <div class="panel-header">
           <div><div class="panel-title" data-i18n="nf_title">Nueva Factura</div>
             <div class="panel-sub" data-i18n="nf_sub">Individual por cliente o masiva para todos a la vez</div></div>
         </div>
         <div id="alert-nf" class="alert"></div>
-
-        <!-- Modo: individual, masivo o electrónica -->
         <div class="card" style="margin-bottom:14px">
           <div class="card-title" data-i18n="billing_mode">Modo de facturación</div>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
@@ -869,8 +718,6 @@ body {
             ⚠️ <span data-i18n="bill_all_warning">Se generará una factura por cada cliente registrado usando sus servicios contratados. Los clientes sin servicios asignados serán omitidos.</span>
           </div>
         </div>
-
-        <!-- Datos generales -->
         <div class="card" id="nf-datos-generales">
           <div class="card-title" data-i18n="invoice_data">Datos de la factura</div>
           <div class="grid-2">
@@ -891,11 +738,8 @@ body {
               <option value="19" selected>19%</option>
             </select>
           </div>
-<!-- tipo se toma del cliente; se guarda en campo oculto -->
           <input type="hidden" id="nf-tipo" value="fija">
         </div>
-
-        <!-- Cliente (solo en modo individual) -->
         <div id="nf-blq-individual">
           <div class="card">
             <div class="card-title" data-i18n="client_word">Cliente</div>
@@ -917,8 +761,6 @@ body {
               <button class="link-btn" style="color:var(--blue)" data-i18n="create_new_client_here" onclick="abrirModalNuevoCliente()">+ Crear cliente nuevo desde aquí</button>
             </div>
           </div>
-
-          <!-- Ítems (modo individual) -->
           <div class="card">
             <div class="card-title" data-i18n="services_items">Servicios / Ítems</div>
             <div class="item-headers">
@@ -928,8 +770,6 @@ body {
             <datalist id="dl-servicios-nf"></datalist>
             <button class="btn-add" onclick="agregarItemNF()">+ <span data-i18n="add_item">Agregar ítem</span></button>
           </div>
-
-          <!-- Totales -->
           <div class="card">
             <div class="card-title" data-i18n="totals_word">Totales</div>
             <div class="form-g">
@@ -942,14 +782,11 @@ body {
               <div class="total-row"><span class="total-label" style="font-weight:700" data-i18n="total_word2">TOTAL</span><span class="total-value big" id="nf-total">$0</span></div>
             </div>
           </div>
-
           <div class="btn-row">
             <button class="btn-primary" style="flex:1" id="btn-guardar-factura" onclick="crearFactura()">💾 <span data-i18n="save_invoice">Guardar Factura</span></button>
             <button class="btn-outline" onclick="limpiarNF()">🗑 <span data-i18n="clear_word">Limpiar</span></button>
           </div>
         </div>
-
-        <!-- Modo TODOS -->
         <div id="nf-blq-todos" style="display:none">
           <div class="card">
             <div class="card-title" data-i18n="preview_clients_bill">Vista previa — clientes a facturar</div>
@@ -964,8 +801,6 @@ body {
           <button class="btn-green" style="width:100%" id="btn-facturar-todos" onclick="facturarTodos()">⚡ <span data-i18n="generate_invoices_all">Generar facturas para todos los clientes</span></button>
         </div>
       </div>
-
-      <!-- ════ CLIENTES ════ -->
       <div id="mod-clientes" class="modulo" style="display:none">
         <div class="panel-header">
           <div><div class="panel-title" data-i18n="clients_title">Clientes</div>
@@ -978,12 +813,10 @@ body {
 <input type="file" id="cli-import-file" accept=".csv,.xlsx,.xls" style="display:none" onchange="importarClientesArchivo(event)">
         </div>
         <div id="alert-clientes" class="alert"></div>
-
         <div class="search-box" style="margin-bottom:14px">
           <span class="search-icon">🔍</span>
           <input type="text" id="cli-q" placeholder="Buscar por nombre o NIT/CC…" data-i18n-ph="search_name_nit" oninput="buscarClientes()">
         </div>
-
         <div class="table-wrap">
           <div class="table-head"><h3 id="cli-count" data-i18n="clients_title">Clientes</h3></div>
           <div class="table-scroll">
@@ -1003,8 +836,6 @@ body {
           </div>
         </div>
       </div>
-
-      <!-- ════ SERVICIOS ════ -->
       <div id="mod-servicios" class="modulo" style="display:none">
         <div class="panel-header">
           <div><div class="panel-title" data-i18n="svc_catalog_title">Catálogo de Servicios</div>
@@ -1012,7 +843,6 @@ body {
           <button class="btn-primary btn-sm" onclick="abrirModalNuevoServicio()">+ <span data-i18n="new_service">Nuevo servicio</span></button>
         </div>
         <div id="alert-servicios" class="alert"></div>
-
         <div class="table-wrap">
           <div class="table-head"><h3 id="svc-count" data-i18n="nav_services">Servicios</h3></div>
           <div class="table-scroll">
@@ -1031,8 +861,6 @@ body {
           </div>
         </div>
       </div>
-
-      <!-- ════ GASTOS ════ -->
       <div id="mod-gastos" class="modulo" style="display:none">
         <div class="panel-header">
           <div><div class="panel-title" data-i18n="expenses_title">Gastos</div>
@@ -1040,7 +868,6 @@ body {
           <button class="btn-primary btn-sm" onclick="abrirModalNuevoGasto()">+ <span data-i18n="new_expense">Registrar gasto</span></button>
         </div>
         <div id="alert-gastos" class="alert"></div>
-
         <div class="filter-row" style="margin-bottom:14px">
           <select id="f-gas-mes" onchange="cargarGastos()" style="flex:1;min-width:100px">
             <option value="" data-i18n="all_months">Todos los meses</option>
@@ -1055,7 +882,6 @@ body {
             <option value="" data-i18n="all">Todos</option>
           </select>
         </div>
-
         <div class="table-wrap">
           <div class="table-head"><h3 id="gas-count" data-i18n="expenses_title">Gastos</h3>
             <div style="font-size:12px;font-weight:600;color:var(--red)" id="gas-total-header"></div>
@@ -1074,8 +900,6 @@ body {
           </div>
         </div>
       </div>
-
-      <!-- ════ RENTABILIDAD ════ -->
       <div id="mod-rentabilidad" class="modulo" style="display:none">
         <div class="panel-header">
           <div><div class="panel-title" data-i18n="profitability_title">Rentabilidad</div>
@@ -1083,8 +907,6 @@ body {
           <button class="btn-green btn-sm" onclick="generarReportePDF()">📄 <span data-i18n="export_pdf">Exportar PDF</span></button>
         </div>
         <div id="alert-rent" class="alert"></div>
-
-        <!-- Filtro período -->
         <div class="card" style="margin-bottom:16px">
           <div class="card-title" data-i18n="analysis_period">Período de análisis</div>
           <div class="grid-2" style="align-items:end">
@@ -1111,7 +933,6 @@ body {
             <button class="btn-primary btn-sm" data-i18n="update_word" onclick="cargarRentabilidad()">Actualizar</button>
           </div>
         </div>
-
 <div class="grid-5" style="margin-bottom:16px">
   <div class="rent-kpi" style="--c:#2E9E4F">
     <div class="rent-kpi-ico">💵</div>
@@ -1141,7 +962,6 @@ body {
     <div class="rent-kpi-sub2" id="rent-iva-pend" style="color:#E8801A">Por recaudar: $0</div>
   </div>
 </div>
-        
 <div class="card" style="margin-bottom:16px">
   <div class="card-title" style="color:var(--green4)">💰 <span>Cobros por método de pago</span></div>
   <div id="rent-metodos"></div>
@@ -1156,30 +976,23 @@ body {
             <div id="graf-rent-gas"></div>
           </div>
         </div>
-
-        <!-- Flujo mensual -->
         <div class="card">
           <div class="card-title">📅 <span data-i18n="monthly_flow">Flujo mensual</span></div>
           <div id="flujo-mensual-wrap">
             <div class="empty-state"><div class="empty-icon">📅</div><div data-i18n="no_data_period">Sin datos en el período</div></div>
           </div>
         </div>
-
-        <!-- Top clientes -->
         <div class="card">
           <div class="card-title" style="color:var(--blue2)">🏆 <span data-i18n="top_clients">Top clientes</span></div>
           <div id="graf-rent-cli"></div>
         </div>
       </div>
-
-      <!-- ════ CONFIGURACIÓN DE EMPRESA ════ -->
       <div id="mod-config" class="modulo" style="display:none">
         <div class="panel-header">
           <div><div class="panel-title" data-i18n="nav_my_company">Datos generales</div>
             <div class="panel-sub" data-i18n="my_company_sub">Estos datos aparecen en el encabezado de tus facturas en PDF</div></div>
         </div>
         <div id="alert-config" class="alert"></div>
-
         <div class="card">
           <div class="card-title" data-i18n="logo_word">Logo</div>
           <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
@@ -1193,7 +1006,6 @@ body {
             </div>
           </div>
         </div>
-
         <div class="card">
           <div class="card-title" data-i18n="company_data">Datos de la empresa</div>
           <div class="grid-2">
@@ -1215,15 +1027,11 @@ body {
             <div class="hint" data-i18n="default_notes_hint">Este texto aparece automáticamente en el PDF, en cada factura</div>
           </div>
         </div>
-
         <button class="btn-primary" style="width:auto;padding:12px 28px" onclick="guardarConfiguracion()">💾 <span data-i18n="save_company_data">Guardar datos de mi empresa</span></button>
       </div>
-
     </div><!-- main-content -->
   </div><!-- app-body -->
 </div><!-- screen-app -->
-
-<!-- MODAL: Cliente -->
 <div class="modal-overlay" id="modal-cliente">
   <div class="modal-box">
     <h3 id="mcli-title" data-i18n="new_client_title">Nuevo cliente</h3>
@@ -1249,8 +1057,6 @@ body {
     </div>
     <div class="form-g"><label data-i18n="notes2">Notas</label>
       <textarea id="mcli-notas" rows="2" placeholder="Observaciones del cliente…" data-i18n-ph="ph_client_notes"></textarea></div>
-
-    <!-- ── CONFIGURACIÓN DE FACTURACIÓN ── -->
     <div style="background:var(--bg3);border-radius:var(--r);padding:14px 16px;margin-bottom:14px">
       <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink3);margin-bottom:12px" data-i18n="billing_config">Configuración de facturación</div>
       <div class="grid-2">
@@ -1273,7 +1079,6 @@ body {
         </div>
       </div>
     </div>
-
     <div class="form-g" style="margin-top:14px;margin-bottom:0">
   <label>Tipo de facturación</label>
   <select id="mcli-tipo-facturacion">
@@ -1282,8 +1087,6 @@ body {
   </select>
   <div class="hint">Solo los clientes de facturación tradicional (con servicio asignado) se facturan desde esta app</div>
 </div>
-
-    <!-- ── SERVICIOS CONTRATADOS ── -->
     <div class="form-g">
       <label data-i18n="contracted_services">Servicios contratados</label>
       <div id="mcli-servicios-wrap" style="border:1.5px solid var(--border);border-radius:var(--r);background:var(--bg3);padding:8px 10px;min-height:64px;max-height:220px;overflow-y:auto">
@@ -1295,15 +1098,12 @@ body {
       <button type="button" class="btn-add" style="margin-top:8px" onclick="abrirServicioUnico()">⭐ + Servicio único para este cliente</button>
 <div id="mcli-svc-unicos"></div>
     </div>
-
     <div class="modal-actions">
       <button class="btn-cancel" data-i18n="cancel" onclick="cerrarModal('modal-cliente')">Cancelar</button>
       <button class="btn-confirm" data-i18n="save_client" onclick="guardarCliente()">Guardar cliente</button>
     </div>
   </div>
 </div>
-
-<!-- MODAL: Servicio -->
 <div class="modal-overlay" id="modal-servicio">
   <div class="modal-box">
     <h3 id="msvc-title" data-i18n="new_service_title">Nuevo servicio</h3>
@@ -1330,8 +1130,6 @@ body {
     </div>
   </div>
 </div>
-
-<!-- MODAL: Gasto -->
 <div class="modal-overlay" id="modal-gasto">
   <div class="modal-box">
     <h3 id="mgas-title" data-i18n="new_expense_title">Registrar gasto</h3>
@@ -1362,8 +1160,6 @@ body {
     </div>
   </div>
 </div>
-
-<!-- MODAL: Confirmar eliminación -->
 <div class="modal-overlay center" id="modal-confirmar">
   <div class="modal-box">
     <h3 id="mconf-title" data-i18n="confirm_action">¿Confirmar acción?</h3>
@@ -1374,8 +1170,6 @@ body {
     </div>
   </div>
 </div>
-
-<!-- MODAL: Ver factura -->
 <div class="modal-overlay" id="modal-ver-factura">
   <div class="modal-box" style="max-width:640px">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
@@ -1392,7 +1186,6 @@ body {
     </div>
   </div>
 </div>
-<!-- MODAL: Método de pago -->
 <div class="modal-overlay center" id="modal-metodo-pago">
   <div class="modal-box">
     <h3>¿Cómo pagó el cliente?</h3>
@@ -1406,7 +1199,6 @@ body {
     </div>
   </div>
 </div>
-<!-- Modal eliminar cuenta -->
 <div class="modal-overlay center" id="modal-eliminar-cuenta">
   <div class="modal-box">
     <h3 data-i18n="del_account_title">Eliminar mi cuenta</h3>
@@ -1425,11 +1217,9 @@ body {
   </div>
 </div>
 <div class="toast" id="toast"></div>
-
 <script>
 var SESSION = null;
 aplicarIdioma();
-
 var _clientes     = [];
 var _servicios    = [];
 var _facturas     = [];
@@ -1442,15 +1232,12 @@ var _chipEstado   = '';
 var _chipTipoFact = '';
   var _chipMetodo='';
 var _rentPeriodo  = 'mes';
-
-
 /* ─────────────────────────────────────────────────
    HELPERS
 ───────────────────────────────────────────────── */
 function fmt(v){ return new Intl.NumberFormat('es-CO',{style:'currency',currency:'COP',minimumFractionDigits:0}).format(v||0); }
 function fmtN(v){ return parseFloat((v||0).toFixed(2)).toLocaleString('es-CO'); }
 function esc(s){ return (s||'').toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-
 function showAlert(id,msg,tipo){
   var a=document.getElementById(id);
   if(!a)return;
@@ -1458,13 +1245,11 @@ function showAlert(id,msg,tipo){
   setTimeout(function(){a.style.display='none';},7000);
 }
 function hideAlert(id){ var a=document.getElementById(id); if(a) a.style.display='none'; }
-
 function toast(msg,tipo){
   var el=document.getElementById('toast');
   el.textContent=msg; el.className='toast visible '+(tipo||'ok');
   setTimeout(function(){el.className='toast';},4000);
 }
-
 function fechaHoy(){
   var d=new Date(); var m=String(d.getMonth()+1).padStart(2,'0');
   var dd=String(d.getDate()).padStart(2,'0');
@@ -1474,7 +1259,6 @@ function mesAnioHoy(){
   var d=new Date(); var m=String(d.getMonth()+1).padStart(2,'0');
   return d.getFullYear()+'/'+m;
 }
-
 /* ─────────────────────────────────────────────────
    SIDEBAR / NAVEGACIÓN (sin cambios)
 ───────────────────────────────────────────────── */
@@ -1487,7 +1271,6 @@ function closeSidebar(){
   document.getElementById('sidebar').classList.remove('open');
   document.getElementById('sidebar-overlay').classList.remove('visible');
 }
-
 var MODS=['dashboard','facturas','nueva-factura','clientes','servicios','gastos','rentabilidad','config'];
 function cambiarMod(mod){
   closeSidebar();
@@ -1505,7 +1288,6 @@ function cambiarMod(mod){
   if(mod==='rentabilidad')  initRentabilidad();
   if(mod==='config')        cargarConfiguracion();
 }
-
 /* ─────────────────────────────────────────────────
    AUTH — convertido a Supabase
 ───────────────────────────────────────────────── */
@@ -1519,20 +1301,16 @@ function setAuthTab(tab){
   document.getElementById('blq-reset').style.display     = 'none';
   hideAlert('alert-auth');
 }
-
 async function doLogin(){
   var email=document.getElementById('in-user').value.trim();
   var p=document.getElementById('in-pwd').value;
   if(!email||!p) return showAlert('alert-auth',t('msg_enter_email_pwd'),'err');
   var btn=document.getElementById('btn-login');
   btn.disabled=true; btn.textContent='Entrando…';
-
   try {
     var { data, error } = await supabase.auth.signInWithPassword({ email:email, password:p });
     if(error){ return showAlert('alert-auth',t('msg_wrong_credentials'),'err'); }
-
     var { data: perfil } = await supabase.from('perfiles').select('*').eq('id', data.user.id).single();
-
     if(!perfil || perfil.estado!=='activo' || !perfil.apps.includes('finanzas')){
       await supabase.auth.signOut();
       var tipo = (perfil && (perfil.estado==='pendiente'||perfil.estado==='inactivo')) ? 'warn':'err';
@@ -1550,7 +1328,6 @@ async function doLogin(){
     btn.disabled=false; btn.textContent='Entrar';
   }
 }
-
 async function doRegistro(){
   var n=document.getElementById('rg-nombre').value.trim();
   var e=document.getElementById('rg-email').value.trim();
@@ -1559,7 +1336,6 @@ async function doRegistro(){
   if(!n||!e||!u||!p) return showAlert('alert-auth',t('msg_complete_fields'),'err');
   if(p.length<6) return showAlert('alert-auth',t('msg_min_pwd'),'err');
   var btn=document.getElementById('btn-reg'); btn.disabled=true; btn.textContent='Creando cuenta…';
-
   try {
     var { data, error } = await supabase.auth.signUp({
       email: e, password: p,
@@ -1574,7 +1350,6 @@ async function doRegistro(){
     btn.disabled=false; btn.textContent='Crear cuenta';
   }
 }
-
 async function doLogout(){
   await supabase.auth.signOut();
   SESSION=null;
@@ -1582,14 +1357,12 @@ async function doLogout(){
   document.getElementById('screen-login').classList.add('visible');
   setAuthTab('login');
 }
-
 function mostrarRecuperacion(){
   ['blq-login','blq-registro'].forEach(function(id){document.getElementById(id).style.display='none';});
   document.getElementById('blq-recuperar').style.display='block';
   document.querySelectorAll('.tab-auth button').forEach(function(b){b.classList.remove('active');});
 }
 function volverLogin(){ document.getElementById('blq-recuperar').style.display='none'; document.getElementById('blq-reset').style.display='none'; setAuthTab('login'); }
-
 async function doRecuperar(){
   var email=document.getElementById('rec-email').value.trim();
   if(!email) return showAlert('alert-auth',t('msg_enter_email2'),'err');
@@ -1603,7 +1376,6 @@ async function doRecuperar(){
     btn.disabled=false; btn.textContent='Enviar instrucciones';
   }
 }
-
 async function doNuevaPwd(){
   var pwd=document.getElementById('reset-pwd').value, pwd2=document.getElementById('reset-pwd2').value;
   if(!pwd||pwd.length<6) return showAlert('alert-auth',t('msg_min_6chars'),'err');
@@ -1620,7 +1392,6 @@ async function doNuevaPwd(){
     btn.disabled=false; btn.textContent='Guardar contraseña';
   }
 }
-
 supabase.auth.onAuthStateChange(function(event){
   if(event==='PASSWORD_RECOVERY'){
     ['blq-login','blq-registro','blq-recuperar'].forEach(function(id){document.getElementById(id).style.display='none';});
@@ -1628,8 +1399,6 @@ supabase.auth.onAuthStateChange(function(event){
     document.querySelectorAll('.tab-auth button').forEach(function(b){b.classList.remove('active');});
   }
 });
-
-/* Auto-login */
 (async function(){
   var { data:{ session } } = await supabase.auth.getSession();
   if(!session) return;
@@ -1642,7 +1411,6 @@ supabase.auth.onAuthStateChange(function(event){
     showAlert('alert-auth','⚠️ '+t('msg_no_finanzas_access'),'warn');
   }
 })();
-
 function entrarApp(){
   document.getElementById('screen-login').classList.remove('visible');
   document.getElementById('screen-app').classList.add('visible');
@@ -1653,28 +1421,24 @@ function entrarApp(){
   cargarDashboard();
   cargarConfiguracion();
 }
-
 function toggleUserMenu(){ document.getElementById('user-menu').classList.toggle('open'); }
 function closeUserMenu(){ document.getElementById('user-menu').classList.remove('open'); }
 document.addEventListener('click',function(e){
   var menu=document.getElementById('user-menu');
   if(menu && menu.classList.contains('open') && !menu.contains(e.target)) menu.classList.remove('open');
 });
-
 /* ─────────────────────────────────────────────────
    MODALES GENÉRICOS (sin cambios)
 ───────────────────────────────────────────────── */
 function abrirModal(id){ document.getElementById(id).classList.add('visible'); }
 function cerrarModal(id){ document.getElementById(id).classList.remove('visible'); }
 document.addEventListener('keydown',function(e){ if(e.key==='Escape') document.querySelectorAll('.modal-overlay.visible').forEach(function(m){m.classList.remove('visible');}); });
-
 function confirmar(titulo,msg,fn){
   document.getElementById('mconf-title').textContent=titulo;
   document.getElementById('mconf-msg').textContent=msg;
   document.getElementById('mconf-btn').onclick=function(){ cerrarModal('modal-confirmar'); fn(); };
   abrirModal('modal-confirmar');
 }
-
 /* ─────────────────────────────────────────────────
    DASHBOARD
 ───────────────────────────────────────────────── */
@@ -1683,36 +1447,27 @@ async function cargarDashboard(){
   document.getElementById('dash-periodo-label').textContent='Cargando…';
   var hora=(new Date()).getHours();
   document.getElementById('dash-saludo').textContent = hora<12?'Buen día':hora<19?'Buenas tardes':'Buenas noches';
-
   var { data: r } = await supabase.rpc('fac_reporte_rentabilidad', { p_desde: ma, p_hasta: ma });
   if(!r) return;
-
   var mesLbl=document.getElementById('dash-periodo-label');
-  mesLbl.textContent=t('current_month_label')+' · '+(new Date()).toLocaleDateString(LANG==='en'?'en-US':'es-CO',{month:'long',year:'numeric'});
+  mesLbl.textContent=t('current_month_label')+' · '+(new Date()).toLocaleDateString('es-CO',{month:'long',year:'numeric'});
   document.getElementById('kpi-fac').textContent=fmt(r.totalFacturado);
   document.getElementById('kpi-fac-sub').textContent=r.totalFacturas+' factura'+(r.totalFacturas!==1?'s':'');
   document.getElementById('kpi-gas').textContent=fmt(r.totalGastos);
-
   var calc=calcUtilidadCobrada(r);
   var ku=document.getElementById('kpi-util');
   ku.textContent=fmt(calc.util); ku.style.color=calc.util>=0?'var(--green2)':'var(--red)';
-
   var pag=r.facturas.filter(function(f){return f.estado==='pagada';});
   document.getElementById('kpi-pag').textContent=fmt(calc.cobrado);
   document.getElementById('kpi-pag-sub').textContent=pag.length+' factura'+(pag.length!==1?'s':'');
-
   var pend=r.facturas.filter(function(f){return f.estado==='emitida';});
   var totalPend=pend.reduce(function(s,f){return s+f.total;},0);
   document.getElementById('kpi-pend').textContent=fmt(totalPend);
   document.getElementById('kpi-pend-sub').textContent=pend.length+' factura'+(pend.length!==1?'s':'');
-
   renderGrafico('graf-clientes',r.porCliente.map(function(c){return{label:c.nombre,val:c.total};}),r.porCliente.map(function(c){return c.total;}),'var(--blue)');
   renderGrafico('graf-servicios',r.porServicio.map(function(s){return{label:s.nombre,val:s.total};}),r.porServicio.map(function(s){return s.total;}),'var(--green2)');
-
   renderMetodosPago('dash-pagos', ma, ma, true);
 }
-  
-/* Utilidad real = lo cobrado (facturas pagadas) − gastos */
 function calcUtilidadCobrada(r){
   var cobrado = (r.facturas||[]).filter(function(f){ return f.estado==='pagada'; })
     .reduce(function(s,f){ return s+f.total; },0);
@@ -1720,11 +1475,9 @@ function calcUtilidadCobrada(r){
   var margen = cobrado>0 ? util/cobrado*100 : 0;
   return { cobrado:cobrado, util:util, margen:margen };
 }
-
 function badgeLabel(estado){
   return estado==='emitida'?'⏳ '+t('status_pending'):estado==='pagada'?'✅ '+t('status_paid'):'❌ '+t('status_voided');
 }
-
 function renderGrafico(id,data,vals,color){
   var el=document.getElementById(id);
   if(!data||!data.length){el.innerHTML='<div class="empty-state" style="padding:16px 10px"><div style="font-size:12px;color:var(--ink3)">Sin datos</div></div>';return;}
@@ -1740,24 +1493,18 @@ function renderGrafico(id,data,vals,color){
   html+='</div>';
   el.innerHTML=html;
 }
-
-/* ── Cobros por método de pago (Control + Rentabilidad) ── */
 async function renderMetodosPago(id, d, h, conLista){
   var el = document.getElementById(id);
   if(!el) return;
-
   var { data: r, error } = await supabase.rpc('fac_reporte_metodos_pago', { p_desde: d, p_hasta: h });
   if(error || !r){
     el.innerHTML = '<div class="empty-state" style="padding:16px 10px"><div style="font-size:12px;color:var(--ink3)">No se pudo cargar</div></div>';
     return;
   }
-
   function n(c){ return c + ' factura' + (c !== 1 ? 's' : ''); }
-
 var gs = r.gastos || {efectivo:0, transferencia:0, sinMetodo:0, cantSinMetodo:0};
 var ne = r.neto || {efectivo:r.efectivo.total, transferencia:r.transferencia.total};
 function neg(v){ return v>=0 ? 'var(--green4)' : 'var(--red)'; }
-
 var html = '<div class="grid-2" style="margin-bottom:12px">' +
   '<div class="kpi" style="background:var(--green3)">' +
     '<div class="kpi-label">💵 Efectivo</div>' +
@@ -1772,19 +1519,15 @@ var html = '<div class="grid-2" style="margin-bottom:12px">' +
     '<div class="kpi-value" style="color:' + neg(ne.transferencia) + ';margin-top:6px">' + fmt(ne.transferencia) + '</div>' +
     '<div class="kpi-sub">Queda por transferencia</div></div>' +
 '</div>';
-
 if(gs.cantSinMetodo > 0){
   html += '<div style="font-size:11px;color:var(--amber);margin-bottom:10px">⚠️ ' + gs.cantSinMetodo +
     ' gasto(s) sin método (' + fmt(gs.sinMetodo) + ') no se están restando. Asígnales método en Gastos.</div>';
 }
-
   if(r.sinMetodo.cantidad > 0){
     html += '<div style="font-size:11px;color:var(--ink3);margin-bottom:10px">Sin método registrado (pagadas antes de este cambio): ' +
       fmt(r.sinMetodo.total) + ' · ' + n(r.sinMetodo.cantidad) + '</div>';
   }
-
   html += '<div style="font-size:12px;font-weight:600;color:var(--ink2);margin-bottom:6px">Total cobrado: ' + fmt(r.total) + '</div>';
-
   if(conLista){
     if(!r.pagos.length){
       html += '<div class="empty-state" style="padding:16px 10px"><div style="font-size:12px;color:var(--ink3)">Sin cobros este mes</div></div>';
@@ -1801,10 +1544,8 @@ if(gs.cantSinMetodo > 0){
       }).join('');
     }
   }
-
   el.innerHTML = html;
 }
-
 /* ─────────────────────────────────────────────────
    FACTURAS — listado
 ───────────────────────────────────────────────── */
@@ -1822,14 +1563,12 @@ _facturas.forEach(function(f){ f.metodoPago = (mapaM||{})[f.id] || ''; });
   if(va) fa.value=va;
   filtrarFacturas();
 }
-
 function setChipEstado(btn,estado){
   _chipEstado=estado;
   document.querySelectorAll('#chips-estado .chip').forEach(function(c){c.classList.remove('active');});
   btn.classList.add('active');
   filtrarFacturas();
 }
-
 function setChipTipoFact(btn,tipo){
   _chipTipoFact=tipo;
   document.querySelectorAll('#chips-tipo-fact .chip').forEach(function(c){c.classList.remove('active');});
@@ -1848,18 +1587,15 @@ function okMetodo(f){
   if(_chipMetodo==='sin') return !f.metodoPago;
   return f.metodoPago===_chipMetodo;
 }
-
 function tipoFactBadge(tipo){
   return tipo==='electronica'
     ? '<span class="badge" style="background:var(--purple2);color:var(--purple)">💻 Electrónica</span>'
     : '<span class="badge badge-blue">🧾 Tradicional</span>';
 }
-
 function filtrarFacturas(){
   var q=(document.getElementById('f-fac-q').value||'').toLowerCase();
   var mes=document.getElementById('f-fac-mes').value;
   var anio=document.getElementById('f-fac-anio').value;
-
   var filtradas=_facturas.filter(function(f){
     var p=(f.fechaSolo||'').split('/');
     var okEstado=!_chipEstado||f.estado===_chipEstado;
@@ -1869,23 +1605,19 @@ function filtrarFacturas(){
     var okQ=!q||(f.clienteNombre||'').toLowerCase().includes(q)||(f.clienteNitcc||'').toLowerCase().includes(q)||(f.id||'').toLowerCase().includes(q)||(f.numero||'').includes(q);
     return okEstado&&okTipoFact&&okMetodo(f)&&okMes&&okAnio&&okQ;
   });
-
   var tbody=document.getElementById('fac-tbody');
   var empty=document.getElementById('fac-empty');
   var resumen=document.getElementById('fac-resumen');
   tbody.innerHTML='';
   document.getElementById('fac-count').textContent=filtradas.length+' '+(filtradas.length!==1?t('invoice_plural'):t('invoice_singular'));
-
   if(!filtradas.length){ empty.style.display='block'; resumen.style.display='none'; return; }
   empty.style.display='none'; resumen.style.display='block';
-
   var totalT=0,totalPag=0,totalPend=0;
   filtradas.forEach(function(f){
     var noAnulada=f.estado!=='anulada';
     if(noAnulada) totalT+=f.total;
     if(f.estado==='pagada') totalPag+=f.total;
     if(f.estado==='emitida') totalPend+=f.total;
-
     var tr=document.createElement('tr');
     tr.innerHTML='<td style="font-family:var(--font-mono);font-size:11px;color:var(--ink3)">'+esc(f.id)+'</td>'+
       '<td><strong>'+esc(f.clienteNombre)+'</strong></td>'+
@@ -1904,20 +1636,17 @@ function filtrarFacturas(){
       '</div></td>';
     tbody.appendChild(tr);
   });
-
   document.getElementById('frp-cnt').textContent=filtradas.filter(function(f){return f.estado!=='anulada';}).length;
   document.getElementById('frp-total').textContent=fmt(totalT);
   document.getElementById('frp-pag').textContent=fmt(totalPag);
   document.getElementById('frp-pend').textContent=fmt(totalPend);
 }
-
 async function cambiarEstadoFac(id,estado,metodo){
   var { data: res, error } = await supabase.rpc('fac_factura_cambiar_estado', { p_id:id, p_estado:estado, p_metodo_pago: metodo||null });
   if(error){ toast(t('msg_error_prefix')+error.message,'err'); return; }
   if(res.success){ toast(res.mensaje,'ok'); cargarFacturas(); cargarDashboard(); }
   else toast(res.mensaje,'err');
 }
-
 var _pagoPendienteId = null;
 function pedirMetodoPago(id){
   _pagoPendienteId = id;
@@ -1929,14 +1658,12 @@ function confirmarMetodoPago(metodo){
   cerrarModal('modal-metodo-pago');
   if(id) cambiarEstadoFac(id,'pagada',metodo);
 }
-
 function marcarPagada(){
   if(!_facturaActual) return;
   var id=_facturaActual.id;
   cerrarModal('modal-ver-factura');
   pedirMetodoPago(id);
 }
-
 /* ─────────────────────────────────────────────────
    VER FACTURA (modal)
 ───────────────────────────────────────────────── */
@@ -1945,7 +1672,6 @@ function formatFechaCorta(v){
   var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(v);
   return m ? (m[3]+'/'+m[2]+'/'+m[1]) : v;
 }
-
 async function verFactura(id){
   var { data: f } = await supabase.rpc('fac_factura_get_by_id', { p_id:id });
   if(!f){toast(t('invoice_not_found'),'err');return;}
@@ -1964,11 +1690,10 @@ async function verFactura(id){
     (f.fechaVencimiento?'<div style="color:var(--amber)">'+t('due_word')+' '+esc(formatFechaCorta(f.fechaVencimiento))+'</div>':'')+
     '<div style="margin-top:4px">'+tipoFactBadge(f.tipoFacturacion)+' <span class="badge badge-'+esc(f.estado)+'">'+badgeLabel(f.estado)+'</span></div>'+
     '</div></div></div>';
-
   html+='<table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:12px">'+
     '<thead><tr style="background:var(--bg3)"><th style="padding:8px;text-align:left;font-size:10px;color:var(--ink3);text-transform:uppercase">'+t('th_service')+'</th>'+
     '<th style="padding:8px;text-align:right;font-size:10px;color:var(--ink3);text-transform:uppercase">'+t('th_qty_short')+'</th>'+
-    '<th style="padding:8px;text-align:right;font-size:10px;color:var(--ink3);text-transform:uppercase">'+t('th_price')+'</th>'+
+    '<th style="padding:8px;text-align:right;font-size:10px;color:var(--ink3);text-transform:uppercase">'+t('th_price2')+'</th>'+
     '<th style="padding:8px;text-align:right;font-size:10px;color:var(--ink3);text-transform:uppercase">'+t('th_subtotal2')+'</th></tr></thead><tbody>';
   (f.items||[]).forEach(function(it){
     html+='<tr style="border-bottom:1px solid var(--border)">'+
@@ -1980,24 +1705,19 @@ async function verFactura(id){
       '<td style="padding:8px;text-align:right;font-weight:600">'+fmt(it.subtotalItem)+'</td></tr>';
   });
   html+='</tbody></table>';
-
   html+='<div style="background:var(--blue3);border-radius:var(--r);padding:12px 16px">'+
     '<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0"><span style="color:var(--ink2)">'+t('subtotal_word')+'</span><span>'+fmt(f.subtotal)+'</span></div>'+
     (f.ivaPorc>0?'<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0"><span style="color:var(--ink2)">'+t('th_iva')+' ('+f.ivaPorc+'%)</span><span>'+fmt(f.ivaValor)+'</span></div>':'')+
     '<div style="display:flex;justify-content:space-between;font-size:16px;font-weight:700;padding:8px 0 3px;border-top:1px solid rgba(15,110,86,.2);margin-top:6px"><span style="color:var(--blue2)">'+t('total_word2')+'</span><span style="color:var(--blue);font-family:var(--font-serif);font-size:22px">'+fmt(f.total)+'</span></div></div>';
-
   if(f.notas) html+='<div style="margin-top:10px;font-size:12px;color:var(--ink2);background:var(--bg3);border-radius:var(--r);padding:10px 14px"><strong>'+t('notes_colon')+'</strong> '+esc(f.notas)+'</div>';
-
   document.getElementById('vf-contenido').innerHTML=html;
   document.getElementById('vf-btn-pagar').style.display=f.estado==='emitida'?'block':'none';
   abrirModal('modal-ver-factura');
 }
-
 /* ─────────────────────────────────────────────────
    NUEVA FACTURA
 ───────────────────────────────────────────────── */
 var _nfMode = 'individual';
-
 function setNFMode(mode){
   _nfMode = mode;
   document.getElementById('nfmode-individual').classList.toggle('active', mode==='individual');
@@ -2008,11 +1728,6 @@ function setNFMode(mode){
   document.getElementById('nf-iva-wrap').style.display       = mode==='individual' ? 'block' : 'none';
   if(mode==='todos') cargarVistaPreviaTodos();
 }
-
-function onNFTipoChange(){
-  var tipo = document.getElementById('nf-tipo').value;
-}
-
 async function initNF(){
   document.getElementById('nf-fecha').value=fechaHoy();
   document.getElementById('nf-vencimiento').value='';
@@ -2028,7 +1743,6 @@ async function initNF(){
   if(!_servicios.length){ var { data: s } = await supabase.rpc('fac_servicio_listar'); _servicios=s||[]; }
   if(!_clientes.length){ var { data: c } = await supabase.rpc('fac_cliente_listar'); _clientes=c||[]; }
 }
-
 async function buscarClienteNF(){
   var q=document.getElementById('nf-cli-q').value.trim();
   if(!q){document.getElementById('nf-cli-results').style.display='none';return;}
@@ -2048,7 +1762,6 @@ async function buscarClienteNF(){
   }).join('');
   res.style.display='block';
 }
-
 function seleccionarClienteNF(id,nombre,nitcc,tel,ciudad){
   _nfClienteId=id;
   document.getElementById('nf-cli-q').value='';
@@ -2057,14 +1770,13 @@ function seleccionarClienteNF(id,nombre,nitcc,tel,ciudad){
   document.getElementById('nf-cli-nombre').textContent=nombre;
   var info=[nitcc?'NIT: '+nitcc:'',tel,ciudad].filter(Boolean).join(' · ');
   document.getElementById('nf-cli-info').textContent=info;
-
   var cli=_clientes.find(function(c){return c.id===id;});
   if(cli){
     if(cli.ivaDefault!==undefined && cli.ivaDefault!==null){
       document.getElementById('nf-iva').value=String(cli.ivaDefault);
       recalcularNF();
     }
-    if(cli.tipoFactura){ document.getElementById('nf-tipo').value=cli.tipoFactura; onNFTipoChange(); }
+    if(cli.tipoFactura){ document.getElementById('nf-tipo').value=cli.tipoFactura; }
     if(cli.serviciosContratados&&cli.serviciosContratados.length){
       document.getElementById('nf-items').innerHTML='';
       _nfItemCnt=0;
@@ -2076,25 +1788,19 @@ function seleccionarClienteNF(id,nombre,nitcc,tel,ciudad){
     }
   }
 }
-
 function limpiarClienteNF(){
   _nfClienteId='';
   document.getElementById('nf-cli-q').value='';
   document.getElementById('nf-cli-results').style.display='none';
   document.getElementById('nf-cli-sel').style.display='none';
 }
-
-
-
 var _nfItemCnt=0;
-
 function _pobDatalistServiciosNF(){
   var dl = document.getElementById('dl-servicios-nf');
   if(!dl) return;
   dl.innerHTML = _servicios.filter(function(s){ return s.categoria !== CAT_UNICO; })
     .map(function(s){ return '<option value="' + esc(s.nombre) + '">'; }).join('');
 }
-
 function agregarItemNF(){
   _nfItemCnt++;
   var id='nfitem-'+_nfItemCnt;
@@ -2110,7 +1816,6 @@ function agregarItemNF(){
   document.getElementById('nf-items').appendChild(div);
   recalcularNF();
 }
-
 function agregarItemNFConServicio(svc){
   _nfItemCnt++;
   var id='nfitem-'+_nfItemCnt;
@@ -2128,7 +1833,6 @@ function agregarItemNFConServicio(svc){
   document.getElementById('nf-items').appendChild(div);
   recalcularNF();
 }
-
 function onNombreServicioInput(rowId){
   var row=document.getElementById(rowId);
   var nombreInput=row.querySelector('.nf-item-nombre');
@@ -2145,12 +1849,10 @@ function onNombreServicioInput(rowId){
   }
   recalcularNF();
 }
-
 function rmItemNF(id){
   var el=document.getElementById(id); if(el) el.remove();
   recalcularNF();
 }
-
 function recalcularNF(){
   var subtotal=0;
   document.querySelectorAll('.item-row').forEach(function(row){
@@ -2168,7 +1870,6 @@ function recalcularNF(){
   document.getElementById('nf-iva-val').textContent=fmt(ivaVal);
   document.getElementById('nf-total').textContent=fmt(total);
 }
-
 function leerItemsNF(){
   var items=[];
   document.querySelectorAll('.item-row').forEach(function(row){
@@ -2185,14 +1886,12 @@ function leerItemsNF(){
   });
   return items;
 }
-
 async function crearFactura(){
   if(!_nfClienteId) return showAlert('alert-nf',t('msg_select_client_first'),'err');
   var items=leerItemsNF();
   if(!items.length) return showAlert('alert-nf',t('msg_add_item_first'),'err');
   var btn=document.getElementById('btn-guardar-factura');
   btn.disabled=true; btn.textContent='Guardando…';
-
   try {
     var { data: res, error } = await supabase.rpc('fac_factura_crear', {
       p_cliente_id: _nfClienteId,
@@ -2213,7 +1912,6 @@ async function crearFactura(){
     btn.disabled=false; btn.textContent='💾 Guardar Factura';
   }
 }
-
 function limpiarNF(){
   _nfClienteId=''; _nfItemCnt=0;
   limpiarClienteNF();
@@ -2227,7 +1925,6 @@ function limpiarNF(){
   recalcularNF();
   hideAlert('alert-nf');
 }
-
 /* ─────────────────────────────────────────────────
    FACTURAR A TODOS LOS CLIENTES
 ───────────────────────────────────────────────── */
@@ -2235,7 +1932,6 @@ function _clienteFacturable(c){
   return (c.estado||'activo')!=='suspendido'
     && c.serviciosContratados && c.serviciosContratados.length>0;
 }
-
 async function cargarVistaPreviaTodos(){
   var wrap=document.getElementById('nf-todos-preview');
   wrap.innerHTML='<div style="font-size:12px;color:var(--ink3);padding:12px 0">'+t('loading_word')+'</div>';
@@ -2277,7 +1973,6 @@ async function cargarVistaPreviaTodos(){
   html+='</div>';
   wrap.innerHTML=html;
 }
-
 async function facturarTodos(){
   var aptos=_clientes.filter(_clienteFacturable);
   if(!aptos.length){ toast(t('no_client_has_services'),'warn'); return; }
@@ -2287,7 +1982,6 @@ async function facturarTodos(){
   var vencimiento=document.getElementById('nf-vencimiento').value;
   var notas=document.getElementById('nf-todos-notas').value.trim();
   var total=aptos.length, creadas=0, errores=[];
-
   for(var i=0;i<aptos.length;i++){
     var c=aptos[i];
     var items=(c.serviciosContratados||[]).map(function(sid){
@@ -2305,18 +1999,15 @@ async function facturarTodos(){
       if(error || !res.success) errores.push(c.nombre+': '+(error?error.message:res.mensaje));
     } catch(e){ creadas++; errores.push(c.nombre+': '+e.message); }
   }
-
   btn.disabled=false; btn.textContent='⚡ Generar facturas para todos los clientes';
   if(errores.length) toast('⚠️ '+errores.length+' '+t('errors_word'),'warn');
   else toast('✅ '+total+' '+(total!==1?t('invoices_generated'):t('invoice_generated'))+' '+(total!==1?t('generated_ok_pl'):t('generated_ok'))+' '+t('correctly_word'),'ok');
   cambiarMod('facturas');
 }
-
 /* ─────────────────────────────────────────────────
    CLIENTES
 ───────────────────────────────────────────────── */
 async function cargarClientes(){
-  // Se cargan clientes y servicios juntos, para poder mostrar el nombre de cada servicio
   var r = await Promise.all([
     supabase.rpc('fac_cliente_listar'),
     supabase.rpc('fac_servicio_listar')
@@ -2325,7 +2016,6 @@ async function cargarClientes(){
   _servicios = r[1].data || [];
   renderClientes(_clientes);
 }
-
 async function buscarClientes(){
   var q=(document.getElementById('cli-q').value||'');
   if(!_servicios.length){
@@ -2335,7 +2025,6 @@ async function buscarClientes(){
   var { data: filtrados } = await supabase.rpc('fac_cliente_buscar', { p_q: q });
   renderClientes(filtrados||[]);
 }
-
 function renderClientes(lista){
   var tbody=document.getElementById('cli-tbody');
   var empty=document.getElementById('cli-empty');
@@ -2380,18 +2069,15 @@ function renderClientes(lista){
     tbody.appendChild(tr);
   });
 }
-
 async function cambiarEstadoCliente(id, estado){
   var { data: res, error } = await supabase.rpc('fac_cliente_cambiar_estado', { p_id:id, p_estado:estado });
   if(error){ toast(t('msg_error_prefix')+error.message,'err'); return; }
   if(res.success){ toast(res.mensaje,'ok'); cargarClientes(); }
   else toast(res.mensaje,'err');
 }
-
 function _renderServiciosEnModal(seleccionados){
   _svcUnicosPend = []; _renderUnicosPend();
   var lista = document.getElementById('mcli-servicios-lista');
-  // Los servicios únicos solo se muestran en el cliente que los tiene
   var visibles = (_servicios || []).filter(function(s){
     return s.categoria !== CAT_UNICO || (seleccionados && seleccionados.includes(s.id));
   });
@@ -2419,7 +2105,6 @@ function _renderServiciosEnModal(seleccionados){
   });
   lista.innerHTML = html;
 }
-
 async function abrirModalNuevoCliente(){
   document.getElementById('mcli-title').textContent=t('new_client_title');
   document.getElementById('mcli-id').value='';
@@ -2433,7 +2118,6 @@ async function abrirModalNuevoCliente(){
   _renderServiciosEnModal([]);
   abrirModal('modal-cliente');
 }
-
 async function editarCliente(id){
   var c=_clientes.find(function(x){return x.id===id;});
   if(!c)return;
@@ -2455,14 +2139,11 @@ async function editarCliente(id){
   _renderServiciosEnModal(seleccionados);
   abrirModal('modal-cliente');
 }
-
 async function guardarCliente(){
   var svcsSeleccionados = [];
   document.querySelectorAll('.mcli-svc-cb:checked').forEach(function(cb){ svcsSeleccionados.push(cb.value); });
   var nombre = document.getElementById('mcli-nombre').value.trim();
   if(!nombre) return showAlert('alert-mcli', t('msg_name_required'), 'err');
-
-  // Crear los servicios únicos pendientes y asignarlos a este cliente
   if(_svcUnicosPend.length){
     var creados = [];
     for(var i = 0; i < _svcUnicosPend.length; i++){
@@ -2484,7 +2165,6 @@ async function guardarCliente(){
     });
     _renderServiciosEnModal(svcsSeleccionados);   // refresca la lista con los nuevos ya marcados
   }
-
   var { data: res, error } = await supabase.rpc('fac_cliente_guardar', {
     p_id: document.getElementById('mcli-id').value || null,
     p_nombre: nombre,
@@ -2503,18 +2183,14 @@ async function guardarCliente(){
   if(res.success){ toast(res.mensaje, 'ok'); cerrarModal('modal-cliente'); cargarClientes(); }
   else showAlert('alert-mcli', res.mensaje, 'err');
 }
-
 async function eliminarCliente(id){
   var { data: res, error } = await supabase.rpc('fac_cliente_eliminar', { p_id:id });
   if(error){ toast(t('msg_error_prefix')+error.message,'err'); return; }
   if(res.success){ toast(res.mensaje,'ok'); cargarClientes(); }
   else toast(res.mensaje,'err');
 }
-
-  /* ── SERVICIO ÚNICO POR CLIENTE ── */
 var CAT_UNICO = 'Personalizado';
 var _svcUnicosPend = [];
-
 function _renderUnicosPend(){
   var el = document.getElementById('mcli-svc-unicos');
   if(!el) return;
@@ -2524,7 +2200,6 @@ function _renderUnicosPend(){
   }).join('');
 }
 function quitarUnicoPend(i){ _svcUnicosPend.splice(i,1); _renderUnicosPend(); }
-
 function abrirServicioUnico(){
   var base = _servicios.filter(function(s){ return s.categoria !== CAT_UNICO; });
   var ov = document.createElement('div');
@@ -2550,11 +2225,9 @@ function abrirServicioUnico(){
     '<div class="form-g"><label>Descripción (aparece en la factura)</label><textarea id="su-d" rows="2"></textarea></div>' +
     '<div class="modal-actions"><button class="btn-cancel" id="su-no">Cancelar</button><button class="btn-confirm" id="su-si">Agregar</button></div></div>';
   document.body.appendChild(ov);
-
   function g(id){ return ov.querySelector('#' + id); }
   var descEditada = false;
   g('su-d').oninput = function(){ descEditada = true; };
-
   function calc(){
     var prop = g('su-modo').value === 'prop';
     g('su-prop').style.display = prop ? 'block' : 'none';
@@ -2576,7 +2249,6 @@ function abrirServicioUnico(){
     g(id).addEventListener('change', calc);
   });
   calc();
-
   g('su-no').onclick = function(){ ov.remove(); };
   g('su-si').onclick = function(){
     var n = g('su-n').value.trim(), p = parseFloat(g('su-p').value) || 0;
@@ -2591,7 +2263,6 @@ function abrirServicioUnico(){
     _renderUnicosPend();
   };
 }
-  
 /* ─────────────────────────────────────────────────
    SERVICIOS
 ───────────────────────────────────────────────── */
@@ -2600,7 +2271,6 @@ async function cargarServicios(){
   _servicios=lista||[];
   renderServicios(_servicios);
 }
-
 function renderServicios(lista){
   var tbody=document.getElementById('svc-tbody');
   var empty=document.getElementById('svc-empty');
@@ -2622,7 +2292,6 @@ function renderServicios(lista){
     tbody.appendChild(tr);
   });
 }
-
 function abrirModalNuevoServicio(){
   document.getElementById('msvc-title').textContent=t('new_service_title');
   document.getElementById('msvc-id').value='';
@@ -2631,7 +2300,6 @@ function abrirModalNuevoServicio(){
   hideAlert('alert-msvc');
   abrirModal('modal-servicio');
 }
-
 function editarServicio(id){
   var s=_servicios.find(function(x){return x.id===id;});
   if(!s)return;
@@ -2645,13 +2313,11 @@ function editarServicio(id){
   hideAlert('alert-msvc');
   abrirModal('modal-servicio');
 }
-
 async function guardarServicio(){
   var nombre=document.getElementById('msvc-nombre').value.trim();
   var precio=parseFloat(document.getElementById('msvc-precio').value)||0;
   if(!nombre) return showAlert('alert-msvc',t('msg_name_required'),'err');
   if(precio<=0) return showAlert('alert-msvc',t('msg_price_gt0'),'err');
-
   var { data: res, error } = await supabase.rpc('fac_servicio_guardar', {
     p_id: document.getElementById('msvc-id').value || null,
     p_nombre: nombre,
@@ -2664,14 +2330,11 @@ async function guardarServicio(){
   if(res.success){ toast(res.mensaje,'ok'); cerrarModal('modal-servicio'); cargarServicios(); }
   else showAlert('alert-msvc',res.mensaje,'err');
 }
-
 async function eliminarServicio(id){
   var { data: res, error } = await supabase.rpc('fac_servicio_eliminar', { p_id:id });
   if(error){ toast(t('msg_error_prefix')+error.message,'err'); return; }
   if(res.success){ toast(res.mensaje,'ok'); cargarServicios(); }
 }
-
-/* ── IMPORTAR CLIENTES (CSV / Excel) ── */
 function _normCol(s){
   return (s||'').toString().toLowerCase().normalize('NFD')
     .replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');
@@ -2689,7 +2352,6 @@ var _COL_MAP = {
   tipofactura:'tipoFactura', tipodefactura:'tipoFactura',
   tipofacturacion:'tipoFacturacion', tipodefacturacion:'tipoFacturacion'
 };
-
 function _parseCSV(text){
   text = text.replace(/^\uFEFF/,'');
   var first = text.split(/\r?\n/)[0] || '';
@@ -2713,8 +2375,6 @@ function _parseCSV(text){
   if(cur!=='' || row.length){ row.push(cur); rows.push(row); }
   return rows;
 }
-
-// IVA del Excel: "SI" → se pregunta el % al importar; número/% → ese valor; "NO" → 0; vacío → sin dato
 function _ivaDeCelda(v){
   v = (v==null ? '' : String(v)).trim().toLowerCase().replace('%','').replace(',','.');
   if(v==='') return {k:'vacio'};
@@ -2723,9 +2383,6 @@ function _ivaDeCelda(v){
   var n = parseFloat(v);
   return isNaN(n) ? {k:'vacio'} : {k:'num', val:n};
 }
-
-// Busca el servicio por nombre tal como está en el catálogo (ignora mayúsculas, espacios y tildes;
-// también tolera confundir la letra O con el cero, ej. "MO5V" vs "M05V")
 function _buscarServicio(nombre){
   var n = _normCol(nombre);
   var s = _servicios.find(function(x){ return _normCol(x.nombre)===n; });
@@ -2735,7 +2392,6 @@ function _buscarServicio(nombre){
   }
   return s;
 }
-
 function descargarPlantillaClientes(){
   var csv = '\uFEFFNombre;NIT/CC;Teléfono;Correo;Dirección;Ciudad;Notas;IVA;Producto;Tipo de Factura\r\n' +
     'Juan Pérez;1234567890;3001234567;juan@correo.com;Calle 1 # 2-3;Toledo;;SI;M10;Tradicional\r\n';
@@ -2745,7 +2401,6 @@ function descargarPlantillaClientes(){
   a.click();
   setTimeout(function(){ URL.revokeObjectURL(a.href); }, 1000);
 }
-
 async function importarClientesArchivo(ev){
   var file = ev.target.files[0];
   ev.target.value = '';
@@ -2763,33 +2418,24 @@ async function importarClientesArchivo(ev){
     }
     rows = rows.filter(function(r){ return r.some(function(c){ return String(c).trim()!==''; }); });
     if(rows.length<2) return showAlert('alert-clientes','El archivo no tiene filas de datos.','err');
-
     var cols = rows[0].map(function(h){ return _COL_MAP[_normCol(h)] || null; });
     if(cols.indexOf('nombre')<0)
       return showAlert('alert-clientes','No encontré la columna "Nombre" en la primera fila.','err');
-
-    // Datos actuales: clientes (para detectar los que ya existen) y servicios (para asignarlos)
     var r1 = await supabase.rpc('fac_cliente_listar'); _clientes = r1.data || [];
     var r2 = await supabase.rpc('fac_servicio_listar'); _servicios = r2.data || [];
-
     var porNit = {};
     _clientes.forEach(function(c){ if(c.nitcc) porNit[_normCol(c.nitcc)] = c; });
-
     var nuevos=[], existentes=[], enArchivo={}, sinNombre=0, svcFaltan={}, haySI=false;
     rows.slice(1).forEach(function(r){
       var o = {};
       cols.forEach(function(k,i){ if(k) o[k] = (r[i]==null ? '' : String(r[i])).trim(); });
       if(!o.nombre){ sinNombre++; return; }
-
-      // Servicios de la fila (varios separados por | o ;)
       var ids = [];
       (o.servicios||'').split(/[|;]/).forEach(function(n){
         n = n.trim(); if(!n) return;
         var s = _buscarServicio(n);
         if(s) ids.push(s.id); else svcFaltan[n] = 1;
       });
-
-      // "Tipo de Factura" puede traer Tradicional/Electrónica (tipo de facturación) o Fija/Temporal: se detecta por el valor
       var tf='', tp='';
       [o.tipoFactura, o.tipoFacturacion].forEach(function(v){
         v = v || '';
@@ -2798,27 +2444,21 @@ async function importarClientesArchivo(ev){
         else if(/temp/i.test(v)) tp='temporal';
         else if(/fij/i.test(v)) tp='fija';
       });
-
       o._iva = _ivaDeCelda(o.iva);
       if(o._iva.k==='si') haySI = true;
       o._svcs = ids; o._tf = tf; o._tp = tp;
-
       var nit = _normCol(o.nitcc||'');
-      // Mismo NIT repetido en el archivo (segundo servicio del mismo cliente): se unen los servicios
       if(nit && enArchivo[nit]){ enArchivo[nit]._svcs = enArchivo[nit]._svcs.concat(ids); return; }
       if(nit) enArchivo[nit] = o;
       var ex = nit && porNit[nit];
       if(ex){ o._ex = ex; existentes.push(o); } else nuevos.push(o);
     });
-
     if(!nuevos.length && !existentes.length)
       return showAlert('alert-clientes','No encontré filas válidas para importar.','warn');
-
     var msg = 'Clientes nuevos: ' + nuevos.length + '.' +
       (existentes.length ? ' Ya existen (mismo NIT/CC): ' + existentes.length + '.' : '') +
       (sinNombre ? ' Filas sin nombre omitidas: ' + sinNombre + '.' : '') +
       (Object.keys(svcFaltan).length ? ' Servicios que no encontré en el catálogo (esos clientes quedan sin ese servicio): ' + Object.keys(svcFaltan).join(', ') + '.' : '');
-
     _dialogoImportar({msg:msg, haySI:haySI, nExistentes:existentes.length}, function(opts){
       _importarClientes(nuevos, existentes, opts);
     });
@@ -2827,8 +2467,6 @@ async function importarClientesArchivo(ev){
     showAlert('alert-clientes','No pude leer el archivo: '+e.message,'err');
   }
 }
-
-// Ventana de confirmación: pregunta el % de IVA para los clientes con "SI" y si se actualizan los existentes
 function _dialogoImportar(info, onOk){
   var ov = document.createElement('div');
   ov.className = 'modal-overlay center visible';
@@ -2851,7 +2489,6 @@ function _dialogoImportar(info, onOk){
     onOk(opts);
   };
 }
-
 async function _importarClientes(nuevos, existentes, opts){
   var lista = nuevos.concat(opts.actualizar ? existentes : []);
   var ok=0, errores=[];
@@ -2859,13 +2496,11 @@ async function _importarClientes(nuevos, existentes, opts){
   for(var i=0;i<lista.length;i++){
     var c = lista[i], ex = c._ex;
     toast('Importando '+(i+1)+' de '+lista.length+'…','ok');
-
     var iva = c._iva.k==='si' ? opts.iva
             : c._iva.k==='num' ? c._iva.val
             : (ex ? (ex.ivaDefault||0) : 0);
     var svcs = (ex ? (ex.serviciosContratados||[]) : []).concat(c._svcs)
       .filter(function(v,idx,arr){ return arr.indexOf(v)===idx; });
-
     var { data: res, error } = await supabase.rpc('fac_cliente_guardar', {
       p_id: ex ? ex.id : null,
       p_nombre: c.nombre,
@@ -2889,7 +2524,6 @@ async function _importarClientes(nuevos, existentes, opts){
   } else toast('✅ '+ok+' clientes importados','ok');
   cargarClientes();
 }
-  
 /* ─────────────────────────────────────────────────
    GASTOS
 ───────────────────────────────────────────────── */
@@ -2912,7 +2546,6 @@ _gastos.forEach(function(g){ g.metodoPago = (mapa||{})[g.id] || ''; });
   });
   renderGastos(filtrados);
 }
-
 function renderGastos(lista){
   var tbody=document.getElementById('gas-tbody');
   var empty=document.getElementById('gas-empty');
@@ -2937,7 +2570,6 @@ function renderGastos(lista){
     tbody.appendChild(tr);
   });
 }
-
 function abrirModalNuevoGasto(){
   document.getElementById('mgas-title').textContent=t('new_expense_title');
   document.getElementById('mgas-id').value='';
@@ -2947,26 +2579,20 @@ function abrirModalNuevoGasto(){
   hideAlert('alert-mgas');
   abrirModal('modal-gasto');
 }
-
 async function cambiarMetodoGasto(id, metodo){
   var { data: res, error } = await supabase.rpc('fac_gasto_set_metodo', { p_id:id, p_metodo:metodo });
   if(error || !res.success){ toast(error?error.message:res.mensaje,'err'); return; }
   toast(res.mensaje,'ok'); cargarGastos();
 }
-
 async function guardarGasto(){
   var descripcion=document.getElementById('mgas-desc').value.trim();
   var monto=parseFloat(document.getElementById('mgas-monto').value)||0;
   if(!descripcion) return showAlert('alert-mgas',t('msg_desc_required'),'err');
   if(monto<=0) return showAlert('alert-mgas',t('msg_amount_gt0'),'err');
-
-  // 1) Dejar el método de pago listo para que el trigger lo asigne
   var rm = await supabase.rpc('fac_gasto_metodo_pendiente_set', {
     p_metodo: document.getElementById('mgas-metodo').value
   });
   if(rm.error){ showAlert('alert-mgas',t('msg_error_prefix')+rm.error.message,'err'); return; }
-
-  // 2) Guardar el gasto
   var { data: res, error } = await supabase.rpc('fac_gasto_guardar', {
     p_id: document.getElementById('mgas-id').value || null,
     p_categoria: document.getElementById('mgas-cat').value.trim()||'Otros',
@@ -2979,13 +2605,11 @@ async function guardarGasto(){
   if(res && res.success){ toast(res.mensaje,'ok'); cerrarModal('modal-gasto'); cargarGastos(); }
   else showAlert('alert-mgas',(res&&res.mensaje)||'No se pudo guardar el gasto.','err');
 }
-
 async function eliminarGasto(id){
   var { data: res, error } = await supabase.rpc('fac_gasto_eliminar', { p_id:id });
   if(error){ toast(t('msg_error_prefix')+error.message,'err'); return; }
   if(res.success){ toast(res.mensaje,'ok'); cargarGastos(); }
 }
-
 /* ─────────────────────────────────────────────────
    RENTABILIDAD
 ───────────────────────────────────────────────── */
@@ -2993,7 +2617,6 @@ function initRentabilidad(){
   _initSelectsRentPeriodo();
   setRentPeriodo('mes');
 }
-
 /* ── Selects propios de mes/año (reemplazan el <input type="month">
    nativo, que el navegador siempre muestra en el idioma del sistema
    operativo, sin importar el idioma elegido en la app) ── */
@@ -3027,7 +2650,6 @@ function getRentDesde(){ return document.getElementById('rent-desde-anio').value
 function getRentHasta(){ return document.getElementById('rent-hasta-anio').value+'-'+document.getElementById('rent-hasta-mes').value; }
 function setRentDesde(v){ var p=v.split('-'); document.getElementById('rent-desde-anio').value=p[0]; document.getElementById('rent-desde-mes').value=p[1]; }
 function setRentHasta(v){ var p=v.split('-'); document.getElementById('rent-hasta-anio').value=p[0]; document.getElementById('rent-hasta-mes').value=p[1]; }
-
 function setRentPeriodo(p){
   _rentPeriodo=p;
   ['mes','trim','anio','custom'].forEach(function(id){ document.getElementById('rchip-'+id).classList.toggle('active',id===p); });
@@ -3048,7 +2670,6 @@ function setRentPeriodo(p){
   }
   if(p!=='custom') cargarRentabilidad();
 }
-
 async function cargarRentabilidad(){
   var desde=getRentDesde();
   var hasta=getRentHasta();
@@ -3056,15 +2677,12 @@ async function cargarRentabilidad(){
   var h=hasta?hasta.replace('-','/'):'';
   var { data: r } = await supabase.rpc('fac_reporte_rentabilidad', { p_desde:d, p_hasta:h });
   if(!r) return;
-
   var calc=calcUtilidadCobrada(r);
 renderKpisRent(r, calc, d, h);
   renderMetodosPago('rent-metodos', d, h, false);
-
   renderGrafico('graf-rent-svc',r.porServicio.map(function(s){return{label:s.nombre,val:s.total};}),r.porServicio.map(function(s){return s.total;}),'var(--blue)');
   renderGrafico('graf-rent-gas',r.porCatGasto.map(function(g){return{label:g.cat,val:g.total};}),r.porCatGasto.map(function(g){return g.total;}),'var(--red)');
   renderGrafico('graf-rent-cli',r.porCliente.map(function(c){return{label:c.nombre,val:c.total};}),r.porCliente.map(function(c){return c.total;}),'var(--green2)');
-
   var flujoWrap=document.getElementById('flujo-mensual-wrap');
   if(!r.flujoMensual||!r.flujoMensual.length){
     flujoWrap.innerHTML='<div class="empty-state"><div class="empty-icon">📅</div><div>'+t('no_data_period')+'</div></div>';
@@ -3094,19 +2712,13 @@ renderKpisRent(r, calc, d, h);
   html+='</div>';
   flujoWrap.innerHTML=html;
 }
-
     async function renderKpisRent(r, calc, d, h){
-  // Ingresos = lo realmente cobrado (facturas pagadas)
   document.getElementById('rent-ing').textContent = fmt(calc.cobrado);
   document.getElementById('rent-egr').textContent = fmt(r.totalGastos);
-
   var ku = document.getElementById('rent-util');
   ku.textContent = fmt(calc.util);
   ku.style.color = calc.util >= 0 ? 'var(--green2)' : '#DC3545';
-
   document.getElementById('rent-margen').textContent = calc.margen.toFixed(1) + '%';
-
-  // IVA: se calcula desde el listado de facturas, filtrando por el período
   var { data: lista } = await supabase.rpc('fac_factura_listar');
   var conIva = (lista || []).filter(function(f){
     var p = (f.fechaSolo || '').split('/');           // dd/mm/yyyy
@@ -3124,12 +2736,10 @@ renderKpisRent(r, calc, d, h);
     conIva.length + ' factura' + (conIva.length !== 1 ? 's' : '') + ' con IVA';
   document.getElementById('rent-iva-pend').textContent = 'Por recaudar: ' + fmt(ivaPend);
 }
-
 /* ─────────────────────────────────────────────────
    CONFIGURACIÓN DE EMPRESA (logo, datos para el PDF)
 ───────────────────────────────────────────────── */
 var _config = { logoBase64:'', nombreEmpresa:'', nit:'', telefono:'', ciudad:'', email:'', observacionesDefault:'' };
-
 function actualizarAvatarUsuario(){
   var av=document.getElementById('user-avatar');
   if(!av) return;
@@ -3140,7 +2750,6 @@ function actualizarAvatarUsuario(){
     av.innerHTML = nombreMostrar.trim().charAt(0).toUpperCase();
   }
 }
-
 async function cargarConfiguracion(){
   var { data: c } = await supabase.rpc('fac_configuracion_obtener');
   if(c) _config = c;
@@ -3158,7 +2767,6 @@ async function cargarConfiguracion(){
   }
   actualizarAvatarUsuario();
 }
-
 function onLogoSeleccionado(e){
   var file = e.target.files[0];
   if(!file) return;
@@ -3172,7 +2780,6 @@ function onLogoSeleccionado(e){
   };
   reader.readAsDataURL(file);
 }
-
 function quitarLogo(){
   _config.logoBase64 = '';
   document.getElementById('config-logo-preview').innerHTML =
@@ -3180,7 +2787,6 @@ function quitarLogo(){
   document.getElementById('config-logo-file').value = '';
   actualizarAvatarUsuario();
 }
-
 async function guardarConfiguracion(){
   var nuevosDatos = {
     p_logo_base64: _config.logoBase64,
@@ -3193,9 +2799,6 @@ async function guardarConfiguracion(){
   };
   var { data: res, error } = await supabase.rpc('fac_configuracion_guardar', nuevosDatos);
   if(error){ showAlert('alert-config',t('msg_error_prefix')+error.message,'err'); return; }
-
-  // Actualizamos la copia en memoria con lo recién guardado,
-  // así el PDF ya no depende de recargar la página.
   _config = {
     logoBase64: nuevosDatos.p_logo_base64,
     nombreEmpresa: nuevosDatos.p_nombre_empresa,
@@ -3205,10 +2808,8 @@ async function guardarConfiguracion(){
     email: nuevosDatos.p_email,
     observacionesDefault: nuevosDatos.p_observaciones_default
   };
-
   showAlert('alert-config',t('config_saved'),'ok');
 }
-
 /* ─────────────────────────────────────────────────
    PDF — FACTURA INDIVIDUAL, estilo plantilla clásica
    (logo + datos empresa a la izquierda, "Factura de
@@ -3218,26 +2819,20 @@ function descargarFacturaPDF(){
   if(!_facturaActual){ toast(t('no_invoice_selected'),'err'); return; }
   pdfFacturaObj(_facturaActual);
 }
-
 async function pdfFactura(id){
   var { data: f } = await supabase.rpc('fac_factura_get_by_id', { p_id:id });
   if(f){ _facturaActual=f; pdfFacturaObj(f); } else toast(t('invoice_not_found2'),'err');
 }
-
 async function pdfFacturaObj(f, opts){
   opts = opts || {};
-  // En modo masivo la configuración se carga una sola vez antes (opts.sinConfig)
   if(!opts.sinConfig){
     var { data: c } = await supabase.rpc('fac_configuracion_obtener');
     if(c) _config = c;
   }
-
   var doc=new window.jspdf.jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
   var W=doc.internal.pageSize.getWidth(), H=doc.internal.pageSize.getHeight();
   var MX=15, y=15;
   var NEGRO=[20,20,20], GRIS=[90,90,90];
-
-  // ── Encabezado: logo + datos empresa (izquierda) ──────────
   var textX = MX;
   if(_config.logoBase64){
     try{
@@ -3254,17 +2849,13 @@ async function pdfFacturaObj(f, opts){
   if(_config.telefono){ doc.text(t('pdf_phone_label')+': '+_config.telefono, textX, ly); ly+=4.5; }
   if(_config.ciudad){ doc.text(_config.ciudad, textX, ly); ly+=4.5; }
   if(_config.email){ doc.text(_config.email, textX, ly); ly+=4.5; }
-
-  // ── Caja "Factura de Venta" (derecha) ──────────────────────
   var boxW = 60, boxX = W-MX-boxW;
   doc.setDrawColor(0,0,0); doc.setLineWidth(0.4);
   doc.rect(boxX, y, boxW, 9);
   doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor.apply(doc,NEGRO);
-  doc.text(t('pdf_invoice_of_sale'), boxX+boxW/2, y+6, {align:'center'});
+  doc.text(t('pdf_invoice_of_sale').toUpperCase(), boxX+boxW/2, y+6, {align:'center'});
   doc.setFont('helvetica','bold'); doc.setFontSize(9);
   doc.text(t('number_word')+' '+f.numero, boxX+boxW/2, y+9+6, {align:'center'});
-
-  // ── Caja "Fecha y hora Factura" — justo debajo del número ──
   var fy = y+9+10;
   doc.autoTable({
     startY: fy,
@@ -3281,10 +2872,7 @@ async function pdfFacturaObj(f, opts){
     columnStyles: { 0:{fontStyle:'bold', cellWidth: boxW*0.45}, 1:{cellWidth: boxW*0.55} }
   });
   var fechaBoxBottom = doc.lastAutoTable.finalY;
-
   y = Math.max(ly+4, fechaBoxBottom+4, y+30);
-
-  // ── Datos del cliente ────────────────────────────────────────
   var cx=MX, cw=W-MX*2, ch=8;
   doc.setLineWidth(0.3);
   doc.rect(cx, y, cw, ch);
@@ -3293,7 +2881,6 @@ async function pdfFacturaObj(f, opts){
   doc.setFont('helvetica','normal');
   doc.text(f.clienteNombre||'', cx+22, y+5.5);
   y+=ch;
-
   doc.rect(cx, y, cw*0.5, ch);
   doc.rect(cx+cw*0.5, y, cw*0.5, ch);
   doc.setFont('helvetica','bold'); doc.text('NIT/CC', cx+2, y+5.5);
@@ -3301,7 +2888,6 @@ async function pdfFacturaObj(f, opts){
   doc.setFont('helvetica','bold'); doc.text(t('pdf_phone_label'), cx+cw*0.5+2, y+5.5);
   doc.setFont('helvetica','normal'); doc.text(f.clienteTelefono||'', cx+cw*0.5+24, y+5.5);
   y+=ch;
-
   doc.rect(cx, y, cw*0.5, ch);
   doc.rect(cx+cw*0.5, y, cw*0.5, ch);
   doc.setFont('helvetica','bold'); doc.text(t('pdf_address_label'), cx+2, y+5.5);
@@ -3309,8 +2895,6 @@ async function pdfFacturaObj(f, opts){
   doc.setFont('helvetica','bold'); doc.text(t('pdf_city_label'), cx+cw*0.5+2, y+5.5);
   doc.setFont('helvetica','normal'); doc.text(f.clienteCiudad||'', cx+cw*0.5+20, y+5.5);
   y+=ch+8;
-
-  // ── Tabla de ítems ─────────────────────────────────────────
   var bodyItems=(f.items||[]).map(function(it,i){
     return [String(i+1), it.nombre+(it.descripcion?' — '+it.descripcion:''), String(it.cantidad), fmt(it.subtotalItem)];
   });
@@ -3325,11 +2909,8 @@ async function pdfFacturaObj(f, opts){
     margin:{left:MX,right:MX}
   });
   y=doc.lastAutoTable.finalY+6;
-
-  // ── Total de ítems (izq) + Totales (der) ────────────────────
   doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor.apply(doc,NEGRO);
   doc.text(t('pdf_total_items')+' '+(f.items||[]).length, MX, y+4);
-
   var tw=70, tx=W-MX-tw;
   var filasTot=[[t('pdf_gross_total'), fmt(f.subtotal)]];
   if(f.ivaPorc>0) filasTot.push([t('th_iva')+' '+f.ivaPorc+'%', fmt(f.ivaValor)]);
@@ -3343,8 +2924,6 @@ async function pdfFacturaObj(f, opts){
     doc.text(r[1], tx+tw-2, ry+5, {align:'right'});
   });
   y += filasTot.length*7 + 14;
-
-  // ── Observaciones ────────────────────────────────────────────
   var obs = f.notas || _config.observacionesDefault || '';
   if(obs){
     doc.setFont('helvetica','bold'); doc.setFontSize(8.5); doc.setTextColor.apply(doc,NEGRO);
@@ -3353,26 +2932,20 @@ async function pdfFacturaObj(f, opts){
     var obsLines = doc.splitTextToSize(obs, W-MX*2-32);
     doc.text(obsLines, MX+32, y);
   }
-
-  // ── Pie de página ─────────────────────────────────────────────
   doc.setDrawColor(220,220,220); doc.setLineWidth(0.2); doc.line(MX,H-10,W-MX,H-10);
   doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(150,150,150);
   doc.text(t('pdf_generated_with'),W/2,H-6,{align:'center'});
-
     var nombreArchivo = 'Factura_'+f.numero+'_'+f.clienteNombre.replace(/[\\\/:*?"<>|]/g,'').replace(/\s+/g,'_').substring(0,20)+'.pdf';
   if(opts.zip){ return { nombre: nombreArchivo, blob: doc.output('blob') }; }
   doc.save(nombreArchivo);
   toast('📄 '+t('pdf_downloaded'),'ok');
 }
-
 function exportarFacturasMasivo(){
   var tbody=document.getElementById('fac-tbody');
   if(!tbody.rows.length){ toast(t('no_invoices_export'),'warn'); return; }
-
   var q=(document.getElementById('f-fac-q').value||'').toLowerCase();
   var mes=document.getElementById('f-fac-mes').value;
   var anio=document.getElementById('f-fac-anio').value;
-
   var lista=_facturas.filter(function(f){
     var p=(f.fechaSolo||'').split('/');
     var ok=(!_chipEstado||f.estado===_chipEstado)
@@ -3382,10 +2955,8 @@ function exportarFacturasMasivo(){
       &&(!q||(f.clienteNombre||'').toLowerCase().includes(q)||(f.clienteNitcc||'').toLowerCase().includes(q)||(f.id||'').toLowerCase().includes(q)||(f.numero||'').includes(q));
     return ok && f.estado!=='anulada' && f.tipoFacturacion!=='electronica' &&okMetodo(f);
   });
-
   if(!lista.length){ toast(t('no_active_invoices_export'),'warn'); return; }
   if(typeof JSZip==='undefined'){ toast('No se cargó la librería ZIP. Recarga la página.','err'); return; }
-
   confirmar(
     'Descargar facturas en ZIP',
     'Se generarán '+lista.length+' PDF y se descargarán juntos en un solo archivo .zip. ¿Continuar?',
@@ -3393,24 +2964,19 @@ function exportarFacturasMasivo(){
       var btn=document.querySelector('[onclick="exportarFacturasMasivo()"]');
       if(btn){ btn.disabled=true; }
       try{
-        // Configuración de la empresa: una sola vez
         var { data: c } = await supabase.rpc('fac_configuracion_obtener');
         if(c) _config = c;
-
         var zip=new JSZip();
         var usados={};
         for(var i=0;i<lista.length;i++){
           toast('Generando PDF '+(i+1)+' de '+lista.length+'…','ok');
           var r=await pdfFacturaObj(lista[i],{zip:true,sinConfig:true});
           var nombre=r.nombre;
-          // Evitar nombres repetidos dentro del ZIP
           if(usados[nombre]){ nombre=nombre.replace(/\.pdf$/,'_'+lista[i].id+'.pdf'); }
           usados[nombre]=1;
           zip.file(nombre,r.blob);
-          // Cede el control al navegador para que no se congele
           await new Promise(function(res){ setTimeout(res,0); });
         }
-
         toast('Comprimiendo archivos…','ok');
         var blob=await zip.generateAsync({type:'blob',compression:'DEFLATE',compressionOptions:{level:6}});
         var a=document.createElement('a');
@@ -3428,7 +2994,6 @@ function exportarFacturasMasivo(){
     }
   );
 }
-
 /* ─────────────────────────────────────────────────
    REPORTE RENTABILIDAD PDF
 ───────────────────────────────────────────────── */
@@ -3437,11 +3002,9 @@ async function generarReportePDF(){
   var hasta=document.getElementById('rent-hasta-mes')?getRentHasta():'';
   var d=desde?desde.replace('-','/'):'';
   var h=hasta?hasta.replace('-','/'):'';
-
   toast(t('generating_pdf'),'ok');
   var { data: r } = await supabase.rpc('fac_reporte_rentabilidad', { p_desde:d, p_hasta:h });
   if(!r){ toast(t('no_data_period2'),'warn'); return; }
-
   var doc=new window.jspdf.jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
   var W=doc.internal.pageSize.getWidth(), H=doc.internal.pageSize.getHeight();
   var MX=15, y=0;
@@ -3451,8 +3014,7 @@ async function generarReportePDF(){
   var GRIS1=[28,27,24], GRIS2=[92,90,85], GRIS3=[156,154,148], BORDE=[226,224,218];
   var AMBAR=[186,117,23];
   var empresa=SESSION.nombre||SESSION.usuario;
-  var fechaGen=new Date().toLocaleDateString(LANG==='en'?'en-US':'es-CO',{day:'2-digit',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
-
+  var fechaGen=new Date().toLocaleDateString('es-CO',{day:'2-digit',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
   function pie(){
     var pg=doc.internal.getCurrentPageInfo().pageNumber, tot=doc.internal.getNumberOfPages();
     doc.setDrawColor.apply(doc,BORDE); doc.setLineWidth(0.3); doc.line(MX,H-10,W-MX,H-10);
@@ -3468,7 +3030,7 @@ async function generarReportePDF(){
     doc.roundedRect(MX,y-3,W-MX*2,8,1.5,1.5,'F');
     doc.setFillColor.apply(doc,col); doc.roundedRect(MX,y-3,3,8,1,1,'F');
     doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor.apply(doc,col);
-    doc.text(titulo,MX+7,y+2); y+=9;
+    doc.text(titulo.toUpperCase(),MX+7,y+2); y+=9;
   }
   function kpiCard(x,yy,w,h2,lbl,val,sub,cv,cb){
     cb=cb||AZUL;
@@ -3482,7 +3044,6 @@ async function generarReportePDF(){
     doc.text(val,x+w/2,yy+14,{align:'center'});
     if(sub){ doc.setFont('helvetica','normal'); doc.setFontSize(6.5); doc.setTextColor.apply(doc,GRIS3); doc.text(sub,x+w/2,yy+20,{align:'center'}); }
   }
-
   doc.setFillColor.apply(doc,AZUL); doc.rect(0,0,W,28,'F');
   doc.setFont('helvetica','bold'); doc.setFontSize(18); doc.setTextColor(255,255,255);
   doc.text(t('pdf_rep_title'),MX,14);
@@ -3491,14 +3052,12 @@ async function generarReportePDF(){
   doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(255,255,255);
   doc.text((d||t('pdf_rep_all_word'))+(h&&h!==d?' '+t('pdf_rep_to_word')+' '+h:''),W-MX,14,{align:'right'});
   y=34;
-
   var kW=(W-MX*2-9)/4, kH=26, pos=r.utilidad>=0;
   kpiCard(MX,         y,kW,kH,t('pdf_rep_total_billed'),fmt(r.totalFacturado),r.totalFacturas+' '+t('pdf_rep_invoices_suffix'),AZUL,AZUL);
   kpiCard(MX+kW+3,    y,kW,kH,t('pdf_rep_total_expenses'),fmt(r.totalGastos),'',GRIS1,GRIS3);
   kpiCard(MX+(kW+3)*2,y,kW,kH,t('pdf_rep_net_profit'),fmt(r.utilidad),pos?t('pdf_rep_positive'):t('pdf_rep_negative'),pos?VERDE:ROJO,pos?VERDE:ROJO);
   kpiCard(MX+(kW+3)*3,y,kW,kH,t('pdf_rep_margin'),r.margen.toFixed(1)+'%',t('pdf_rep_over_income'),AMBAR,AMBAR);
   y+=kH+10;
-
   if(r.porServicio&&r.porServicio.length){
     seccion(t('pdf_rep_income_by_service'),AZUL); y+=2;
     var bSvc=r.porServicio.map(function(s){return[s.nombre,String(Math.round(s.cantidad)),fmt(s.total)];});
@@ -3511,7 +3070,6 @@ async function generarReportePDF(){
       margin:{left:MX,right:MX}});
     y=doc.lastAutoTable.finalY+6;
   }
-
   if(r.porCliente&&r.porCliente.length){
     checkY(30);
     seccion(t('pdf_rep_top_clients'),VERDE); y+=2;
@@ -3523,7 +3081,6 @@ async function generarReportePDF(){
       margin:{left:MX,right:MX}});
     y=doc.lastAutoTable.finalY+6;
   }
-
   if(r.porCatGasto&&r.porCatGasto.length){
     checkY(30);
     seccion(t('pdf_rep_expenses_by_cat'),ROJO); y+=2;
@@ -3537,7 +3094,6 @@ async function generarReportePDF(){
       margin:{left:MX,right:MX}});
     y=doc.lastAutoTable.finalY+6;
   }
-
   if(r.flujoMensual&&r.flujoMensual.length){
     checkY(30);
     seccion(t('pdf_rep_monthly_flow'),AMBAR); y+=2;
@@ -3560,7 +3116,6 @@ async function generarReportePDF(){
       margin:{left:MX,right:MX}});
     y=doc.lastAutoTable.finalY+6;
   }
-
   if(r.facturas&&r.facturas.length){
     checkY(30);
     seccion(t('pdf_rep_invoice_detail'),AZUL); y+=2;
@@ -3583,13 +3138,11 @@ async function generarReportePDF(){
       margin:{left:MX,right:MX}});
     y=doc.lastAutoTable.finalY+6;
   }
-
   pie();
   var fecha=new Date().toISOString().slice(0,10).replace(/-/g,'');
   doc.save('Rentabilidad_'+empresa.replace(/\s+/g,'_')+'_'+fecha+'.pdf');
   toast('📄 '+t('profitability_report_downloaded'),'ok');
 }
-
 /* ─────────────────────────────────────────────────
    RENOVACIÓN MANUAL DE FACTURAS FIJAS
 ───────────────────────────────────────────────── */
@@ -3609,13 +3162,11 @@ async function renovarFacturasManuales(){
     }
   );
 }
-
 function mostrarModalEliminar(){
   document.getElementById('del-pwd').value='';
   document.getElementById('del-error').style.display='none';
   abrirModal('modal-eliminar-cuenta');
 }
-
 async function doEliminarCuenta(){
   var pwd=document.getElementById('del-pwd').value;
   if(!pwd){
@@ -3642,13 +3193,10 @@ async function doEliminarCuenta(){
   showAlert('alert-auth',t('del_finanzas_access'),'ok');
 }
 </script>
-
-<!-- Banner instalación iOS -->
 <div id="ios-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:var(--ink);color:#fff;padding:14px 16px;padding-bottom:calc(14px + env(safe-area-inset-bottom));z-index:999;font-size:13px;text-align:center">
   📲 Para usar sin problemas en iPhone: toca <strong>Compartir</strong> → <strong>Agregar a pantalla de inicio</strong>
   <button onclick="document.getElementById('ios-banner').style.display='none'" style="background:none;border:none;color:#aaa;font-size:18px;position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer">✕</button>
 </div>
-
 <script>
 (function(){
   var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
